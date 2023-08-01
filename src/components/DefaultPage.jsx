@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function DefaultPage() {
   return (
-    <div>Oops, this is not a valid page.</div>
+    <div>404 Not found. Oops, this is not a valid page.</div>
   )
 }
