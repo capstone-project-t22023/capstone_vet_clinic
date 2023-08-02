@@ -11,35 +11,13 @@ export default function Logout() {
     }, []);
     return (
         <div>
-
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(4, minmax(80px, 1fr))',
-                    gap: 1,
-                    p: 5,
-                }}
-            >
-                <Button variant="contained">Solid</Button>
-                <Button size="lg" variant="contained">
-                    Neutral
-                </Button>
-                <Button size="md" variant="contained">
-                    Danger
-                </Button>
-                <Button size="sm" variant="contained">
-                    Info
-                </Button>
-            </Box>
-
-                <h2>Sucessfully logged out!</h2>
+             <h2>Sucessfully logged out!</h2>
             <Link to="/login">
                 <Button size="md" variant="contained">Login</Button>
             </Link>
             <Link to="/">
-                <Button size="md" variant="soft">Homepage</Button>
+                <Button size="md" variant="text">Homepage</Button>
             </Link>
-            <Button size="lg">Homepage</Button>
 
             <Link to="/login">
                 <Button size="lg" variant="outlined">Login</Button>
