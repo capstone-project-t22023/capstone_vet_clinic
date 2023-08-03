@@ -1023,6 +1023,158 @@ class Database
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Add pet information
+     * Returns true or false 
+     */
+    public function addPet($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pet_information` 
+            (`petname`, `species`, `breed`, `birthdate`,`weight`,`comments`,`update_date`)
+            VALUES
+            (?,?,?,?,?,?,SYSDATE())'
+        ); 
+        $sql->bind_param(
+            'ssssds', 
+            $record['petname'],
+            $record['species'],
+            $record['breed'],
+            $record['birthdate'],
+            $record['weight'],
+            $record['comments']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update pet information
+     * Returns true or false 
+     */
+    public function updatePet($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pet_information` 
+            SET 
+            petname=?, 
+            species=?, 
+            breed=?, 
+            birthdate=?,
+            weight=?,
+            comments=?,
+            update_date=SYSDATE()
+            WHERE
+            id =?'
+        ); 
+        $sql->bind_param(
+            'ssssdsi', 
+            $record['petname'],
+            $record['species'],
+            $record['breed'],
+            $record['birthdate'],
+            $record['weight'],
+            $record['comments'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete pet information
+     * Returns true or false 
+     */
+    public function deletePet($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE `pet_information` 
+            WHERE
+            id =?'
+        ); 
+        $sql->bind_param(
+            'i', 
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Get pet information
+     * Returns true or false 
+     */
+    public function getPet($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT * FROM `pet_information` 
+            WHERE
+            id =?'
+        ); 
+        $sql->bind_param(
+            'i', 
+            $record['id']
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $pet_record = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $pet_record;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 }
 
 ?>

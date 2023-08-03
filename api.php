@@ -505,6 +505,93 @@ elseif ($action === 'update_pet_owner') {
     }
 } 
 
+/**
+ * API endpoint when adding pet information
+ * addPet method that adds pet record from database.php
+ */ 
+elseif ($action === 'add_pet') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $pet = [
+            'petname' => $_POST['petname'],
+            'species' => $_POST['species'],
+            'breed' => $_POST['breed'],
+            'birthdate' => $_POST['birthdate'],
+            'weight' => $_POST['weight'],
+            'comments' => $_POST['comments']
+        ];
+
+        if ($pet_id = $database->addPet($pet)) {
+            return_json(['add_pet' => $pet_id]);
+        }
+    }
+}
+
+/**
+ * API endpoint when updating pet information
+ * updatePet method that updates pet record from database.php
+ */ 
+elseif ($action === 'update_pet') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $pet = [
+            'id' => $id,
+            'petname' => $_POST['petname'],
+            'species' => $_POST['species'],
+            'breed' => $_POST['breed'],
+            'birthdate' => $_POST['birthdate'],
+            'weight' => $_POST['weight'],
+            'comments' => $_POST['comments']
+        ];
+
+        if ($record = $database->updatePet($pet)) {
+            return_json(['update_pet' => "success"]);
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting pet information
+ * deletePet method that deletes pet record from database.php
+ */ 
+elseif ($action === 'delete_pet') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $pet = [
+            'id' => $id
+        ];
+
+        if ($record = $database->deletePet($pet)) {
+            return_json(['delete_pet' => "success"]);
+        }
+    }
+}
+
+/**
+ * API endpoint when selecting pet information
+ * getPet method that retrieves pet record from database.php
+ */ 
+elseif ($action === 'get_pet') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $pet = [
+            'id' => $id
+        ];
+
+        if ($pet_record = $database->getPet($pet)) {
+            return_json(['get_pet' => $pet_record]);
+        }
+    }
+}
+
 return_json(['status' => 0]);
 
 /**

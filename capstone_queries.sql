@@ -124,3 +124,17 @@ VALUES
 ('Horace','Blanchard','abortivevanilla',md5('abortivevanilla_2023'),'74 Hodgson St','VIC','abortivevanilla@pawsome.com.au',508469679,3930,1,SYSDATE()),
 ('Brent','Davenport','grubbybolognase',md5('grubbybolognase_2023'),'90 McKillop Street','VIC','grubbybolognase@pawsome.com.au',344679468,3810,1,SYSDATE());
 commit;
+
+DROP TABLE IF EXISTS `pet_information`;
+CREATE TABLE IF NOT EXISTS `pet_information` (
+  `id` int(11) COMMENT "Unique key of this table" NOT NULL AUTO_INCREMENT,
+  `petname` varchar(50) COMMENT "Name of pet" NOT NULL,
+  `species` varchar(50) COMMENT "Species of pet" NOT NULL,
+  `breed` varchar(50) COMMENT "Breed of pet" NOT NULL,
+  `birthdate` datetime COMMENT "Birthdate of pet" NOT NULL,
+  `weight` int(4) COMMENT "Weight of pet" NOT NULL,
+  `comments` varchar(1000) COMMENT "Other comments for pet information like colour, behaviour, allergies",
+  `update_date` datetime COMMENT "Update date of record" NOT NULL,
+  PRIMARY KEY (`id`)
+);
+commit;
