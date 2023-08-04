@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import dayjs from 'dayjs';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,21 +9,32 @@ import TimeSlots from "./TimeSlots";
 
 export default function BookingOptions(props) {
     const {selectedBooking} = props;
-    const [date, setDate] = useState( dayjs(new Date()));
+    const [date, setDate] = useState(dayjs(new Date()));
     const [selectedSlots, setSelectedSlots] = useState(new Set());
 
-    const displayDate = dayjs(date).format('DD-MM-YYYY');
-
+    const bookingsInSystem = [
+        {
+            Date: "04-08-2023",
+            TimeSlots: ['12:00', '15:30'],
+        }, {
+            Date: "06-08-2023",
+            TimeSlots: ['10:30', '11:30'],
+        }
+    ]
 
     const saveDate = () => {
+        const slots = Array.from(selectedSlots);
+        slots.map(obj => obj.value);
+
         const combinedBooking = {
-            selectedDate: displayDate,
-            selectedTimeSlots: selectedSlots,
+            Date: dayjs(date).format('DD-MM-YYYY'),
+            TimeSlots: slots,
         };
 
-        // Call the parent's selectedBooking handler
+        // Send booking Date and Slots to Main Booking component
         selectedBooking(combinedBooking);
     };
+
 
 
     return (

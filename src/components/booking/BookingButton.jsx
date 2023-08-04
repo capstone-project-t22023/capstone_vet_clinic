@@ -8,9 +8,9 @@ import BookingOptions from './BookingOptions'
 function SimpleDialog(props) {
     const { open, onClose } = props;
 
-    const handleClose = () => {
-        // onClose(selectedValue);
-    };
+    // const handleClose = () => {
+    //     // onClose(selectedValue);
+    // };
 
     const handleSelectedDate = (booking) => {
         onClose(booking);
@@ -18,7 +18,7 @@ function SimpleDialog(props) {
 
 
     return (
-        <Dialog onClose={handleClose} open={open}>
+        <Dialog open={open}>
             <DialogTitle>Choose the Date of appointment:</DialogTitle>
             <BookingOptions selectedBooking={handleSelectedDate} />
         </Dialog>
@@ -42,13 +42,12 @@ export default function SimpleDialogDemo() {
     return (
         <div>
             <Typography variant="subtitle1" component="div">
-                {/*Selected: {selectedValue? selectedValue.selectedDate : "Please select a Date" }*/}
-                Selected Date: {selectedValue? selectedValue.selectedDate : "Please select a Date" }
-                Selected Slots: {selectedValue? selectedValue.selectedTimeSlots : "Please select a Date" }
+                <p>Selected Date: {selectedValue? selectedValue.Date : "Please select a Date" }</p>
+                <p>Selected Slots: {selectedValue? selectedValue.TimeSlots : "Nothing selected" }</p>
             </Typography>
             <br />
             <Button variant="contained" onClick={handleClickOpen}>
-                Open dialog with calendar in
+                Select the booking
             </Button>
             <SimpleDialog open={open} onClose={handleClose} />
         </div>
