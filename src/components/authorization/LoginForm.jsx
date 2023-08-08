@@ -7,7 +7,7 @@ import {Link, Navigate} from "react-router-dom";
 import ProgramContext from '../../ProgramContext';
 
 
-export default function Login() {
+export default function LoginForm() {
 
     const [errorUsername, setErrorUsername] = useState(false);
     const [errorUsernameMessage, setErrorUsernameMessage] = useState("");
@@ -287,11 +287,11 @@ export default function Login() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
                     <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Log in
                 </Typography>
                 <Box component="form" noValidate sx={{mt: 1}}>
                     <TextField
@@ -330,9 +330,6 @@ export default function Login() {
                         }}
                         error={errorPassword}
                         type={showPassword ? 'text' : 'password'}
-
-
-
                         margin="normal"
                         required
                         fullWidth

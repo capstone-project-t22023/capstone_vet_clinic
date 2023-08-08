@@ -1,13 +1,10 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import Typography from '@mui/material/Typography';
+import {Box, Button, DialogTitle, Dialog, Typography} from "@mui/material";
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import BookingOptions from './BookingOptions'
-import {Box} from "@mui/material";
 
-function SimpleDialog(props) {
-    const {open, onClose, selectedBooking} = props;
+function BookingDialog(props) {
+    const {open, onClose, onCancel, selectedBooking} = props;
 
     const handleSelectedDate = (booking) => {
         onClose(booking);
@@ -16,18 +13,22 @@ function SimpleDialog(props) {
     const handleClose = () => {
         onClose(false);
     }
+    const handleCancel = () => {
+      onCancel(false)
+    }
 
 
     return (
-        <Dialog open={open} onClose={handleClose} >
-            <DialogTitle sx={{ m: 0, p: 2 }}>Choose the Date of appointment:</DialogTitle>
-            <BookingOptions selectedBooking={selectedBooking} onClose={handleClose}  sendSelectedBooking={handleSelectedDate}/>
+        <Dialog open={open} onClose={handleClose} maxWidth={"md"}>
+            <DialogTitle sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>{selectedBooking ? "Already selected:" : "Choose the Date of appointment"}</DialogTitle>
+            {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.Date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.TimeSlots +"" }</p> : null}
+            <BookingOptions onCancel={handleCancel} sendSelectedBooking={handleSelectedDate}/>
         </Dialog>
     );
 }
 
 
-export default function SimpleDialogDemo() {
+export default function BookingButton({booking}) {
     const [open, setOpen] = React.useState(false);
     const [selectedBooking, setSelectedBooking] = React.useState();
 
@@ -38,7 +39,12 @@ export default function SimpleDialogDemo() {
     const handleClose = (value) => {
         setOpen(false);
         setSelectedBooking(value);
+        booking(value)
     };
+
+    const handleCancel = (value) => {
+      setOpen(value)
+    }
 
     const handleRemoveBooking = () => {
       setSelectedBooking(null);
@@ -61,10 +67,10 @@ export default function SimpleDialogDemo() {
                 </Box>
             ) : (
                 <Button variant="contained" onClick={handleClickOpen}>
-                    Select the booking
+                    Make a new booking
                 </Button>
             )}
-            <SimpleDialog open={open} onClose={handleClose} selectedBooking={selectedBooking}/>
+            <BookingDialog open={open} onClose={handleClose} onCancel={handleCancel} selectedBooking={selectedBooking}/>
         </div>
     );
 }

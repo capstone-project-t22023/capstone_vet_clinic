@@ -3,7 +3,7 @@ import {Chip, Box} from '@mui/material';
 import dayjs from "dayjs";
 
 export default function TimeSlots(props) {
-    const {chosenDate, selectedSlots, onChange, whenBusyData, selectedBooking} = props; // Destructure the selectedSlots and setSelectedSlots props
+    const {chosenDate, selectedSlots, onChange, whenBusyData} = props; // Destructure the selectedSlots and setSelectedSlots props
 
     const [timeSlots, setTimeSlots] = useState(generateTimeSlots())
 
@@ -32,7 +32,6 @@ export default function TimeSlots(props) {
 
         slot.free = !slot.free;
         onChange(slot)
-console.log("slots and booking and slot:", selectedSlots, selectedBooking,slot);
     }
 
 
@@ -44,25 +43,10 @@ console.log("slots and booking and slot:", selectedSlots, selectedBooking,slot);
 
     const isSelected = (slot) => {
 
-        // return (
-        //     (!slotIsBusy(slot) && selectedSlots && selectedSlots.includes(slot.time)) ||
-        //     (selectedBooking && selectedBooking.Date === dayjs(chosenDate).format('DD-MM-YYYY') && selectedBooking.TimeSlots.includes(slot.time))
-        // );
+        return (
+            (!slotIsBusy(slot) && selectedSlots && selectedSlots.includes(slot.time))
+        );
 
-            if((!slotIsBusy(slot) && selectedSlots && selectedSlots.includes(slot.time)) ||
-            (selectedBooking && selectedBooking.Date === dayjs(chosenDate).format('DD-MM-YYYY') && selectedBooking.TimeSlots.includes(slot.time))){
-
-                return true;
-            }else{
-                slot.free = !slot.free;
-                return false
-            }
-
-
-    }
-
-    const handleDelete = (slot) => {
-        onChange(slot)
     }
 
 
@@ -73,17 +57,17 @@ console.log("slots and booking and slot:", selectedSlots, selectedBooking,slot);
                 sx={{
                     display: 'grid',
                     gap: 1,
-                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    pt:3
                 }}
             >
-
             {
                 timeSlots.map((slot, index) => (
 
                     <Chip
                         key={index}
                         label={slotIsBusy(slot) ? "Taken" : slot.time}
-                        color={isSelected(slot) ? "primary" : (slotIsBusy(slot)? "error" : "primary")}
+                        color={isSelected(slot) ? "secondary" : (slotIsBusy(slot)? "secondary" : "primary")}
                         variant={isSelected(slot) ? "" : (slotIsBusy(slot)? "" : "outlined")}
                         onDelete={isSelected(slot) ? () => changeSlotCheck(slot) : null}
                         onClick={!slotIsBusy(slot) ? (e) => changeSlotCheck(slot) : null}

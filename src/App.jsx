@@ -2,23 +2,28 @@
 import React, {useEffect, useState} from 'react';
 import {HelmetProvider} from 'react-helmet-async';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import ProgramContext from './ProgramContext';
 
-//Theme imports
+//Theme import
 import {ThemeProvider,CssBaseline} from "@mui/material";
 import theme from "./theme";
 
-//Local file imports
+//Pages import
+import DefaultPage from './pages/DefaultPage';
+import Home from './pages/Home';
+import Bookings from './pages/Bookings';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Dashboard from "./pages/Dashboard";
+//Components import
 import Protected from './components/Protected';
-import Home from './components/Home';
-import DefaultPage from './components/DefaultPage';
 import Logout from './components/authorization/Logout';
-import Login from './components/authorization/Login';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
 import Signup from './components/authorization/Signup';
 
 
-import ProgramContext from './ProgramContext';
+
 
 /**
  *
@@ -96,19 +101,12 @@ function App() {
                         <CssBaseline />
                         <BrowserRouter>
                             <Routes>
+                                <Route index element={ <Home/> }/>
                                 <Route
-                                    path="/"
+                                    path="/dashboard"
                                     element={
                                         <Protected isLoggedIn={authenticated}>
-                                            <Home/>
-                                        </Protected>
-                                    }
-                                />
-                                <Route
-                                    path="/home"
-                                    element={
-                                        <Protected isLoggedIn={authenticated}>
-                                            <Home/>
+                                            <Dashboard/>
                                         </Protected>
                                     }
                                 />
@@ -117,6 +115,18 @@ function App() {
                                 <Route path="/login" element={<Login/>}/>
                                 <Route path="/signup" element={<Signup/>}/>
                                 <Route path="/confirm" element={<ConfirmSignup/>}/>
+
+                                {/*USER PET OWNER LINKS*/}
+                                <Route path="/bookings" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <Bookings/>
+                                    </Protected>
+                                }/>
+                                <Route path="/profile" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <Profile/>
+                                    </Protected>
+                                }/>
 
                                 <Route path="/trialform"
                                        element={
