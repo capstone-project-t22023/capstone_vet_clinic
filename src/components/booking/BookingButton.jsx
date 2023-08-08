@@ -21,6 +21,7 @@ function BookingDialog(props) {
     return (
         <Dialog open={open} onClose={handleClose} maxWidth={"md"}>
             <DialogTitle sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>{selectedBooking ? "Already selected:" : "Choose the Date of appointment"}</DialogTitle>
+            <Typography component="p" variant="p" sx={{color: "error.main", my: 1, textAlign: "center"}}>This dates do have a bookings: 02-08-2023 & 04-08-23</Typography>
             {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.Date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.TimeSlots +"" }</p> : null}
             <BookingOptions onCancel={handleCancel} sendSelectedBooking={handleSelectedDate}/>
         </Dialog>

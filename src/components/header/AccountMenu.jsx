@@ -32,15 +32,15 @@ export default function AccountMenu({toLogout, user}) {
         navigate('/login');
     }
 
-    const handleSettings = () => {
-        navigate('/profile')
+    const handleNavigate = (link) => {
+        navigate(link)
     }
-
 
     return (
         <React.Fragment>
             {/*{ toLogout ? <Navigate to="/logout" replace={true} /> : null}*/}
             <Box sx={{flexGrow: 1, alignItems: 'center', textAlign: 'center', display: {xs: 'none', md: 'flex'}}}>
+                {(user && Object.keys(user).length > 0) ? (
                 <Tooltip title="Account settings">
                     <IconButton
                         onClick={handleClick}
@@ -56,6 +56,14 @@ export default function AccountMenu({toLogout, user}) {
                         }}>{user && user.firstname ? user.firstname.charAt(0) : "NO USER"}</Avatar>
                     </IconButton>
                 </Tooltip>
+                    ):(
+                        <div>
+                            {/*<Button sx={{color: "grey.50"}} onClick={() => handleNavigate("/login")} >LOG IN</Button>*/}
+                            {/*<Button sx={{color: "grey.50"}} onClick={() => handleNavigate("/signup")} >Sign up</Button>*/}
+                            <Button color={"secondary"} variant="contained" size={"small"} sx={{mx: 1}} onClick={() => handleNavigate("/login")} >LOG IN</Button>
+                            <Button color={"secondary"} variant="outlined" size={"small"} sx={{mx: 1}} onClick={() => handleNavigate("/signup")} >Sign up</Button>
+                        </div>
+                    )}
             </Box>
             <Menu
                 anchorEl={anchorEl}
@@ -84,7 +92,7 @@ export default function AccountMenu({toLogout, user}) {
                             right: 14,
                             width: 10,
                             height: 10,
-                            bgcolor: 'background.paper',
+                            bgColor: 'background.paper',
                             transform: 'translateY(-50%) rotate(45deg)',
                             zIndex: 0,
                         },
@@ -103,7 +111,7 @@ export default function AccountMenu({toLogout, user}) {
                 }}>{user.firstname} {user.lastname}</Typography>
                 </Box>
                 <Divider/>
-                <MenuItem onClick={handleSettings}>
+                <MenuItem onClick={() => handleNavigate("/profile")}>
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>

@@ -15,12 +15,12 @@ import Bookings from './pages/Bookings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard";
+import Signup from './pages/Signup';
 //Components import
 import Protected from './components/Protected';
 import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
-import Signup from './components/authorization/Signup';
 
 
 
