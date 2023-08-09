@@ -1,22 +1,17 @@
-import React from "react";
-import {Link, useNavigate} from "react-router-dom"
-import { Button } from "@mui/material"
+import React, {useState} from "react";
+import { Button, Stack, Typography } from "@mui/material"
 
 
 export default function MainMenu() {
 
-    const navigate = useNavigate();
-    const handleClick = (navigation) => {
-        navigate(navigation);
-    }
-
     return(
-        <React.Fragment>
-            <Button color={"secondary"} onClick={() => handleClick("/bookings")}>Bookings</Button>
-            <Button color={"secondary"} onClick={() => handleClick("/profile")}>Update Profile</Button>
-            <Button color={"secondary"}onClick={() => handleClick("#")}>Manage Pets</Button>
-            <Button color={"secondary"} onClick={() => handleClick("#")}>Open Pet's medical records</Button>
-        </React.Fragment>
+        <>
+
+                <Typography component="a" href={"/bookings"}><Button color={"secondary"} variant="contained" size={"small"}>Bookings</Button></Typography>
+                <Typography component="a" href={"/profile"}><Button color={"secondary"} variant="contained" size={"small"}>Update Profile</Button></Typography>
+                <Typography component="a" href={"#"}><Button color={"secondary"} variant="outlined" size={"small"}>Manage Pets</Button></Typography>
+                <Typography component="a" href={"#"}><Button color={"secondary"} variant="outlined" size={"small"}>Open Pet's medical records</Button></Typography>
+        </>
     )
 
 }

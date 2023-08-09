@@ -24,7 +24,7 @@ export default function Logo() {
                     color: 'inherit',
                     textDecoration: 'none',
                     display: {
-                        xs: 'none', md: 'block', fontFamily: 'monospace',
+                        xs: 'none', sm: 'block', fontFamily: 'monospace',
                         fontWeight: 700,
                         letterSpacing: '.3rem',
                     },
