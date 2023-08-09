@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Button, InputAdornment, TextField, IconButton } from '@mui/material';
+import React, {useState, useEffect, useContext} from 'react';
+import {Button, InputAdornment, TextField, IconButton, Box, Avatar, Typography, Checkbox, Grid, FormControlLabel} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link, Navigate } from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import ProgramContext from '../../ProgramContext';
 
 
-export default function Login() {
+export default function LoginForm() {
 
     const [errorUsername, setErrorUsername] = useState(false);
     const [errorUsernameMessage, setErrorUsernameMessage] = useState("");
@@ -77,15 +78,15 @@ export default function Login() {
             setErrorAlert(true);
             setErrorUsernameMessage("Username is required");
             setErrorPasswordMessage("Please check errors");
-        } 
-        
+        }
+
         if (!password) {
             setErrorPassword(true);
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             setErrorAlertMessage("Please check errors");
-        }  
-        
+        }
+
         if (!record) {
             setErrorUsername(true);
             setErrorAlert(true);
@@ -103,22 +104,22 @@ export default function Login() {
                     if (data.credentials) {
                         sessionStorage.setItem('token', data.credentials);
                         sessionStorage.setItem('authenticated', true);
-                            fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
-                              headers: {
-                                  Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                              },
-                              })
+                        fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
+                            headers: {
+                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                            },
+                        })
                             .then((response) => {
-                                    return response.json();
+                                return response.json();
                             })
                             .then(data => {
-                              if(data.user){
-                                let tmp = data.user;
-                                tmp.role = 'admin';
-                                setUser(tmp);
-                                setAuthenticated(true);
-                                sessionStorage.setItem('user',JSON.stringify(tmp));
-                              }
+                                if (data.user) {
+                                    let tmp = data.user;
+                                    tmp.role = 'admin';
+                                    setUser(tmp);
+                                    setAuthenticated(true);
+                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                }
                             })
                             .catch(error => {
                                 console.error(error);
@@ -146,15 +147,15 @@ export default function Login() {
             setErrorAlert(true);
             setErrorUsernameMessage("Username is required");
             setErrorPasswordMessage("Please check errors");
-        } 
-        
+        }
+
         if (!password) {
             setErrorPassword(true);
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             setErrorAlertMessage("Please check errors");
-        }  
-        
+        }
+
         if (!record) {
             setErrorUsername(true);
             setErrorAlert(true);
@@ -173,21 +174,21 @@ export default function Login() {
                         sessionStorage.setItem('token', data.credentials);
                         sessionStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
-                              headers: {
-                                  Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                              },
-                              })
+                            headers: {
+                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                            },
+                        })
                             .then((response) => {
-                                    return response.json();
+                                return response.json();
                             })
                             .then(data => {
-                              if(data.user){
-                                let tmp = data.user;
-                                tmp.role = 'doctor';
-                                setUser(tmp);
-                                setAuthenticated(true);
-                                sessionStorage.setItem('user',JSON.stringify(tmp));
-                              }
+                                if (data.user) {
+                                    let tmp = data.user;
+                                    tmp.role = 'doctor';
+                                    setUser(tmp);
+                                    setAuthenticated(true);
+                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                }
                             })
                             .catch(error => {
                                 console.error(error);
@@ -215,15 +216,15 @@ export default function Login() {
             setErrorAlert(true);
             setErrorUsernameMessage("Username is required");
             setErrorPasswordMessage("Please check errors");
-        } 
-        
+        }
+
         if (!password) {
             setErrorPassword(true);
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             setErrorAlertMessage("Please check errors");
-        }  
-        
+        }
+
         if (!record) {
             setErrorUsername(true);
             setErrorAlert(true);
@@ -242,21 +243,21 @@ export default function Login() {
                         sessionStorage.setItem('token', data.credentials);
                         sessionStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
-                              headers: {
-                                  Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                              },
-                              })
+                            headers: {
+                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                            },
+                        })
                             .then((response) => {
-                                    return response.json();
+                                return response.json();
                             })
                             .then(data => {
-                              if(data.user){
-                                let tmp = data.user;
-                                tmp.role = 'pet_owner';
-                                setUser(tmp);
-                                setAuthenticated(true);
-                                sessionStorage.setItem('user',JSON.stringify(tmp));
-                              }
+                                if (data.user) {
+                                    let tmp = data.user;
+                                    tmp.role = 'pet_owner';
+                                    setUser(tmp);
+                                    setAuthenticated(true);
+                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                }
                             })
                             .catch(error => {
                                 console.error(error);
@@ -275,54 +276,93 @@ export default function Login() {
     }
 
     return (
-        <div>{ toHome ?
-            <Navigate to="/" replace={true} /> :
-            <div>
-            <TextField
-                sx={{ m: 1, width: '35ch' }}
-                id="username"
-                error={errorUsername}
-                value={username}
-                onChange={handleChange}
-                label="Username"
-                helperText={errorUsername ? errorUsernameMessage : ""}
-                variant="filled"
-            />
-            <br /><br />
-            <TextField
-                id="password"
-                label="Password"
-                sx={{ width: '35ch' }}
-                helperText={errorPassword ? errorPasswordMessage : ""}
-                onChange={handleChange}
-                size="small"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                            >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                        </InputAdornment>
-                    )
-                }}
-                variant="filled"
-                error={errorPassword}
-                type={showPassword ? 'text' : 'password'}
-            />
-            <br/>
-            <Button size="small" variant='outlined' onClick={handleLoginDoctor}>Login as Doctor</Button><br/>
-            <Button size="small" variant='outlined' onClick={handleLoginAdmin}>Login as Admin</Button><br/>
-            <Button size="small" variant='outlined' onClick={handleLoginPetOwner}>Login as Pet Owner</Button><br/>
+        <div>{toHome ?
+            <Navigate to="/" replace={true}/> :
 
-            <Link to="/signup">
-                <Button size="small" variant='outlined'>Signup</Button>
-            </Link>
-            
-        </div> 
-        }</div>
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Log in
+                </Typography>
+                <Box component="form" noValidate sx={{mt: 1}}>
+                    <TextField
+                        id="username"
+                        error={errorUsername}
+                        value={username}
+                        onChange={handleChange}
+                        label="Username"
+                        helperText={errorUsername ? errorUsernameMessage : ""}
+
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="username"
+                        autoComplete="email"
+                        autoFocus
+
+                    />
+                    <TextField
+                        id="password"
+                        label="Password"
+                        helperText={errorPassword ? errorPasswordMessage : ""}
+                        onChange={handleChange}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
+                        error={errorPassword}
+                        type={showPassword ? 'text' : 'password'}
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        autoComplete="current-password"
+                    />
+                    <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            my: 2
+                        }}>
+                        <Button type="submit" onClick={handleLoginAdmin} fullWidth variant="contained">as Admin</Button>
+                        <Button type="submit" onClick={handleLoginDoctor} fullWidth variant="contained" sx={{px: 3, mx: 1}}>as Doctor</Button>
+                        <Button type="submit" onClick={handleLoginPetOwner} fullWidth variant="contained">as Customer</Button>
+                    </Box>
+
+                    <Grid container>
+                        <Grid item xs>
+                            <Link variant="body2">
+                                //Forgot password?
+                            </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link to="/signup" variant="body2">
+                                "Don't have an account? Sign Up"
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Box>
+        }
+
+        </div>
     )
 }
