@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Box, Grid, Card, CardActions, CardContent, Button, InputAdornment, TextField, IconButton, MenuItem, Radio, Avatar, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import {
+    Alert,
+    Box,
+    CardContent,
+    Button,
+    InputAdornment,
+    TextField,
+    IconButton,
+    MenuItem,
+    Radio,
+    Avatar,
+    Typography,
+    FormControlLabel,
+    styled
+} from '@mui/material';
 import { Navigate, Link } from "react-router-dom";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
@@ -341,8 +355,30 @@ export default function SignupForm() {
         }
     };
 
+
+
+    const FormInputs = styled(Box)({
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 2,
+        justifyContent: 'center',
+        // gridTemplateColumns: 'repeat(2, 1fr)',
+        // columnGap: 2,
+        // rowGap: 0,
+        '& .MuiFormControl-root': {
+            width: "90%",
+            maxWidth: "350px",
+            margin: ".5rem",
+        },
+    })
+
+    // const Search = styled("div")(({theme})=> ({
+    //     backgroundColor: "white",
+    //     width: '40%',
+    // }))
+
   return (
-    <div>
+    <>
 
         { canLogin ?
             <CardContent>
@@ -361,7 +397,7 @@ export default function SignupForm() {
                 </Typography>
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <FormControlLabel value="doctor" label="DOCTOR" control={
+                    <FormControlLabel value="doctor" label="Doctor" control={
                         <Radio
                             checked={selectedPrivilege === 'doctor'}
                             onChange={handleSelectedPrivilege}
@@ -390,7 +426,7 @@ export default function SignupForm() {
                     }/>
                 </Box>
 
-                <Box component="form" noValidate sx={{mt: 1, mb:1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', columnGap: 2, rowGap: 0 }}>
+                <FormInputs component="form" noValidate>
                     <TextField
                         id="fname"
                         label="FirstName"
@@ -401,7 +437,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <BadgeIcon />
+                                    <BadgeIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -420,7 +456,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <BadgeIcon />
+                                    <BadgeIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -438,7 +474,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PhoneIcon />
+                                    <PhoneIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -456,7 +492,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <EmailIcon />
+                                    <EmailIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -475,7 +511,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <HomeIcon />
+                                    <HomeIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -495,7 +531,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PlaceIcon />
+                                    <PlaceIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -519,7 +555,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PlaceIcon />
+                                    <PlaceIcon color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -538,7 +574,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <AccountCircle />
+                                    <AccountCircle color="primary" />
                                 </InputAdornment>
                             ),
                         }}
@@ -557,7 +593,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PasswordIcon />
+                                    <PasswordIcon color="primary" />
                                 </InputAdornment>
                             ),
                             endAdornment:(
@@ -587,7 +623,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PasswordIcon />
+                                    <PasswordIcon color="primary" />
                                 </InputAdornment>
                             ),
                             endAdornment:(
@@ -606,14 +642,14 @@ export default function SignupForm() {
                         fullWidth
                         margin="normal"
                     />
-                </Box>
+                </FormInputs>
                 { errorAlert ?
                     <Box sx={{ mt:2, mb: 3 }}>
                         <Alert severity="error">{errorAlertMessage}</Alert>
                     </Box>
                         : ""
                 }
-                <Box sx={{ display: 'flex', gap:2, mt: 2 }}>
+                <Box sx={{ display: 'flex', gap:2, mt: 2, flexDirection: { xs: 'column', sm:'row'} }}>
                     <Link to="/">
                         <Button variant="outlined">Discard and Return to Home</Button>
                     </Link>
@@ -624,6 +660,6 @@ export default function SignupForm() {
             </Box>
         }
 
-    </div>
+    </>
   )
 }

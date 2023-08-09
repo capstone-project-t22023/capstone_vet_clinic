@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Box, Button, DialogTitle, Dialog, Typography} from "@mui/material";
-import AlarmOnIcon from '@mui/icons-material/AlarmOn';
+import {AlternateEmail} from '@mui/icons-material';
 import BookingOptions from './BookingOptions'
 
 function BookingDialog(props) {
@@ -20,10 +20,10 @@ function BookingDialog(props) {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth={"md"}>
-            <DialogTitle sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>{selectedBooking ? "Already selected:" : "Choose the Date of appointment"}</DialogTitle>
-            <Typography component="p" variant="p" sx={{color: "error.main", my: 1, textAlign: "center"}}>This dates do have a bookings: 02-08-2023 & 04-08-23</Typography>
-            {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.Date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.TimeSlots +"" }</p> : null}
+            <DialogTitle sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold', color: "primary.main" }}>{selectedBooking ? "Chosen Appointment:" : "Choose the Date of appointment"}</DialogTitle>
+            {selectedBooking && <Typography component="p" sx={{ backgroundColor:"secondary.main", color: "secondary.contrastText", py: 1, textAlign: "center"}}>{selectedBooking.Date } <AlternateEmail fontSize="small" color="primary" /> { selectedBooking.TimeSlots +"" }</Typography> }
             <BookingOptions onCancel={handleCancel} sendSelectedBooking={handleSelectedDate}/>
+            <Typography component="p" sx={{backgroundColor:"grey.200", color: "grey.500", py: 1, textAlign: "center"}}>note: This dates (02-08-2023 & 04-08-23) do have a bookings...</Typography>
         </Dialog>
     );
 }

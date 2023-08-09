@@ -55,10 +55,11 @@ export default function TimeSlots(props) {
         <div>
             <Box
                 sx={{
-                    display: 'grid',
-                    gap: 1,
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    pt:3
+                    display: "flex",
+                    flexWrap: 'wrap',
+                    justifyContent: {xs: 'center', sm: 'flex-start'},
+                    alignItems: 'space-around',
+                    px: 2,
                 }}
             >
             {

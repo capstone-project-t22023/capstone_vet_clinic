@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DateCalendar} from '@mui/x-date-pickers/DateCalendar';
-import { Stack, Box, Grid, Button, Paper} from '@mui/material';
+import { Stack,  Box, Grid, Button, Paper} from '@mui/material';
 import TimeSlots from "./TimeSlots";
 import * as React from "react";
 
@@ -57,37 +57,31 @@ export default function BookingOptions(props) {
 
 
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                gap: 1,
-                p: 3
-            }}
-        >
+        <>
 
-            <Box
-                sx={{
-                    display: 'grid',
-                    gap: 1,
-                    gridTemplateColumns: '1fr 1fr',
-                }}
+            <Stack
+                direction={{xs: "column", sm: "row"}}
+                justifyContent="space-evenly"
+                sx={{ maxWidth: "730px"}}
             >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar value={date} onChange={changeDateHandler}/>
-                </LocalizationProvider>
-                <Box sx={{alignItems: 'center', border: '1px solid default'}}>
+                <Box sx={{ display: "flex", justifyContent: "center", width: "100%"}}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateCalendar value={date} onChange={changeDateHandler}/>
+                    </LocalizationProvider>
+                </Box>
+                <Box sx={{display: "flex", alignItems: 'center', justifyContent: 'center', width: "100%"}}>
                     <TimeSlots chosenDate={date} selectedSlots={selectedSlots} whenBusyData={whenBusyData}
                                onChange={slotsHandler} />
                 </Box>
-            </Box>
+            </Stack>
 
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: 'row',
-                    gap: 1,
-                    m: 'auto',
-                    width: 'fit-content',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    gap: 2,
+                    p:3
                 }}
             >
                 <Button
@@ -105,6 +99,6 @@ export default function BookingOptions(props) {
                     {selectedSlots.length>0 ? "Save Bookings" : "Select Time"}
                 </Button>
             </Box>
-        </Box>
+        </>
     );
 }

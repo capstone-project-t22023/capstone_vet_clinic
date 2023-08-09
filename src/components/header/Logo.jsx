@@ -1,27 +1,36 @@
 import React from "react";
-import AdbIcon from '@mui/icons-material/Adb';
-import { Typography } from '@mui/material';
+import {Typography, Stack} from '@mui/material';
+import {Pets} from "@mui/icons-material";
+
 export default function Logo() {
     return (
-        <React.Fragment>
-            <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
+        <Stack direction="row" alignItems="center" spacing={2}
+               sx={{
+                   '&:hover': {
+                       color: 'secondary.main',
+                       '& .MuiSvgIcon-root': {
+                           color: 'secondary.100'
+                       }
+                   }
+               }}
+        >
+            <Pets/>
             <Typography
                 variant="h6"
                 noWrap
                 component="a"
                 href="/"
                 sx={{
-                    mr: 2,
-                    display: {xs: 'none', md: 'flex'},
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
                     color: 'inherit',
                     textDecoration: 'none',
-                }}
-            >
-                LOGO
+                    display: {
+                        xs: 'none', md: 'block', fontFamily: 'monospace',
+                        fontWeight: 700,
+                        letterSpacing: '.3rem',
+                    },
+                }}>
+                PawSome
             </Typography>
-        </React.Fragment>
+        </Stack>
     )
 }
