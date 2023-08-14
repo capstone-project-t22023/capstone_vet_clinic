@@ -13,15 +13,15 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const ausState = [
-    { value: '', label: '', shipping_fee: 0 },
-    { value: 'NSW', label: 'New South Wales', shipping_fee: 30 },
-    { value: 'QLD', label: 'Queensland', shipping_fee: 40 },
-    { value: 'NT', label: 'Northern Territories', shipping_fee: 50 },
-    { value: 'WA', label: 'Western Australia', shipping_fee: 50 },
-    { value: 'SA', label: 'South Australia', shipping_fee: 50 },
-    { value: 'TAS', label: 'Tasmania', shipping_fee: 50 },
-    { value: 'VIC', label: 'Victoria', shipping_fee: 40 },
-    { value: 'ACT', label: 'Australian Capital Territory', shipping_fee: 40 },
+    { value: '', label: ''},
+    { value: 'NSW', label: 'New South Wales'},
+    { value: 'QLD', label: 'Queensland'},
+    { value: 'NT', label: 'Northern Territories'},
+    { value: 'WA', label: 'Western Australia'},
+    { value: 'SA', label: 'South Australia'},
+    { value: 'TAS', label: 'Tasmania'},
+    { value: 'VIC', label: 'Victoria'},
+    { value: 'ACT', label: 'Australian Capital Territory'},
 ];
 
 export default function SignupForm() {
