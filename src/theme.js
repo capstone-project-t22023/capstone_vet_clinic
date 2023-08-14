@@ -1,6 +1,6 @@
 // import { createContext, useState, useMemo } from "react";
 import { createTheme } from '@mui/material/styles';
-import { deepPurple, lime, grey } from '@mui/material/colors';
+import { indigo, teal, grey } from '@mui/material/colors';
 
 const theme = createTheme({
     // palette: {
@@ -18,9 +18,13 @@ const theme = createTheme({
     //     },
     // },
     palette: {
-        primary: deepPurple,
-        secondary: lime,
+        mode: 'light',
+        primary: indigo,
+        secondary: teal,
         grey: grey,
+        background: {
+            default: '#f2f4f8',
+        },
     },
 });
 

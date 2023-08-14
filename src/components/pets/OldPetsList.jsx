@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {Box, Button, Stack, Typography, IconButton, Dialog, Paper} from "@mui/material";
-import {Delete as DeleteIcon, EditRounded} from '@mui/icons-material';
-import AddNewPet from "./AddNewPet";
+import {Box, Button, Stack, Typography, IconButton, Dialog, Paper, Collapse, List, ListItemButton} from "@mui/material";
+import {Delete as DeleteIcon, EditRounded, ExpandLessRounded as ExpandLess, ExpandMoreRounded as ExpandMore} from '@mui/icons-material';
+import OldAddNewPet from "./OldAddNewPet";
 
-export default function PetsList({showData, onDelete, onEdit, onAdd}) {
+export default function OldPetsList({showData, onDelete, onEdit, onAdd}) {
     const [expandedPetId, setExpandedPetId] = useState(null);
     const [showDialog, setShowDialog] = useState(false);
     const [petToEdit, setPetToEdit] = useState(false);
@@ -56,13 +56,22 @@ export default function PetsList({showData, onDelete, onEdit, onAdd}) {
 
     return (
         <>
-            <Stack direction={"row"}>
+            <Stack direction={"row"} flexWrap="wrap">
                 {showData.map(pet => (
-                    <Box key={pet.id} sx={{backgroundColor: "secondary.100", m: 3, p: 1}}>
-                        Pet Name:
+                    <Box key={pet.id} sx={{backgroundColor: "secondary.100", m: 3, p: 1, width: "304px"}}>
                         <Button onClick={() => toggleExpand(pet.id)}>
                             {pet.petname}
                         </Button>
+
+                        {/*{expandedPetId === pet.id ? <ExpandLess /> : <ExpandMore />}*/}
+                        {/*<Collapse in={toggleExpand} timeout="auto" unmountOnExit>*/}
+                        {/*    <List component="div" disablePadding>*/}
+                        {/*        <ListItemButton sx={{ pl: 4 }}>*/}
+                        {/*            INSIDE of Collapse component*/}
+                        {/*        </ListItemButton>*/}
+                        {/*    </List>*/}
+                        {/*</Collapse>*/}
+
                         {expandedPetId === pet.id && (
                             <Box sx={{p: 2}}>
                                 <Typography component="p" color="Primary"><Typography component="span"
@@ -165,7 +174,7 @@ export default function PetsList({showData, onDelete, onEdit, onAdd}) {
                                 Are you sure you want to edit this pet?
                             </Typography>
 
-                            <AddNewPet petToEdit={petToEdit}/>
+                            <OldAddNewPet petToEdit={petToEdit}/>
 
                             <Button variant="text" onClick={() => setShowDialog(false)}>
                                 Cancel
@@ -183,7 +192,7 @@ export default function PetsList({showData, onDelete, onEdit, onAdd}) {
                                 New Pet to add
                             </Typography>
 
-                            <AddNewPet onAddPet={handleAddPet}/>
+                            <OldAddNewPet onAddPet={handleAddPet}/>
 
                         </Paper>
                     </Dialog>

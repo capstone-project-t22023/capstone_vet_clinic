@@ -5,9 +5,12 @@ import ProgramContext from '../ProgramContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import UserCard from "../components/user/UserCard";
-import Pets from "../components/pets/Pets";
+import OldPets from "../components/pets/OldPets";
 
 export default function Home() {
+
+
+    console.log("How many times reload");
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
@@ -25,6 +28,10 @@ export default function Home() {
                     <Box>
                         <Typography component="h1" variant="h3">Homepage</Typography>
                         <Link to={"/login"}>Login</Link>
+                        <Link to="https://dribbble.com/shots/16824211-Pet-Care-Website">Homepage For a vet clinic</Link>
+                        <Link to="https://dribbble.com/shots/17897237-Wet-Noses-Dashboard">Dashboard of vet clinic</Link>
+                        <Link to="https://dribbble.com/shots/14964970-Veterinary-Clinic-Dashboard">Dashboard of vet clinic - Better </Link>
+                        <Link to="https://dribbble.com/shots/14095613-The-veterinary-clinic-dashdoard">I like the bottom arrows on components to  </Link>
                     </Box>
                 ) : (
                     <>
@@ -54,7 +61,7 @@ export default function Home() {
                                 onClick={() => handleClick("/bookings")}>Bookings</Button>
                         <Button color={"secondary"} variant="contained" sx={{mx: 1}}
                                 onClick={() => handleClick("/profile")}>Update Profile</Button>
-                        <Pets/>
+                        <OldPets />
                     </div>
                 </>
 

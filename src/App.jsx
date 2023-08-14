@@ -40,6 +40,8 @@ function App() {
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
 
+    console.log("How many times reload the APP");
+
     useEffect(() => {
         Promise.all([
             fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {

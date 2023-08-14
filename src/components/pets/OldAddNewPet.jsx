@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Box, Button, Grid, TextField, InputAdornment} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
 
-export default function AddNewPet({petToEdit, onAddPet}) {
+export default function OldAddNewPet({petToEdit, onAddPet}) {
     const [petname, setPetname] = useState('');
     const [species, setSpecies] = useState('');
     const [breed, setBreed] = useState('');

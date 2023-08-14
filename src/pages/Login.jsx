@@ -1,13 +1,12 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Container} from '@mui/material';
-import ProgramContext from "../ProgramContext";
 import Header from "../components/Header"
 import Footer from "../components/Footer";
 import LoginForm from '../components/authorization/LoginForm'
 
 export default function Login() {
 
-    const {user, authenticated} = useContext(ProgramContext);
+    console.log("How many times reload");
 
 
     return (

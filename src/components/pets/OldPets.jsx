@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, Button, Stack, Typography, IconButton} from "@mui/material";
-import PetsList from "./PetsList";
+import OldPetsList from "./OldPetsList";
 
 
 ///// GENERATOR OF DUMMY PETS DATA
@@ -46,7 +46,7 @@ function generateRandomData(count) {
 }
 
 
-export default function Pets() {
+export default function OldPets() {
 
     const handleDeletePet = (object) => {
         console.log(`Pet with ID ${object.id} has to be deleted now.`, object);
@@ -66,7 +66,7 @@ export default function Pets() {
             <Box sx={{p: 3, m: 3, backgroundColor: "secondary.50"}}>
                 <h4>This is Pets Component</h4>
                 <Typography component="h4">All of your Pets</Typography>
-                <PetsList showData={petData} onDelete={handleDeletePet} onEdit={handleEditPet} onAdd={handleAddPet}/>
+                <OldPetsList showData={petData} onDelete={handleDeletePet} onEdit={handleEditPet} onAdd={handleAddPet}/>
             </Box>
     )
 }
