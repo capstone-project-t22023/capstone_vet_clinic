@@ -429,8 +429,16 @@ elseif ($action === 'delete_doctor') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
-        if ($doctor = $database->deleteDoctor($_POST['doctor_id'])) {
+        
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deleteDoctor($record)) {
             return_json(['delete_doctor' => "success"]);
+        } else {
+            return_json(['delete_doctor' => "error"]);
         }
     }
 } 
@@ -441,10 +449,15 @@ elseif ($action === 'delete_doctor') {
  */ 
 elseif ($action === 'delete_admin') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-        if ($admin = $database->deleteAdmin($_POST['admin_id'])) {
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deleteAdmin($record)) {
             return_json(['delete_admin' => "success"]);
+        } else {
+            return_json(['delete_admin' => "error"]);
         }
     }
 } 
@@ -457,89 +470,106 @@ elseif ($action === 'delete_pet_owner') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
-        if ($pet_owner = $database->deletePetOwner($_POST['pet_owner_id'])) {
+        
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deletePetOwner($record)) {
             return_json(['delete_pet_owner' => "success"]);
+        } else {
+            return_json(['delete_pet_owner' => "error"]);
         }
     }
 } 
 
 /**
- * API endpoint when updating doctors
- * updateDoctor method that updates doctor record from database.php
+ * API endpoint when adding user
+ * add<Role> method that adds user record from database.php
  */ 
-elseif ($action === 'update_doctor') {
+elseif ($action === 'add_user') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $doctor = [
-            'user_id' => $_POST['user_id'],
+        $user = [
+            'role' => $_POST['role'],
             'firstname' => $_POST['firstname'],
             'lastname' => $_POST['lastname'],
+            'username' => $_POST['username'],
+            'password' => md5($_POST['password']),
             'address' => $_POST['address'],
             'state' => $_POST['state'],
             'email' => $_POST['email'],
             'phone' => $_POST['phone'],
             'postcode' => $_POST['postcode'],
-            'archived' => $_POST['archived']
+            'created_by' => $_POST['created_by']
         ];
 
-        if ($database->updateDoctor($doctor)) {
-            return_json(['update_doctor' => "success"]);
+        if($_POST['role'] === 'pet_owner'){
+            if ($user_id = $database->addPetOwnerByAdmin($user)) {
+                return_json(['add_pet_owner' => $user_id]);
+            } else {
+                return_json(['add_pet_owner' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'doctor'){
+            if ($user_id = $database->addDoctorByAdmin($user)) {
+                return_json(['add_doctor' => $user_id]);
+            } else {
+                return_json(['add_doctor' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'admin'){
+            if ($user_id = $database->addAdminByAdmin($user)) {
+                return_json(['add_admin' => $user_id]);
+            } else {
+                return_json(['add_admin' => "error"]);
+            }
         }
     }
 } 
 
 /**
- * API endpoint when updating admins
- * updateAdmin method that updates doctor record from database.php
+ * API endpoint when updating user
+ * update<Role> method that updates user record from database.php
  */ 
-elseif ($action === 'update_admin') {
+elseif ($action === 'update_user') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $admin = [
-            'user_id' => $_POST['user_id'],
+        $user = [
+            'id' => $id,
+            'role' => $_POST['role'],
             'firstname' => $_POST['firstname'],
             'lastname' => $_POST['lastname'],
+            'password' => md5($_POST['password']),
             'address' => $_POST['address'],
             'state' => $_POST['state'],
             'email' => $_POST['email'],
             'phone' => $_POST['phone'],
             'postcode' => $_POST['postcode'],
-            'archived' => $_POST['archived']
+            'username' => $_POST['username'],
         ];
 
-        if ($database->updateAdmin($admin)) {
-            return_json(['update_admin' => "success"]);
-        }
-    }
-} 
-
-/**
- * API endpoint when updating pet_owner
- * updateAdmin method that updates doctor record from database.php
- */ 
-elseif ($action === 'update_pet_owner') {
-    if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $pet_owner = [
-            'user_id' => $_POST['user_id'],
-            'firstname' => $_POST['firstname'],
-            'lastname' => $_POST['lastname'],
-            'address' => $_POST['address'],
-            'state' => $_POST['state'],
-            'email' => $_POST['email'],
-            'phone' => $_POST['phone'],
-            'postcode' => $_POST['postcode'],
-            'archived' => $_POST['archived']
-        ];
-
-        if ($database->updatePetOwner($pet_owner)) {
-            return_json(['update_pet_owner' => "success"]);
+        if($_POST['role'] === 'pet_owner'){
+            if ($database->updatePetOwner($user)) {
+                return_json(['update_pet_owner' => "success"]);
+            } else {
+                return_json(['update_pet_owner' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'doctor'){
+            if ($database->updateDoctor($user)) {
+                return_json(['update_doctor' => "success"]);
+            } else {
+                return_json(['update_doctor' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'admin'){
+            if ($database->updateAdmin($user)) {
+                return_json(['update_admin' => "success"]);
+            } else {
+                return_json(['update_admin' => "error"]);
+            }
         }
     }
 } 

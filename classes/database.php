@@ -732,6 +732,480 @@ class Database
     }
 
     /**
+     * Insert data into the doctors table by admin
+     */
+    public function addDoctorByAdmin($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT 
+            INTO `pawsome`.`doctors` 
+            (`firstname`, 
+            `lastname`, 
+            `username`, 
+            `password`, 
+            `address`, 
+            `state`, 
+            `email`, 
+            `phone`, 
+            `postcode`, 
+            `archived`, 
+            `created_date`, 
+            `updated_date`,
+            `updated_by`) 
+            VALUES (?,?,?,?,?,?,?,?,?,0,SYSDATE(),SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            )'
+        );
+        $sql->bind_param(
+            'sssssssiis',
+            $record['firstname'],
+            $record['lastname'],
+            $record['username'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['created_by']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert data into the admins table by admin
+     */
+    public function addAdminByAdmin($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT 
+            INTO `pawsome`.`admins` 
+            (`firstname`, 
+            `lastname`, 
+            `username`, 
+            `password`, 
+            `address`, 
+            `state`, 
+            `email`, 
+            `phone`, 
+            `postcode`, 
+            `archived`, 
+            `created_date`, 
+            `updated_date`,
+            `updated_by`) 
+            VALUES (?,?,?,?,?,?,?,?,?,0,SYSDATE(),SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            )'
+        );
+        $sql->bind_param(
+            'sssssssiis',
+            $record['firstname'],
+            $record['lastname'],
+            $record['username'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['created_by']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert data into the pet_owners table by admin
+     */
+    public function addPetOwnerByAdmin($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT 
+            INTO `pawsome`.`pet_owners` 
+            (`firstname`, 
+            `lastname`, 
+            `username`, 
+            `password`, 
+            `address`, 
+            `state`, 
+            `email`, 
+            `phone`, 
+            `postcode`, 
+            `archived`, 
+            `created_date`, 
+            `updated_date`,
+            `updated_by`) 
+            VALUES (?,?,?,?,?,?,?,?,?,0,SYSDATE(),SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            )'
+        );
+        $sql->bind_param(
+            'sssssssiis',
+            $record['firstname'],
+            $record['lastname'],
+            $record['username'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['created_by']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete doctor info by id
+     * Returns true or false 
+     */
+    public function deleteDoctor($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare('CALL delete_doctor(?, ?)');
+        $sql->bind_param(
+            'is',
+            $record['id'], 
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete admin info by id
+     * Returns true or false 
+     */
+    public function deleteAdmin($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare('CALL delete_admin(?, ?)');
+        $sql->bind_param(
+            'is',
+            $record['id'], 
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete pet owner info by id
+     * Returns true or false 
+     */
+    public function deletePetOwner($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare('CALL delete_pet_owner(?, ?)');
+        $sql->bind_param(
+            'is',
+            $record['id'], 
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update doctor info by id
+     * Returns true or false 
+     */
+    public function updateDoctor($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`doctors`
+            SET
+            firstname = ?,
+            lastname = ?,
+            password = ?,
+            address = ?,
+            state = ?,
+            email = ?,
+            phone = ?,
+            postcode = ?,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'ssssssiisi', 
+            $record['firstname'],
+            $record['lastname'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update admin info by id
+     * Returns true or false 
+     */
+    public function updateAdmin($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`admins`
+            SET
+            firstname = ?,
+            lastname = ?,
+            password = ?,
+            address = ?,
+            state = ?,
+            email = ?,
+            phone = ?,
+            postcode = ?,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'ssssssiisi', 
+            $record['firstname'],
+            $record['lastname'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update pet owner info by id
+     * Returns true or false 
+     */
+    public function updatePetOwner($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_owners`
+            SET
+            firstname = ?,
+            lastname = ?,
+            password = ?,
+            address = ?,
+            state = ?,
+            email = ?,
+            phone = ?,
+            postcode = ?,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'ssssssiisi', 
+            $record['firstname'],
+            $record['lastname'],
+            $record['password'],
+            $record['address'],
+            $record['state'],
+            $record['email'],
+            $record['phone'],
+            $record['postcode'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves all records of pet owners
      * Returns pet_owners object array or false
      */
@@ -787,7 +1261,7 @@ class Database
             p.species,
             p.breed,
             p.birthdate,
-            p.weight,
+            ROUND(p.weight,2) weight,
             p.sex,
             p.microchip_no,
             p.insurance_membership,
@@ -842,7 +1316,7 @@ class Database
             p.species,
             p.breed,
             p.birthdate,
-            p.weight,
+            ROUND(p.weight,2) weight,
             p.sex,
             p.microchip_no,
             p.insurance_membership,
@@ -902,7 +1376,7 @@ class Database
             p.species,
             p.breed,
             p.birthdate,
-            p.weight,
+            ROUND(p.weight,2) weight,
             p.sex,
             p.microchip_no,
             p.insurance_membership,
@@ -962,7 +1436,7 @@ class Database
             p.species,
             p.breed,
             p.birthdate,
-            p.weight,
+            ROUND(p.weight,2) weight,
             p.sex,
             p.microchip_no,
             p.insurance_membership,
@@ -992,270 +1466,6 @@ class Database
             $sql->close();
             $this->connection->close();
             return $pets;
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Delete doctor info by id
-     * Returns true or false 
-     */
-    public function deleteDoctor($doctor_id)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql_tokens = $this->connection->prepare(
-            'DELETE FROM `doctor_account_tokens` WHERE `doctor_id`=?'
-        );
-        $sql_tokens->bind_param(
-            'i', $doctor_id
-        );
-
-        $sql = $this->connection->prepare(
-            'DELETE FROM `doctors` WHERE `id`=?'
-        );
-        $sql->bind_param(
-            'i', $doctor_id
-        );
-
-        if ($sql_tokens->execute()) {
-            if($sql->execute()){
-                $sql->close();
-                $sql_tokens->close();
-                $this->connection->close();
-                return true;
-            }
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Delete admin info by id
-     * Returns true or false 
-     */
-    public function deleteAdmin($admin_id)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql_tokens = $this->connection->prepare(
-            'DELETE FROM `admin_account_tokens` WHERE `admin_id`=?'
-        );
-        $sql_tokens->bind_param(
-            'i', $admin_id
-        );
-
-        $sql = $this->connection->prepare(
-            'DELETE FROM `admins` WHERE `id`=?'
-        );
-        $sql->bind_param(
-            'i', $admin_id
-        );
-
-        if ($sql_tokens->execute()) {
-            if($sql->execute()){
-                $sql->close();
-                $sql_tokens->close();
-                $this->connection->close();
-                return true;
-            }
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Delete pet owner info by id
-     * Returns true or false 
-     */
-    public function deletePetOwner($pet_owner_id)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql_tokens = $this->connection->prepare(
-            'DELETE FROM `pet_owners_account_tokens` WHERE `pet_owner_id`=?'
-        );
-        $sql_tokens->bind_param(
-            'i', $pet_owner_id
-        );
-
-        $sql = $this->connection->prepare(
-            'DELETE FROM `pet_owners` WHERE `id`=?'
-        );
-        $sql->bind_param(
-            'i', $pet_owner_id
-        );
-
-        if ($sql_tokens->execute()) {
-            if($sql->execute()){
-                $sql->close();
-                $sql_tokens->close();
-                $this->connection->close();
-                return true;
-            }
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Update doctor info by id
-     * Returns true or false 
-     */
-    public function updateDoctor($record)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare(
-            'UPDATE `doctors`
-            SET
-            firstname = ?,
-            lastname = ?,
-            address = ?,
-            state = ?,
-            email = ?,
-            phone = ?,
-            postcode = ?,
-            archived = ?
-            WHERE id = ?'
-        ); 
-        $sql->bind_param(
-            'sssssiiii', 
-            $record['firstname'],
-            $record['lastname'],
-            $record['address'],
-            $record['state'],
-            $record['email'],
-            $record['phone'],
-            $record['postcode'],
-            $record['archived'],
-            $record['doctor_id'],
-        );
-        if ($sql->execute()) {
-            $sql->close();
-            $this->connection->close();
-            return true;
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Update admin info by id
-     * Returns true or false 
-     */
-    public function updateAdmin($record)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare(
-            'UPDATE `admins`
-            SET
-            firstname = ?,
-            lastname = ?,
-            address = ?,
-            state = ?,
-            email = ?,
-            phone = ?,
-            postcode = ?,
-            archived = ?
-            WHERE id = ?'
-        ); 
-        $sql->bind_param(
-            'sssssiiii', 
-            $record['firstname'],
-            $record['lastname'],
-            $record['address'],
-            $record['state'],
-            $record['email'],
-            $record['phone'],
-            $record['postcode'],
-            $record['archived'],
-            $record['admin_id'],
-        );
-        if ($sql->execute()) {
-            $sql->close();
-            $this->connection->close();
-            return true;
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Update pet owner info by id
-     * Returns true or false 
-     */
-    public function updatePetOwner($record)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare(
-            'UPDATE `pet_owners`
-            SET
-            firstname = ?,
-            lastname = ?,
-            address = ?,
-            state = ?,
-            email = ?,
-            phone = ?,
-            postcode = ?,
-            archived = ?
-            WHERE id = ?'
-        ); 
-        $sql->bind_param(
-            'sssssiiii', 
-            $record['firstname'],
-            $record['lastname'],
-            $record['address'],
-            $record['state'],
-            $record['email'],
-            $record['phone'],
-            $record['postcode'],
-            $record['archived'],
-            $record['pet_owner_id'],
-        );
-        if ($sql->execute()) {
-            $sql->close();
-            $this->connection->close();
-            return true;
         }
         $sql->close();
         $this->connection->close();

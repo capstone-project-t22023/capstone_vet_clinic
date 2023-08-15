@@ -113,7 +113,7 @@ CREATE TABLE `pawsome`.`pets` (
   `species` varchar(50) NOT NULL COMMENT 'Species of pet',
   `breed` varchar(50) NOT NULL COMMENT 'Breed of pet',
   `birthdate` date NOT NULL COMMENT 'Birthdate of pet',
-  `weight` float(2) NOT NULL COMMENT 'Weight of pet',
+  `weight` decimal(10,2) NOT NULL COMMENT 'Weight of pet',
   `sex` varchar(10) NOT NULL COMMENT 'Sex of pet',
   `microchip_no` varchar(15) DEFAULT NULL COMMENT 'Microchip identifier of pet',
   `insurance_membership` varchar(10) DEFAULT NULL COMMENT 'Insurance owned under pet’s name',
@@ -324,6 +324,316 @@ BEGIN
     COMMIT;
              
     CLOSE booking_records;
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_pet_owner;
+DELIMITER //
+CREATE PROCEDURE delete_pet_owner(
+	IN pet_owner_id INT(10), 
+    IN username VARCHAR(20)
+)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE prev_status VARCHAR(15);
+    DECLARE new_status VARCHAR(15);
+    DECLARE b_status VARCHAR(15);
+    DECLARE b_id INT(10);
+    DECLARE p_id INT(10);
+    DECLARE pet_records CURSOR FOR 
+		SELECT DISTINCT 
+            p.id pet_id
+            FROM 
+            `pawsome`.`pets` p
+            WHERE 
+            p.archived = 0
+            AND p.pet_owner_id = pet_owner_id;
+    DECLARE booking_records CURSOR FOR 
+		SELECT DISTINCT 
+            b.id booking_id,
+            b.booking_status
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`pet_owners` p
+            WHERE 
+            b.pet_owner_id = p.id 
+            AND b.archived = 0
+            AND p.id = pet_owner_id;
+	DECLARE
+		CONTINUE HANDLER FOR NOT FOUND
+		SET done = TRUE;
+     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+			SELECT 'An error has occurred, operation rollbacked and the stored procedure was terminated';
+		END; 
+            
+    OPEN pet_records;        
+    OPEN booking_records;
+    
+    SET done = FALSE;
+    booking_loop: 
+    LOOP
+		FETCH booking_records INTO b_id, b_status;
+        IF done THEN LEAVE booking_loop;
+		END IF;
+        IF b_status = 'PENDING' || b_status = 'CONFIRMED' THEN
+			SET new_status = 'ARCHIVED';
+            SET prev_status = b_status;
+            
+            UPDATE `pawsome`.`bookings`
+            SET archived = 1,
+            booking_status = new_status,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            WHERE id = b_id;
+            
+            SET SQL_SAFE_UPDATES = 0;
+            DELETE FROM `pawsome`.`booking_slots` WHERE booking_id = b_id;
+            
+            INSERT INTO `pawsome`.`booking_history`
+            (`booking_id`,
+            `prev_status`,
+            `new_status`,
+            `updated_date`,
+            `updated_by`)
+            VALUES
+            (b_id,prev_status,new_status,SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            );
+        END IF;
+    END LOOP booking_loop;
+    
+    SET done = FALSE;
+    pet_loop:
+    LOOP
+		FETCH pet_records INTO p_id;
+        IF done THEN LEAVE pet_loop;
+		END IF;
+        
+        UPDATE `pawsome`.`pets`
+		SET
+		  archived = 1,
+		  updated_date = SYSDATE(),
+		  updated_by = (
+			WITH
+					  all_users AS 
+					  (
+						  SELECT * FROM `pawsome`.`doctors`
+						  UNION
+						  SELECT * FROM `pawsome`.`admins`
+						  UNION 
+						  SELECT * FROM `pawsome`.`pet_owners`
+					  )
+					  SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+		)
+		WHERE id = p_id;
+    END LOOP pet_loop;
+    
+    SET SQL_SAFE_UPDATES = 0;
+	DELETE FROM `pawsome`.`pet_owners_account_tokens` WHERE `pet_owners_account_tokens`.pet_owner_id = pet_owner_id;
+    
+    UPDATE `pawsome`.`pet_owners`
+		SET
+		  archived = 1,
+		  updated_date = SYSDATE(),
+		  updated_by = (
+			WITH
+					  all_users AS 
+					  (
+						  SELECT * FROM `pawsome`.`doctors`
+						  UNION
+						  SELECT * FROM `pawsome`.`admins`
+						  UNION 
+						  SELECT * FROM `pawsome`.`pet_owners`
+					  )
+					  SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+		)
+		WHERE id = pet_owner_id;
+    
+    COMMIT;
+             
+    CLOSE pet_records;
+    CLOSE booking_records;
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_doctor;
+DELIMITER //
+CREATE PROCEDURE delete_doctor(
+	IN doctor_id INT(10), 
+    IN username VARCHAR(20)
+)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE prev_status VARCHAR(15);
+    DECLARE new_status VARCHAR(15);
+    DECLARE b_status VARCHAR(15);
+    DECLARE b_id INT(10);
+    DECLARE booking_records CURSOR FOR 
+		SELECT DISTINCT 
+            b.id booking_id,
+            b.booking_status
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`doctors` d
+            WHERE 
+            b.doctor_id = d.id 
+            AND b.archived = 0
+            AND d.id = doctor_id;
+	DECLARE
+		CONTINUE HANDLER FOR NOT FOUND
+		SET done = TRUE;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+			SELECT 'An error has occurred, operation rollbacked and the stored procedure was terminated';
+		END; 
+            
+    OPEN booking_records;
+    
+    SET done = FALSE;
+    booking_loop: 
+    LOOP
+		FETCH booking_records INTO b_id, b_status;
+        IF done THEN LEAVE booking_loop;
+		END IF;
+        IF b_status = 'PENDING' || b_status = 'CONFIRMED' THEN
+			SET new_status = 'PENDING';
+            SET prev_status = b_status;
+            
+            UPDATE `pawsome`.`bookings`
+            SET 
+            doctor_id = null,
+            booking_status = new_status,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            WHERE id = b_id;
+            
+            INSERT INTO `pawsome`.`booking_history`
+            (`booking_id`,
+            `prev_status`,
+            `new_status`,
+            `updated_date`,
+            `updated_by`)
+            VALUES
+            (b_id,prev_status,new_status,SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            );
+        END IF;
+    END LOOP booking_loop;
+    
+    SET SQL_SAFE_UPDATES = 0;
+	DELETE FROM `pawsome`.`doctor_account_tokens` WHERE `doctor_account_tokens`.doctor_id = doctor_id;
+    
+    UPDATE `pawsome`.`doctors`
+		SET
+		  archived = 1,
+		  updated_date = SYSDATE(),
+		  updated_by = (
+			WITH
+					  all_users AS 
+					  (
+						  SELECT * FROM `pawsome`.`doctors`
+						  UNION
+						  SELECT * FROM `pawsome`.`admins`
+						  UNION 
+						  SELECT * FROM `pawsome`.`pet_owners`
+					  )
+					  SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+		)
+		WHERE id = doctor_id;
+    
+    COMMIT;
+             
+    CLOSE booking_records;
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_admin;
+DELIMITER //
+CREATE PROCEDURE delete_admin(
+	IN admin_id INT(10), 
+    IN username VARCHAR(20)
+)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+			SELECT 'An error has occurred, operation rollbacked and the stored procedure was terminated';
+		END; 
+    
+    SET SQL_SAFE_UPDATES = 0;
+	DELETE FROM `pawsome`.`admin_account_tokens` WHERE `admin_account_tokens`.admin_id = admin_id;
+    
+    UPDATE `pawsome`.`admins`
+		SET
+		  archived = 1,
+		  updated_date = SYSDATE(),
+		  updated_by = (
+			WITH
+					  all_users AS 
+					  (
+						  SELECT * FROM `pawsome`.`doctors`
+						  UNION
+						  SELECT * FROM `pawsome`.`admins`
+						  UNION 
+						  SELECT * FROM `pawsome`.`pet_owners`
+					  )
+					  SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+		)
+		WHERE id = admin_id;
+    
+    COMMIT;
+             
 END //
 
 DELIMITER ;
