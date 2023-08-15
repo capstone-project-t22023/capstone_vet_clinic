@@ -26,10 +26,10 @@ import React from "react";
             data.push({
                 id: id,
                 pet_owner_id: i * 100,
-                petname: `Pet ${id}`,
-                species: ['Dog', 'Cat'][Math.floor(Math.random() * 2)],
+                petname: ['Joshua', 'Parky', 'Ruby', 'Coco', 'Charlie'][Math.floor(Math.random() * 5)],
+                species: ['Dog', 'Cat', 'Snake', 'Racoon'][Math.floor(Math.random() * 4)],
                 breed: ['Bulldog', 'Siamese', 'Labrador', 'Persian'][Math.floor(Math.random() * 4)],
-                birthdate: birthdate.toISOString().split('T')[0],
+                birthdate: birthdate,
                 weight: weight,
                 comments: `This is pet ${i}`,
                 insurance_membership: generateRandomBoolean(),

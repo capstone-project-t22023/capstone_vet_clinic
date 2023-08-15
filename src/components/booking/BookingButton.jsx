@@ -29,7 +29,7 @@ function BookingDialog(props) {
 }
 
 
-export default function BookingButton({booking}) {
+export default function BookingButton() {
     const [open, setOpen] = React.useState(false);
     const [selectedBooking, setSelectedBooking] = React.useState();
 
@@ -40,7 +40,8 @@ export default function BookingButton({booking}) {
     const handleClose = (value) => {
         setOpen(false);
         setSelectedBooking(value);
-        booking(value)
+        // THIS CAN SEND THE BOOKING TO PARENT
+        // booking(value)
     };
 
     const handleCancel = (value) => {

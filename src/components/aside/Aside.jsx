@@ -1,18 +1,45 @@
-import React from "react";
-import {Box, Container, IconButton, Stack, List, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import React, {useContext, useState} from "react";
+import {Navigate} from "react-router-dom";
+import {
+    IconButton,
+    Stack,
+    ListItemButton,
+    Tooltip,
+    Zoom
+} from '@mui/material';
 import {
     ExitToAppRounded as ExitIcon,
-    SendRounded as SendIcon,
-    DraftsRounded as DraftsIcon,
-    InboxRounded as InboxIcon,
     DashboardRounded,
     SettingsRounded,
     CalendarMonthRounded,
     LocationCityRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
+import {useLocation, useNavigate} from "react-router-dom";
+import ProgramContext from "../../ProgramContext";
 
 export default function Aside() {
+    const [toLogout, setToLogout] = useState(false);
+    const {user, authenticated, setAuthenticated} = useContext(ProgramContext);
+
+    const location = useLocation();
+    const isActive = (path) => {
+        return location.pathname === path;
+    }
+
+    const navigate = useNavigate();
+    const handleClick = (navigation) => {
+        navigate(navigation);
+    }
+    function handleLogout() {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('authenticated');
+        setAuthenticated(false)
+        console.log("Bye Bye! Logging out now");
+    }
+
+
     return (
         <Stack direction="column" justifyContent="space-between" alignItems="center" spacing={8}
                sx={{
@@ -23,6 +50,7 @@ export default function Aside() {
 
                }}>
             <Logo/>
+            {toLogout ? <Navigate to="/logout" replace={true}/> : null}
             <Stack direction="column" height={1} width={1} spacing={1} sx={{
                 justifyContent: "flex-start",
                 alignItems: "stretch",
@@ -53,24 +81,29 @@ export default function Aside() {
                     },
                 },
             }}>
-                <ListItemButton selected={true} alignItems="center">
-                    <DashboardRounded/>
+                <Tooltip title="Dashboard" TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton selected={isActive('/dashboard')} onClick={() => handleClick('/dashboard')}>
+                        <DashboardRounded />
+                    </ListItemButton>
+                </Tooltip>
+                <ListItemButton disabled>
+                    <CalendarMonthRounded />
                 </ListItemButton>
-                <ListItemButton>
-                    <CalendarMonthRounded/>
+                <ListItemButton disabled>
+                    <LocationCityRounded />
                 </ListItemButton>
-                <ListItemButton>
-                    <LocationCityRounded/>
-                </ListItemButton>
-                <ListItemButton>
-                    <SettingsRounded/>
-                </ListItemButton>
+                <Tooltip title="Update Profile" TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton selected={isActive('/profile')} onClick={() => handleClick('/profile')}>
+                        <SettingsRounded />
+                    </ListItemButton>
+                </Tooltip>
             </Stack>
             <Stack direction="column">
-                <IconButton aria-label="logout">
+                <Tooltip title="Logout & Exit" TransitionComponent={Zoom} placement="top">
+                <IconButton aria-label="logout" onClick={handleLogout}>
                     <ExitIcon/>
                 </IconButton>
-
+                </Tooltip>
             </Stack>
         </Stack>
     )
