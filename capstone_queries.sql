@@ -113,19 +113,19 @@ CREATE TABLE `pawsome`.`pets` (
   `species` varchar(50) NOT NULL COMMENT 'Species of pet',
   `breed` varchar(50) NOT NULL COMMENT 'Breed of pet',
   `birthdate` date NOT NULL COMMENT 'Birthdate of pet',
-  `weight` int(4) NOT NULL COMMENT 'Weight of pet',
+  `weight` float(2) NOT NULL COMMENT 'Weight of pet',
   `sex` varchar(10) NOT NULL COMMENT 'Sex of pet',
   `microchip_no` varchar(15) DEFAULT NULL COMMENT 'Microchip identifier of pet',
   `insurance_membership` varchar(10) DEFAULT NULL COMMENT 'Insurance owned under pet’s name',
   `insurance_expiry` date DEFAULT NULL COMMENT 'Expiration date of insurance under pet’s name',
   `comments` varchar(1000) DEFAULT NULL COMMENT 'Other comments for pet information like colour, behaviour, allergies',
-  `update_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` int(1) DEFAULT NULL COMMENT 'Indicates if pet record is still actively used or not',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `microchip_n_UNIQUE` (`microchip_no`),
-  CONSTRAINT `fk_pet_po` FOREIGN KEY (`id`) REFERENCES `pet_owners` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_pet_po` FOREIGN KEY (`pet_owner_id`) REFERENCES `pet_owners` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 commit;
 
@@ -134,7 +134,7 @@ CREATE TABLE `pawsome`.`booking_types` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,
   `booking_type` VARCHAR(50) NOT NULL COMMENT 'Description of booking',
   `booking_fee` FLOAT(2) NOT NULL COMMENT 'Fee associated with booking type',
-  `update_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` INT(1) NULL COMMENT 'Indicates id record is active or not',
   PRIMARY KEY (`id`),
@@ -145,7 +145,7 @@ commit;
 DROP TABLE IF EXISTS `pawsome`.`invoices`;
 CREATE TABLE `pawsome`.`invoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
-  `update_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` INT(1) NULL COMMENT 'Indicates id record is active or not',
   PRIMARY KEY (`id`),
@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS `pawsome`.`receipts`;
 CREATE TABLE `pawsome`.`receipts` (
   `id` INT(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
   `invoice_id` INT(10) NOT NULL COMMENT 'Referenced invoice ID',
-  `update_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` INT(1) NULL COMMENT 'Indicates id record is active or not',
   PRIMARY KEY (`id`),
@@ -180,7 +180,7 @@ CREATE TABLE `pawsome`.`bookings` (
   `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor',
   `invoice_id` int(10) DEFAULT NULL COMMENT 'Referenced invoice',
   `receipt_id` int(10) DEFAULT NULL COMMENT 'Referenced receipt',
-  `update_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` int(1) NOT NULL COMMENT 'Indicates id record is active or not',
   PRIMARY KEY (`id`),
@@ -215,6 +215,118 @@ CREATE TABLE `pawsome`.`booking_history` (
   `updated_date` datetime NOT NULL COMMENT 'Booking update date',
   `updated_by` int(10) NOT NULL COMMENT 'Booking updated by user ID'
 );
+
+DROP PROCEDURE IF EXISTS delete_pet;
+DELIMITER //
+CREATE PROCEDURE delete_pet(
+	IN pet_id INT(10), 
+    IN username VARCHAR(20)
+)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE prev_status VARCHAR(15);
+    DECLARE new_status VARCHAR(15);
+    DECLARE b_status VARCHAR(15);
+    DECLARE b_id INT(10);
+    DECLARE booking_records CURSOR FOR 
+		SELECT DISTINCT 
+            b.id booking_id,
+            b.booking_status
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`pets` p
+            WHERE 
+            b.pet_id = p.id 
+            AND b.archived = 0
+            AND p.id = pet_id;
+	DECLARE
+		CONTINUE HANDLER FOR NOT FOUND
+		SET done = TRUE;
+     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+			SELECT 'An error has occurred, operation rollbacked and the stored procedure was terminated';
+		END; 
+            
+    OPEN booking_records;
+    read_loop: 
+    LOOP
+		FETCH booking_records INTO b_id, b_status;
+        IF done THEN LEAVE read_loop;
+		END IF;
+        IF b_status = 'PENDING' || b_status = 'CONFIRMED' THEN
+			SET new_status = 'CANCELED';
+            SET prev_status = b_status;
+            
+            UPDATE `pawsome`.`bookings`
+            SET archived = 1,
+            booking_status = new_status,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            WHERE id = b_id;
+            
+            SET SQL_SAFE_UPDATES = 0;
+            DELETE FROM `pawsome`.`booking_slots` WHERE booking_id = b_id;
+            
+            INSERT INTO `pawsome`.`booking_history`
+            (`booking_id`,
+            `prev_status`,
+            `new_status`,
+            `updated_date`,
+            `updated_by`)
+            VALUES
+            (b_id,prev_status,new_status,SYSDATE(),
+            (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+            )
+            );
+        END IF;
+    END LOOP read_loop;
+    
+    UPDATE `pawsome`.`pets`
+    SET
+      archived = 1,
+      updated_date = SYSDATE(),
+      updated_by = (
+        WITH
+                  all_users AS 
+                  (
+                      SELECT * FROM `pawsome`.`doctors`
+                      UNION
+                      SELECT * FROM `pawsome`.`admins`
+                      UNION 
+                      SELECT * FROM `pawsome`.`pet_owners`
+                  )
+                  SELECT a.id from all_users a WHERE UPPER(a.username) = UPPER(username)
+    )
+	  WHERE id = pet_id;
+    
+    COMMIT;
+             
+    CLOSE booking_records;
+END //
+
+DELIMITER ;
 
 /** 
 Initial data scripts
@@ -283,7 +395,7 @@ INSERT INTO `pawsome`.`pets`
 `comments`,
 `insurance_membership`,
 `insurance_expiry`,
-`update_date`,
+`updated_date`,
 `updated_by`,
 `archived`)
 VALUES
@@ -325,7 +437,7 @@ INSERT INTO `pawsome`.`bookings`
 `pet_id`,
 `invoice_id`,
 `receipt_id`,
-`update_date`,
+`updated_date`,
 `updated_by`,
 `archived`)
 VALUES
@@ -389,7 +501,7 @@ TRUNCATE TABLE `pawsome`.`booking_types`;
 INSERT INTO `pawsome`.`booking_types`
 (`booking_type`,
 `booking_fee`,
-`update_date`,
+`updated_date`,
 `updated_by`,
 `archived`)
 VALUES
