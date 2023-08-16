@@ -1,32 +1,29 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {Box, Button, Paper, Divider, Container, Typography, Stack, Grid, Zoom, Slide} from '@mui/material';
-import ProgramContext from '../ProgramContext';
-import Header from '../components/Header';
+import ProgramContext from '../contexts/ProgramContext';
 import Footer from '../components/Footer';
-import UserCard from "../components/user/UserCard";
 import Aside from '../components/aside/Aside';
-import OldPets from "../components/pets/OldPets";
 import PetsListAvatars from "../components/pets/PetsListAvatars";
-import generateRandomPetArray from "../components/pets/PetArrayListGenerator";
 import PetProfile from "../components/pets/PetProfile";
 import UpcomingAppointments from "../components/appointments/upcomingAppointments/UpcomingAppointments";
-import OldPetsList from "../components/pets/OldPetsList";
 import PetsList from "../components/pets/PetsList";
-import petOwnersData from "../components/pets/json/test.json";
+import {PetsContext} from "../contexts/PetsProvider";
+import {PetOwnersContext} from "../contexts/PetOwnersProvider";
+
 
 export default function Dashboard() {
 
-    const {user, authenticated} = useContext(ProgramContext);
+    const {user} = useContext(ProgramContext);
     const [selectedPet, setSelectedPet] = useState(false); // Changed initial value to null
-    const [arrayUsersPets, setArrayUsersPets] = useState(generateRandomPetArray(5))
+    const petsList = useContext(PetsContext);
+    const petOwners = useContext(PetOwnersContext);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
         navigate(navigation);
     }
 
-    const petOwners = petOwnersData.petOwners;
 
     const handleChangedSelectedPet = (petId) => {
         (petId === false) ? setSelectedPet(false) : setSelectedPet(petId);
@@ -38,6 +35,11 @@ export default function Dashboard() {
     return (
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>
+
+                <Stack direction="column" maxWidth="300px">
+                <PetsListAvatars onChange={handleChangedSelectedPet}/>
+                </Stack>
+
 
             <Stack
                 direction="column"
@@ -63,8 +65,8 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                    <PetsList petsList={arrayUsersPets} petOwnersList={petOwners} onChange={handleChangedSelectedPet}/>
-                                    <PetsListAvatars petsList={arrayUsersPets} onChange={handleChangedSelectedPet}/>
+                                    <PetsList petsList={petsList} petOwnersList={petOwners} onChange={handleChangedSelectedPet}/>
+                                    <PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
@@ -92,7 +94,7 @@ export default function Dashboard() {
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
                                         Welcome Back, {user.firstname}!
                                     </Typography>
-                                    <PetsListAvatars petsList={arrayUsersPets} onChange={handleChangedSelectedPet}/>
+                                    <PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>
                                 </Stack>
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
@@ -134,7 +136,7 @@ export default function Dashboard() {
                             backgroundColor: 'white',
                         }}
                     >
-                        <PetProfile petsList={arrayUsersPets} selectedPet={selectedPet} onDelete={handleDeletePet}/>
+                        <PetProfile petsList={petsList} selectedPet={selectedPet} onDelete={handleDeletePet}/>
                     </Stack>
                 </Slide>
         </Stack>

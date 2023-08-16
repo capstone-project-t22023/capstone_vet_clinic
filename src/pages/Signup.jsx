@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Container,Box} from '@mui/material';
-import ProgramContext from "../ProgramContext";
+import ProgramContext from "../contexts/ProgramContext";
 import Header from "../components/Header"
 import Footer from "../components/Footer";
 import LoginForm from '../components/authorization/LoginForm'

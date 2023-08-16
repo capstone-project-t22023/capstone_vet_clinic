@@ -2,10 +2,13 @@
 import React, {useEffect, useState} from 'react';
 import {HelmetProvider} from 'react-helmet-async';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import ProgramContext from './ProgramContext';
+
+//Providers import
+import ProgramContext from './contexts/ProgramContext';
+import {PetsProvider} from "./contexts/PetsProvider";
 
 //Theme import
-import {ThemeProvider,CssBaseline} from "@mui/material";
+import {ThemeProvider, CssBaseline} from "@mui/material";
 import theme from "./theme";
 
 //Pages import
@@ -21,8 +24,7 @@ import Protected from './components/Protected';
 import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
-
-
+import {PetOwnersProvider} from "./contexts/PetOwnersProvider";
 
 
 /**
@@ -40,7 +42,7 @@ function App() {
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
 
-    console.log("How many times reload the APP");
+    console.log("How many times reload the APP, this log is in App.jsx");
 
     useEffect(() => {
         Promise.all([
@@ -100,24 +102,20 @@ function App() {
                         authenticated, setAuthenticated
                     }}>
                     <ThemeProvider theme={theme}>
-                        <CssBaseline />
+                        <CssBaseline/>
                         <BrowserRouter>
                             <Routes>
-                                <Route index element={ <Home/> }/>
-                                <Route
-                                    path="/dashboard"
-                                    element={
-                                        <Protected isLoggedIn={authenticated}>
-                                            <Dashboard/>
-                                        </Protected>
-                                    }
+                                <Route index element={<Home/>}/>
+                                <Route path="/dashboard" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetOwnersProvider>
+                                            <PetsProvider>
+                                                <Dashboard/>
+                                            </PetsProvider>
+                                        </PetOwnersProvider>
+                                    </Protected>
+                                }
                                 />
-
-                                <Route path="/logout" element={<Logout/>}/>
-                                <Route path="/login" element={<Login/>}/>
-                                <Route path="/signup" element={<Signup/>}/>
-                                <Route path="/confirm" element={<ConfirmSignup/>}/>
-
                                 {/*USER PET OWNER LINKS*/}
                                 <Route path="/bookings" element={
                                     <Protected isLoggedIn={authenticated}>
@@ -130,13 +128,17 @@ function App() {
                                     </Protected>
                                 }/>
 
-                                <Route path="/trialform"
-                                       element={
-                                           <Protected isLoggedIn={authenticated}>
-                                               <TrialForm/>
-                                           </Protected>
-                                       }
+                                <Route path="/trialform" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <TrialForm/>
+                                    </Protected>
+                                }
                                 />
+
+                                <Route path="/logout" element={<Logout/>}/>
+                                <Route path="/login" element={<Login/>}/>
+                                <Route path="/signup" element={<Signup/>}/>
+                                <Route path="/confirm" element={<ConfirmSignup/>}/>
 
                                 <Route
                                     path="*"

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import {Stack, Typography} from "@mui/material";
-import ProgramContext from "../ProgramContext";
+import ProgramContext from "../contexts/ProgramContext";
 
 export default function Footer() {
     const {user, authenticated} = useContext(ProgramContext);

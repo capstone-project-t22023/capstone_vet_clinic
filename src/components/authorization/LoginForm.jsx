@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {Link, Navigate} from "react-router-dom";
-import ProgramContext from '../../ProgramContext';
+import ProgramContext from '../../contexts/ProgramContext';
 
 
 export default function LoginForm() {

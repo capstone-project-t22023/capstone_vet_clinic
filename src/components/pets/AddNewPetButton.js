@@ -3,7 +3,7 @@ import {Button, Tooltip, Dialog, IconButton, Zoom} from "@mui/material";
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
 
-export default function AddNewPetButton() {
+export default function AddNewPetButton({petOwner = null}) {
     const [openModal, setOpenModal] = useState(false);
     const handleAddPet = (pet) => {
       console.log("add this pet", pet);
@@ -35,6 +35,7 @@ export default function AddNewPetButton() {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
             >
+                Add a new pet to this owner: {petOwner}
                 <AddNewPetForm onAddPet={handleAddPet}/>
             </Dialog>
         </>

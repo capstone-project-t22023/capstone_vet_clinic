@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import ProgramContext from '../ProgramContext';
+import ProgramContext from '../contexts/ProgramContext';
 import {Navigate} from "react-router-dom";
 import {
     AppBar,

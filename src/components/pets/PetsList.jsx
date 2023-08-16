@@ -76,7 +76,6 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
 
-            <AddNewPetButton/> this button should go into slided window
 
             <Stack direction={"row"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start"
                    sx={{
@@ -114,7 +113,7 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
                     ))
                     : <h6>You should add a new pet</h6>
                 }
-                <AddNewPetButton/>
+                <AddNewPetButton  petOwner={selectedOwner}/>
             </Stack>
             <Divider/>
         </Stack>

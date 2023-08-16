@@ -26,7 +26,7 @@ export default function SearchPetOwner({selectedOwner, petOwnersList}) {
     };
 
     return (
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} alignItems="center">
             <Stack direction="column">
                 <Typography variant="h5">Search in Pet Owners List</Typography>
                 <TextField
@@ -51,11 +51,11 @@ export default function SearchPetOwner({selectedOwner, petOwnersList}) {
                         }
                     }
                 }}>
-                {filteredOwners.map((owner) => (
+                {filteredOwners && filteredOwners.map((owner) => (
                     <ListItem key={owner.id} onClick={() => handleSelectedOwner(owner.id)}
                               selected={owner.id === ownerIsSelected}>
                         <ListItemText
-                            primary={`${owner.firstName} ${owner.lastName} id${owner.id}`}
+                            primary={`-> ${owner.firstName} ${owner.lastName} id${owner.id}`}
                         />
                     </ListItem>
                 ))}

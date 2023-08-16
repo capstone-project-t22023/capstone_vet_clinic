@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
-import ProgramContext from "../../ProgramContext";
+import ProgramContext from "../../contexts/ProgramContext";
 
 export default function Aside() {
     const [toLogout, setToLogout] = useState(false);
