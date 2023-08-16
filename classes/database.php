@@ -591,7 +591,9 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `doctors` WHERE username=?'
+            'SELECT DISTINCT d.*, "doctor" role 
+            FROM `pawsome`.`doctors` d 
+            WHERE username=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -621,7 +623,9 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `admins` WHERE username=?'
+            'SELECT DISTINCT a.*, "admin" role
+            FROM `pawsome`.`admins` a
+            WHERE username=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -651,7 +655,9 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `pet_owners` WHERE username=?'
+            'SELECT DISTINCT po.*, "pet_owner" role 
+            FROM `pawsome`.`pet_owners` po 
+            WHERE username=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -1416,6 +1422,65 @@ class Database
      * Retrieves all records of pets
      * Returns pets object array or false
      */
+    public function getAllPetsByPetOwnerId($filter_value)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT
+            p.pet_owner_id,
+            po.firstname,
+            po.lastname,
+            po.username,
+            p.id pet_id,
+            p.petname,
+            p.species,
+            p.breed,
+            p.birthdate,
+            ROUND(p.weight,2) weight,
+            p.sex,
+            p.microchip_no,
+            p.insurance_membership,
+            p.insurance_expiry,
+            p.comments
+            FROM
+            pets p,
+            pet_owners po
+            WHERE
+            p.pet_owner_id = po.id
+            AND p.archived = 0
+            AND p.pet_owner_id = ?
+            ORDER BY
+            p.pet_owner_id'
+        );
+        $sql->bind_param(
+            'i', $filter_value
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $pets = array();
+            while($row=$result->fetch_assoc()){
+                array_push($pets, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $pets;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of pets
+     * Returns pets object array or false
+     */
     public function getAllPetsByPetname($filter_value)
     {
         $this->connection = new mysqli(
@@ -1681,6 +1746,38 @@ class Database
     }
 
     /**
+     * Retrieves booking types
+     * Returns booking type object array or false
+     */
+    public function getBookingTypes()
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT * FROM `pawsome`.`booking_types`'
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $types = array();
+            while($row=$result->fetch_assoc()){
+                array_push($types, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $types;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves taken slots by date
      * Returns booking slots object array or false
      */
@@ -1694,15 +1791,20 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT
-            booking_date, booking_time, count(booking_time) slot_counter 
-            FROM pawsome.booking_slots 
-            WHERE booking_date = STR_TO_DATE(?,"%d-%m-%Y")
-            GROUP BY booking_date, booking_time'
+            'WITH
+            taken_slots AS (SELECT DISTINCT
+                        booking_date, booking_time, count(booking_time) slot_counter 
+                        FROM pawsome.booking_slots 
+                        GROUP BY booking_date, booking_time)
+            SELECT DATE_FORMAT(booking_date, "%d-%m-%Y") booking_date, GROUP_CONCAT(booking_time separator ",") booking_time 
+            FROM taken_slots 
+            WHERE 
+            slot_counter = 5 
+            AND booking_date = STR_TO_DATE(?,"%d-%m-%Y")
+            GROUP BY booking_date'
         );
         $sql->bind_param(
-            's', 
-            $selected_date //"15-09-2023"
+            's', $selected_date
         );
         $sql->execute();
         $result = $sql->get_result();
@@ -1734,10 +1836,12 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT
-            booking_date, booking_time, count(booking_time) slot_counter 
-            FROM pawsome.booking_slots 
-            GROUP BY booking_date, booking_time'
+            'WITH
+            taken_slots AS (SELECT DISTINCT
+                        booking_date, booking_time, count(booking_time) slot_counter 
+                        FROM pawsome.booking_slots 
+                        GROUP BY booking_date, booking_time)
+            SELECT DATE_FORMAT(booking_date, "%d-%m-%Y") booking_date, GROUP_CONCAT(booking_time separator ",") booking_time FROM taken_slots WHERE slot_counter = 5 GROUP BY booking_date'
         );
         $sql->execute();
         $result = $sql->get_result();
@@ -1878,7 +1982,18 @@ class Database
             `pet_id` = ?,
             `doctor_id` = ?,
             `updated_date` = SYSDATE(),
-            `updated_by` = (SELECT id FROM admins WHERE UPPER(username) = UPPER(?))
+            `updated_by` = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
             WHERE
             `id` = ?
             '
@@ -1921,17 +2036,30 @@ class Database
             'UPDATE `pawsome`.`bookings`
             SET
             `booking_type_id` = (SELECT id from booking_types WHERE UPPER(booking_type) = UPPER(?)),
+            `booking_status` = ?,
             `pet_owner_id` = ?,
             `pet_id` = ?,
             `updated_date` = SYSDATE(),
-            `updated_by` = (SELECT id FROM pet_owners WHERE UPPER(username) = UPPER(?))
+            `updated_by` = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+            )
             WHERE
             `id` = ?
             '
         );
         $sql->bind_param(
-            'siisi',
+            'ssiisi',
             $booking['booking_type'],
+            $booking['new_booking_status'],
             $booking['pet_owner_id'],
             $booking['pet_id'],
             $booking['username'],
@@ -2000,8 +2128,8 @@ class Database
             'UPDATE `bookings`
             SET archived = 1,
             booking_status = ?,
-            SYSDATE(),
-            (
+            updated_date = SYSDATE(),
+            updated_by = (
                 WITH
                 all_users AS 
                 (
@@ -2143,6 +2271,67 @@ class Database
             $sql->close();
             $this->connection->close();
             return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of bookings by booking ID
+     * Returns bookings object array or false
+     */
+    public function getBookingById($booking_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT 
+            b.id booking_id,
+            DATE_FORMAT(bs.booking_date, "%d-%m-%Y") booking_date,
+            GROUP_CONCAT(bs.booking_time separator ",") booking_time,
+            b.booking_status,
+            bt.booking_type,
+            b.doctor_id,
+            b.invoice_id,
+            b.receipt_id,
+            b.updated_date,
+            b.pet_owner_id,
+            po.username,
+            CONCAT(po.firstname," ",po.lastname) pet_owner,
+            b.pet_id,
+            p.petname
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`booking_types` bt, 
+            `pawsome`.`pet_owners` po, 
+            `pawsome`.`pets` p, 
+            `pawsome`.`booking_slots` bs
+            WHERE 
+            p.pet_owner_id = po.id 
+            AND b.pet_owner_id = po.id 
+            AND b.pet_id = p.id 
+            AND b.booking_type_id = bt.id
+            AND b.id = bs.booking_id
+            AND b.archived = 0
+            AND b.id = ?
+            ORDER BY b.updated_date DESC'
+        );
+        $sql->bind_param(
+            'i', $booking_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $row=$result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $row;
         }
         $sql->close();
         $this->connection->close();

@@ -391,9 +391,57 @@ elseif ($action === 'get_all_pet_owners') {
  */ 
 elseif ($action === 'get_all_pets') {
     if ($valid_jwt_token) {
-        if ($pets = $database->getAllPets()) {
-            return_json(['pets' => $pets]);
-        } 
+        if ($pet_owners = $database->getAllPetOwners()) {
+            $pet_info  = array();
+
+            foreach($pet_owners as $y):
+
+                $pet_records = array();
+                if ($pets = $database->getAllPetsByPetOwnerId($y['id'])) {
+
+                    foreach($pets as $p):
+                        $pet_record = [
+                            'pet_id' => $p['pet_id'],
+                            'petname' => $p['petname'],
+                            'species' => $p['species'],
+                            'breed' => $p['breed'],
+                            'birthdate' => $p['birthdate'],
+                            'weight' => $p['weight'],
+                            'sex' => $p['sex'],
+                            'microchip_no' => $p['microchip_no'],
+                            'insurance_membership' => $p['insurance_membership'],
+                            'insurance_expiry' => $p['insurance_expiry'],
+                            'comments' => $p['comments']
+                        ];
+
+                        array_push($pet_records, $pet_record);
+                    endforeach;
+
+                     $record = [
+                        'pet_owner_id' => $y['id'],
+                        'firstname' => $y['firstname'],
+                        'lastname' => $y['lastname'],
+                        'username' => $y['username'],
+                        'pets' => $pet_records
+                    ];
+                    array_push($pet_info, $record);
+                } else {
+                    $record = [
+                        'pet_owner_id' => $y['id'],
+                        'firstname' => $y['firstname'],
+                        'lastname' => $y['lastname'],
+                        'username' => $y['username'],
+                        'pets' => []
+                    ];
+                    array_push($pet_info, $record);
+                }
+               
+            endforeach;
+
+            return_json(['pets' => $pet_info]);
+        } else {
+            return_json(['pets' => "No pets found"]);
+        }
     }
 } 
 
@@ -415,6 +463,10 @@ elseif ($action === 'get_all_pets_by_filter') {
             } 
         } elseif ($_GET['filter'] == 'lastname'){
             if ($pets = $database->getAllPetsByLname($_GET['filter_value'])) {
+                return_json(['pets' => $pets]);
+            } 
+        } elseif ($_GET['filter'] == 'pet_owner_id'){
+            if ($pets = $database->getAllPetsByPetOwnerId($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         }
@@ -673,6 +725,20 @@ elseif ($action === 'get_pet') {
 
 /**
  * API endpoint when getting taken slots
+ * getBookingTypes method that retrieves taken slots by date
+ */ 
+elseif ($action === 'get_booking_types') {
+    if ($valid_jwt_token) {
+        if($booking_types = $database->getBookingTypes()){
+            return_json(['booking_types' => $booking_types]);
+        } else {
+            return_json(['booking_types' => "No booking types"]);
+        }
+    }
+}
+
+/**
+ * API endpoint when getting taken slots
  * getTakenSlotsByDate method that retrieves taken slots by date
  */ 
 elseif ($action === 'get_taken_slots_by_date') {
@@ -680,13 +746,25 @@ elseif ($action === 'get_taken_slots_by_date') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $selected_date = $_POST['selected_date'];
+        if ($taken_slots = $database->getTakenSlotsByDate($_POST['selected_date'])) {
+            $slots  = array();
 
-        if ($taken_slots = $database->getTakenSlotsByDate($selected_date)) {
-            return_json(['taken_slots_by_date' => $taken_slots]);
+            foreach($taken_slots as $y):
+                $date = [
+                    'booking_date' => $y['booking_date'],
+                    'booking_time' => explode(',', $y['booking_time'])
+                ];
+                array_push($slots, $date);
+            endforeach;
+
+            return_json(['taken_slots_by_date' => $slots]);
+        } else {
+            return_json(['taken_slots_by_date' => []]);
         }
     }
 }
+
+
 
 /**
  * API endpoint when getting taken slots
@@ -695,7 +773,19 @@ elseif ($action === 'get_taken_slots_by_date') {
 elseif ($action === 'get_taken_slots_all') {
     if ($valid_jwt_token) {
         if ($taken_slots = $database->getTakenSlotsAll()) {
-            return_json(['taken_slots_all' => $taken_slots]);
+            $slots  = array();
+
+            foreach($taken_slots as $y):
+                $date = [
+                    'booking_date' => $y['booking_date'],
+                    'booking_time' => explode(',', $y['booking_time'])
+                ];
+                array_push($slots, $date);
+            endforeach;
+
+            return_json(['taken_slots_all' => $slots]);
+        } else {
+            return_json(['taken_slots_all' => []]);
         }
     }
 }
@@ -739,7 +829,7 @@ elseif ($action === 'add_booking') {
             ];
 
             if($database->addBookingHistoryRecord($booking_history_record)){
-                return_json(['add_booking' => "success"]);
+                return_json(['add_booking' => $booking_id ]);
             }
 
         } else {
@@ -758,9 +848,9 @@ elseif ($action === 'update_booking_by_admin') {
         $_POST = json_decode($rest_json, true);
 
         $booking = [
-            'booking_id' => $_POST['booking_id'],
+            'booking_id' => $id,
             'prev_booking_status' => $_POST['prev_booking_status'],
-            'new_booking_status' => $_POST['new_booking_status'],
+            'new_booking_status' => "PENDING",
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
@@ -783,10 +873,10 @@ elseif ($action === 'update_booking_by_admin') {
         endforeach;
 
         if ($database->updateBookingByAdmin($booking)) {
-            if($database->deleteBookingSlot($_POST['booking_id'])){
+            if($database->deleteBookingSlot($id)){
                 foreach($booking_slots as $slot):
                     $record = [
-                        'booking_id' => $_POST['booking_id'],
+                        'booking_id' => $id,
                         'booking_date' => $slot['booking_date'],
                         'booking_time' => $slot['booking_time']
                     ];
@@ -796,14 +886,14 @@ elseif ($action === 'update_booking_by_admin') {
                 endforeach;
 
                 $booking_history_record = [
-                    'booking_id' => $_POST['booking_id'],
+                    'booking_id' => $id,
                     'prev_status' => $_POST['prev_booking_status'],
-                    'new_status' => $_POST['new_booking_status'],
+                    'new_status' => "PENDING",
                     'username' => $_POST['username']
                 ];
 
                 if($database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => "success"]);
+                    return_json(['update_booking' => $id]);
                 } else {
                     return_json(['update_booking' => "error"]);
                 }
@@ -826,7 +916,9 @@ elseif ($action === 'update_booking_by_pet_owner') {
         $_POST = json_decode($rest_json, true);
 
         $booking = [
-            'booking_id' => $_POST['booking_id'],
+            'booking_id' => $id,
+            'prev_booking_status' => $_POST['prev_booking_status'],
+            'new_booking_status' => "PENDING",
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
@@ -848,10 +940,10 @@ elseif ($action === 'update_booking_by_pet_owner') {
         endforeach;
 
         if ($database->updateBookingByPetOwner($booking)) {
-            if($database->deleteBookingSlot($_POST['booking_id'])){
+            if($database->deleteBookingSlot($id)){
                 foreach($booking_slots as $slot):
                     $record = [
-                        'booking_id' => $_POST['booking_id'],
+                        'booking_id' => $id,
                         'booking_date' => $slot['booking_date'],
                         'booking_time' => $slot['booking_time']
                     ];
@@ -861,14 +953,14 @@ elseif ($action === 'update_booking_by_pet_owner') {
                 endforeach;
 
                 $booking_history_record = [
-                    'booking_id' => $_POST['booking_id'],
+                    'booking_id' => $id,
                     'prev_status' => $_POST['prev_booking_status'],
-                    'new_status' => $_POST['new_booking_status'],
+                    'new_status' => "PENDING",
                     'username' => $_POST['username']
                 ];
 
                 if($database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => "success"]);
+                    return_json(['update_booking' => $id]);
                 } else {
                     return_json(['update_booking' => "error"]);
                 }
@@ -978,6 +1070,38 @@ elseif ($action === 'finish_booking') {
 }
 
 /**
+ * API endpoint when getting single booking information by ID
+ * getBookingById method that retrieves booking information in the database
+ */ 
+elseif ($action === 'get_booking') {
+    if ($valid_jwt_token) {
+        if ($record=$database->getBookingById($id)) {
+
+            $booking_record = [
+                'booking_id' => $record['booking_id'],
+                'booking_date' => $record['booking_date'],
+                'booking_time' => explode(',', $record['booking_time']),
+                'booking_status' => $record['booking_status'],
+                'booking_type' => $record['booking_type'],
+                'doctor_id' => $record['doctor_id'],
+                'invoice_id' => $record['invoice_id'],
+                'receipt_id' => $record['receipt_id'],
+                'updated_date' => $record['updated_date'],
+                'pet_owner_id' => $record['pet_owner_id'],
+                'username' => $record['username'],
+                'pet_owner' => $record['pet_owner'],
+                'pet_id' => $record['pet_id'],
+                'petname' => $record['petname']
+            ];
+
+            return_json(['booking_record' => $booking_record]);
+        } else {
+            return_json(['booking_record' => "error"]);
+        }
+    }
+}
+
+/**
  * API endpoint when moving booking status to CANCELED
  * cancelBooking method that updates booking information in the database
  */ 
@@ -987,14 +1111,14 @@ elseif ($action === 'cancel_booking') {
         $_POST = json_decode($rest_json, true);
 
         $booking_record = [
-            'booking_id' => $_POST['booking_id'],
+            'booking_id' => $id,
             'prev_status' => $_POST['prev_booking_status'],
-            'new_status' => $_POST['new_booking_status'],
+            'new_status' => "CANCELED",
             'username' => $_POST['username']
         ];
 
         if ($database->cancelBooking($booking_record)) {
-            if($database->deleteBookingSlot($_POST['booking_id'])){
+            if($database->deleteBookingSlot($id)){
                 if($database->addBookingHistoryRecord($booking_record)){
                     return_json(['cancel_booking' => "success"]);
                 } else {
