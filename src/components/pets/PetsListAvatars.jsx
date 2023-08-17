@@ -3,17 +3,17 @@ import { Stack, Avatar, IconButton, Tooltip } from "@mui/material";
 
 import AddNewPetButton from './AddNewPetButton';
 
-export default function PetsListAvatars({petsList, onChange}) {
+export default function PetsListAvatars({petList, onChange}) {
     const [showPet, setShowPet] = useState(null);
     // const [showDialog, setShowDialog] = useState(false);
 
-    const handleSelectedPet = (petId) => {
-        if (showPet === petId) {
+    const handleSelectedPet = (pet) => {
+        if (showPet === pet) {
             onChange(false);
             setShowPet(null);
         } else {
-            setShowPet(petId);
-            onChange(petId);
+            setShowPet(pet);
+            onChange(pet);
         }
     };
 
@@ -36,7 +36,7 @@ export default function PetsListAvatars({petsList, onChange}) {
 
     const isSelected = (petId) => showPet === petId ? "active" : "";
 
-    // console.log(petsList);
+    // console.log(petList);
 
     return (
         <Stack direction={"row"} spacing={1} flexWrap="wrap" alignItems="center" justifyContent="flex-end"
@@ -51,13 +51,13 @@ export default function PetsListAvatars({petsList, onChange}) {
                }}
         >
             <AddNewPetButton/>
-            {petsList ?
-                petsList.map(pet => (
-                    <Tooltip key={pet.id} title={pet.petname} placement="top" arrow>
+            {petList ?
+                petList.map(pet => (
+                    <Tooltip key={pet.pet_id} title={pet.petname} placement="top" arrow>
                         <IconButton
-                            onClick={() => handleSelectedPet(pet.id)}
+                            onClick={() => handleSelectedPet(pet)}
                             flex={0}
-                            className={isSelected(pet.id)}
+                            className={isSelected(pet.pet_id)}
                         >
                             <Avatar
                                 src={avatarAnimalUnsplashUrl(pet.species)}

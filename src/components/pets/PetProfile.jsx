@@ -9,10 +9,9 @@ import {
 } from '@mui/icons-material';
 import BookingButton from "../booking/BookingButton";
 
-export default function PetProfile({petsList, selectedPet, onDelete}) {
+export default function PetProfile({pet, onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
 
-    const selectedPetData = petsList.find((pet) => pet.id === selectedPet);
     const avatarAnimalUnsplashUrl = (species) => {
         if (species === 'Dog') {
             return 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
@@ -38,12 +37,12 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
     }
     const handleConfirmDelete = () => {
         setShowDialog(true);
-        onDelete(selectedPet);
+        onDelete(pet.pet_id);
     };
 
 
     return (
-        selectedPetData && (
+        pet && (
             <Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{m: 4}}>
                 <Stack direction="column" spacing={2} alignItems="center"
                        sx={{
@@ -58,8 +57,8 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
                            },
                        }}>
                     <Avatar
-                        src={avatarAnimalUnsplashUrl(selectedPetData.species)}
-                        alt={selectedPetData.petname}
+                        src={avatarAnimalUnsplashUrl(pet.species)}
+                        alt={pet.petname}
                         sx={{width: 120, height: 120}}
                     />
                     <Box sx={{textAlign: "center", position: "relative"}}>
@@ -71,7 +70,7 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
                                 fontWeight: "bold",
                             }}
                         >
-                            {selectedPetData.petname}
+                            {pet.petname}
                         </Typography>
                         <Typography
                             component="h5"
@@ -81,7 +80,7 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
                                 fontSize: 14,
                             }}
                         >
-                            {selectedPetData.breed}
+                            {pet.breed}
                         </Typography>
                         <Stack direction="row">
                             <Tooltip title="Update details" placement="right" TransitionComponent={Zoom} arrow>
@@ -98,7 +97,7 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
 
                         <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth={"lg"}>
                             <Paper sx={{p: 3, textAlign: "center"}}>
-                                <h4>{selectedPetData.petname} - {selectedPetData.breed}</h4>
+                                <h4>{pet.petname} - {pet.breed}</h4>
                                 <p>Are you sure you want to delete this pet?</p>
 
                                 <Button variant="text" onClick={() => setShowDialog(false)}>
@@ -140,7 +139,7 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
                                }
                            }}>
                         <Stack direction="column">
-                            <Typography component="p"><AgeCalculator birthdate={selectedPetData.birthdate}/></Typography>
+                            <Typography component="p"><AgeCalculator birthdate={pet.birthdate}/></Typography>
                             <Typography component="span">Age</Typography>
                         </Stack>
                         <Stack direction="column">
@@ -148,7 +147,7 @@ export default function PetProfile({petsList, selectedPet, onDelete}) {
                             <Typography component="span">Sex</Typography>
                         </Stack>
                         <Stack direction="column">
-                            <Typography component="p">{selectedPetData.weight} kg</Typography>
+                            <Typography component="p">{pet.weight}</Typography>
                             <Typography component="span">Weight</Typography>
                         </Stack>
                     </Stack>
