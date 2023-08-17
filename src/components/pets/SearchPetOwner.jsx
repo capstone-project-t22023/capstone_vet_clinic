@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Typography, TextField, List, Stack, ListItem, ListItemText} from "@mui/material";
+import {Box, Typography, TextField, List, Stack, ListItemButton, ListItemText} from "@mui/material";
 
 
 export default function SearchPetOwner({selectedOwner, petOwnersList}) {
@@ -22,7 +22,7 @@ export default function SearchPetOwner({selectedOwner, petOwnersList}) {
     };
     const handleSelectedOwner = (ownerId) => {
         selectedOwner(ownerId);
-        setOwnerIsSelected(ownerId)
+        setOwnerIsSelected(ownerId);
     };
 
     return (
@@ -52,12 +52,12 @@ export default function SearchPetOwner({selectedOwner, petOwnersList}) {
                     }
                 }}>
                 {filteredOwners && filteredOwners.map((owner) => (
-                    <ListItem key={owner.id} onClick={() => handleSelectedOwner(owner.id)}
+                    <ListItemButton key={owner.id} onClick={() => handleSelectedOwner(owner.id)}
                               selected={owner.id === ownerIsSelected}>
                         <ListItemText
-                            primary={`-> ${owner.firstName} ${owner.lastName} id${owner.id}`}
+                            primary={`${owner.firstName} ${owner.lastName} id${owner.id}`}
                         />
-                    </ListItem>
+                    </ListItemButton>
                 ))}
             </List>
         </Stack>

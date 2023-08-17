@@ -42,7 +42,7 @@ function App() {
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
 
-    console.log("How many times reload the APP, this log is in App.jsx");
+    // console.log("How many times reload the APP, this log is in App.jsx");
 
     useEffect(() => {
         Promise.all([

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Box,
     Button,
@@ -17,9 +17,12 @@ import {
 
 import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
+import {PetOwnersContext} from "../../contexts/PetOwnersProvider";
 
-export default function PetsList({petsList, onChange, petOwnersList}) {
+export default function PetsList({petsList, onChange}) {
     const [showPet, setShowPet] = useState(null);
+    const petOwners = useContext(PetOwnersContext);
+
     // const [showDialog, setShowDialog] = useState(false);
 
     const handleSelectedPet = (petId) => {
@@ -37,18 +40,20 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
             return 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         } else if (species === 'Cat') {
             return 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
+        } else if (species === 'Giraffe') {
+            return 'https://images.unsplash.com/photo-1547721064-da6cfb341d50?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         } else if (species === 'Racoon') {
             return 'https://images.unsplash.com/photo-1497752531616-c3afd9760a11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         } else if (species === 'Snake') {
             return 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         } else {
             // Default URL if species is not recognized
-            return 'https://images.unsplash.com/photo-1554774859-f6b0366d7cc3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
+            return 'https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         }
     };
 
     const getPetOwner = (ownerId) => {
-        const foundOwner = petOwnersList.find((owner) => owner.id === ownerId);
+        const foundOwner = petOwners.find((owner) => owner.id === ownerId);
         return foundOwner ? foundOwner.firstName : "Unknown Owner";
     };
 
@@ -56,7 +61,7 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
 
 
     const [selectedOwner, setSelectedOwner] = useState(null)
-    const [filteredPets, setFilteredPets] = useState(petsList);
+    const [filteredPets, setFilteredPets] = useState(false);
 
 
     function filterPetsByOwnerId(pets, ownerId) {
@@ -65,13 +70,13 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
 
     const handlerSelectedOwner = (selected) => {
         setSelectedOwner(selected);
-        console.log("selected owner: ", selected);
     }
 
 
     useEffect(() => {
         setFilteredPets(filterPetsByOwnerId(petsList, selectedOwner));
-    }, [selectedOwner, petsList]);
+        console.log("filtered pets:", filteredPets);
+    }, [selectedOwner]);
 
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
@@ -89,31 +94,38 @@ export default function PetsList({petsList, onChange, petOwnersList}) {
                    }}
             >
 
-                <SearchPetOwner selectedOwner={handlerSelectedOwner} petOwnersList={petOwnersList}/>
+                <SearchPetOwner selectedOwner={handlerSelectedOwner} petOwnersList={petOwners}/>
 
-
-                {filteredPets ?
-                    filteredPets.map(pet => (
-                        <Stack key={pet.id} direction="column" flex={0}
-                               sx={{backgroundColor: "primary.50", borderRadius: 6, minWidth: "10rem"}}>
-                            <Typography>Pet Owner: {getPetOwner(pet.pet_owner_id)}</Typography>
-                            <Typography>Pet Name: {pet.petname}</Typography>
-                            <IconButton
+                {filteredPets.length > 0 ? (
+                    <Stack direction="row" flexWrap="wrap" spacing={2} width={1} flex={1}>
+                        <Typography>Pet Owner: {selectedOwner}</Typography>
+                        {filteredPets.map(pet => (
+                            <Stack
                                 key={pet.id}
-                                onClick={() => handleSelectedPet(pet.id)}
+                                direction="column"
                                 flex={0}
-                                className={isSelected(pet.id)}
+                                sx={{backgroundColor: "secondary.50", borderRadius: 6}}
                             >
-                                <Avatar
-                                    src={avatarAnimalUnsplashUrl(pet.species)}
-                                    alt={pet.petname}
-                                />
-                            </IconButton>
-                        </Stack>
-                    ))
-                    : <h6>You should add a new pet</h6>
-                }
-                <AddNewPetButton  petOwner={selectedOwner}/>
+                                <IconButton
+                                    key={pet.id}
+                                    onClick={() => handleSelectedPet(pet.id)}
+                                    flex={0}
+                                    className={isSelected(pet.id)}
+                                >
+                                    <Avatar
+                                        src={avatarAnimalUnsplashUrl(pet.species)}
+                                        alt={pet.petname}
+                                    />
+                                </IconButton>
+                                <Typography>{pet.petname}</Typography>
+                            </Stack>
+                        ))}
+                <AddNewPetButton petOwner={selectedOwner}/>
+                    </Stack>
+                ) : (
+                    <Typography component="h5" variant="h6" >Select owner first</Typography>
+                )}
+
             </Stack>
             <Divider/>
         </Stack>

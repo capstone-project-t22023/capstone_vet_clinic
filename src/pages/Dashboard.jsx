@@ -36,9 +36,9 @@ export default function Dashboard() {
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>
 
-                <Stack direction="column" maxWidth="300px">
-                <PetsListAvatars onChange={handleChangedSelectedPet}/>
-                </Stack>
+                {/*<Stack direction="column" maxWidth="300px">*/}
+                {/*<PetsListAvatars onChange={handleChangedSelectedPet}/>*/}
+                {/*</Stack>*/}
 
 
             <Stack
@@ -66,7 +66,7 @@ export default function Dashboard() {
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
                                     <PetsList petsList={petsList} petOwnersList={petOwners} onChange={handleChangedSelectedPet}/>
-                                    <PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>
+                                    {/*<PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>*/}
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
