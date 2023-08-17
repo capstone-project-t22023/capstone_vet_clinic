@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { useState, useContext } from "react";
 import {Box, Button, DialogTitle, Dialog, Typography} from "@mui/material";
-import {AlternateEmail} from '@mui/icons-material';
-import BookingOptions from './BookingOptions'
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
+import BookingOptions from './BookingOptions';
+import ProgramContext from "../../ProgramContext";
+
 
 function BookingDialog(props) {
-    const {open, onClose, onCancel, selectedBooking} = props;
+    const {open, onClose, onCancel, selectedBooking, editMode} = props;
 
     const handleSelectedDate = (booking) => {
         onClose(booking);
@@ -20,36 +22,74 @@ function BookingDialog(props) {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth={"md"}>
-            <DialogTitle sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold', color: "primary.main" }}>{selectedBooking ? "Chosen Appointment:" : "Choose the Date of appointment"}</DialogTitle>
-            {selectedBooking && <Typography component="p" sx={{ backgroundColor:"secondary.main", color: "secondary.contrastText", py: 1, textAlign: "center"}}>{selectedBooking.Date } <AlternateEmail fontSize="small" color="primary" /> { selectedBooking.TimeSlots +"" }</Typography> }
-            <BookingOptions onCancel={handleCancel} sendSelectedBooking={handleSelectedDate}/>
-            <Typography component="p" sx={{backgroundColor:"grey.200", color: "grey.500", py: 1, textAlign: "center"}}>note: This dates (02-08-2023 & 04-08-23) do have a bookings...</Typography>
+            <DialogTitle 
+                sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>
+                    {selectedBooking ? "Already selected:" : "Choose the Date of appointment"}
+            </DialogTitle>
+            <Typography 
+                component="p" 
+                variant="p" 
+                sx={{color: "error.main", my: 1, textAlign: "center"}}>
+                    This dates do have a bookings: 02-08-2023 & 04-08-23
+            </Typography>
+            {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.booking_date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.booking_time +"" }</p> : null}            
+            <BookingOptions 
+                onCancel={handleCancel} 
+                sendSelectedBooking={handleSelectedDate} 
+                selectedBooking={selectedBooking} 
+                editMode={editMode}/>
         </Dialog>
     );
 }
 
 
-export default function BookingButton() {
-    const [open, setOpen] = React.useState(false);
-    const [selectedBooking, setSelectedBooking] = React.useState();
+export default function BookingButton({booking}) {
+    const {user, authenticated} = useContext(ProgramContext);
+    const [open, setOpen] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState();
+    const [editMode, setEditMode] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
+        setEditMode(false);
+    };
+
+    const handleChangeBooking = () => {
+        setOpen(true);
+        setEditMode(true);
     };
 
     const handleClose = (value) => {
         setOpen(false);
         setSelectedBooking(value);
-        // THIS CAN SEND THE BOOKING TO PARENT
-        // booking(value)
+        booking(value);
     };
 
     const handleCancel = (value) => {
-      setOpen(value)
+      setOpen(value);
     }
 
     const handleRemoveBooking = () => {
-      setSelectedBooking(null);
+      fetch("http://localhost/capstone_vet_clinic/api.php/cancel_booking/"+selectedBooking.booking_id, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            },
+            body: JSON.stringify({
+                prev_booking_status: selectedBooking.booking_status,
+                username: user.username
+            })
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.cancel_booking);
+                setSelectedBooking(null);
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     return (
@@ -57,22 +97,26 @@ export default function BookingButton() {
             {selectedBooking ? (
                 <Box>
                     <Typography variant="subtitle1" component="div">
-                        <p>Selected Date: {selectedBooking ? selectedBooking.Date : "Please select a Date"}</p>
-                        <p>Selected Slots: {selectedBooking ? selectedBooking.TimeSlots + "" : "Nothing selected"}</p>
+                        <p>Booking ID: {selectedBooking.booking_id}</p>
+                        <p>Booking Status: {selectedBooking.booking_status}</p>
+                        <p>Date: {selectedBooking.booking_date}</p>
+                        <p>Time: {selectedBooking.booking_time.join(",")}</p>
+                        <p>Pet Owner: {selectedBooking.pet_owner}</p>
+                        <p>Pet: {selectedBooking.petname}</p>
                     </Typography>
                     <Button variant="outlined" onClick={handleRemoveBooking} sx={{ m: 1}}>
                         Remove Booking
                     </Button>
-                    <Button variant="contained" onClick={handleClickOpen} sx={{ m: 1}}>
+                    <Button variant="contained" onClick={handleChangeBooking} sx={{ m: 1}}>
                         Change booking
                     </Button>
                 </Box>
             ) : (
                 <Button variant="contained" onClick={handleClickOpen}>
-                    Make a new booking
+                   Make a new booking
                 </Button>
             )}
-            <BookingDialog open={open} onClose={handleClose} onCancel={handleCancel} selectedBooking={selectedBooking}/>
+            <BookingDialog open={open} onClose={handleClose} onCancel={handleCancel} selectedBooking={selectedBooking} editMode={editMode}/>
         </div>
     );
 }

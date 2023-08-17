@@ -1,20 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {
-    Alert,
-    Box,
-    CardContent,
-    Button,
-    InputAdornment,
-    TextField,
-    IconButton,
-    MenuItem,
-    Radio,
-    Avatar,
-    Typography,
-    FormControlLabel,
-    styled, Grid, Paper, Divider
-} from '@mui/material';
-import {Navigate, Link} from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Alert, Box, Grid, Card, CardActions, CardContent, Button, InputAdornment, TextField, IconButton, MenuItem, Radio, Avatar, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import { Navigate, Link } from "react-router-dom";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -27,15 +13,15 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const ausState = [
-    {value: '', label: '', shipping_fee: 0},
-    {value: 'NSW', label: 'New South Wales', shipping_fee: 30},
-    {value: 'QLD', label: 'Queensland', shipping_fee: 40},
-    {value: 'NT', label: 'Northern Territories', shipping_fee: 50},
-    {value: 'WA', label: 'Western Australia', shipping_fee: 50},
-    {value: 'SA', label: 'South Australia', shipping_fee: 50},
-    {value: 'TAS', label: 'Tasmania', shipping_fee: 50},
-    {value: 'VIC', label: 'Victoria', shipping_fee: 40},
-    {value: 'ACT', label: 'Australian Capital Territory', shipping_fee: 40},
+    { value: '', label: ''},
+    { value: 'NSW', label: 'New South Wales'},
+    { value: 'QLD', label: 'Queensland'},
+    { value: 'NT', label: 'Northern Territories'},
+    { value: 'WA', label: 'Western Australia'},
+    { value: 'SA', label: 'South Australia'},
+    { value: 'TAS', label: 'Tasmania'},
+    { value: 'VIC', label: 'Victoria'},
+    { value: 'ACT', label: 'Australian Capital Territory'},
 ];
 
 export default function SignupForm() {
@@ -105,19 +91,19 @@ export default function SignupForm() {
             });
     }, []);
 
-    function handleShowPassword() {
+    function handleShowPassword(){
         setShowPassword(!showPassword);
     };
 
-    function handleShowConfirmPassword() {
+    function handleShowConfirmPassword(){
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-    function handleMouseDownPassword(event) {
+    function handleMouseDownPassword (event){
         event.preventDefault();
     };
 
-    function handleMouseDownConfirmPassword(event) {
+    function handleMouseDownConfirmPassword (event){
         event.preventDefault();
     };
 
@@ -146,49 +132,49 @@ export default function SignupForm() {
         setErrorStateMessage("");
         setErrorUsernameMessage("");
 
-        if (event.target.id === 'fname') {
+        if(event.target.id === 'fname'){
             setFname(event.target.value);
-        } else if (event.target.id === 'lname') {
+        } else if(event.target.id === 'lname'){
             setLname(event.target.value);
-        } else if (event.target.id === 'phone') {
+        } else if(event.target.id === 'phone'){
             setPhone(event.target.value);
-        } else if (event.target.id === 'email') {
+        } else if(event.target.id === 'email'){
             setEmail(event.target.value);
-        } else if (event.target.id === 'address') {
+        } else if(event.target.id === 'address'){
             setAddress(event.target.value);
-        } else if (event.target.id === 'postcode') {
+        } else if(event.target.id === 'postcode'){
             setPostcode(event.target.value);
-        } else if (event.target.id === 'password') {
+        } else if (event.target.id === 'password'){
             setPassword(event.target.value);
-        } else if (event.target.id === 'password2') {
+        } else if (event.target.id === 'password2'){
             setPassword2(event.target.value);
-        } else if (event.target.id === 'username') {
+        } else if (event.target.id === 'username'){
             setUsername(event.target.value);
         }
     }
 
-    function handleSelectedPrivilege(event) {
+    function handleSelectedPrivilege(event){
         setSelectedPrivilege(event.target.value);
     }
 
-    function handleSelectedState(event) {
-        let st = ausState.filter(x => x.value === event.target.value);
+    function handleSelectedState(event){
+        let st = ausState.filter( x => x.value === event.target.value);
         setState(st[0]);
     }
 
-    function handleSignup(event) {
+    function handleSignup(event){
         event.preventDefault();
         let record = {};
         let errorPresent = false;
 
-        if (selectedPrivilege === 'doctor') {
+        if (selectedPrivilege === 'doctor'){
             record = doctors.filter(x => username.toUpperCase() === x.username.toUpperCase())[0];
-        } else if (selectedPrivilege === 'admin') {
+        } else if (selectedPrivilege === 'admin'){
             record = admins.filter(x => username.toUpperCase() === x.username.toUpperCase())[0];
-        } else if (selectedPrivilege === 'pet_owner') {
+        } else if (selectedPrivilege === 'pet_owner'){
             record = petOwners.filter(x => username.toUpperCase() === x.username.toUpperCase())[0];
         }
-
+        
         if (!email) {
             setErrorEmail(true);
             setErrorAlert(true);
@@ -206,15 +192,15 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorFnameMessage("First Name is required");
             errorPresent = true;
-        }
-
+        } 
+        
         if (!lname) {
             setErrorLname(true);
             setErrorAlert(true);
             setErrorLnameMessage("Last Name is required");
             errorPresent = true;
-        }
-
+        } 
+        
         if (!phone) {
             setErrorPhone(true);
             setErrorAlert(true);
@@ -225,27 +211,27 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorPhoneMessage("Only accepts 9 numbers, excluding 0 or +61");
             errorPresent = true;
-        } else if (phone.length !== 9) {
+        } else if (phone.length !== 9){
             setErrorPhone(true);
             setErrorAlert(true);
             setErrorPhoneMessage("Only accepts 9 numbers, excluding 0 or +61");
             errorPresent = true;
         }
-
+        
         if (!address) {
             setErrorAddress(true);
             setErrorAlert(true);
             setErrorAddressMessage("Address is required");
             errorPresent = true;
-        }
-
+        } 
+        
         if (!state.value) {
             setErrorState(true);
             setErrorAlert(true);
             setErrorStateMessage("State is required");
             errorPresent = true;
-        }
-
+        } 
+        
         if (!postcode) {
             setErrorPostcode(true);
             setErrorAlert(true);
@@ -256,26 +242,26 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorPostcodeMessage("Only accepts 4 numbers");
             errorPresent = true;
-        } else if (postcode.length !== 4) {
+        } else if (postcode.length !== 4){
             setErrorPostcode(true);
             setErrorAlert(true);
             setErrorPostcodeMessage("Only accepts 4 numbers");
             errorPresent = true;
         }
-
+        
         if (!password) {
             setErrorPassword(true);
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             errorPresent = true;
-        }
-
+        } 
+        
         if (!password2) {
             setErrorPassword2(true);
             setErrorAlert(true);
             setErrorPassword2Message("Please confirm password");
             errorPresent = true;
-        } else if (password !== password2) {
+        } else if (password !== password2){
             setErrorPassword(true);
             setErrorPassword2(true);
             setErrorAlert(true);
@@ -283,32 +269,32 @@ export default function SignupForm() {
             setErrorPassword2Message("Password doesn't match");
             errorPresent = true;
         }
-
+        
         if (!username) {
             setErrorUsername(true);
             setErrorAlert(true);
             setErrorUsernameMessage("Username is required");
             errorPresent = true;
-        }
+        }  
 
         if (!selectedPrivilege) {
             setErrorPrivilege(true);
             setErrorAlert(true);
             setErrorPrivilegeMessage("Role is required");
             errorPresent = true;
-        }
-
-        if (record) {
+        }  
+        
+        if ( record ){
             setErrorAlert(true);
-            setErrorAlertMessage("User already exists. Please login.");
-        } else if (errorPresent) {
+            setErrorAlertMessage("User already existing. Please login.");
+        } else if ( errorPresent ) {
             setErrorAlert(true);
             setErrorAlertMessage("Please check existing errors.");
-        } else if (!record) {
+        } else if(!record){
             console.log(JSON.stringify({
-                "username": username,
+                "username": username, 
                 "password": password,
-                "email": email,
+                "email": email, 
                 "firstname": fname,
                 "lastname": lname,
                 "phone": phone,
@@ -319,20 +305,20 @@ export default function SignupForm() {
             }));
 
             let link = "";
-            if (selectedPrivilege === 'doctor') {
+            if (selectedPrivilege === 'doctor'){
                 link = "http://localhost/capstone_vet_clinic/api.php/register_doctor";
-            } else if (selectedPrivilege === 'admin') {
+            } else if (selectedPrivilege === 'admin'){
                 link = "http://localhost/capstone_vet_clinic/api.php/register_admin";
-            } else if (selectedPrivilege === 'pet_owner') {
+            } else if (selectedPrivilege === 'pet_owner'){
                 link = "http://localhost/capstone_vet_clinic/api.php/register_pet_owner";
             }
 
             fetch(link, {
                 method: 'POST',
                 body: JSON.stringify({
-                    "username": username,
+                    "username": username, 
                     "password": password,
-                    "email": email,
+                    "email": email, 
                     "firstname": fname,
                     "lastname": lname,
                     "phone": phone,
@@ -340,337 +326,304 @@ export default function SignupForm() {
                     "state": state.value,
                     "postcode": postcode
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        sessionStorage.setItem('tmp_token', data.status);
-                        sessionStorage.setItem('tmp_privilege', selectedPrivilege);
-                        setToConfirm(true);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status) {
+                    sessionStorage.setItem('tmp_token', data.status);
+                    sessionStorage.setItem('tmp_privilege', selectedPrivilege);
+                    setToConfirm(true);
+                }
+              })
+              .catch(error => {
+                console.error(error);
+              });         
         }
     };
 
-    return (
-        <>
+  return (
+    <div>
 
-            {canLogin ?
-                <CardContent>
-                    Thank you for joining us!
-                    <br/>
-                </CardContent>
+        { canLogin ?
+            <CardContent>
+                Thank you for joining us!
+                <br/>
+            </CardContent>
 
-                :
+            :
 
-                <Box sx={{marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
-                        <LockOutlinedIcon/>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Join Us!
-                    </Typography>
+            <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Join Us!
+                </Typography>
 
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                    }}>
-                        <FormControlLabel value="doctor" label="Doctor" control={
-                            <Radio
-                                checked={selectedPrivilege === 'doctor'}
-                                onChange={handleSelectedPrivilege}
-                                value="doctor"
-                                name="privilege"
-                                inputProps={{'aria-label': 'Doctor'}}
-                            />
-                        }/>
-                        <FormControlLabel value="admin" label="Admin" control={
-                            <Radio
-                                checked={selectedPrivilege === 'admin'}
-                                onChange={handleSelectedPrivilege}
-                                value="admin"
-                                name="privilege"
-                                inputProps={{'aria-label': 'Admin'}}
-                            />
-                        }/>
-                        <FormControlLabel value="pet_owner" label="Pet Owner" control={
-                            <Radio
-                                checked={selectedPrivilege === 'pet_owner'}
-                                onChange={handleSelectedPrivilege}
-                                value="pet_owner"
-                                name="privilege"
-                                inputProps={{'aria-label': 'Pet Owner'}}
-                            />
-                        }/>
-                    </Box>
-
-
-                    <Grid container spacing={2} columns={12} sx={{width: "90%"}}>
-
-                        <Grid item xs={12} sm={8} sx={{mt: 0, alignItems: "center", mx: "auto"}}>
-                            <Grid item>
-                                <TextField
-                                    id="username"
-                                    label="Username"
-                                    helperText={errorUsername ? errorUsernameMessage : ""}
-                                    onChange={handleChange}
-                                    // variant="standard"
-                                    error={errorUsername}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <AccountCircle color="primary"/>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    required
-                                    fullWidth
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    id="password"
-                                    label="Password"
-                                    helperText={errorPassword ? errorPassword2Message : ""}
-                                    onChange={handleChange}
-                                    // variant="standard"
-                                    type={showPassword ? 'text' : 'password'}
-                                    error={errorPassword}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <PasswordIcon color="primary"/>
-                                            </InputAdornment>
-                                        ),
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                >
-                                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        )
-                                    }}
-                                    required
-                                    fullWidth
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    id="password2"
-                                    label="Confirm Password"
-                                    helperText={errorPassword2 ? errorPassword2Message : ""}
-                                    onChange={handleChange}
-                                    // variant="standard"
-                                    error={errorPassword2}
-                                    type={showConfirmPassword ? 'text' : 'password'}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <PasswordIcon color="primary"/>
-                                            </InputAdornment>
-                                        ),
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleShowConfirmPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                >
-                                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        )
-                                    }}
-                                    required
-                                    fullWidth
-                                    margin="normal"
-                                />
-                            </Grid>
-                        </Grid>
-
-
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="fname"
-                                label="FirstName"
-                                helperText={errorFname ? errorFnameMessage : ""}
-                                onChange={handleChange}
-                                // variant="standard"
-                                error={errorFname}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <BadgeIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="lname"
-                                label="LastName"
-                                helperText={errorLname ? errorLnameMessage : ""}
-                                onChange={handleChange}
-                                // variant="standard"
-                                error={errorLname}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <BadgeIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="phone"
-                                label="Phone"
-                                helperText={errorPhone ? errorPhoneMessage : ""}
-                                onChange={handleChange}
-                                // variant="standard"
-                                error={errorPhone}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <PhoneIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="email"
-                                label="Email Address"
-                                helperText={errorEmail ? errorEmailMessage : ""}
-                                onChange={handleChange}
-                                // variant="standard"
-                                error={errorEmail}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="address"
-                                label="Address"
-                                helperText={errorAddress ? errorAddressMessage : ""}
-                                onChange={handleChange}
-                                sx={{gridColumn: 'span 2'}}
-                                // variant="standard"
-                                error={errorAddress}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <HomeIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                select
-                                defaultValue=""
-                                id="state"
-                                label="State"
-                                helperText={errorState ? errorStateMessage : ""}
-                                onChange={handleSelectedState}
-                                // variant="standard"
-                                error={errorState}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <PlaceIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            >
-                                {ausState.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                id="postcode"
-                                label="Postcode"
-                                helperText={errorPostcode ? errorPostcodeMessage : ""}
-                                onChange={handleChange}
-                                // variant="standard"
-                                error={errorPostcode}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <PlaceIcon color="primary"/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-
-
-
-                    </Grid>
-                    {errorAlert ?
-                        <Box sx={{mt: 2, mb: 3}}>
-                            <Alert severity="error">{errorAlertMessage}</Alert>
-                        </Box>
-                        : ""
-                    }
-                    <Box sx={{display: 'flex', gap: 2, mt: 2, flexDirection: {xs: 'column', sm: 'row'}}}>
-                        <Link to="/">
-                            <Button variant="outlined">Discard and Return to Home</Button>
-                        </Link>
-                        <Button variant="contained" onClick={handleSignup}>Sign Up and Confirm</Button>
-                        {toConfirm ? <Navigate to="/confirm" replace={true}/> : ""}
-                    </Box>
-
+                <Box sx={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                    <FormControlLabel value="doctor" label="DOCTOR" control={
+                        <Radio
+                            checked={selectedPrivilege === 'doctor'}
+                            onChange={handleSelectedPrivilege}
+                            value="doctor"
+                            name="privilege"
+                            inputProps={{ 'aria-label': 'Doctor' }}
+                        />
+                    }/>
+                    <FormControlLabel value="admin" label="Admin" control={
+                        <Radio
+                            checked={selectedPrivilege === 'admin'}
+                            onChange={handleSelectedPrivilege}
+                            value="admin"
+                            name="privilege"
+                            inputProps={{ 'aria-label': 'Admin' }}
+                        />
+                    }/>
+                    <FormControlLabel value="pet_owner" label="Pet Owner" control={
+                        <Radio
+                        checked={selectedPrivilege === 'pet_owner'}
+                        onChange={handleSelectedPrivilege}
+                        value="pet_owner"
+                        name="privilege"
+                        inputProps={{ 'aria-label': 'Pet Owner' }}
+                        />
+                    }/>
                 </Box>
-            }
 
-        </>
-    )
+                <Box component="form" noValidate sx={{mt: 1, mb:1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', columnGap: 2, rowGap: 0 }}>
+                    <TextField
+                        id="fname"
+                        label="FirstName"
+                        helperText={errorFname ? errorFnameMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorFname}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <BadgeIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                        autoFocus
+                    />
+                    <TextField
+                        id="lname"
+                        label="LastName"
+                        helperText={errorLname ? errorLnameMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorLname}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <BadgeIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="phone"
+                        label="Phone"
+                        helperText={errorPhone ? errorPhoneMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorPhone}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PhoneIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="email"
+                        label="Email Address"
+                        helperText={errorEmail ? errorEmailMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorEmail}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <EmailIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="address"
+                        label="Address"
+                        helperText={errorAddress ? errorAddressMessage : ""}
+                        onChange={handleChange}
+                        sx={{ gridColumn: 'span 2' }}
+                        // variant="standard"
+                        error = {errorAddress}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <HomeIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        select
+                        defaultValue=""
+                        id="state"
+                        label="State"
+                        helperText={errorState ? errorStateMessage : ""}
+                        onChange={handleSelectedState}
+                        // variant="standard"
+                        error = {errorState}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PlaceIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    >
+                        {ausState.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        id="postcode"
+                        label="Postcode"
+                        helperText={errorPostcode ? errorPostcodeMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorPostcode}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PlaceIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="username"
+                        label="Username"
+                        helperText={errorUsername ? errorUsernameMessage : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorUsername}
+                        sx={{ gridColumn: 'span 2' }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <AccountCircle />
+                                </InputAdornment>
+                            ),
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="password"
+                        label="Password"
+                        helperText={errorPassword ? errorPassword2Message : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        type={showPassword ? 'text' : 'password'}
+                        error = {errorPassword}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PasswordIcon />
+                                </InputAdornment>
+                            ),
+                            endAdornment:(
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        id="password2"
+                        label="Confirm Password"
+                        helperText={errorPassword2 ? errorPassword2Message : ""}
+                        onChange={handleChange}
+                        // variant="standard"
+                        error = {errorPassword2}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PasswordIcon />
+                                </InputAdornment>
+                            ),
+                            endAdornment:(
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleShowConfirmPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+                </Box>
+                { errorAlert ?
+                    <Box sx={{ mt:2, mb: 3 }}>
+                        <Alert severity="error">{errorAlertMessage}</Alert>
+                    </Box>
+                        : ""
+                }
+                <Box sx={{ display: 'flex', gap:2, mt: 2 }}>
+                    <Link to="/">
+                        <Button variant="outlined">Discard and Return to Home</Button>
+                    </Link>
+                    <Button variant="contained" onClick={handleSignup}>Sign Up and Confirm</Button>
+                    { toConfirm ? <Navigate to="/confirm" replace={true}/> : "" }
+                </Box>
+
+            </Box>
+        }
+
+    </div>
+  )
 }
