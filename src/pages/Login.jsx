@@ -16,7 +16,7 @@ export default function Login() {
                     <LoginForm/>
             </Container>
 
-            <p>Pet owner: ritzydonut -> ritzydonut_2023</p>
+            <p>Pet owner: abundantasparagus -> abundantasparagus_2023</p>
             <p>Doctor: teemingbroth -> teemingbroth_2023</p>
             <p>admin: pawsome_admin -> pawsome_admin2023</p>
             <Footer/>

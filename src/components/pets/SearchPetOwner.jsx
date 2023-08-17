@@ -2,19 +2,21 @@ import React, {useState} from "react";
 import {Box, Typography, TextField, List, Stack, ListItemButton, ListItemText} from "@mui/material";
 
 
-export default function SearchPetOwner({selectedOwner, petOwnersList}) {
+export default function SearchPetOwner({selectedOwner, petsList}) {
+
+    console.log('THIS', petsList)
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [filteredOwners, setFilteredOwners] = useState(petOwnersList);
+    const [filteredOwners, setFilteredOwners] = useState(petsList);
     const [ownerIsSelected, setOwnerIsSelected] = useState(false);
     const handleSearchChange = (event) => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
 
-        const filtered = petOwnersList.filter(
+        const filtered = petsList.filter(
             (owner) =>
-                owner.firstName.toLowerCase().includes(query) ||
-                owner.lastName.toLowerCase().includes(query)
+                owner.firstname.toLowerCase().includes(query) ||
+                owner.lastname.toLowerCase().includes(query)
         );
 
         setFilteredOwners(filtered);
@@ -52,10 +54,10 @@ export default function SearchPetOwner({selectedOwner, petOwnersList}) {
                     }
                 }}>
                 {filteredOwners && filteredOwners.map((owner) => (
-                    <ListItemButton key={owner.id} onClick={() => handleSelectedOwner(owner.id)}
+                    <ListItemButton key={owner.id} onClick={() => handleSelectedOwner(owner.pet_owner_id)}
                               selected={owner.id === ownerIsSelected}>
                         <ListItemText
-                            primary={`${owner.firstName} ${owner.lastName} id${owner.id}`}
+                            primary={`${owner.firstname} ${owner.lastname}`}
                         />
                     </ListItemButton>
                 ))}

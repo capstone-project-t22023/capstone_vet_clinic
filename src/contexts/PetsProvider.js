@@ -1,10 +1,15 @@
-import {createContext, useEffect} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
+import {ProgramContext} from "./ProgramContext";
 
 export const PetsContext = createContext();
 
 export const PetsProvider = ({ children }) => {
 
-    let petList = [];
+    const {user} = useContext(ProgramContext);
+
+
+    const [petList, setPetList] = useState([]);
+
 
     useEffect(() => {
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pets", {
@@ -17,13 +22,19 @@ export const PetsProvider = ({ children }) => {
             })
             .then(data => {
                 if (data.pets) {
-                    petList = data.pets
+                    if (user.role === 'pet_owner') {
+                        const userPets = data.pets.find(u => u.pet_owner_id === user.id);
+                        setPetList(userPets.pets)
+                    }
+                    else if (user.role === 'doctor' || user.role === 'admin')  {
+                        setPetList(data.pets)
+                    };
                 }
             })
             .catch(error => {
                 console.error(error);
             });
-    }, []);
+    }, [user]);
 
 
 

@@ -31,6 +31,8 @@ export default function PetsList({petsList, onChange}) {
             setShowPet(null);
         } else {
             setShowPet(petId);
+
+            // selectedOwner.pet
             onChange(petId);
         }
     };
@@ -52,31 +54,20 @@ export default function PetsList({petsList, onChange}) {
         }
     };
 
-    const getPetOwner = (ownerId) => {
-        const foundOwner = petOwners.find((owner) => owner.id === ownerId);
-        return foundOwner ? foundOwner.firstName : "Unknown Owner";
-    };
+
 
     const isSelected = (petId) => showPet === petId ? "active" : "";
 
 
     const [selectedOwner, setSelectedOwner] = useState(null)
-    const [filteredPets, setFilteredPets] = useState(false);
 
-
-    function filterPetsByOwnerId(pets, ownerId) {
-        return pets.filter((pet) => pet.pet_owner_id === ownerId);
-    }
 
     const handlerSelectedOwner = (selected) => {
-        setSelectedOwner(selected);
+        const getOwner = petsList.find(item => item.pet_owner_id === selected);
+
+        setSelectedOwner(getOwner);
     }
 
-
-    useEffect(() => {
-        setFilteredPets(filterPetsByOwnerId(petsList, selectedOwner));
-        console.log("filtered pets:", filteredPets);
-    }, [selectedOwner]);
 
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
@@ -94,23 +85,21 @@ export default function PetsList({petsList, onChange}) {
                    }}
             >
 
-                <SearchPetOwner selectedOwner={handlerSelectedOwner} petOwnersList={petOwners}/>
+                <SearchPetOwner selectedOwner={handlerSelectedOwner} petsList={petsList}/>
 
-                {filteredPets.length > 0 ? (
+                {selectedOwner ? (
                     <Stack direction="row" flexWrap="wrap" spacing={2} width={1} flex={1}>
-                        <Typography>Pet Owner: {selectedOwner}</Typography>
-                        {filteredPets.map(pet => (
+                        {selectedOwner.pets.map((pet) => (
                             <Stack
-                                key={pet.id}
+                                key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
                                 direction="column"
                                 flex={0}
-                                sx={{backgroundColor: "secondary.50", borderRadius: 6}}
+                                sx={{ backgroundColor: "secondary.50", borderRadius: 6 }}
                             >
                                 <IconButton
-                                    key={pet.id}
-                                    onClick={() => handleSelectedPet(pet.id)}
+                                    onClick={() => handleSelectedPet(pet)}
                                     flex={0}
-                                    className={isSelected(pet.id)}
+                                    className={isSelected(pet.pet_id)}
                                 >
                                     <Avatar
                                         src={avatarAnimalUnsplashUrl(pet.species)}
@@ -120,10 +109,14 @@ export default function PetsList({petsList, onChange}) {
                                 <Typography>{pet.petname}</Typography>
                             </Stack>
                         ))}
-                <AddNewPetButton petOwner={selectedOwner}/>
+                        <AddNewPetButton petOwner={selectedOwner} />
                     </Stack>
+
                 ) : (
-                    <Typography component="h5" variant="h6" >Select owner first</Typography>
+                    <Box>
+                        <Typography component="h5" variant="h6">Owner has no pets</Typography>
+                        <AddNewPetButton petOwner={selectedOwner}/>
+                    </Box>
                 )}
 
             </Stack>

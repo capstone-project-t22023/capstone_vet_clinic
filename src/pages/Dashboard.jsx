@@ -9,24 +9,26 @@ import PetProfile from "../components/pets/PetProfile";
 import UpcomingAppointments from "../components/appointments/upcomingAppointments/UpcomingAppointments";
 import PetsList from "../components/pets/PetsList";
 import {PetsContext} from "../contexts/PetsProvider";
-import {PetOwnersContext} from "../contexts/PetOwnersProvider";
 
 
 export default function Dashboard() {
 
+
+
     const {user} = useContext(ProgramContext);
     const [selectedPet, setSelectedPet] = useState(false); // Changed initial value to null
-    const petsList = useContext(PetsContext);
-    const petOwners = useContext(PetOwnersContext);
+    const petList = useContext(PetsContext);
+    console.log("this is petlist", petList);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
         navigate(navigation);
     }
 
+    console.log('Petlist',petList);
 
-    const handleChangedSelectedPet = (petId) => {
-        (petId === false) ? setSelectedPet(false) : setSelectedPet(petId);
+    const handleChangedSelectedPet = (pet) => {
+        (pet === false) ? setSelectedPet(false) : setSelectedPet(pet);
     };
     const handleDeletePet = (petId) => {
         console.log("This Pet has to be removed", petId)
@@ -35,11 +37,6 @@ export default function Dashboard() {
     return (
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>
-
-                {/*<Stack direction="column" maxWidth="300px">*/}
-                {/*<PetsListAvatars onChange={handleChangedSelectedPet}/>*/}
-                {/*</Stack>*/}
-
 
             <Stack
                 direction="column"
@@ -65,8 +62,8 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                    <PetsList petsList={petsList} petOwnersList={petOwners} onChange={handleChangedSelectedPet}/>
-                                    {/*<PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>*/}
+                                    <PetsList petsList={petList} onChange={handleChangedSelectedPet}/>
+                                    {/*<PetsListAvatars petList={petList} onChange={handleChangedSelectedPet}/>*/}
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
@@ -94,7 +91,7 @@ export default function Dashboard() {
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
                                         Welcome Back, {user.firstname}!
                                     </Typography>
-                                    <PetsListAvatars petsList={petsList} onChange={handleChangedSelectedPet}/>
+                                    <PetsListAvatars petList={petList} onChange={handleChangedSelectedPet}/>
                                 </Stack>
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
@@ -136,7 +133,7 @@ export default function Dashboard() {
                             backgroundColor: 'white',
                         }}
                     >
-                        <PetProfile petsList={petsList} selectedPet={selectedPet} onDelete={handleDeletePet}/>
+                        <PetProfile pet={selectedPet} selectedPet={selectedPet} onDelete={handleDeletePet}/>
                     </Stack>
                 </Slide>
         </Stack>
