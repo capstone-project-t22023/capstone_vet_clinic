@@ -24,7 +24,6 @@ import Protected from './components/Protected';
 import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
-import {PetOwnersProvider} from "./contexts/PetOwnersProvider";
 
 
 /**
@@ -107,11 +106,9 @@ function App() {
                                 <Route index element={<Home/>}/>
                                 <Route path="/dashboard" element={
                                     <Protected isLoggedIn={authenticated}>
-                                        <PetOwnersProvider>
                                             <PetsProvider>
                                                 <Dashboard/>
                                             </PetsProvider>
-                                        </PetOwnersProvider>
                                     </Protected>
                                 }
                                 />

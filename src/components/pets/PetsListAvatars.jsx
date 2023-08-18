@@ -5,7 +5,6 @@ import AddNewPetButton from './AddNewPetButton';
 
 export default function PetsListAvatars({petList, onChange}) {
     const [showPet, setShowPet] = useState(null);
-    // const [showDialog, setShowDialog] = useState(false);
 
     const handleSelectedPet = (pet) => {
         if (showPet === pet) {
@@ -50,7 +49,7 @@ export default function PetsListAvatars({petList, onChange}) {
                    }
                }}
         >
-            <AddNewPetButton/>
+            <AddNewPetButton />
             {petList ?
                 petList.map(pet => (
                     <Tooltip key={pet.pet_id} title={pet.petname} placement="top" arrow>

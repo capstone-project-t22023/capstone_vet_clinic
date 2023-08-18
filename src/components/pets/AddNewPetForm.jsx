@@ -1,40 +1,46 @@
-import React, {useState} from "react";
-import {Box, Button, Grid, TextField, InputAdornment} from "@mui/material";
-import {AccountCircle, AddRounded} from "@mui/icons-material";
+import React, { useState } from "react";
+import {
+    Box,
+    Button,
+    Grid,
+    TextField,
+    FormControlLabel,
+    Checkbox
+} from "@mui/material";
+import { AccountCircle, AddRounded } from "@mui/icons-material";
 
-
-export default function AddNewPetForm({petToEdit, onAddPet}) {
-    const [petname, setPetname] = useState('');
-    const [species, setSpecies] = useState('');
-    const [breed, setBreed] = useState('');
-    const [birthdate, setBirthdate] = useState('');
-    const [weight, setWeight] = useState('');
-    const [comments, setComments] = useState('');
+export default function AddNewPetForm({ petToEdit = null, onAddPet, onUpdate, onCancel }) {
+    const [petname, setPetname] = useState("");
+    const [species, setSpecies] = useState("");
+    const [breed, setBreed] = useState("");
+    const [birthdate, setBirthdate] = useState("");
+    const [weight, setWeight] = useState("");
+    const [comments, setComments] = useState("");
     const [insuranceMembership, setInsuranceMembership] = useState(false);
-    const [insuranceExpiry, setInsuranceExpiry] = useState('');
+    const [insuranceExpiry, setInsuranceExpiry] = useState("");
     const [errors, setErrors] = useState({});
 
     const validateInputs = () => {
         const newErrors = {};
 
         if (!petname) {
-            newErrors.petname = 'Pet Name is required';
+            newErrors.petname = "Pet Name is required";
         }
 
         if (!species) {
-            newErrors.species = 'Species is required';
+            newErrors.species = "Species is required";
         }
 
         if (!breed) {
-            newErrors.breed = 'Breed is required';
+            newErrors.breed = "Breed is required";
         }
 
         if (!birthdate) {
-            newErrors.birthdate = 'Birthdate is required';
+            newErrors.birthdate = "Birthdate is required";
         }
 
         if (!weight) {
-            newErrors.weight = 'Weight is required';
+            newErrors.weight = "Weight is required";
         }
 
         setErrors(newErrors);
@@ -56,277 +62,131 @@ export default function AddNewPetForm({petToEdit, onAddPet}) {
                 insurance_expiry: insuranceExpiry,
             };
 
-            onAddPet(newPet);
-            setPetname('');
-            setSpecies('');
-            setBreed('');
-            setBirthdate('');
-            setWeight('');
-            setComments('');
+            if (petToEdit) {
+                onUpdate(newPet);
+            } else {
+                onAddPet(newPet);
+            }
+
+            setPetname("");
+            setSpecies("");
+            setBreed("");
+            setBirthdate("");
+            setWeight("");
+            setComments("");
             setInsuranceMembership(false);
-            setInsuranceExpiry('');
+            setInsuranceExpiry("");
             setErrors({});
         }
     };
 
+    const handleCancel = () => {
+        onCancel(true);
+    };
+
     return (
-
-        <Box sx={{p:3}}>
-            {petToEdit ? (
-                <Grid columns={12}
-                      sx={{width: "100%", mb: 3, "& .MuiSvgIcon-root": {flex: 1, color: "secondary.dark"}}}>
-
+        <Box sx={{ p: 3 }}>
+            <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
-
+                        <TextField
+                            label="Pet Name"
+                            fullWidth
+                            value={petname}
+                            onChange={(e) => setPetname(e.target.value)}
+                            error={!!errors.petname}
+                            helperText={errors.petname}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4} lg={3}>
                         <TextField
                             id="species"
                             label="Species"
-                            placeholder={petToEdit.species}
-                            // helperText={errorSpecies ? errorSpecies : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorSpecies}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
                             fullWidth
-                            margin="normal"
+                            value={species}
+                            onChange={(e) => setSpecies(e.target.value)}
+                            error={!!errors.species}
+                            helperText={errors.species}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
                         <TextField
                             id="breed"
                             label="Breed"
-                            placeholder={petToEdit.breed}
-                            // helperText={errorBreed ? errorBreedMessage : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorBreed}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
                             fullWidth
-                            margin="normal"
+                            value={breed}
+                            onChange={(e) => setBreed(e.target.value)}
+                            error={!!errors.breed}
+                            helperText={errors.breed}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
-
                         <TextField
                             id="birthdate"
-                            label="Birth Date"
-                            placeholder={petToEdit.birthdate}
-                            // helperText={errorSpecies ? errorBirthdate : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorBirthdate}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
+                            label="Birthdate"
                             fullWidth
-                            margin="normal"
+                            value={birthdate}
+                            onChange={(e) => setBirthdate(e.target.value)}
+                            error={!!errors.birthdate}
+                            helperText={errors.birthdate}
+                            type="date"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
                         <TextField
                             id="weight"
                             label="Weight"
-                            placeholder={petToEdit.weight}
-                            // helperText={errorBreed ? errorWeight : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorWeight}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
                             fullWidth
-                            margin="normal"
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            error={!!errors.weight}
+                            helperText={errors.weight}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
-
                         <TextField
                             id="comments"
                             label="Comments"
-                            placeholder={petToEdit.comments}
-                            // helperText={errorSpecies ? errorComments : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorComments}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
                             fullWidth
-                            margin="normal"
+                            value={comments}
+                            onChange={(e) => setComments(e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <TextField
-                            id="insurance_membership"
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id="insurance_membership"
+                                    checked={insuranceMembership}
+                                    onChange={(e) => setInsuranceMembership(e.target.checked)}
+                                />
+                            }
                             label="Insurance Membership"
-                            placeholder={petToEdit.insurance_membership ? 'Yes' : 'No'}
-                            // helperText={errorBreed ? errorInsurance_membership : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorInsurance_membership}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
-                            fullWidth
-                            margin="normal"
                         />
                     </Grid>
-
                     <Grid item xs={12} sm={6} md={4} lg={3}>
                         <TextField
                             id="insurance_expiry"
                             label="Insurance Expiry"
-                            placeholder={petToEdit.insurance_expiry}
-                            // value={petToEdit.insurance_expiry}
-                            // helperText={errorBreed ? errorInsurance_expiry : ""}
-                            // onChange={handleChange}
-                            // variant="standard"
-                            // error={errorInsurance_expiry}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle/>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            required
                             fullWidth
-                            margin="normal"
-                            type={"date"}
+                            value={insuranceExpiry}
+                            onChange={(e) => setInsuranceExpiry(e.target.value)}
+                            type="date"
                         />
                     </Grid>
-
-                </Grid>
-
-            ) : (
-                <>
-                    <Grid columns={12}
-                          sx={{}}>
-
-
-                        <form onSubmit={handleSubmit}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Pet Name"
-                                        fullWidth
-                                        value={petname}
-                                        onChange={(e) => setPetname(e.target.value)}
-                                        error={!!errors.petname}
-                                        helperText={errors.petname}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Species"
-                                        fullWidth
-                                        value={species}
-                                        onChange={(e) => setSpecies(e.target.value)}
-                                        error={!!errors.species}
-                                        helperText={errors.species}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Breed"
-                                        fullWidth
-                                        value={breed}
-                                        onChange={(e) => setBreed(e.target.value)}
-                                        error={!!errors.breed}
-                                        helperText={errors.breed}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Birthdate"
-                                        fullWidth
-                                        value={birthdate}
-                                        onChange={(e) => setBirthdate(e.target.value)}
-                                        error={!!errors.birthdate}
-                                        helperText={errors.birthdate}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Weight"
-                                        fullWidth
-                                        value={weight}
-                                        onChange={(e) => setWeight(e.target.value)}
-                                        error={!!errors.weight}
-                                        helperText={errors.weight}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Comments"
-                                        fullWidth
-                                        value={comments}
-                                        onChange={(e) => setComments(e.target.value)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Insurance Membership"
-                                        fullWidth
-                                        value={insuranceMembership}
-                                        onChange={(e) => setInsuranceMembership(e.target.checked)}
-                                        type="checkbox"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <TextField
-                                        label="Insurance Expiry"
-                                        fullWidth
-                                        value={insuranceExpiry}
-                                        onChange={(e) => setInsuranceExpiry(e.target.value)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button type="submit" variant="contained" color="primary">
-                                        <AddRounded />Add Pet
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </form>
+                    <Grid item xs={12}>
+                        {petToEdit ? (
+                            <Button variant="text" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                        ) : null}
+                        <Button type="submit" variant="contained" color="primary">
+                            {petToEdit ? "Update" : <AddRounded />}
+                            {/*{petToEdit ? "Update" : "Add Pet"}*/}
+                        </Button>
                     </Grid>
-
-                </>
-
-            )}
+                </Grid>
+            </form>
         </Box>
-    )
+    );
 }

@@ -1,14 +1,20 @@
-import React, {useState} from "react";
-import {Button, Tooltip, Dialog, IconButton, Zoom} from "@mui/material";
+import React, {useContext, useState} from "react";
+import {Button, Box, Tooltip, Dialog, IconButton, Zoom} from "@mui/material";
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
+// import ProgramContext from "../../contexts/ProgramContext";
+import {PetsContext} from "../../contexts/PetsProvider";
 
-export default function AddNewPetButton({petOwner = null}) {
+export default function AddNewPetButton() {
     const [openModal, setOpenModal] = useState(false);
     const handleAddPet = (pet) => {
       console.log("add this pet", pet);
       setOpenModal(false);
     }
+
+    const {selectedOwner} = useContext(PetsContext);
+    // const {user} = useContext(ProgramContext);
+
 
     return (
         <>
@@ -35,7 +41,9 @@ export default function AddNewPetButton({petOwner = null}) {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
             >
-                Add a new pet to this owner: {petOwner}
+                <Box>
+                    Add a new pet to this owner: {selectedOwner ? `${selectedOwner.firstname} and id ${selectedOwner.pet_owner_id}` : ''}
+                </Box>
                 <AddNewPetForm onAddPet={handleAddPet}/>
             </Dialog>
         </>

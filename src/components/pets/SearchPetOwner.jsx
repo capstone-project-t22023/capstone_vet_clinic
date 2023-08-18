@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Box, Typography, TextField, List, Stack, ListItemButton, ListItemText} from "@mui/material";
+import {PetsContext} from "../../contexts/PetsProvider";
 
 
-export default function SearchPetOwner({selectedOwner, petsList}) {
+export default function SearchPetOwner({petsList}) {
 
-    console.log('THIS', petsList)
+
+    const {updateSelectedOwner} = useContext(PetsContext);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredOwners, setFilteredOwners] = useState(petsList);
@@ -20,11 +22,10 @@ export default function SearchPetOwner({selectedOwner, petsList}) {
         );
 
         setFilteredOwners(filtered);
-        console.log("filtered owners :", filtered)
     };
-    const handleSelectedOwner = (ownerId) => {
-        selectedOwner(ownerId);
-        setOwnerIsSelected(ownerId);
+    const handleSelectedOwner = (owner) => {
+        setOwnerIsSelected(owner.pet_owner_id)
+        updateSelectedOwner(owner);
     };
 
     return (
@@ -54,8 +55,8 @@ export default function SearchPetOwner({selectedOwner, petsList}) {
                     }
                 }}>
                 {filteredOwners && filteredOwners.map((owner) => (
-                    <ListItemButton key={owner.id} onClick={() => handleSelectedOwner(owner.pet_owner_id)}
-                              selected={owner.id === ownerIsSelected}>
+                    <ListItemButton key={owner.pet_owner_id} onClick={() => handleSelectedOwner(owner)}
+                              selected={owner.pet_owner_id === ownerIsSelected}>
                         <ListItemText
                             primary={`${owner.firstname} ${owner.lastname}`}
                         />

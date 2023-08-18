@@ -17,15 +17,13 @@ export default function Dashboard() {
 
     const {user} = useContext(ProgramContext);
     const [selectedPet, setSelectedPet] = useState(false); // Changed initial value to null
-    const petList = useContext(PetsContext);
-    console.log("this is petlist", petList);
+    const {petList} = useContext(PetsContext);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
         navigate(navigation);
     }
 
-    console.log('Petlist',petList);
 
     const handleChangedSelectedPet = (pet) => {
         (pet === false) ? setSelectedPet(false) : setSelectedPet(pet);
@@ -133,7 +131,7 @@ export default function Dashboard() {
                             backgroundColor: 'white',
                         }}
                     >
-                        <PetProfile pet={selectedPet} selectedPet={selectedPet} onDelete={handleDeletePet}/>
+                        <PetProfile pet={selectedPet} onDelete={handleDeletePet}/>
                     </Stack>
                 </Slide>
         </Stack>
