@@ -5,8 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Stack, Box, Grid, Button, Paper, TextField, MenuItem } from '@mui/material';
 import TimeSlots from "./TimeSlots";
-import ProgramContext from "../../ProgramContext";
-
+import ProgramContext from "../../contexts/ProgramContext";
 
 
 export default function BookingOptions(props) {

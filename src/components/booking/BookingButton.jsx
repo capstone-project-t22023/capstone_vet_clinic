@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import {Box, Button, DialogTitle, Dialog, Typography} from "@mui/material";
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import BookingOptions from './BookingOptions';
-import ProgramContext from "../../ProgramContext";
+import ProgramContext from "../../contexts/ProgramContext";
 
 
 function BookingDialog(props) {
