@@ -8,30 +8,32 @@ import {
     IconButton,
     Divider,
     Paper,
+    Tooltip,
+    Zoom,
     Collapse,
     List,
     ListItem,
     ListItemText,
-    TextField
+    TextField, Fade
 } from "@mui/material";
 
 import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
 
-export default function PetsList({petsList, onChange}) {
+export default function PetsList({petsList}) {
     const [showPet, setShowPet] = useState(null);
-    const {selectedOwner} = useContext(PetsContext);
+    const {selectedOwner,updateSelectedPet} = useContext(PetsContext);
 
     const isSelected = (petId) => showPet === petId ? "active" : "";
 
-    const handleSelectedPet = (petObject) => {
-        if (showPet === petObject) {
-            onChange(false);
+    const handleSelectedPet = (petId) => {
+        if (showPet === petId) {
+            updateSelectedPet(false);
             setShowPet(null);
         } else {
-            setShowPet(petObject);
-            onChange(petObject);
+            setShowPet(petId);
+            updateSelectedPet(petId);
         }
     };
 
@@ -53,13 +55,9 @@ export default function PetsList({petsList, onChange}) {
     };
 
 
-
-
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
-
-
-            <Stack direction={"row"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start"
+            <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start"
                    sx={{
                        "& .MuiButtonBase-root": {
                            p: 0.5,
@@ -71,49 +69,53 @@ export default function PetsList({petsList, onChange}) {
                    }}
             >
 
-                {/*<SearchPetOwner selectedOwner={handlerSelectedOwner} petsList={petsList}/>*/}
-                <SearchPetOwner petsList={petsList}/>
-
-                {selectedOwner ? (
-                    selectedOwner.pets.length>0 ? (
-                        <Stack direction="row" flexWrap="wrap" spacing={2} width={1} flex={1}>
-                            {selectedOwner.pets.map((pet) => (
-                                <Stack
-                                    key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
-                                    direction="column"
-                                    flex={0}
-                                    sx={{ backgroundColor: "secondary.50", borderRadius: 6 }}
-                                >
-                                    <IconButton
-                                        onClick={() => handleSelectedPet(pet)}
+                {selectedOwner && Object.keys(selectedOwner).length > 0 ? (
+                    <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
+                        {selectedOwner.pets.length > 0 ? (
+                            <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="flex-start"
+                                   spacing={1} width={1} flex={1}>
+                                <Typography component="h5" variant="h6">{selectedOwner.firstname} has these pets:</Typography>
+                                {selectedOwner.pets.map((pet) => (
+                                    <Stack
+                                        key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
+                                        direction="column"
                                         flex={0}
-                                        className={isSelected(pet.pet_id)}
                                     >
-                                        <Avatar
-                                            src={avatarAnimalUnsplashUrl(pet.species)}
-                                            alt={pet.petname}
-                                        />
-                                    </IconButton>
-                                    <Typography>{pet.petname}</Typography>
-                                </Stack>
-                            ))}
-                            <AddNewPetButton petOwner={selectedOwner} />
-                        </Stack>
+                                        <Tooltip title={pet.petname} TransitionComponent={Fade} arrow placement="top">
+                                            <IconButton
+                                                onClick={() => handleSelectedPet(pet.pet_id)}
+                                                flex={0}
+                                                className={isSelected(pet.pet_id)}
+                                            >
+                                                <Avatar
+                                                    src={avatarAnimalUnsplashUrl(pet.species)}
+                                                    alt={pet.petname}
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Stack>
+                                ))}
+                                <AddNewPetButton petOwner={selectedOwner}/>
+                            </Stack>
 
-                    ) : (
-                        <Box>
-                            <Typography component="h5" variant="h6">Owner has no pets</Typography>
-                            <AddNewPetButton petOwner={selectedOwner}/>
-                        </Box>
-                    )
-                    ):(
-                        <Box>
-                            <Typography component="h5" variant="h6">Select the owner first</Typography>
-                        </Box>
-                    )}
+                        ) : (
+                            <Stack direction="row" alignItems="center" spacing={3}>
+                                <Typography component="h5" variant="h6">{selectedOwner.firstname} has no pets</Typography>
+                                <AddNewPetButton petOwner={selectedOwner}/>
+                            </Stack>
+                        )
+                        }
+                    </Paper>
+                ) : (
+                    <Box>
+                        <Typography component="h5" variant="h6">Select the owner first</Typography>
+                    </Box>
+                )}
+                {/*<Divider/>*/}
+                <SearchPetOwner/>
+
 
             </Stack>
-            <Divider/>
         </Stack>
     );
 }

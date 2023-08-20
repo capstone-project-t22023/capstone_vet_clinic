@@ -9,32 +9,31 @@ import PetProfile from "../components/pets/PetProfile";
 import UpcomingAppointments from "../components/appointments/upcomingAppointments/UpcomingAppointments";
 import PetsList from "../components/pets/PetsList";
 import {PetsContext} from "../contexts/PetsProvider";
+import BookingButton from "../components/booking/BookingButton";
 
 
 export default function Dashboard() {
 
 
-
     const {user} = useContext(ProgramContext);
-    const [selectedPet, setSelectedPet] = useState(false); // Changed initial value to null
-    const {petList} = useContext(PetsContext);
+    const {petList, selectedPet} = useContext(PetsContext);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
         navigate(navigation);
     }
 
-
-    const handleChangedSelectedPet = (pet) => {
-        (pet === false) ? setSelectedPet(false) : setSelectedPet(pet);
-    };
     const handleDeletePet = (petId) => {
         console.log("This Pet has to be removed", petId)
+    }
+    const handleBooking = (booking) => {
+        console.log("This is booking", booking)
     }
 
     return (
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>
+
 
             <Stack
                 direction="column"
@@ -59,14 +58,18 @@ export default function Dashboard() {
                                     </Typography>
                                 </Stack>
 
-                                <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                    <PetsList petsList={petList} onChange={handleChangedSelectedPet}/>
-                                    {/*<PetsListAvatars petList={petList} onChange={handleChangedSelectedPet}/>*/}
-                                </Paper>
 
                                 <Stack direction="row" spacing={2}>
-                                    <UpcomingAppointments/>
-                                    <UpcomingAppointments/>
+                                    <Box flex={1}>
+                                        <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
+                                            <Typography fontWeight="bold">Search in Pet Owners List</Typography>
+
+                                        </Stack>
+                                        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
+                                            <PetsList petsList={petList}/>
+                                        </Paper>
+                                    </Box>
+                                    {/*<UpcomingAppointments/>*/}
                                 </Stack>
 
                             </Stack>
@@ -89,7 +92,7 @@ export default function Dashboard() {
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
                                         Welcome Back, {user.firstname}!
                                     </Typography>
-                                    <PetsListAvatars petList={petList} onChange={handleChangedSelectedPet}/>
+                                    <PetsListAvatars petList={petList}/>
                                 </Stack>
 
                                 <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
@@ -120,20 +123,20 @@ export default function Dashboard() {
                 )}
 
             </Stack>
-                <Slide in={selectedPet ? true : false} direction="left" mountOnEnter unmountOnExit={true}>
-                    <Stack
-                        direction="column"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        spacing={5}
-                        sx={{
-                            height: '100vh',
-                            backgroundColor: 'white',
-                        }}
-                    >
-                        <PetProfile pet={selectedPet} onDelete={handleDeletePet}/>
-                    </Stack>
-                </Slide>
+            <Slide in={selectedPet ? true : false} direction="left">
+                <Stack
+                    direction="column"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={5}
+                    sx={{
+                        height: '100vh',
+                        backgroundColor: 'white',
+                    }}
+                >
+                    <PetProfile onDelete={handleDeletePet}/>
+                </Stack>
+            </Slide>
         </Stack>
     );
 }

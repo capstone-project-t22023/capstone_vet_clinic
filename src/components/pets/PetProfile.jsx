@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Avatar, Button, Box, Stack, Typography, Divider, IconButton, Tooltip, Fade, Dialog, Paper, Zoom
 } from "@mui/material";
@@ -8,13 +8,28 @@ import {
 } from '@mui/icons-material';
 import BookingButton from "../booking/BookingButton";
 import {PetsContext} from "../../contexts/PetsProvider";
+import ProgramContext from "../../contexts/ProgramContext";
+
 import AddNewPetForm from "./AddNewPetForm";
 
-export default function PetProfile({pet, onDelete}) {
+export default function PetProfile({onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
     const [actionForm, setActionForm] = useState(null);
-    const [newPetData, setNewPetData] = useState(null);
-    const {selectedOwner} = useContext(PetsContext);
+    const {selectedOwner,selectedPet} = useContext(PetsContext);
+    const [activePet, setActivePet] = useState(selectedPet);
+    const {user} = useContext(ProgramContext);
+
+    function getPetById(petId) {
+        return selectedOwner.pets ? selectedOwner.pets.find(pet => pet.pet_id === petId) : null;
+    }
+
+    useEffect (() => {
+        setActivePet(getPetById(selectedPet))
+    }, [selectedPet])
+
+    const handleBooking = (booking) => {
+      console.log("This is booking", booking)
+    }
 
     const avatarAnimalUnsplashUrl = (species) => {
         if (species === 'Dog') {
@@ -46,12 +61,13 @@ export default function PetProfile({pet, onDelete}) {
         setShowDialog(true);
     }
     const handleConfirmDelete = () => {
-        onDelete(pet.pet_id);
+        onDelete(activePet.pet_id);
         setShowDialog(false);
     };
 
 
-    return (pet && (<Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{m: 4}}>
+    return (activePet && (
+        <Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{p: 4}}>
             <Stack direction="column" spacing={2} alignItems="center"
                    sx={{
                        ":hover button": {
@@ -62,8 +78,8 @@ export default function PetProfile({pet, onDelete}) {
                        },
                    }}>
                 <Avatar
-                    src={avatarAnimalUnsplashUrl(pet.species)}
-                    alt={pet.petname}
+                    src={avatarAnimalUnsplashUrl(activePet.species)}
+                    alt={activePet.petname}
                     sx={{width: 120, height: 120}}
                 />
                 <Box sx={{textAlign: "center", position: "relative"}}>
@@ -75,7 +91,7 @@ export default function PetProfile({pet, onDelete}) {
                             fontWeight: "bold",
                         }}
                     >
-                        {pet.petname}
+                        {activePet.petname}
                     </Typography>
                     <Typography
                         component="h5"
@@ -84,7 +100,7 @@ export default function PetProfile({pet, onDelete}) {
                             textTransform: "uppercase", fontSize: 14,
                         }}
                     >
-                        {pet.breed}
+                        {activePet.breed}
                     </Typography>
                     <Stack direction="row" justifyContent="center">
                         <Tooltip title="Update details" placement="right" TransitionComponent={Zoom} arrow>
@@ -104,21 +120,22 @@ export default function PetProfile({pet, onDelete}) {
 
                             {actionForm === "delete" ? (
                                 <Box>
-                                <h4>{pet.petname} - {pet.breed}</h4>
-                                <p>Are you sure you want to delete this pet?</p>
+                                    <h4>{activePet.petname} - {activePet.breed}</h4>
+                                    <p>Are you sure you want to delete this pet?</p>
 
-                                <Button variant="text" onClick={() => setShowDialog(false)}>
-                                Cancel
-                                </Button>
-                                <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-                                Delete
-                                </Button>
+                                    <Button variant="text" onClick={() => setShowDialog(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                                        Delete
+                                    </Button>
                                 </Box>
                             ) : (
                                 actionForm === "update" ? (
                                     <Box>
-                                        <h4>{selectedOwner.firstname} {pet.petname} - {pet.breed}</h4>
-                                        <AddNewPetForm petToEdit={pet} onUpdate={handleConfirmUpdate} onCancel={() => setShowDialog(false)} />
+                                        <h4>{selectedOwner.firstname} {activePet.petname} - {activePet.breed}</h4>
+                                        <AddNewPetForm petToEdit={activePet} onUpdate={handleConfirmUpdate}
+                                                       onCancel={() => setShowDialog(false)}/>
                                     </Box>
                                 ) : (
                                     <Box>
@@ -129,7 +146,7 @@ export default function PetProfile({pet, onDelete}) {
                                         </Button>
                                     </Box>
                                 )
-                                )}
+                            )}
 
                         </Paper>
                     </Dialog>
@@ -160,7 +177,7 @@ export default function PetProfile({pet, onDelete}) {
                            }
                        }}>
                     <Stack direction="column">
-                        <Typography component="p"><AgeCalculator birthdate={pet.birthdate}/></Typography>
+                        <Typography component="p"><AgeCalculator birthdate={activePet.birthdate}/></Typography>
                         <Typography component="span">Age</Typography>
                     </Stack>
                     <Stack direction="column">
@@ -168,7 +185,7 @@ export default function PetProfile({pet, onDelete}) {
                         <Typography component="span">Sex</Typography>
                     </Stack>
                     <Stack direction="column">
-                        <Typography component="p">{pet.weight}</Typography>
+                        <Typography component="p">{activePet.weight}</Typography>
                         <Typography component="span">Weight</Typography>
                     </Stack>
                 </Stack>
@@ -233,7 +250,15 @@ export default function PetProfile({pet, onDelete}) {
                 </Stack>
             </Box>
 
-            <BookingButton/>
+            <BookingButton booking={handleBooking}/>
+
+            {user.role !== 'pet_owner' && (
+                <Stack direction='row' spacing={2}>
+                    <Button variant="outlined" disabled={true}>Write prescription</Button>
+                    <Button variant="outlined" disabled={true}>Update pet History</Button>
+                </Stack>
+            )}
+
 
         </Stack>
 

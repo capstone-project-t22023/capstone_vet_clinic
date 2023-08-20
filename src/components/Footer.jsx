@@ -6,7 +6,7 @@ export default function Footer() {
     const {user, authenticated} = useContext(ProgramContext);
     return (
         <Stack direction="column" justifyContent="space-between" alignItems="center" spacing={2}
-               sx={{py: 4, backgroundColor: "secondary.100"}}>
+               sx={{py: 4, backgroundColor: "primary.50", borderRadius: 6}}>
 
             <Typography component="h3" variant="h5">Footer Section</Typography>
 

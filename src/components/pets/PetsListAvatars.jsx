@@ -1,18 +1,21 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { Stack, Avatar, IconButton, Tooltip } from "@mui/material";
+import {PetsContext} from "../../contexts/PetsProvider";
 
 import AddNewPetButton from './AddNewPetButton';
 
-export default function PetsListAvatars({petList, onChange}) {
+export default function PetsListAvatars({petList}) {
     const [showPet, setShowPet] = useState(null);
+    const {selectedOwner, updateSelectedPet} = useContext(PetsContext);
 
-    const handleSelectedPet = (pet) => {
-        if (showPet === pet) {
-            onChange(false);
+
+    const handleSelectedPet = (petId) => {
+        if (showPet === petId) {
+            updateSelectedPet(false);
             setShowPet(null);
         } else {
-            setShowPet(pet);
-            onChange(pet);
+            setShowPet(petId);
+            updateSelectedPet(petId);
         }
     };
 
@@ -49,12 +52,12 @@ export default function PetsListAvatars({petList, onChange}) {
                    }
                }}
         >
-            <AddNewPetButton />
+            <AddNewPetButton petOwner={selectedOwner}/>
             {petList ?
                 petList.map(pet => (
                     <Tooltip key={pet.pet_id} title={pet.petname} placement="top" arrow>
                         <IconButton
-                            onClick={() => handleSelectedPet(pet)}
+                            onClick={() => handleSelectedPet(pet.pet_id)}
                             flex={0}
                             className={isSelected(pet.pet_id)}
                         >

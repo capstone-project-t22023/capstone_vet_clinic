@@ -3,6 +3,7 @@ import {Box, Button, DialogTitle, Dialog, Typography} from "@mui/material";
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import BookingOptions from './BookingOptions';
 import ProgramContext from "../../contexts/ProgramContext";
+import BookingOptionsUpdate from "./BookingOptionsUpdate";
 
 
 function BookingDialog(props) {
@@ -26,18 +27,9 @@ function BookingDialog(props) {
                 sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>
                     {selectedBooking ? "Already selected:" : "Choose the Date of appointment"}
             </DialogTitle>
-            <Typography 
-                component="p" 
-                variant="p" 
-                sx={{color: "error.main", my: 1, textAlign: "center"}}>
-                    This dates do have a bookings: 02-08-2023 & 04-08-23
-            </Typography>
-            {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.booking_date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.booking_time +"" }</p> : null}            
-            <BookingOptions 
-                onCancel={handleCancel} 
-                sendSelectedBooking={handleSelectedDate} 
-                selectedBooking={selectedBooking} 
-                editMode={editMode}/>
+            {selectedBooking ? <p className={"text-center text-primary"}>{selectedBooking.booking_date } <AlarmOnIcon fontSize="small" color="action" /> { selectedBooking.booking_time +"" }</p> : null}
+            <BookingOptionsUpdate onCancel={handleCancel} sendSelectedBooking={handleSelectedDate} selectedBooking={selectedBooking} editMode={editMode}/>
+            {/*<BookingOptions onCancel={handleCancel} sendSelectedBooking={handleSelectedDate} selectedBooking={selectedBooking} editMode={editMode}/>*/}
         </Dialog>
     );
 }

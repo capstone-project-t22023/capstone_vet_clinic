@@ -7,13 +7,26 @@ export const PetsProvider = ({children}) => {
 
     const {user} = useContext(ProgramContext);
     const [petList, setPetList] = useState([]);
-    const [selectedOwner, setSelectedOwner] = useState(null);
+    const [updatePetListData, setUpdateNewPetListData] = useState(false)
+    const [selectedOwner, setSelectedOwner] = useState({});
+    const [selectedPet, setSelectedPet] = useState({});
+
 
 
     const updateSelectedOwner = (owner) => {
         if (user.role !== 'pet_owner') {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
         }
+    }
+
+    const updateSelectedPet = (pet) => {
+        console.log("clickS",pet);
+        setSelectedPet(pet); // If user is not a pet owner, use the passed owner
+    }
+
+    const updatePetList = (Boolean) =>{
+        console.log("I am going to get a new data - PetsProvider/updatePetList")
+        setUpdateNewPetListData(true);
     }
 
 
@@ -34,18 +47,19 @@ export const PetsProvider = ({children}) => {
                         setPetList(userPets.pets);
                     } else if (user.role === 'doctor' || user.role === 'admin') {
                         setPetList(data.pets)
-                    }
-                    ;
+                    };
                 }
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [user]);
+        console.log("trying to updateNewPetListData to false - petsProvider/UseEffect", petList)
+        setUpdateNewPetListData(false);
+    }, [user, updatePetListData]);
 
 
     return (
-        <PetsContext.Provider value={{petList, selectedOwner, updateSelectedOwner}}>
+        <PetsContext.Provider value={{petList, selectedOwner, selectedPet, updateSelectedPet, updateSelectedOwner, updatePetList}}>
             {children}
         </PetsContext.Provider>
     );
