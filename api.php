@@ -1164,6 +1164,10 @@ elseif ($action === 'search_booking') {
             if ($bookings = $database->getBookingsByPetName($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
+        }  elseif ($_GET['filter'] == 'pet_id'){
+            if ($bookings = $database->getBookingsByPetId($_GET['filter_value'])) {
+                return_json(['bookings' => $bookings]);
+            } 
         }
     }
 } 
