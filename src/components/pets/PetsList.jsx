@@ -20,7 +20,7 @@ import {
 import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
-import UpcomingAppointments from "../appointments/upcomingAppointments/UpcomingAppointments";
+import Appointments from "../appointments/Appointments";
 
 export default function PetsList({petsList}) {
     const [showPet, setShowPet] = useState(null);
@@ -112,9 +112,9 @@ export default function PetsList({petsList}) {
 
 
                     <Stack direction="row" spacing={2} mb={2}>
-                        <UpcomingAppointments filter="today"/>
-                        <UpcomingAppointments filter="historic"/>
-                        <UpcomingAppointments filter="future"/>
+                        <Appointments filter="today"/>
+                        <Appointments filter="historic"/>
+                        <Appointments filter="future"/>
 
                     </Stack>
 

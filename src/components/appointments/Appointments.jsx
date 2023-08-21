@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Box, Button, Paper, Divider, IconButton, Stack, Typography} from "@mui/material";
 import {AccessTimeFilledRounded, ForwardRounded, ChevronRightRounded} from '@mui/icons-material';
-import UpcomingAppointmentsItem from "./UpcomingAppointmentsItem";
+import AppointmentsItem from "./AppointmentsItem";
 import dayjs from "dayjs";
-import {PetsContext} from "../../../contexts/PetsProvider";
+import {PetsContext} from "../../contexts/PetsProvider";
 
 
-export default function UpcomingAppointments({filter}) {
+export default function Appointments({filter}) {
 
 
     // APPOINTMENTS LIST
@@ -112,7 +112,7 @@ export default function UpcomingAppointments({filter}) {
                         <Typography fontWeight="bold" color="grey.300">No Records.</Typography>
                 ) : (
                     filteredAppointments.map((appointment, index) => (
-                        <UpcomingAppointmentsItem appointment={appointment} key={index} />
+                        <AppointmentsItem appointment={appointment} key={index} />
                     ))
                 )}
 

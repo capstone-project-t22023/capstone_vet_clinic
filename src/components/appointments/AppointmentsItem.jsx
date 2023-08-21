@@ -64,7 +64,7 @@ const SxUpcomingAppointment = {
         },
     }
 }
-export default function UpcomingAppointmentsItem({appointment}) {
+export default function AppointmentsItem({appointment}) {
     console.log('appointment: ', appointment)
     const sortedBookingTime = appointment.booking_time.sort((a, b) => a.localeCompare(b));
 

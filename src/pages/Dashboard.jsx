@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import Aside from '../components/aside/Aside';
 import PetsListAvatars from "../components/pets/PetsListAvatars";
 import PetProfile from "../components/pets/PetProfile";
-import UpcomingAppointments from "../components/appointments/upcomingAppointments/UpcomingAppointments";
+import Appointments from "../components/appointments/Appointments";
 import PetsList from "../components/pets/PetsList";
 import {PetsContext} from "../contexts/PetsProvider";
 import BookingButton from "../components/booking/BookingButton";
@@ -104,10 +104,10 @@ export default function Dashboard() {
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
-                                    <UpcomingAppointments filter="today"/>
-                                    <UpcomingAppointments filter="future"/>
-                                    <UpcomingAppointments filter="historic"/>
-                                    <UpcomingAppointments/>
+                                    <Appointments filter="today"/>
+                                    <Appointments filter="future"/>
+                                    <Appointments filter="historic"/>
+                                    <Appointments/>
 
                                 </Stack>
 

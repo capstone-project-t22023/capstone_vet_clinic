@@ -5,8 +5,6 @@ import Header from "../components/Header"
 import Footer from "../components/Footer";
 import UserCard from "../components/user/UserCard";
 import Aside from "../components/aside/Aside";
-import UpcomingAppointments from "../components/appointments/upcomingAppointments/UpcomingAppointments";
-import PetsListAvatars from "../components/pets/PetsListAvatars";
 
 
 export default function Home() {
