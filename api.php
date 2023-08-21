@@ -69,35 +69,108 @@ $valid_jwt_token = isset($bearer_token) ? valid_jwt_token($bearer_token) : false
 $database = new Database();
 
 /**
+ * Authorization and User Management
+ */
+
+/**
  * Executed when doctor registers
  * A unique code will be generated to be entered by doctor later to be activated
  */
 if ($action === 'register_doctor') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
-    $doctor = [
-        'firstname' => $_POST['firstname'],
-        'lastname' => $_POST['lastname'],
-        'username' => $_POST['username'],
-        'password' => md5($_POST['password']),
-        'address' => $_POST['address'],
-        'state' => $_POST['state'],
-        'email' => $_POST['email'],
-        'phone' => $_POST['phone'],
-        'postcode' => $_POST['postcode'],
-        'archived' => 1,
-        'created_date' => date('Y-m-d H:i:s'),
-        'updated_date' => date('Y-m-d H:i:s'),
-    ];
+    $check = false;
 
-    if ($doctor_id = $database->addDoctor($doctor)) {
-        $doctor['id'] = $doctor_id;
-        if ($code = $database->generateTokenForDoctor($doctor_id)) {
-            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-            $payload = ['user' => $doctor];
-            $jwt = generate_jwt_token($headers, $payload);
-            return_json(['status' => $jwt]);
+    if(validateLength($_POST['firstname'], 50)
+        && validateAlpha($_POST['firstname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Firstname must be up to 50 letters only."]);
+    }
+
+    if(validateLength($_POST['lastname'], 50)
+        && validateAlpha($_POST['lastname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Lastname must be up to 50 letters only."]);
+    }
+
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if(validateAlphaNumeric($_POST['address'])
+        && validateLength($_POST['address'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Address must be up to 100 letters only."]);  
+    }
+
+    if(validateAlpha($_POST['state'])
+        && validateLength($_POST['state'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: State must be up to 100 letters only."]);  
+    }
+
+    if(validateEmail($_POST['email'])
+        && validateLength($_POST['email'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Email must be up to 100 letters only."]);  
+    }
+
+    if(validateNumeric($_POST['phone'])
+        && validateLength($_POST['phone'], 9)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Phone number must be up to 9 numerical characters only."]);  
+    }
+
+    if(validateNumeric($_POST['postcode'])
+        && validateLength($_POST['postcode'], 4)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
+    }
+
+    if($check){
+        $doctor = [
+            'firstname' => $_POST['firstname'],
+            'lastname' => $_POST['lastname'],
+            'username' => $_POST['username'],
+            'password' => md5($_POST['password']),
+            'address' => $_POST['address'],
+            'state' => $_POST['state'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'postcode' => $_POST['postcode'],
+            'archived' => 1,
+            'created_date' => date('Y-m-d H:i:s'),
+            'updated_date' => date('Y-m-d H:i:s'),
+        ];
+
+        if ($doctor_id = $database->addDoctor($doctor)) {
+            $doctor['id'] = $doctor_id;
+            if ($code = $database->generateTokenForDoctor($doctor_id)) {
+                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                $payload = ['user' => $doctor];
+                $jwt = generate_jwt_token($headers, $payload);
+                return_json(['register_user' => $jwt]);
+            }
         }
+    } else {
+        return_json(['register_user' => "Error occured."]);
     }
 }  
 
@@ -108,6 +181,71 @@ if ($action === 'register_doctor') {
 if ($action === 'register_admin') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
+    $check = false;
+
+    if(validateLength($_POST['firstname'], 50)
+        && validateAlpha($_POST['firstname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Firstname must be up to 50 letters only."]);
+    }
+
+    if(validateLength($_POST['lastname'], 50)
+        && validateAlpha($_POST['lastname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Lastname must be up to 50 letters only."]);
+    }
+
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if(validateAlphaNumeric($_POST['address'])
+        && validateLength($_POST['address'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Address must be up to 100 letters only."]);  
+    }
+
+    if(validateAlpha($_POST['state'])
+        && validateLength($_POST['state'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: State must be up to 100 letters only."]);  
+    }
+
+    if(validateEmail($_POST['email'])
+        && validateLength($_POST['email'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Email must be up to 100 letters only."]);  
+    }
+
+    if(validateNumeric($_POST['phone'])
+        && validateLength($_POST['phone'], 9)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Phone number must be up to 9 numerical characters only."]);  
+    }
+
+    if(validateNumeric($_POST['postcode'])
+        && validateLength($_POST['postcode'], 4)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
+    }
+
     $admin = [
         'firstname' => $_POST['firstname'],
         'lastname' => $_POST['lastname'],
@@ -123,14 +261,18 @@ if ($action === 'register_admin') {
         'updated_date' => date('Y-m-d H:i:s'),
     ];
 
-    if ($admin_id = $database->addAdmin($admin)) {
-        $admin['id'] = $admin_id;
-        if ($code = $database->generateTokenForAdmin($admin_id)) {
-            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-            $payload = ['user' => $admin];
-            $jwt = generate_jwt_token($headers, $payload);
-            return_json(['status' => $jwt]);
+    if($check){
+        if ($admin_id = $database->addAdmin($admin)) {
+            $admin['id'] = $admin_id;
+            if ($code = $database->generateTokenForAdmin($admin_id)) {
+                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                $payload = ['user' => $admin];
+                $jwt = generate_jwt_token($headers, $payload);
+                return_json(['register_user' => $jwt]);
+            }
         }
+    } else {
+        return_json(['register_user' => "Error occured."]);
     }
 }  
 
@@ -141,6 +283,71 @@ if ($action === 'register_admin') {
 if ($action === 'register_pet_owner') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
+    $check = false;
+
+    if(validateLength($_POST['firstname'], 50)
+        && validateAlpha($_POST['firstname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Firstname must be up to 50 letters only."]);
+    }
+
+    if(validateLength($_POST['lastname'], 50)
+        && validateAlpha($_POST['lastname'])){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Lastname must be up to 50 letters only."]);
+    }
+
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if(validateAlphaNumeric($_POST['address'])
+        && validateLength($_POST['address'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Address must be up to 100 letters only."]);  
+    }
+
+    if(validateAlpha($_POST['state'])
+        && validateLength($_POST['state'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: State must be up to 100 letters only."]);  
+    }
+
+    if(validateEmail($_POST['email'])
+        && validateLength($_POST['email'], 100)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Email must be up to 100 letters only."]);  
+    }
+
+    if(validateNumeric($_POST['phone'])
+        && validateLength($_POST['phone'], 9)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Phone number must be up to 9 numerical characters only."]);  
+    }
+
+    if(validateNumeric($_POST['postcode'])
+        && validateLength($_POST['postcode'], 4)){
+        $check = true;
+    } else {
+        return_json(['register_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
+    }
+
     $pet_owner = [
         'firstname' => $_POST['firstname'],
         'lastname' => $_POST['lastname'],
@@ -156,14 +363,18 @@ if ($action === 'register_pet_owner') {
         'updated_date' => date('Y-m-d H:i:s'),
     ];
 
-    if ($pet_owner_id = $database->addPetOwner($pet_owner)) {
-        $pet_owner['id'] = $pet_owner_id;
-        if ($code = $database->generateTokenForPetOwners($pet_owner_id)) {
-            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-            $payload = ['user' => $pet_owner];
-            $jwt = generate_jwt_token($headers, $payload);
-            return_json(['status' => $jwt]);
+    if($check){
+        if ($pet_owner_id = $database->addPetOwner($pet_owner)) {
+            $pet_owner['id'] = $pet_owner_id;
+            if ($code = $database->generateTokenForPetOwners($pet_owner_id)) {
+                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                $payload = ['user' => $pet_owner];
+                $jwt = generate_jwt_token($headers, $payload);
+                return_json(['register_user' => $jwt]);
+            }
         }
+    } else {
+        return_json(['register_user' => "Error occured."]);
     }
 } 
 
@@ -263,17 +474,36 @@ elseif ($action === 'get_token_pet_owner') {
 elseif ($action === 'login_doctor') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
+    $check = false;
 
-    if (
-        $doctor = $database->loginDoctor(
-            $_POST['username'],
-            md5($_POST['password'])
-        )
-    ) {
-        $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-        $payload = ['user' => $doctor];
-        $jwt = generate_jwt_token($headers, $payload);
-        return_json(['credentials' => $jwt]);
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if($check){
+        if (
+            $doctor = $database->loginDoctor(
+                $_POST['username'],
+                md5($_POST['password'])
+            )
+        ) {
+            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+            $payload = ['user' => $doctor];
+            $jwt = generate_jwt_token($headers, $payload);
+            return_json(['login' => $jwt]);
+        }
+    } else {
+        return_json(['login' => "Error occurred."]); 
     }
 }
 
@@ -285,17 +515,36 @@ elseif ($action === 'login_doctor') {
 elseif ($action === 'login_admin') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
+    $check = false;
 
-    if (
-        $admin = $database->loginAdmin(
-            $_POST['username'],
-            md5($_POST['password'])
-        )
-    ) {
-        $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-        $payload = ['user' => $admin];
-        $jwt = generate_jwt_token($headers, $payload);
-        return_json(['credentials' => $jwt]);
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if($check){
+        if (
+            $admin = $database->loginAdmin(
+                $_POST['username'],
+                md5($_POST['password'])
+            )
+        ) {
+            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+            $payload = ['user' => $admin];
+            $jwt = generate_jwt_token($headers, $payload);
+            return_json(['login' => $jwt]);
+        }
+    } else {
+        return_json(['login' => "Error occurred."]); 
     }
 }
 
@@ -307,17 +556,36 @@ elseif ($action === 'login_admin') {
 elseif ($action === 'login_pet_owner') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
+    $check = false;
 
-    if (
-        $pet_owner = $database->loginPetOwner(
-            $_POST['username'],
-            md5($_POST['password'])
-        )
-    ) {
-        $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-        $payload = ['user' => $pet_owner];
-        $jwt = generate_jwt_token($headers, $payload);
-        return_json(['credentials' => $jwt]);
+    if(validateUsername($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
+    }
+
+    if(validatePassword($_POST['password'])
+        && validateLength($_POST['password'], 20)){
+        $check = true;
+    } else {
+        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+    }
+
+    if($check){
+        if (
+            $pet_owner = $database->loginPetOwner(
+                $_POST['username'],
+                md5($_POST['password'])
+            )
+        ) {
+            $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+            $payload = ['user' => $pet_owner];
+            $jwt = generate_jwt_token($headers, $payload);
+            return_json(['login' => $jwt]);
+        }
+    } else {
+        return_json(['login' => "Error occurred."]); 
     }
 }
 
@@ -389,6 +657,291 @@ elseif ($action === 'get_all_pet_owners') {
         return_json(['pet_owners' => $pet_owners]);
     }
 } 
+
+/**
+ * API endpoint when deleting doctors
+ * deleteDoctor method that deletes doctor record from database.php
+ */ 
+elseif ($action === 'delete_doctor') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+        
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deleteDoctor($record)) {
+            return_json(['delete_doctor' => "success"]);
+        } else {
+            return_json(['delete_doctor' => "error"]);
+        }
+    }
+} 
+
+/**
+ * API endpoint when deleting admins
+ * deleteAdmin method that deletes admin record from database.php
+ */ 
+elseif ($action === 'delete_admin') {
+    if ($valid_jwt_token) {
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deleteAdmin($record)) {
+            return_json(['delete_admin' => "success"]);
+        } else {
+            return_json(['delete_admin' => "error"]);
+        }
+    }
+} 
+
+/**
+ * API endpoint when deleting pet owners
+ * deletePetOwner method that deletes pet owner record from database.php
+ */ 
+elseif ($action === 'delete_pet_owner') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+        
+        $record = [
+            'id' => $id,
+            'username' => $_POST['username']
+        ];
+
+        if ($database->deletePetOwner($record)) {
+            return_json(['delete_pet_owner' => "success"]);
+        } else {
+            return_json(['delete_pet_owner' => "error"]);
+        }
+    }
+} 
+
+/**
+ * API endpoint when adding user
+ * add<Role> method that adds user record from database.php
+ */ 
+elseif ($action === 'add_user') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+        $check = false;
+
+        if(validateLength($_POST['firstname'], 50)
+            && validateAlpha($_POST['firstname'])){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Firstname must be up to 50 letters only."]);
+        }
+
+        if(validateLength($_POST['lastname'], 50)
+            && validateAlpha($_POST['lastname'])){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Lastname must be up to 50 letters only."]);
+        }
+
+        if(validateUsername($_POST['username'])
+            && validateLength($_POST['username'], 20)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Username must be up to 20 characters only."]);  
+        }
+
+        if(validatePassword($_POST['password'])
+            && validateLength($_POST['password'], 20)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+        }
+
+        if(validateAlphaNumeric($_POST['address'])
+            && validateLength($_POST['address'], 100)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Address must be up to 100 letters only."]);  
+        }
+
+        if(validateAlpha($_POST['state'])
+            && validateLength($_POST['state'], 100)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: State must be up to 100 letters only."]);  
+        }
+
+        if(validateEmail($_POST['email'])
+            && validateLength($_POST['email'], 100)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Email must be up to 100 letters only."]);  
+        }
+
+        if(validateNumeric($_POST['phone'])
+            && validateLength($_POST['phone'], 9)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Phone number must be up to 9 numerical characters only."]);  
+        }
+
+        if(validateNumeric($_POST['postcode'])
+        && validateLength($_POST['postcode'], 4)){
+            $check = true;
+        } else {
+            return_json(['add_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
+        }
+        
+        $user = [
+            'role' => $_POST['role'],
+            'firstname' => $_POST['firstname'],
+            'lastname' => $_POST['lastname'],
+            'username' => $_POST['username'],
+            'password' => md5($_POST['password']),
+            'address' => $_POST['address'],
+            'state' => $_POST['state'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'postcode' => $_POST['postcode'],
+            'created_by' => $_POST['created_by']
+        ];
+
+        if($_POST['role'] === 'pet_owner'){
+            if ($user_id = $database->addPetOwnerByAdmin($user)) {
+                return_json(['add_user' => $user_id]);
+            } else {
+                return_json(['add_user' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'doctor'){
+            if ($user_id = $database->addDoctorByAdmin($user)) {
+                return_json(['add_user' => $user_id]);
+            } else {
+                return_json(['add_user' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'admin'){
+            if ($user_id = $database->addAdminByAdmin($user)) {
+                return_json(['add_user' => $user_id]);
+            } else {
+                return_json(['add_user' => "error"]);
+            }
+        }
+    }
+} 
+
+/**
+ * API endpoint when updating user
+ * update<Role> method that updates user record from database.php
+ */ 
+elseif ($action === 'update_user') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+        $check = false;
+
+        if(validateLength($_POST['firstname'], 50)
+            && validateAlpha($_POST['firstname'])){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Firstname must be up to 50 letters only."]);
+        }
+
+        if(validateLength($_POST['lastname'], 50)
+            && validateAlpha($_POST['lastname'])){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Lastname must be up to 50 letters only."]);
+        }
+
+        if(validateUsername($_POST['username'])
+            && validateLength($_POST['username'], 20)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Username must be up to 20 characters only."]);  
+        }
+
+        if(validatePassword($_POST['password'])
+            && validateLength($_POST['password'], 20)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
+        }
+
+        if(validateAlphaNumeric($_POST['address'])
+            && validateLength($_POST['address'], 100)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Address must be up to 100 letters only."]);  
+        }
+
+        if(validateAlpha($_POST['state'])
+            && validateLength($_POST['state'], 100)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: State must be up to 100 letters only."]);  
+        }
+
+        if(validateEmail($_POST['email'])
+            && validateLength($_POST['email'], 100)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Email must be up to 100 letters only."]);  
+        }
+
+        if(validateNumeric($_POST['phone'])
+            && validateLength($_POST['phone'], 9)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Phone number must be up to 9 numerical characters only."]);  
+        }
+
+        if(validateNumeric($_POST['postcode'])
+        && validateLength($_POST['postcode'], 4)){
+            $check = true;
+        } else {
+            return_json(['update_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
+        }
+
+        $user = [
+            'id' => $id,
+            'role' => $_POST['role'],
+            'firstname' => $_POST['firstname'],
+            'lastname' => $_POST['lastname'],
+            'password' => md5($_POST['password']),
+            'address' => $_POST['address'],
+            'state' => $_POST['state'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'postcode' => $_POST['postcode'],
+            'username' => $_POST['username'],
+        ];
+
+        if($_POST['role'] === 'pet_owner'){
+            if ($database->updatePetOwner($user)) {
+                return_json(['update_user' => "success"]);
+            } else {
+                return_json(['update_user' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'doctor'){
+            if ($database->updateDoctor($user)) {
+                return_json(['update_user' => "success"]);
+            } else {
+                return_json(['update_user' => "error"]);
+            }
+        } elseif ($_POST['role'] === 'admin'){
+            if ($database->updateAdmin($user)) {
+                return_json(['update_user' => "success"]);
+            } else {
+                return_json(['update_user' => "error"]);
+            }
+        }
+    }
+} 
+
+/**
+ * Pet Management
+ */
 
 /**
  * API endpoint when getting all pet owners that are active
@@ -474,159 +1027,6 @@ elseif ($action === 'get_all_pets_by_filter') {
             if ($pets = $database->getAllPetsByPetOwnerId($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
-        }
-    }
-} 
-
-/**
- * API endpoint when deleting doctors
- * deleteDoctor method that deletes doctor record from database.php
- */ 
-elseif ($action === 'delete_doctor') {
-    if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-        
-        $record = [
-            'id' => $id,
-            'username' => $_POST['username']
-        ];
-
-        if ($database->deleteDoctor($record)) {
-            return_json(['delete_doctor' => "success"]);
-        } else {
-            return_json(['delete_doctor' => "error"]);
-        }
-    }
-} 
-
-/**
- * API endpoint when deleting admins
- * deleteAdmin method that deletes admin record from database.php
- */ 
-elseif ($action === 'delete_admin') {
-    if ($valid_jwt_token) {
-        $record = [
-            'id' => $id,
-            'username' => $_POST['username']
-        ];
-
-        if ($database->deleteAdmin($record)) {
-            return_json(['delete_admin' => "success"]);
-        } else {
-            return_json(['delete_admin' => "error"]);
-        }
-    }
-} 
-
-/**
- * API endpoint when deleting pet owners
- * deletePetOwner method that deletes pet owner record from database.php
- */ 
-elseif ($action === 'delete_pet_owner') {
-    if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-        
-        $record = [
-            'id' => $id,
-            'username' => $_POST['username']
-        ];
-
-        if ($database->deletePetOwner($record)) {
-            return_json(['delete_pet_owner' => "success"]);
-        } else {
-            return_json(['delete_pet_owner' => "error"]);
-        }
-    }
-} 
-
-/**
- * API endpoint when adding user
- * add<Role> method that adds user record from database.php
- */ 
-elseif ($action === 'add_user') {
-    if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $user = [
-            'role' => $_POST['role'],
-            'firstname' => $_POST['firstname'],
-            'lastname' => $_POST['lastname'],
-            'username' => $_POST['username'],
-            'password' => md5($_POST['password']),
-            'address' => $_POST['address'],
-            'state' => $_POST['state'],
-            'email' => $_POST['email'],
-            'phone' => $_POST['phone'],
-            'postcode' => $_POST['postcode'],
-            'created_by' => $_POST['created_by']
-        ];
-
-        if($_POST['role'] === 'pet_owner'){
-            if ($user_id = $database->addPetOwnerByAdmin($user)) {
-                return_json(['add_pet_owner' => $user_id]);
-            } else {
-                return_json(['add_pet_owner' => "error"]);
-            }
-        } elseif ($_POST['role'] === 'doctor'){
-            if ($user_id = $database->addDoctorByAdmin($user)) {
-                return_json(['add_doctor' => $user_id]);
-            } else {
-                return_json(['add_doctor' => "error"]);
-            }
-        } elseif ($_POST['role'] === 'admin'){
-            if ($user_id = $database->addAdminByAdmin($user)) {
-                return_json(['add_admin' => $user_id]);
-            } else {
-                return_json(['add_admin' => "error"]);
-            }
-        }
-    }
-} 
-
-/**
- * API endpoint when updating user
- * update<Role> method that updates user record from database.php
- */ 
-elseif ($action === 'update_user') {
-    if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $user = [
-            'id' => $id,
-            'role' => $_POST['role'],
-            'firstname' => $_POST['firstname'],
-            'lastname' => $_POST['lastname'],
-            'password' => md5($_POST['password']),
-            'address' => $_POST['address'],
-            'state' => $_POST['state'],
-            'email' => $_POST['email'],
-            'phone' => $_POST['phone'],
-            'postcode' => $_POST['postcode'],
-            'username' => $_POST['username'],
-        ];
-
-        if($_POST['role'] === 'pet_owner'){
-            if ($database->updatePetOwner($user)) {
-                return_json(['update_pet_owner' => "success"]);
-            } else {
-                return_json(['update_pet_owner' => "error"]);
-            }
-        } elseif ($_POST['role'] === 'doctor'){
-            if ($database->updateDoctor($user)) {
-                return_json(['update_doctor' => "success"]);
-            } else {
-                return_json(['update_doctor' => "error"]);
-            }
-        } elseif ($_POST['role'] === 'admin'){
-            if ($database->updateAdmin($user)) {
-                return_json(['update_admin' => "success"]);
-            } else {
-                return_json(['update_admin' => "error"]);
-            }
         }
     }
 } 
@@ -734,6 +1134,8 @@ elseif ($action === 'add_pet') {
             } else {
                 return_json(['add_pet' => "error"]);
             }
+        } else {
+            return_json(['add_pet' => "Error encountered."]);
         }
     }
 }
@@ -746,6 +1148,78 @@ elseif ($action === 'update_pet') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
+        $check = false;
+
+        if(validateNumeric($_POST['pet_owner_id'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Pet Owner ID must be a number."]);
+        }
+
+        if(validateLength($_POST['species'], 50)
+        && validateAlpha($_POST['species'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Species must be up to 50 letters only."]);
+        }
+
+        if(validateLength($_POST['breed'], 50)
+        && validateAlpha($_POST['breed'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Breed must be up to 50 letters only."]);
+        }
+
+        if(validateDate($_POST['birthdate'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Birthdate must be a valid date with format DD-MM-YYYY."]);
+        }
+
+        if(validateDecimal($_POST['weight'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Weight must be a valid number."]);
+        }
+
+        if(validateAlpha($_POST['sex'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Sex must only consist of letters."]);
+        }
+
+        if(validateLength($_POST['microchip_no'], 15)
+        && validateNumeric($_POST['microchip_no'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
+        }
+
+        if(validateLength($_POST['insurance_membership'], 10)
+        && validateNumeric($_POST['insurance_membership'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+        }
+
+        if(validateDate($_POST['insurance_expiry'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Insurance Expiration Date must be a valid date with format DD-MM-YYYY."]);
+        }
+
+        if(validateLength($_POST['comments'], 1000)){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
+        }
+
+        if(validateAlpha($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Username must be up to 20 characters only."]);
+        }
 
         $pet = [
             'id' => $id,
@@ -762,10 +1236,14 @@ elseif ($action === 'update_pet') {
             'comments' => $_POST['comments']
         ];
 
-        if ($database->updatePet($pet)) {
-            return_json(['update_pet' => "success"]);
-        } else {
-            return_json(['update_pet' => "error"]);
+        if($check){
+            if ($database->updatePet($pet)) {
+                return_json(['update_pet' => "success"]);
+            } else {
+                return_json(['update_pet' => "error"]);
+            }
+        }  else {
+            return_json(['add_pet' => "Error encountered."]);
         }
     }
 }
@@ -802,6 +1280,10 @@ elseif ($action === 'get_pet') {
         }
     }
 }
+
+/**
+ * Booking Management
+ */
 
 /**
  * API endpoint when getting taken slots
@@ -843,8 +1325,6 @@ elseif ($action === 'get_taken_slots_by_date') {
         }
     }
 }
-
-
 
 /**
  * API endpoint when getting taken slots
@@ -1063,7 +1543,7 @@ elseif ($action === 'confirm_booking') {
         $_POST = json_decode($rest_json, true);
 
         $booking = [
-            'booking_id' => $_POST['booking_id'],
+            'booking_id' => $id,
             'prev_booking_status' => $_POST['prev_booking_status'],
             'new_booking_status' => $_POST['new_booking_status'],
             'booking_type' => $_POST['booking_type'],
@@ -1088,10 +1568,10 @@ elseif ($action === 'confirm_booking') {
         endforeach;
 
         if ($database->updateBookingByAdmin($booking)) {
-            if($database->deleteBookingSlot($_POST['booking_id'])){
+            if($database->deleteBookingSlot($id)){
                 foreach($booking_slots as $slot):
                     $record = [
-                        'booking_id' => $_POST['booking_id'],
+                        'booking_id' => $id,
                         'booking_date' => $slot['booking_date'],
                         'booking_time' => $slot['booking_time']
                     ];
@@ -1101,7 +1581,7 @@ elseif ($action === 'confirm_booking') {
                 endforeach;
 
                 $booking_history_record = [
-                    'booking_id' => $_POST['booking_id'],
+                    'booking_id' => $id,
                     'prev_status' => $_POST['prev_booking_status'],
                     'new_status' => $_POST['new_booking_status'],
                     'username' => $_POST['username']
@@ -1131,7 +1611,7 @@ elseif ($action === 'finish_booking') {
         $_POST = json_decode($rest_json, true);
 
         $booking_record = [
-            'booking_id' => $_POST['booking_id'],
+            'booking_id' => $id,
             'prev_status' => $_POST['prev_booking_status'],
             'new_status' => $_POST['new_booking_status'],
             'username' => $_POST['username']
@@ -1251,6 +1731,30 @@ elseif ($action === 'search_booking') {
         }
     }
 } 
+
+/**
+ * Pet Health Record Management
+ */
+
+/**
+ * Invoice/Billing Management
+ */
+
+/**
+ * Inventory System Management
+ */
+
+/**
+ * Lodging Management
+ */
+
+/**
+ * Sales Management
+ */
+
+/**
+ * Configuration Management
+ */
 
 return_json(['status' => 0]);
 

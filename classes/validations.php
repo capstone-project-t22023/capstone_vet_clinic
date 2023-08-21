@@ -50,5 +50,29 @@ function validateDate($input){
     }
 }
 
+function validatePassword($input){
+    if(preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/', $input)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function validateUsername($input){
+    if(preg_match('/^[A-Za-z0-9_.]+$/', $input)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function validateEmail($input){
+    if(preg_match('/^\\S+@\\S+\\.\\S+$/', $input)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 ?>

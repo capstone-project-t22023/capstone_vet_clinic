@@ -29,10 +29,11 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'INSERT INTO doctors (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO doctors (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE(),SYSDATE())'
         );
         $sql->bind_param(
-            'sssssssiiiss',
+            'sssssssiii',
             $doctor['firstname'],
             $doctor['lastname'],
             $doctor['username'],
@@ -42,9 +43,7 @@ class Database
             $doctor['email'],
             $doctor['phone'],
             $doctor['postcode'],
-            $doctor['archived'],
-            $doctor['created_date'],
-            $doctor['updated_date']
+            $doctor['archived']
         );
         if ($sql->execute()) {
             $id = $this->connection->insert_id;
@@ -70,10 +69,11 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'INSERT INTO admins (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO admins (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE(),SYSDATE())'
         );
         $sql->bind_param(
-            'sssssssiiiss',
+            'sssssssiii',
             $admin['firstname'],
             $admin['lastname'],
             $admin['username'],
@@ -83,9 +83,7 @@ class Database
             $admin['email'],
             $admin['phone'],
             $admin['postcode'],
-            $admin['archived'],
-            $admin['created_date'],
-            $admin['updated_date']
+            $admin['archived']
         );
         if ($sql->execute()) {
             $id = $this->connection->insert_id;
@@ -111,7 +109,8 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'INSERT INTO pet_owners (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)'
+            'INSERT INTO pet_owners (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`, `updated_date`) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE(),SYSDATE())'
         );
         $sql->bind_param(
             'sssssssiiiss',
@@ -124,9 +123,7 @@ class Database
             $pet_owner['email'],
             $pet_owner['phone'],
             $pet_owner['postcode'],
-            $pet_owner['archived'],
-            $pet_owner['created_date'],
-            $pet_owner['updated_date']
+            $pet_owner['archived']
         );
         if ($sql->execute()) {
             $id = $this->connection->insert_id;

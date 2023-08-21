@@ -1,0 +1,652 @@
+***************************************
+BOOKING ENDPOINTS
+***************************************
+
+endpoint: /cancel_booking/<booking_id>
+request_body: 
+    {
+        "prev_booking_status": "PENDING",
+        "username": "pawsome_admin"
+    }
+response_body:
+    {
+        "cancel_booking": "success"
+    }
+
+endpoint: /finish_booking/<booking_id>
+request_body: 
+    {
+
+    }
+response_body:
+    {
+        
+        
+    }
+
+endpoint: /confirm_booking/<booking_id>
+request_body: 
+    {
+        "booking_id": 10000000,
+        "prev_booking_status": "PENDING",
+        "new_booking_status": "CONFIRMED",
+        "booking_type": "Vaccine",
+        "pet_owner_id": 1002,
+        "pet_id": 3,
+        "doctor_id": 1,
+        "username": "pawsome_admin",
+        "booking_slots": [
+            {
+                "booking_date": "19-09-2023",
+                "booking_time": "09:30"
+            },
+            {
+                "booking_date": "19-09-2023",
+                "booking_time": "10:00"
+            }
+        ]
+    }
+response_body:
+    {
+        "confirm_booking": "success"
+    }
+
+endpoint: /update_booking_by_pet_owner/<booking_id>
+request_body: 
+    {
+        "booking_type": "Vaccine",
+        "prev_booking_status": "PENDING",
+        "pet_owner_id": 1002,
+        "pet_id": 3,
+        "username": "pawsome_admin",
+        "booking_slots": [
+            {
+                "booking_date": "19-09-2023",
+                "booking_time": "09:30"
+            },
+            {
+                "booking_date": "19-09-2023",
+                "booking_time": "10:00"
+            }
+        ]
+    }
+response_body:
+    {
+        "update_booking": "success"
+    }
+
+endpoint: /update_booking_by_admin/<booking_id>
+request_body: 
+    {
+        "booking_type":"Standard Consultation",
+        "prev_booking_status": "PENDING",
+        "pet_owner_id":1017,
+        "pet_id":20,
+        "doctor_id":1,
+        "username":"pawsome_admin",
+        "booking_slots":[
+            {
+                "booking_date":"17-08-2023",
+                "booking_time":"10:30"}
+            ,{
+                "booking_date":"17-08-2023",
+                "booking_time":"11:00"
+            },
+            {
+                "booking_date":"17-08-2023",
+                "booking_time":"11:30"
+            },
+            {
+                "booking_date":"17-08-2023",
+                "booking_time":"12:00"
+            }
+        ]
+    }
+response_body:
+    {
+        "update_booking": "10000069"
+    }
+
+endpoint: /add_booking
+request_body: 
+    {
+        "booking_type": "STANDARD CONSULTATION",
+        "pet_owner_id": 1002,
+        "pet_id": 3,
+        "username": "pawsome_admin",
+        "booking_slots": [
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:00"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:30"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "09:00"
+            }
+        ]
+    }
+response_body:
+    {
+        "add_booking": "success"
+    }
+
+endpoint: /get_taken_slots_by_date
+request_body: 
+    {
+        "selected_date": "07-09-2023"
+    }
+response_body:
+    {
+        "taken_slots_by_date": [
+            {
+                "booking_date": "07-09-2023",
+                "booking_time": [
+                    "09:00",
+                    "15:00"
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_taken_slots_all
+request_body: NO BODY
+response_body:
+    {
+        "taken_slots_all": [
+            {
+                "booking_date": "08-09-2023",
+                "booking_time": [
+                    "14:00",
+                    "09:00",
+                    "08:00",
+                    "16:00",
+                    "15:00"
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_booking_types
+request_body: NO BODY
+response_body:
+    {
+        "booking_types": [
+            {
+                "id": 1,
+                "booking_type": "Standard Consultation",
+                "booking_fee": 100,
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": 501,
+                "archived": 0
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by pet ID)
+request_body: 
+    {
+        "filter": "pet_id",
+        "filter_value": 1
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000054,
+                "booking_date": "2023-08-21",
+                "booking_time": "08:30",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-16 22:30:06",
+                "pet_owner_id": 1001,
+                "username": "ritzydonut",
+                "pet_owner": "Gilbert Lynch",
+                "pet_id": 1,
+                "petname": "Paws"
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by pet name)
+request_body: 
+    {
+        "filter": "pet_name",
+        "filter_value": "Ma"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000004,
+                "booking_date": "2023-09-16",
+                "booking_time": "13:30",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1002,
+                "username": "moaningcasserole",
+                "pet_owner": "Luigi Swanson",
+                "pet_id": 19,
+                "petname": "Maple"
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by username)
+request_body: 
+    {
+        "filter": "username",
+        "filter_value": "a"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000036,
+                "booking_date": "2023-09-17",
+                "booking_time": "09:00",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1007,
+                "username": "unreliablecaviar",
+                "pet_owner": "Nicholas Wu",
+                "pet_id": 7,
+                "petname": "Biscuit"
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by booking type)
+request_body: 
+    {
+        "filter": "booking_type",
+        "filter_value": "Consultation"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000025,
+                "booking_date": "2023-09-16",
+                "booking_time": "16:00",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1019,
+                "username": "pushyherring",
+                "pet_owner": "Fausto Booker",
+                "pet_id": 22,
+                "petname": "Yoda"
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by booking status)
+request_body: 
+    {
+        "filter": "booking_status",
+        "filter_value": "Pending"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000056,
+                "booking_date": "2023-09-17",
+                "booking_time": "08:00",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "update_date": "2023-08-14 11:04:21",
+                "pet_owner_id": 1002,
+                "username": "moaningcasserole",
+                "pet_owner": "Luigi Swanson",
+                "pet_id": 3,
+                "petname": "Snickers"
+            }
+        ]
+    }
+
+
+endpoint: /search_booking (by booking date)
+request_body: 
+    {
+        "filter": "booking_date",
+        "filter_value": "16-09-2023"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000000,
+                "booking_date": "2023-09-16",
+                "booking_time": "08:30",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1001,
+                "username": "ritzydonut",
+                "pet_owner": "Gilbert Lynch",
+                "pet_id": 1,
+                "petname": "Paws"
+            } 
+        ]
+    }
+
+
+endpoint: /search_booking (by booking_id)
+request_body: 
+    {
+        "filter": "booking_id",
+        "filter_value": "32"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000032,
+                "booking_date": "2023-09-17",
+                "booking_time": "13:30",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1003,
+                "username": "abundantasparagus",
+                "pet_owner": "Flora Short",
+                "pet_id": 4,
+                "petname": "Muffin"
+            }
+        ]
+    }
+
+
+endpoint: /get_booking/<id> (by booking id)
+request_body: NO BODY
+response_body:
+    {
+        "booking_record": {
+            "booking_id": 10000050,
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "15:00",
+                "15:30"
+            ],
+            "booking_status": "PENDING",
+            "booking_type": "Standard Consultation",
+            "doctor_id": null,
+            "invoice_id": null,
+            "receipt_id": null,
+            "updated_date": "2023-08-21 14:05:47",
+            "pet_owner_id": 1017,
+            "username": "immodestdill",
+            "pet_owner": "Vicki Oliver",
+            "pet_id": 20,
+            "petname": "Stormy"
+        }
+    }
+
+***************************************
+USER ENDPOINTS
+***************************************
+
+endpoint: /get_all_admins
+request_body: NO BODY
+response_body:
+    {
+        "admins": [
+            {
+                "id": 501,
+                "firstname": "Pawsome",
+                "lastname": "Admin",
+                "username": "pawsome_admin",
+                "password": "59c1a715843c02b63f6862dbb596be97",
+                "address": "40 Romawi Road",
+                "state": "NSW",
+                "email": "pawsome_admin@pawsome.com.au",
+                "phone": 123456789,
+                "postcode": 2570,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+endpoint: /get_all_doctors
+request_body: NO BODY
+response_body:
+    {
+        "doctors": [
+            {
+                "id": 1,
+                "firstname": "Joe",
+                "lastname": "Mcguire",
+                "username": "sneeringbovril",
+                "password": "5fdbec3120f1fde6bdd6106d5b2c7aca",
+                "address": "33 Arthur Street",
+                "state": "NSW",
+                "email": "sneeringbovril@pawsome.com.au",
+                "phone": 832775073,
+                "postcode": 2761,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+endpoint: /get_all_pet_owners
+request_body: NO BODY
+response_body:
+    {
+        "pet_owners": [
+            {
+                "id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "password": "8a01bb6762f3526d584c4e293af69263",
+                "address": "4 Taylor Street",
+                "state": "NSW",
+                "email": "ritzydonut@pawsome.com.au",
+                "phone": 515335785,
+                "postcode": 3000,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+***************************************
+PET ENDPOINTS
+***************************************
+
+endpoint: /get_all_pets
+request_body: NO BODY
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "pets": [
+                    {
+                        "pet_id": 1,
+                        "petname": "Paws",
+                        "species": "Dog",
+                        "breed": "Golden Retriever",
+                        "birthdate": "2021-01-22",
+                        "weight": "36.30",
+                        "sex": "Female",
+                        "microchip_no": null,
+                        "insurance_membership": "5988040028",
+                        "insurance_expiry": "2025-05-30",
+                        "comments": "No allergies"
+                    }
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by firstname)
+request_body: 
+    {
+        "filter": "firstname",
+        "filter_value": "Lu"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1002,
+                "firstname": "Luigi",
+                "lastname": "Swanson",
+                "username": "moaningcasserole",
+                "pet_id": 3,
+                "petname": "Snickers",
+                "species": "Guinea Pig",
+                "breed": "Teddy",
+                "birthdate": "2021-03-14",
+                "weight": "1.00",
+                "sex": "Male",
+                "microchip_no": null,
+                "insurance_membership": null,
+                "insurance_expiry": null,
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by pet_owner_id)
+request_body: 
+    {
+        "filter": "pet_owner_id",
+        "filter_value": "1001"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "pet_id": 1,
+                "petname": "Paws",
+                "species": "Dog",
+                "breed": "Golden Retriever",
+                "birthdate": "2021-01-22",
+                "weight": "36.30",
+                "sex": "Female",
+                "microchip_no": null,
+                "insurance_membership": "5988040028",
+                "insurance_expiry": "2025-05-30",
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by lname)
+request_body: 
+    {
+        "filter": "lastname",
+        "filter_value": "Oliver"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1017,
+                "firstname": "Vicki",
+                "lastname": "Oliver",
+                "username": "immodestdill",
+                "pet_id": 20,
+                "petname": "Stormy",
+                "species": "Dog",
+                "breed": "Poodle",
+                "birthdate": "2017-08-18",
+                "weight": "35.00",
+                "sex": "Female",
+                "microchip_no": null,
+                "insurance_membership": "7766577891",
+                "insurance_expiry": "2025-07-30",
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by petname)
+request_body: 
+    {
+        "filter": "petname",
+        "filter_value": "Sni"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1002,
+                "firstname": "Luigi",
+                "lastname": "Swanson",
+                "username": "moaningcasserole",
+                "pet_id": 3,
+                "petname": "Snickers",
+                "species": "Guinea Pig",
+                "breed": "Teddy",
+                "birthdate": "2021-03-14",
+                "weight": 1,
+                "sex": "Male",
+                "microchip_no": null,
+                "insurance_membership": null,
+                "insurance_expiry": null,
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /
+request_body: 
+    {
+
+    }
+response_body:
+    {
+        
+        
+    }

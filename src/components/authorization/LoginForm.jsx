@@ -101,8 +101,8 @@ export default function LoginForm() {
             })
                 .then(res => res.json())
                 .then((data) => {
-                    if (data.credentials) {
-                        sessionStorage.setItem('token', data.credentials);
+                    if (data.login) {
+                        sessionStorage.setItem('token', data.login);
                         sessionStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
                             headers: {
@@ -170,8 +170,8 @@ export default function LoginForm() {
             })
                 .then(res => res.json())
                 .then((data) => {
-                    if (data.credentials) {
-                        sessionStorage.setItem('token', data.credentials);
+                    if (data.login) {
+                        sessionStorage.setItem('token', data.login);
                         sessionStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
                             headers: {
@@ -239,8 +239,8 @@ export default function LoginForm() {
             })
                 .then(res => res.json())
                 .then((data) => {
-                    if (data.credentials) {
-                        sessionStorage.setItem('token', data.credentials);
+                    if (data.login) {
+                        sessionStorage.setItem('token', data.login);
                         sessionStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
                             headers: {
