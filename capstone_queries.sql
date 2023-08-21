@@ -216,6 +216,326 @@ CREATE TABLE `pawsome`.`booking_history` (
   `updated_by` int(10) NOT NULL COMMENT 'Booking updated by user ID'
 );
 
+DROP TABLE IF EXISTS `pawsome`.`inventory_item_categories`;
+CREATE TABLE `pawsome`.`inventory_item_categories` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `item_category` varchar(50) NOT NULL COMMENT 'Category name of item',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_category_UNIQUE` (`item_category`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+);
+
+DROP TABLE IF EXISTS `pawsome`.`inventory_items`;
+CREATE TABLE `pawsome`.`inventory_items` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `inventory_item_category_id` int(10) NOT NULL COMMENT 'Referenced category ID',
+  `item_name` varchar(100) NOT NULL COMMENT 'Name of item',
+  `in_use_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Out of storage quantity',
+  `in-stock_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Stored inventory',
+  `threshold_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Ordering level of inventory',
+  `weight_volume` decimal(10,2) NOT NULL COMMENT 'Weight or volume of item',
+  `item_unit` varchar(20) NOT NULL COMMENT 'Unit (grams, pieces, tablets, etc.)',
+  `production_date` date NOT NULL COMMENT 'Production date',
+  `expiration_date` date NOT NULL COMMENT 'Expiration date',
+  `unit_price` decimal(10,2) NOT NULL COMMENT 'Price per item',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_inventory_items_iic_idx` (`inventory_item_category_id`),
+  CONSTRAINT `fk_inventory_items_iic` FOREIGN KEY (`inventory_item_category_id`) REFERENCES `inventory_item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`invoices`;
+CREATE TABLE `pawsome`.`invoices` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
+  `receipt_id` int(10) DEFAULT NULL COMMENT 'Reference receipt ID',
+  `invoice_amount` decimal(10,2) NOT NULL,
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
+  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
+  UNIQUE KEY `receipt_id_UNIQUE` (`receipt_id`),
+  KEY `fk_invoices_b_idx` (`booking_id`),
+  KEY `fk_invoices_r_idx` (`receipt_id`),
+  CONSTRAINT `fk_invoices_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoices_r` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`invoice_items`;
+CREATE TABLE `pawsome`.`invoice_items` (
+  `invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
+  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
+  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
+  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
+  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
+  `total_amount` decimal(5,2) NOT NULL COMMENT 'Total amount times quantity',
+  KEY `fk_invoice_items_i_idx` (`invoice_id`),
+  KEY `fk_invoice_items_ic_idx` (`item_category_id`),
+  CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoice_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`lodgings`;
+CREATE TABLE `pawsome`.`lodgings` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `cage_status` varchar(20) NOT NULL DEFAULT 'AVAILABLE' COMMENT 'Status of cage/lodging',
+  `pet_id` int(10) DEFAULT NULL COMMENT 'Referenced pet ID',
+  `assigned_doctor` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
+  `confinement_date` datetime DEFAULT NULL COMMENT 'Start of confinement date',
+  `discharge_date` datetime DEFAULT NULL COMMENT 'Start of discharge date',
+  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
+  `updated_date` date DEFAULT NULL COMMENT 'Date of update',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_lodgings_d_idx` (`assigned_doctor`),
+  KEY `fk_lodgings_p_idx` (`pet_id`),
+  CONSTRAINT `fk_lodgings_d` FOREIGN KEY (`assigned_doctor`) REFERENCES `doctors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_lodgings_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`payments`;
+CREATE TABLE `pawsome`.`payments` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `payment_by` int(10) DEFAULT NULL COMMENT 'Payment made by user ID',
+  `payment_date` datetime DEFAULT NULL COMMENT 'Date of payment',
+  `payment_method` varchar(50) NOT NULL COMMENT 'Method of payment',
+  `payment_status` varchar(50) NOT NULL COMMENT 'Status of payment',
+  `payment_balance` decimal(10,2) NOT NULL COMMENT 'Remaining balance',
+  `payment_paid` decimal(10,2) NOT NULL COMMENT 'Amount received from customer',
+  `payment_change` decimal(10,2) NOT NULL COMMENT 'Change returned from payment made',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  PRIMARY KEY (`id`),
+  KEY `fk_payments_po_idx` (`payment_by`),
+  CONSTRAINT `fk_payments_po` FOREIGN KEY (`payment_by`) REFERENCES `pet_owners` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`payment_history`;
+CREATE TABLE `pawsome`.`payment_history` (
+  `payment_id` int(10) NOT NULL COMMENT 'Referenced payment ID',
+  `prev_payment_status` varchar(15) DEFAULT NULL COMMENT 'Previous payment status',
+  `new_payment_status` varchar(15) DEFAULT NULL COMMENT 'New payment status',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Update date of record',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'User ID who updated the record',
+  KEY `fk_payment_history_p_idx` (`payment_id`),
+  CONSTRAINT `fk_payment_history_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`prescriptions`;
+CREATE TABLE `pawsome`.`prescriptions` (
+  `id` int(10) NOT NULL COMMENT 'Unique identifier',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `doctor_id` int(10) NOT NULL COMMENT 'Referenced doctor ID',
+  `prescription_date` date NOT NULL COMMENT 'Date of prescription',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_prescriptions_p_idx` (`pet_id`),
+  KEY `fk_prescriptions_d_idx` (`doctor_id`),
+  CONSTRAINT `fk_prescriptions_d` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_prescriptions_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`pet_diet_records`;
+CREATE TABLE `pawsome`.`pet_diet_records` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `prescription_id` int(10) NOT NULL COMMENT 'Referenced prescription ID',
+  `product` varchar(100) NOT NULL COMMENT 'Product to be consumed',
+  `serving_portion` varchar(100) NOT NULL COMMENT 'Weight or volume of serving',
+  `morning` varchar(1) DEFAULT NULL COMMENT 'Meal should be given in the morning',
+  `evening` varchar(1) DEFAULT NULL COMMENT 'Meal should be given in the evening',
+  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
+  `updated_date` date DEFAULT NULL COMMENT 'Updated date',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_diet_pres_idx` (`prescription_id`),
+  CONSTRAINT `fk_diet_pres` FOREIGN KEY (`prescription_id`) REFERENCES `prescriptions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`pet_doc_uploads`;
+CREATE TABLE `pawsome`.`pet_doc_uploads` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `file_type` varchar(100) NOT NULL COMMENT 'Document type (referral, lab, invoice, other)',
+  `file_name` varchar(100) NOT NULL COMMENT 'Name of file',
+  `file` blob NOT NULL COMMENT 'File attached',
+  `upload_date` date NOT NULL COMMENT 'Upload date',
+  `uploaded_by` int(10) NOT NULL COMMENT 'Uploaded by user',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_uploads_p_idx` (`pet_id`),
+  CONSTRAINT `fk_uploads_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`pet_immun_records`;
+CREATE TABLE `pawsome`.`pet_immun_records` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `doctor_id` int(10) NOT NULL COMMENT 'Referenced doctor ID',
+  `vaccine_date` date NOT NULL COMMENT 'Vaccination date',
+  `vaccine` varchar(100) NOT NULL COMMENT 'Vaccine name/description',
+  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Update date',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_immune_p_idx` (`pet_id`),
+  KEY `fk_immun_d_idx` (`doctor_id`),
+  CONSTRAINT `fk_immun_d` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_immun_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`referrals`;
+CREATE TABLE `pawsome`.`referrals` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `doctor_id` int(10) NOT NULL COMMENT 'Referenced doctor ID',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `referral_date` date NOT NULL COMMENT 'Date of referral',
+  `diagnosis` varchar(100) NOT NULL COMMENT 'Diagnosis indicated in referral',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_referrals_p_idx` (`pet_id`),
+  KEY `fk_referrals_d_idx` (`doctor_id`),
+  CONSTRAINT `fk_referrals_d` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_referrals_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`pet_rehab_records`;
+CREATE TABLE `pawsome`.`pet_rehab_records` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `referral_id` int(10) NOT NULL COMMENT 'Referenced referral',
+  `treatment_date` date NOT NULL COMMENT 'Date of treatments',
+  `attended` varchar(1) DEFAULT NULL COMMENT 'Pet attended session',
+  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_rehab_p_idx` (`pet_id`),
+  KEY `fk_rehab_r_idx` (`referral_id`),
+  CONSTRAINT `fk_rehab_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_rehab_r` FOREIGN KEY (`referral_id`) REFERENCES `referrals` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`pet_surgery_records`;
+CREATE TABLE `pawsome`.`pet_surgery_records` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
+  `doctor_id` int(10) NOT NULL COMMENT 'Referenced doctor ID',
+  `surgery` varchar(100) NOT NULL COMMENT 'Surgery name',
+  `surgery_date` date NOT NULL COMMENT 'Date of surgery',
+  `discharge_date` date DEFAULT NULL COMMENT 'Date discharged',
+  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Date updated',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_surgery_p_idx` (`pet_id`),
+  KEY `fk_surgery_d_idx` (`doctor_id`),
+  CONSTRAINT `fk_surgery_d` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_surgery_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`receipts`;
+CREATE TABLE `pawsome`.`receipts` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
+  `invoice_id` int(10) NOT NULL COMMENT 'Referenced invoice ID',
+  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
+  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `invoice_id_UNIQUE` (`invoice_id`),
+  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
+  KEY `fk_receipts_p_idx` (`payment_id`),
+  CONSTRAINT `fk_receipts_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_receipts_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_receipts_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`sales_invoices`;
+CREATE TABLE `pawsome`.`sales_invoices` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
+  `invoice_amount` decimal(10,2) NOT NULL,
+  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
+  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
+  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_sales_inv_p_idx` (`payment_id`),
+  CONSTRAINT `fk_sales_inv_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`sales_invoice_items`;
+CREATE TABLE `pawsome`.`sales_invoice_items` (
+  `sales_invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
+  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
+  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
+  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
+  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
+  `total_amount` decimal(5,2) NOT NULL COMMENT 'Total amount times quantity',
+  KEY `fk_sales_inv_si_idx` (`sales_invoice_id`),
+  KEY `fk_sales_inv_ic_idx` (`item_category_id`),
+  KEY `fk_sales_inv_i_idx` (`item_id`),
+  CONSTRAINT `fk_sales_inv_items_i` FOREIGN KEY (`item_id`) REFERENCES `inventory_items` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sales_inv_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sales_inv_items_si` FOREIGN KEY (`sales_invoice_id`) REFERENCES `sales_invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`service_categories`;
+CREATE TABLE `pawsome`.`service_categories` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `category_name` varchar(50) DEFAULT NULL COMMENT 'Category name or description',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+);
+
+DROP TABLE IF EXISTS `pawsome`.`service_categories_items`;
+CREATE TABLE `pawsome`.`service_categories_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
+  `service_category_id` int(10) NOT NULL COMMENT 'Category of service item',
+  `item_description` varchar(50) NOT NULL COMMENT 'Description of item',
+  `item_amount` decimal(10,2) NOT NULL COMMENT 'Amount charged for single item',
+  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
+  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
+  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_sci_sc_idx` (`service_category_id`),
+  CONSTRAINT `fk_sci_sc` FOREIGN KEY (`service_category_id`) REFERENCES `service_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+/** 
+Stored Procedures
+*/
+
 DROP PROCEDURE IF EXISTS delete_pet;
 DELIMITER //
 CREATE PROCEDURE delete_pet(
@@ -709,33 +1029,33 @@ INSERT INTO `pawsome`.`pets`
 `updated_by`,
 `archived`)
 VALUES
-(1001, 'Paws', 'Dog', 'Golden Retriever', STR_TO_DATE("22/01/2021","%d/%m/%Y"),36.3,'Female','No allergies','5988040028',STR_TO_DATE("30/05/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1001, 'Buttons', 'Dog', 'Maltese', STR_TO_DATE("11/02/2020","%d/%m/%Y"),4,'Female','No allergies','8291669232',STR_TO_DATE("30/04/2026","%d/%m/%Y"),SYSDATE(),501,0),
-(1002, 'Snickers', 'Guinea Pig', 'Teddy', STR_TO_DATE("14/03/2021","%d/%m/%Y"),1,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1003, 'Muffin', 'Dog', 'Rottweiler', STR_TO_DATE("12/04/2020","%d/%m/%Y"),54.5,'Male','No allergies','9382754683',STR_TO_DATE("30/06/2027","%d/%m/%Y"),SYSDATE(),501,0),
-(1004, 'Pudding', 'Dog', 'Beagle', STR_TO_DATE("30/05/2021","%d/%m/%Y"),16,'Female','No allergies','5647291745',STR_TO_DATE("30/07/2028","%d/%m/%Y"),SYSDATE(),501,0),
-(1005, 'Mocha', 'Cat', 'Siamese', STR_TO_DATE("29/06/2020","%d/%m/%Y"),4.6,'Female','No allergies','7543759385',STR_TO_DATE("30/08/2026","%d/%m/%Y"),SYSDATE(),501,0),
-(1007, 'Biscuit', 'Hamster', 'Roborovski Dwarf', STR_TO_DATE("18/07/2021","%d/%m/%Y"),0.15,'Female','No allergies',null,null,SYSDATE(),501,0),
-(1008, 'Oreo', 'Dog', 'Samoyed', STR_TO_DATE("16/08/2021","%d/%m/%Y"),25,'Male','No allergies','1606852875',STR_TO_DATE("30/09/2026","%d/%m/%Y"),SYSDATE(),501,0),
-(1009, 'Peanut', 'Rabbit', 'Mini Lop', STR_TO_DATE("23/09/2020","%d/%m/%Y"),4.2,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1010, 'Cocoa', 'Dog', 'Bulldog', STR_TO_DATE("21/10/2019","%d/%m/%Y"),25,'Male','No allergies','3075355527',STR_TO_DATE("30/01/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1010, 'Peaches', 'Cat', 'British Shorthair', STR_TO_DATE("19/11/2020","%d/%m/%Y"),4.65,'Male','No allergies','8171549774',STR_TO_DATE("30/10/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1011, 'Waffles', 'Cat', 'Persian', STR_TO_DATE("17/12/2019","%d/%m/%Y"),4.53,'Female','No allergies','5837259435',STR_TO_DATE("30/11/2024","%d/%m/%Y"),SYSDATE(),501,0),
-(1011, 'Riley', 'Dog', 'Siberian Husky', STR_TO_DATE("15/01/2018","%d/%m/%Y"),27,'Female','No allergies','2560253352',STR_TO_DATE("30/04/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1012, 'Taylor', 'Dog', 'German Shepherd', STR_TO_DATE("01/02/2016","%d/%m/%Y"),38.5,'Female','No allergies','8872866253',STR_TO_DATE("30/03/2024","%d/%m/%Y"),SYSDATE(),501,0),
-(1013, 'Jamie', 'Cat', 'Sphynx', STR_TO_DATE("09/03/2020","%d/%m/%Y"),4.31,'Female','No allergies',null,null,SYSDATE(),501,0),
-(1014, 'Sam', 'Dog', 'Chihuahua', STR_TO_DATE("23/04/2019","%d/%m/%Y"),2.7,'Male','No allergies','6254619187',STR_TO_DATE("30/09/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1015, 'Rain', 'Cat', 'Burmese', STR_TO_DATE("28/05/2018","%d/%m/%Y"),4.23,'Male','No allergies','7028076622',STR_TO_DATE("30/05/2024","%d/%m/%Y"),SYSDATE(),501,0),
-(1016, 'Daisy', 'Dog', 'Dachshund', STR_TO_DATE("22/06/2015","%d/%m/%Y"),12,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1002, 'Maple', 'Cat', 'Exotic Shorthair', STR_TO_DATE("21/07/2018","%d/%m/%Y"),4.37,'Female','No allergies','9086804387',STR_TO_DATE("30/06/2024","%d/%m/%Y"),SYSDATE(),501,0),
-(1017, 'Stormy', 'Dog', 'Poodle', STR_TO_DATE("18/08/2017","%d/%m/%Y"),35,'Female','No allergies','7766577891',STR_TO_DATE("30/07/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1018, 'Pippin', 'Guinea Pig', 'Texel', STR_TO_DATE("16/09/2020","%d/%m/%Y"),0.9,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1019, 'Yoda', 'Dog', 'Border Collie', STR_TO_DATE("11/10/2015","%d/%m/%Y"),24,'Female','No allergies','9833517263',STR_TO_DATE("30/08/2025","%d/%m/%Y"),SYSDATE(),501,0),
-(1020, 'Toto', 'Dog', 'Bichon Frisé', STR_TO_DATE("13/11/2018","%d/%m/%Y"),9,'Male','No allergies','1054943276',STR_TO_DATE("30/07/2024","%d/%m/%Y"),SYSDATE(),501,0),
-(1009, 'Lady', 'Cat', 'Abyssinian', STR_TO_DATE("15/12/2018","%d/%m/%Y"),4.26,'Female','No allergies','8673170001',STR_TO_DATE("30/08/2026","%d/%m/%Y"),SYSDATE(),501,0),
-(1008, 'Puffy', 'Rabbit', 'Dutch', STR_TO_DATE("17/01/2020","%d/%m/%Y"),4.9,'Female','No allergies',null,null,SYSDATE(),501,0),
-(1001, 'Sunny', 'Hamster', 'Campbell''s Dwarf', STR_TO_DATE("21/02/2021","%d/%m/%Y"),0.13,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1003, 'Luna', 'Guinea Pig', 'Peruvian', STR_TO_DATE("23/03/2022","%d/%m/%Y"),0.93,'Female','No allergies',null,null,SYSDATE(),501,0);
+(1001, 'Paws', 'Dog', 'Golden Retriever', STR_TO_DATE("22-01-2021","%d-%m-%Y"),36.3,'Female','No allergies','5988040028',STR_TO_DATE("30-05-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1001, 'Buttons', 'Dog', 'Maltese', STR_TO_DATE("11-02-2020","%d-%m-%Y"),4,'Female','No allergies','8291669232',STR_TO_DATE("30-04-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1002, 'Snickers', 'Guinea Pig', 'Teddy', STR_TO_DATE("14-03-2021","%d-%m-%Y"),1,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1003, 'Muffin', 'Dog', 'Rottweiler', STR_TO_DATE("12-04-2020","%d-%m-%Y"),54.5,'Male','No allergies','9382754683',STR_TO_DATE("30-06-2027","%d-%m-%Y"),SYSDATE(),501,0),
+(1004, 'Pudding', 'Dog', 'Beagle', STR_TO_DATE("30-05-2021","%d-%m-%Y"),16,'Female','No allergies','5647291745',STR_TO_DATE("30-07-2028","%d-%m-%Y"),SYSDATE(),501,0),
+(1005, 'Mocha', 'Cat', 'Siamese', STR_TO_DATE("29-06-2020","%d-%m-%Y"),4.6,'Female','No allergies','7543759385',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1007, 'Biscuit', 'Hamster', 'Roborovski Dwarf', STR_TO_DATE("18-07-2021","%d-%m-%Y"),0.15,'Female','No allergies',null,null,SYSDATE(),501,0),
+(1008, 'Oreo', 'Dog', 'Samoyed', STR_TO_DATE("16-08-2021","%d-%m-%Y"),25,'Male','No allergies','1606852875',STR_TO_DATE("30-09-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1009, 'Peanut', 'Rabbit', 'Mini Lop', STR_TO_DATE("23-09-2020","%d-%m-%Y"),4.2,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1010, 'Cocoa', 'Dog', 'Bulldog', STR_TO_DATE("21-10-2019","%d-%m-%Y"),25,'Male','No allergies','3075355527',STR_TO_DATE("30-01-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1010, 'Peaches', 'Cat', 'British Shorthair', STR_TO_DATE("19-11-2020","%d-%m-%Y"),4.65,'Male','No allergies','8171549774',STR_TO_DATE("30-10-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1011, 'Waffles', 'Cat', 'Persian', STR_TO_DATE("17-12-2019","%d-%m-%Y"),4.53,'Female','No allergies','5837259435',STR_TO_DATE("30-11-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1011, 'Riley', 'Dog', 'Siberian Husky', STR_TO_DATE("15-01-2018","%d-%m-%Y"),27,'Female','No allergies','2560253352',STR_TO_DATE("30-04-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1012, 'Taylor', 'Dog', 'German Shepherd', STR_TO_DATE("01-02-2016","%d-%m-%Y"),38.5,'Female','No allergies','8872866253',STR_TO_DATE("30-03-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1013, 'Jamie', 'Cat', 'Sphynx', STR_TO_DATE("09-03-2020","%d-%m-%Y"),4.31,'Female','No allergies',null,null,SYSDATE(),501,0),
+(1014, 'Sam', 'Dog', 'Chihuahua', STR_TO_DATE("23-04-2019","%d-%m-%Y"),2.7,'Male','No allergies','6254619187',STR_TO_DATE("30-09-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1015, 'Rain', 'Cat', 'Burmese', STR_TO_DATE("28-05-2018","%d-%m-%Y"),4.23,'Male','No allergies','7028076622',STR_TO_DATE("30-05-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1016, 'Daisy', 'Dog', 'Dachshund', STR_TO_DATE("22-06-2015","%d-%m-%Y"),12,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1002, 'Maple', 'Cat', 'Exotic Shorthair', STR_TO_DATE("21-07-2018","%d-%m-%Y"),4.37,'Female','No allergies','9086804387',STR_TO_DATE("30-06-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1017, 'Stormy', 'Dog', 'Poodle', STR_TO_DATE("18-08-2017","%d-%m-%Y"),35,'Female','No allergies','7766577891',STR_TO_DATE("30-07-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1018, 'Pippin', 'Guinea Pig', 'Texel', STR_TO_DATE("16-09-2020","%d-%m-%Y"),0.9,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1019, 'Yoda', 'Dog', 'Border Collie', STR_TO_DATE("11-10-2015","%d-%m-%Y"),24,'Female','No allergies','9833517263',STR_TO_DATE("30-08-2025","%d-%m-%Y"),SYSDATE(),501,0),
+(1020, 'Toto', 'Dog', 'Bichon Frisé', STR_TO_DATE("13-11-2018","%d-%m-%Y"),9,'Male','No allergies','1054943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1009, 'Lady', 'Cat', 'Abyssinian', STR_TO_DATE("15-12-2018","%d-%m-%Y"),4.26,'Female','No allergies','8673170001',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1008, 'Puffy', 'Rabbit', 'Dutch', STR_TO_DATE("17-01-2020","%d-%m-%Y"),4.9,'Female','No allergies',null,null,SYSDATE(),501,0),
+(1001, 'Sunny', 'Hamster', 'Campbell''s Dwarf', STR_TO_DATE("21-02-2021","%d-%m-%Y"),0.13,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1003, 'Luna', 'Guinea Pig', 'Peruvian', STR_TO_DATE("23-03-2022","%d-%m-%Y"),0.93,'Female','No allergies',null,null,SYSDATE(),501,0);
 commit;
 
 TRUNCATE TABLE `pawsome`.`bookings`;

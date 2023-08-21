@@ -18,6 +18,11 @@ include './classes/database.php';
 include './classes/jwt.php';
 
  /**
+  * File input validations are performed
+  */
+include './classes/validations.php';
+
+ /**
   * Handling cross origin request headers
   * Define which methods can come through the API fetch URL
   */
@@ -635,25 +640,100 @@ elseif ($action === 'add_pet') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $pet = [
-            'pet_owner_id' => $_POST['pet_owner_id'],
-            'petname' => $_POST['petname'],
-            'species' => $_POST['species'],
-            'breed' => $_POST['breed'],
-            'birthdate' => $_POST['birthdate'],
-            'weight' => $_POST['weight'],
-            'sex' => $_POST['sex'],
-            'microchip_no' => $_POST['microchip_no'],
-            'insurance_membership' => $_POST['insurance_membership'],
-            'insurance_expiry' => $_POST['insurance_expiry'],
-            'comments' => $_POST['comments'],
-            'username' => $_POST['username']
-        ];
+        $check = false;
 
-        if ($pet_id = $database->addPet($pet)) {
-            return_json(['add_pet' => $pet_id]);
+        if(validateNumeric($_POST['pet_owner_id'])){
+            $check = true;
         } else {
-            return_json(['add_pet' => "error"]);
+            return_json(['add_pet' =>  "Error: Pet Owner ID must be a number."]);
+        }
+
+        if(validateLength($_POST['species'], 50)
+        && validateAlpha($_POST['species'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Species must be up to 50 letters only."]);
+        }
+
+        if(validateLength($_POST['breed'], 50)
+        && validateAlpha($_POST['breed'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Breed must be up to 50 letters only."]);
+        }
+
+        if(validateDate($_POST['birthdate'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Birthdate must be a valid date with format DD-MM-YYYY."]);
+        }
+
+        if(validateDecimal($_POST['weight'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Weight must be a valid number."]);
+        }
+
+        if(validateAlpha($_POST['sex'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Sex must only consist of letters."]);
+        }
+
+        if(validateLength($_POST['microchip_no'], 15)
+        && validateNumeric($_POST['microchip_no'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
+        }
+
+        if(validateLength($_POST['insurance_membership'], 10)
+        && validateNumeric($_POST['insurance_membership'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+        }
+
+        if(validateDate($_POST['insurance_expiry'])){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Insurance Expiration Date must be a valid date with format DD-MM-YYYY."]);
+        }
+
+        if(validateLength($_POST['comments'], 1000)){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
+        }
+
+        if(validateAlpha($_POST['username'])
+        && validateLength($_POST['username'], 20)){
+            $check = true;
+        } else {
+            return_json(['add_pet' =>  "Error: Username must be up to 20 characters only."]);
+        }
+
+        if($check){
+            $pet = [
+                'pet_owner_id' => $_POST['pet_owner_id'],
+                'petname' => $_POST['petname'],
+                'species' => $_POST['species'],
+                'breed' => $_POST['breed'],
+                'birthdate' => $_POST['birthdate'],
+                'weight' => $_POST['weight'],
+                'sex' => $_POST['sex'],
+                'microchip_no' => $_POST['microchip_no'],
+                'insurance_membership' => $_POST['insurance_membership'],
+                'insurance_expiry' => $_POST['insurance_expiry'],
+                'comments' => $_POST['comments'],
+                'username' => $_POST['username']
+            ];
+
+            if ($pet_id = $database->addPet($pet)) {
+                return_json(['add_pet' => $pet_id]);
+            } else {
+                return_json(['add_pet' => "error"]);
+            }
         }
     }
 }
