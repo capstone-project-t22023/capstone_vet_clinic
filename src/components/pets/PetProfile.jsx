@@ -1,16 +1,15 @@
 import React, {useContext, useEffect, useState} from "react";
 import {
-    Avatar, Button, Box, Stack, Typography, Divider, IconButton, Tooltip, Fade, Dialog, Paper, Zoom
+    Avatar, Button, Box, Stack, Typography, IconButton, Tooltip, Dialog, Paper, Zoom
 } from "@mui/material";
 import AgeCalculator from './AgeCalculator';
-import {
-    ChevronRightRounded, FavoriteRounded, SettingsApplicationsRounded, DeleteForeverRounded
-} from '@mui/icons-material';
+import { SettingsApplicationsRounded, DeleteForeverRounded } from '@mui/icons-material';
 import BookingButton from "../booking/BookingButton";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
 
 import AddNewPetForm from "./AddNewPetForm";
+import LastHealthChecks from "../appointments/petProfile/LastHealthChecks";
 
 export default function PetProfile({onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
@@ -25,6 +24,7 @@ export default function PetProfile({onDelete}) {
 
     useEffect (() => {
         setActivePet(getPetById(selectedPet))
+        setAppointmentList(getAppointments('pet_id',selectedPet));
     }, [selectedPet])
 
     const handleBooking = (booking) => {
@@ -64,6 +64,36 @@ export default function PetProfile({onDelete}) {
         onDelete(activePet.pet_id);
         setShowDialog(false);
     };
+
+
+
+
+    // APPOINTMENTS LIST
+    const [loading, setLoading] = useState(true);
+    const [appointmentList, setAppointmentList] = useState([])
+
+    const getAppointments = (filter, filterValue) => {
+        const requestData = {
+            filter: filter,
+            filter_value: filterValue
+        };
+        fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setAppointmentList(data.bookings)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+
 
 
     return (activePet && (
@@ -191,64 +221,7 @@ export default function PetProfile({onDelete}) {
                 </Stack>
             </Stack>
 
-            {/* Last Health Checks */}
-            <Box>
-                <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 3}}>
-                    <Typography fontWeight="bold">Last health checks</Typography>
-                    <Button variant="text" size="small" color="secondary">View all <ChevronRightRounded
-                        fontSize="inherit"/></Button>
-                </Stack>
-                <Stack direction="column" spacing={3}
-                       sx={{
-                           "& .MuiAvatar-root": {
-                               backgroundColor: "primary.50", color: "error.light"
-                           }, "& h5": {
-                               fontWeight: "bold", fontSize: ".875rem"
-                           }, "& h6": {
-                               color: "text.secondary",
-                               textTransform: "uppercase",
-                               fontSize: ".75rem",
-                               maxWidth: "8rem",
-                           }, "& p": {
-                               color: "primary.200", textTransform: "uppercase", fontSize: ".75rem", fontWeight: "bold",
-                           },
-                       }}>
-                    {/*Health Checks item*/}
-                    <Stack direction="row" spacing={2}>
-                        <Stack direction="column" flex={0} alignItems="center">
-                            <Avatar>
-                                <FavoriteRounded fontSize="small"/>
-                            </Avatar>
-                        </Stack>
-                        <Stack direction="column" flex={1} flexWrap="wrap" alignItems="flex-start">
-                            <Typography component="h5">Heart rate check</Typography>
-                            <Typography component="h6">Dr. Joshua Rassel</Typography>
-                        </Stack>
-                        <Stack direction="column" flex={0}>
-                            <Typography component="p">12.12.2022</Typography>
-                        </Stack>
-                    </Stack>
-                    <Divider flexItem/>
-                    {/*Health Checks item end*/}
-                    {/*Health Checks item*/}
-                    <Stack direction="row" spacing={2}>
-                        <Stack direction="column" flex={0} alignItems="center">
-                            <Avatar>
-                                <FavoriteRounded fontSize="small"/>
-                            </Avatar>
-                        </Stack>
-                        <Stack direction="column" flex={1} alignItems="flex-start">
-                            <Typography component="h5">Heart rate check</Typography>
-                            <Typography component="h6">Dr. Vwe Longy Nameas Like This Sua Rassel</Typography>
-                        </Stack>
-                        <Stack direction="column" flex={0}>
-                            <Typography component="p">12.12.2022</Typography>
-                        </Stack>
-                    </Stack>
-                    <Divider flexItem/>
-                    {/*Health Checks item end*/}
-                </Stack>
-            </Box>
+            <LastHealthChecks appointmentList={appointmentList} loading={loading} />
 
             <BookingButton booking={handleBooking}/>
 

@@ -14,36 +14,6 @@ export default function AddNewPetButton() {
 
 
     const addNewPet = (petInfo) => {
-        // const req_body = {
-        //     "petname":"Rendy",
-        //     "species":"Dog",
-        //     "breed":"Husky",
-        //     "birthdate":"08-08-2012",
-        //     "weight":"54",
-        //     "sex":"Male",
-        //     "microchip_no":"1234567899",
-        //     "insurance_membership":"15564s31a3",
-        //     "insurance_expiry":"12-12-2025",
-        //     "comments":"Likes ice cream",
-        //     "pet_owner_id":1006,
-        //     "username":"teemingbroth"
-        // }
-
-        // {
-        //     "petname":"Rendy",
-        //     "species":"Dog",
-        //     "breed":"SouthPark",
-        //     "birthdate":"09-08-2019",
-        //     "weight":"64",
-        //     "sex":"Male",
-        //     "microchip_no":"12saf899",
-        //     "insurance_membership":"15564s3a3",
-        //     "insurance_expiry":"11-08-2023",
-        //     "comments":"no commento",
-        //     "pet_owner_id":1003,
-        //     "username":"abundantasparagus"
-        // }
-
 
         console.log("Add New Pet: " + JSON.stringify(petInfo));
 

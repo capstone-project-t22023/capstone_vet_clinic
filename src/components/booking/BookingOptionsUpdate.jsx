@@ -27,61 +27,6 @@ export default function BookingOptionsUpdate(props) {
     const [takenSlots, setTakenSlots] = useState([]);
     const [bookingTypes, setBookingTypes] = useState([]);
 
-    console.log("updatedBookingOptions", selectedOwner.pet_owner_id, selectedPet);
-
-    //
-    // {
-    //     "booking_type":"Rehab",
-    //     "pet_owner_id":1021,
-    //     "username":"teemingbroth",
-    //     "booking_slots":[
-    //         {"booking_date":"20-08-2023", "booking_time":"13:00"},
-    //         {"booking_date":"20-08-2023", "booking_time":"13:30"},
-    //         {"booking_date":"20-08-2023", "booking_time":"14:00"}
-    //     ]
-    // }
-
-    // {
-    //     "booking_type":"Rehab",
-    //     "pet_owner_id":1010,
-    //     "pet_id":10,
-    //     "username":"teemingbroth",
-    //     "booking_slots":[
-    //         {"booking_date":"20-08-2023", "booking_time":"13:00"},
-    //         {"booking_date":"20-08-2023", "booking_time":"13:30"},
-    //         {"booking_date":"20-08-2023", "booking_time":"14:00"}
-    //     ]
-    // }
-
-
-    // {
-    //     "booking_type":"Vaccine",
-    //     "prev_booking_status":"PENDING",
-    //     "pet_owner_id":1021,
-    //     "doctor_id":null,
-    //     "username":"teemingbroth",
-    //     "booking_slots":
-    //     [{"booking_date":"20-08-2023",
-    //     "booking_time":"09:30"},{"booking_date":"20-08-2023",
-    //     "booking_time":"10:00"}]}
-
-
-    // {
-    //     "booking_type":"Vaccine",
-    //     "prev_booking_status":"PENDING",
-    //     "pet_owner_id":1007,
-    //     "pet_id":7,
-    //     "doctor_id":null,
-    //     "username":"teemingbroth",
-    //     "booking_slots":[{"booking_date":"20-08-2023",
-    //     "booking_time":"09:30"},{"booking_date":"20-08-2023",
-    //     "booking_time":"10:00"},{"booking_date":"20-08-2023",
-    //     "booking_time":"11:30"},{"booking_date":"20-08-2023",
-    //     "booking_time":"12:00"}]}
-
-
-
-
 
     //mount data
     useEffect(() => {

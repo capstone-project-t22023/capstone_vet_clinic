@@ -69,13 +69,11 @@ export default function Dashboard() {
                                             <PetsList petsList={petList}/>
                                         </Paper>
                                     </Box>
-                                    {/*<UpcomingAppointments/>*/}
                                 </Stack>
 
                             </Stack>
 
 
-                            <Divider sx={{my: 2, border: '1px dashed red'}}/>
 
 
                         </Stack>
@@ -106,8 +104,11 @@ export default function Dashboard() {
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
+                                    <UpcomingAppointments filter="today"/>
+                                    <UpcomingAppointments filter="future"/>
+                                    <UpcomingAppointments filter="historic"/>
                                     <UpcomingAppointments/>
-                                    <UpcomingAppointments/>
+
                                 </Stack>
 
                             </Stack>
@@ -123,7 +124,7 @@ export default function Dashboard() {
                 )}
 
             </Stack>
-            <Slide in={selectedPet ? true : false} direction="left">
+            <Slide in={selectedPet ? true : false} direction="left"  mountOnEnter unmountOnExit>
                 <Stack
                     direction="column"
                     justifyContent="space-between"

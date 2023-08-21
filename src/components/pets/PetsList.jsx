@@ -20,6 +20,7 @@ import {
 import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
+import UpcomingAppointments from "../appointments/upcomingAppointments/UpcomingAppointments";
 
 export default function PetsList({petsList}) {
     const [showPet, setShowPet] = useState(null);
@@ -70,11 +71,12 @@ export default function PetsList({petsList}) {
             >
 
                 {selectedOwner && Object.keys(selectedOwner).length > 0 ? (
+                    <Stack>
                     <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
                         {selectedOwner.pets.length > 0 ? (
-                            <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="flex-start"
+                            <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="center"
                                    spacing={1} width={1} flex={1}>
-                                <Typography component="h5" variant="h6">{selectedOwner.firstname} has these pets:</Typography>
+                                <Typography component="h5" variant="h6" color="primary">{selectedOwner.firstname} has these pets:</Typography>
                                 {selectedOwner.pets.map((pet) => (
                                     <Stack
                                         key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
@@ -106,6 +108,18 @@ export default function PetsList({petsList}) {
                         )
                         }
                     </Paper>
+
+
+
+                    <Stack direction="row" spacing={2} mb={2}>
+                        <UpcomingAppointments filter="today"/>
+                        <UpcomingAppointments filter="historic"/>
+                        <UpcomingAppointments filter="future"/>
+
+                    </Stack>
+
+                    </Stack>
+
                 ) : (
                     <Box>
                         <Typography component="h5" variant="h6">Select the owner first</Typography>

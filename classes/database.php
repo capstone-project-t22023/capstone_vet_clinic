@@ -2743,14 +2743,34 @@ class Database
         $sql = $this->connection->prepare(
             'SELECT DISTINCT 
             b.id booking_id,
-            b.booking_status
+            bs.booking_date,
+            bs.booking_time, 
+            b.booking_status,
+            bt.booking_type,
+            b.doctor_id,
+            b.invoice_id,
+            b.receipt_id,
+            b.updated_date,
+            b.pet_owner_id,
+            po.username,
+            CONCAT(po.firstname," ",po.lastname) pet_owner,
+            b.pet_id,
+            p.petname
             FROM 
             `pawsome`.`bookings` b, 
-            `pawsome`.`pets` p
+            `pawsome`.`booking_types` bt, 
+            `pawsome`.`pet_owners` po, 
+            `pawsome`.`pets` p, 
+            `pawsome`.`booking_slots` bs
             WHERE 
-            b.pet_id = p.id 
+            p.pet_owner_id = po.id 
+            AND b.pet_owner_id = po.id 
+            AND b.pet_id = p.id 
+            AND b.booking_type_id = bt.id
+            AND b.id = bs.booking_id
             AND b.archived = 0
-            AND p.id = ?'
+            AND p.id = ?
+            ORDER BY b.updated_date DESC'
         );
         $sql->bind_param(
             'i', $filter_value
