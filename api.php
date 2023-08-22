@@ -1555,40 +1555,47 @@ elseif ($action === 'confirm_booking') {
 
         $booking_slots = $_POST['booking_slots'];
 
-        foreach($booking_slots as $new_slot):
-            $booking_count = [
-                'selected_date' => $new_slot['booking_date'],
-                'selected_time' => $new_slot['booking_time']
-            ];
-            if($count = $database->slotCounter($booking_count)){
-                if($count['slot_counter'] == 5){
-                    return_json(['update_booking' => "All slots taken for ".$new_slot['booking_date']." : ".$new_slot['booking_time']]);
-                }
-            }
-        endforeach;
+        $role = $database->checkRoleByUsername($_POST['username']);
 
-        if ($database->updateBookingByAdmin($booking)) {
-            if($database->deleteBookingSlot($id)){
-                foreach($booking_slots as $slot):
-                    $record = [
-                        'booking_id' => $id,
-                        'booking_date' => $slot['booking_date'],
-                        'booking_time' => $slot['booking_time']
-                    ];
-                    if($database->addBookingSlot($record)){
-                        true;
-                    }
-                endforeach;
+        if($role['role'] === 'admin'){
 
-                $booking_history_record = [
-                    'booking_id' => $id,
-                    'prev_status' => $_POST['prev_booking_status'],
-                    'new_status' => $_POST['new_booking_status'],
-                    'username' => $_POST['username']
+            foreach($booking_slots as $new_slot):
+                $booking_count = [
+                    'selected_date' => $new_slot['booking_date'],
+                    'selected_time' => $new_slot['booking_time']
                 ];
+                if($count = $database->slotCounter($booking_count)){
+                    if($count['slot_counter'] == 5){
+                        return_json(['update_booking' => "All slots taken for ".$new_slot['booking_date']." : ".$new_slot['booking_time']]);
+                    }
+                }
+            endforeach;
 
-                if($database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['confirm_booking' => "success"]);
+            if ($database->updateBookingByAdmin($booking)) {
+                if($database->deleteBookingSlot($id)){
+                    foreach($booking_slots as $slot):
+                        $record = [
+                            'booking_id' => $id,
+                            'booking_date' => $slot['booking_date'],
+                            'booking_time' => $slot['booking_time']
+                        ];
+                        if($database->addBookingSlot($record)){
+                            true;
+                        }
+                    endforeach;
+
+                    $booking_history_record = [
+                        'booking_id' => $id,
+                        'prev_status' => $_POST['prev_booking_status'],
+                        'new_status' => $_POST['new_booking_status'],
+                        'username' => $_POST['username']
+                    ];
+
+                    if($database->addBookingHistoryRecord($booking_history_record)){
+                        return_json(['confirm_booking' => "success"]);
+                    } else {
+                        return_json(['confirm_booking' => "error"]);
+                    }
                 } else {
                     return_json(['confirm_booking' => "error"]);
                 }
@@ -1596,7 +1603,7 @@ elseif ($action === 'confirm_booking') {
                 return_json(['confirm_booking' => "error"]);
             }
         } else {
-            return_json(['confirm_booking' => "error"]);
+            return_json(['confirm_booking' => "You don't have the privilege to perform this action. Only admins can move bookings to CONFIRMED status."]);
         }
     }
 }
@@ -1612,19 +1619,26 @@ elseif ($action === 'finish_booking') {
 
         $booking_record = [
             'booking_id' => $id,
-            'prev_status' => $_POST['prev_booking_status'],
-            'new_status' => $_POST['new_booking_status'],
+            'prev_status' => "CONFIRMED",
+            'new_status' => "FINISHED",
             'username' => $_POST['username']
         ];
 
-        if ($database->finishBooking($booking_record)) {
-            if($database->addBookingHistoryRecord($booking_record)){
-                return_json(['finish_booking' => "success"]);
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] === 'doctor')
+        {
+            if ($database->finishBooking($booking_record)) {
+                if($database->addBookingHistoryRecord($booking_record)){
+                    return_json(['finish_booking' => "success"]);
+                } else {
+                    return_json(['finish_booking' => "error"]);
+                }
             } else {
                 return_json(['finish_booking' => "error"]);
             }
         } else {
-            return_json(['finish_booking' => "error"]);
+            return_json(['finish_booking' => "You don't have the privilege to perform this action. Only doctors can move bookings to FINISHED status."]);
         }
     }
 }

@@ -2169,11 +2169,12 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'UPDATE `bookings`
+            'UPDATE `pawsome`.`bookings`
             SET 
-            booking_status = ?
+            archived = 1,
+            booking_status = ?,
             updated_date = SYSDATE(),
-            updated_by = (SELECT id from doctors where UPPER(username) = UPPER(?))
+            updated_by = (SELECT id from `pawsome`.`doctors` where UPPER(username) = UPPER(?))
             WHERE id = ?'
         );
         $sql->bind_param(
@@ -2804,7 +2805,7 @@ class Database
             'WITH
             all_users AS 
             (
-                SELECT d.*, "doctors" role FROM doctors d
+                SELECT d.*, "doctor" role FROM doctors d
                 UNION
                 SELECT a.*, "admin" role  FROM admins a
                 UNION 
