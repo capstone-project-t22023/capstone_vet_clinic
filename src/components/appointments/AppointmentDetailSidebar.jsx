@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {Stack, Typography, Button} from "@mui/material";
+import {Stack, Typography, Button, Divider} from "@mui/material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
@@ -59,6 +59,7 @@ export default function AppointmentDetailSidebar({appointment}) {
         <Stack direction="column" p={6} spacing={5}>
             <Stack direction="column" spacing={1}>
                 <Typography variant="h6">Appointment Details</Typography>
+                <Divider />
                 <Typography><strong>Booking ID:</strong> {appointment.booking_id}</Typography>
                 <Typography><strong>Booking Date:</strong> {appointment.booking_date}</Typography>
                 <Typography><strong>Booking Time:</strong> {appointment.booking_time.join(', ')}</Typography>
@@ -75,13 +76,12 @@ export default function AppointmentDetailSidebar({appointment}) {
                 <Typography><strong>Pet Name:</strong> {appointment.petname}</Typography>
             </Stack>
             <Stack direction="column" spacing={2}>
+                <BookingButton />
                 <Button onClick={handleStatusFinished} disabled variant="contained" color="error">Mark as
                     FINISHED</Button>
-                <Button onClick={handleStatusFinished} variant="outlined" color="error">Add Booking</Button>
-                <BookingButton booking={handleBooking} />
-                <Button onClick={handleStatusFinished} variant="outlined" color="error">Update Pet Records</Button>
-                <Button onClick={handleStatusFinished} variant="outlined" color="error">Update Inventory</Button>
-                <Button onClick={handleStatusFinished} variant="outlined" color="error">Generate Invoice</Button>
+                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update Pet Records??</Button>
+                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update Inventory??</Button>
+                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Generate Invoice??</Button>
             </Stack>
         </Stack>
     )

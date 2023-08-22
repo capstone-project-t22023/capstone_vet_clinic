@@ -13,7 +13,7 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([]);
-    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment} = useContext(PetsContext)
+    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment, refreshAppointments, handlerRefreshAppointments} = useContext(PetsContext)
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +44,8 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         if (Object.keys(selectedOwner).length > 0) {
             setAppointmentList(getAppointments('username', selectedOwner.username));
         }
-    }, [selectedOwner]);
+        handlerRefreshAppointments(false);
+    }, [selectedOwner,refreshAppointments]);
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);
@@ -66,7 +67,6 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         const sortedMerged = Object.values(merged).sort((b, a) =>
            filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
-
 
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);

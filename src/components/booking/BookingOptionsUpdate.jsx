@@ -10,11 +10,11 @@ import {PetsContext} from "../../contexts/PetsProvider";
 
 
 export default function BookingOptionsUpdate(props) {
-    const { selectedBooking, sendSelectedBooking, onCancel, editMode } = props;
+    const { selectedBooking, onSave, onCancel, editMode } = props;
     const {user, authenticated} = useContext(ProgramContext);
     const [date, setDate] = useState(dayjs(new Date()));
     const [selectedSlots, setSelectedSlots] = useState([]);
-    const {selectedOwner,selectedPet} = useContext(PetsContext);
+    const {selectedOwner,selectedPet,handlerRefreshAppointments} = useContext(PetsContext);
     // const [selectedOwner, setSelectedOwner] = useState('');
     // const [selectedPet, setSelectedPet] = useState('');
     const [selectedBookingType, setSelectedBookingType] = useState('');
@@ -27,7 +27,7 @@ export default function BookingOptionsUpdate(props) {
     const [takenSlots, setTakenSlots] = useState([]);
     const [bookingTypes, setBookingTypes] = useState([]);
 
-
+    console.log("Slots:", selectedSlots)
     //mount data
     useEffect(() => {
         Promise.all([
@@ -120,8 +120,9 @@ export default function BookingOptionsUpdate(props) {
                             setFilteredPets(tmp_p);
                         }
                     }
-                        let d = selectedBooking.booking_date.split("-");
-                        setDate(dayjs().set('date', d[0]).set('month', d[1]-1).set('year', d[2]));
+                        // let d = selectedBooking.booking_date.split("-");
+                        // setDate(dayjs().set('date', d[0]).set('month', d[1]-1).set('year', d[2]));
+                        setDate(dayjs(selectedBooking.booking_date));
 
                         setSelectedSlots(selectedBooking.booking_time);
                         setSelectedBookingType(selectedBooking.booking_type);
@@ -149,7 +150,7 @@ export default function BookingOptionsUpdate(props) {
     }, []);
 
     const changeDateHandler = (newDate) => {
-        setDate(newDate)
+        setDate(dayjs(newDate))
         setSelectedSlots([]);
         fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date", {
             method: 'POST',
@@ -207,6 +208,7 @@ export default function BookingOptionsUpdate(props) {
             return booking_record;
         });
 
+
         let req_body = {
             booking_type : selectedBookingType,
             pet_owner_id : selectedOwner.pet_owner_id,
@@ -214,6 +216,10 @@ export default function BookingOptionsUpdate(props) {
             username: user.username,
             booking_slots: tmp_slots
         }
+        console.log("Add Booking: " + JSON.stringify(req_body));
+
+
+
         console.log("Add Booking: " + JSON.stringify(req_body));
 
         fetch("http://localhost/capstone_vet_clinic/api.php/add_booking", {
@@ -238,7 +244,9 @@ export default function BookingOptionsUpdate(props) {
                         return response.json();
                     })
                     .then(data => {
-                        sendSelectedBooking(data.booking_record);
+                        // sendSelectedBooking(data.booking_record);
+                        handlerRefreshAppointments(true);
+                        onSave(true)
                     });
 
             })
@@ -295,7 +303,8 @@ export default function BookingOptionsUpdate(props) {
                         return response.json();
                     })
                     .then(data => {
-                        sendSelectedBooking(data.booking_record);
+                        // sendSelectedBooking(data.booking_record);
+                        handlerRefreshAppointments(true)
                     });
 
             })
@@ -333,18 +342,21 @@ export default function BookingOptionsUpdate(props) {
             { editMode ? 
             <>
                 <TextField
-                select
-                label="Booking Type"
-                helperText="Please select your booking type"
-                onChange={saveBookingType}
-                value={selectedBookingType || ''}
+                    select
+                    label="Booking Type"
+                    helperText={selectedBookingType ? 'Please select your booking type' : 'Please select a booking type'}
+                    onChange={saveBookingType}
+                    value={selectedBookingType || ''}
+                    error={!selectedBookingType}
+                    required
                 >
-                {bookingTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
+                    {bookingTypes.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
                 </TextField>
+
                 { user.role === 'admin' ?
                 <TextField
                 select
@@ -378,17 +390,19 @@ export default function BookingOptionsUpdate(props) {
             : 
             <>
                 <TextField
-                select
-                label="Booking Type"
-                helperText="Please select your booking type"
-                onChange={saveBookingType}
-                defaultValue=""
+                    select
+                    label="Booking Type"
+                    helperText={selectedBookingType ? 'Please select your booking type' : 'Please select a booking type'}
+                    onChange={saveBookingType}
+                    value={selectedBookingType || ''}
+                    error={!selectedBookingType}
+                    required
                 >
-                {bookingTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
+                    {bookingTypes.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
                 </TextField>
 
                 <Box

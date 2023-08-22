@@ -8,20 +8,20 @@ export const PetsProvider = ({children}) => {
 
     const {user} = useContext(ProgramContext);
     const [petList, setPetList] = useState([]);
-    const [updatePetListData, setUpdateNewPetListData] = useState(false)
+    const [reloadPetList, setReloadPetList] = useState(false)
     const [selectedOwner, setSelectedOwner] = useState({});
     const [selectedPet, setSelectedPet] = useState({});
     const [selectedAppointment, setSelectedAppointment] = useState({});
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
+    const [refreshAppointments, setRefreshAppoinmtents] = useState(false)
 
 
     const changeSidebarContent = (value) => {
         setSidebarContent(value);
-        console.log("SIDEBAR CONTENT:", value)
     }
 
-    const refreshAppointmentList = () => {
-        console.log("need to refresh list, update has changed")
+    const handlerRefreshAppointments = (value) => {
+        setRefreshAppoinmtents(value)
     }
 
     const updateSelectedOwner = (owner) => {
@@ -46,9 +46,9 @@ export const PetsProvider = ({children}) => {
         }
     };
 
-    const updatePetList = (Boolean) => {
+    const handlerReloadPetList = (Boolean) => {
         console.log("I am going to get a new data - PetsProvider/updatePetList (trying to refresh data after adding new pet..)")
-        setUpdateNewPetListData(true);
+        setReloadPetList(Boolean);
     }
 
 
@@ -76,9 +76,8 @@ export const PetsProvider = ({children}) => {
             .catch(error => {
                 console.error(error);
             });
-        console.log("trying to updateNewPetListData to false - petsProvider/UseEffect (trying to refresh data after adding new pet..)", petList)
-        setUpdateNewPetListData(false);
-    }, [user, updatePetListData]);
+        setReloadPetList(false);
+    }, [user, reloadPetList]);
 
 
     return (
@@ -89,11 +88,12 @@ export const PetsProvider = ({children}) => {
                 selectedPet,
                 updateSelectedPet,
                 updateSelectedOwner,
-                updatePetList,
+                handlerReloadPetList,
                 selectedAppointment,
                 setSelectedAppointment,
                 updateSelectedAppointment,
-                refreshAppointmentList,
+                handlerRefreshAppointments,
+                refreshAppointments,
                 changeSidebarContent,
                 sidebarContent
             }}>

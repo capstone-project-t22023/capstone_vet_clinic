@@ -155,20 +155,22 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         <TextField
                             label="Weight"
                             name="weight"
-                            value={(formData.weight)}
-                            onChange={() => {
+                            value={formData.weight}
+                            onChange={(event) => {
+                                const newValue = parseFloat(event.target.value); // Convert input value to a number
                                 handleChange({
                                     target: {
                                         name: 'weight',
-                                        value: parseFloat(formData.weight)
-                                    }
-                                })
+                                        value: isNaN(newValue) ? '' : newValue, // Update with a number or an empty string
+                                    },
+                                });
                             }}
                             fullWidth
                             required
                             error={Boolean(errors.weight)}
                             helperText={errors.weight}
                         />
+
                         <TextField
                             label="Sex"
                             name="sex"

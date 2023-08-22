@@ -3,11 +3,10 @@ import {Button, Box, Tooltip, Dialog, IconButton, Zoom} from "@mui/material";
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
 import {PetsContext} from "../../contexts/PetsProvider";
-import dayjs from "dayjs";
 
 export default function AddNewPetButton() {
     const [openModal, setOpenModal] = useState(false);
-    const {selectedOwner, updatePetList} = useContext(PetsContext);
+    const {selectedOwner, updatePetList, handlerReloadPetList} = useContext(PetsContext);
 
     const addNewPet = (petInfo) => {
 
@@ -23,8 +22,6 @@ export default function AddNewPetButton() {
             .then((response) => {
                 if (response.ok) {
                     return response.json(); // Parse response body as JSON
-                    updatePetList(true);
-                    console.log("Please update the data - from addNewPetButton / response.ok")
                 } else {
                     throw new Error('Network response was not ok');
                 }
@@ -32,7 +29,7 @@ export default function AddNewPetButton() {
             .then(data => {
                 if (data.add_pet && data.add_pet !== 'error') {
                     // Pet added successfully, you can update UI or take any other actions
-                    updatePetList(true);
+                    handlerReloadPetList(true);
                     console.log("Please update the data - from addNewPetButton / data !== 'error'")
                 } else {
                     // Handle error case

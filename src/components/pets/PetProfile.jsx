@@ -15,7 +15,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 export default function PetProfile({onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
     const [actionForm, setActionForm] = useState(null);
-    const {selectedOwner,selectedPet} = useContext(PetsContext);
+    const {selectedOwner,selectedPet,handlerReloadPetList} = useContext(PetsContext);
     const [activePet, setActivePet] = useState(selectedPet);
     const {user} = useContext(ProgramContext);
 
@@ -56,6 +56,7 @@ export default function PetProfile({onDelete}) {
     const handleConfirmUpdate = (pet) => {
         console.log("This pet has to be updated - do action here", pet);
         setShowDialog(false);
+        handlerReloadPetList(true);
     };
     const handleDeletePet = () => {
         setActionForm('delete');
@@ -64,6 +65,7 @@ export default function PetProfile({onDelete}) {
     const handleConfirmDelete = () => {
         onDelete(activePet.pet_id);
         setShowDialog(false);
+        handlerReloadPetList(true);
     };
 
 
