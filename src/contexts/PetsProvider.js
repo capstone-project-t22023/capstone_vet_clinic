@@ -12,15 +12,16 @@ export const PetsProvider = ({children}) => {
     const [selectedOwner, setSelectedOwner] = useState({});
     const [selectedPet, setSelectedPet] = useState({});
     const [selectedAppointment, setSelectedAppointment] = useState({});
-    const [sidebarContent, setSidebarContent] = useState("");
+    const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
 
 
-    const handleSidebarContent = (value) => {
-      setSidebarContent(value);
+    const changeSidebarContent = (value) => {
+        setSidebarContent(value);
+        console.log("SIDEBAR CONTENT:", value)
     }
 
     const refreshAppointmentList = () => {
-      console.log("need to refresh list, update has changed")
+        console.log("need to refresh list, update has changed")
     }
 
     const updateSelectedOwner = (owner) => {
@@ -31,11 +32,18 @@ export const PetsProvider = ({children}) => {
     }
 
     const updateSelectedAppointment = (appointment) => {
-        selectedAppointment.booking_id === appointment.booking_id ? setSelectedAppointment({}) : setSelectedAppointment(appointment)
+        // selectedAppointment.booking_id === appointment.booking_id ? setSelectedAppointment({}) : setSelectedAppointment(appointment)
+        // updateSelectedPet(appointment.pet_id)
+        setSelectedPet(appointment.pet_id)
+        setSelectedAppointment(appointment)
     }
 
     const updateSelectedPet = (petId) => {
-        selectedPet === petId ? setSelectedPet({}) : setSelectedPet(petId);
+        // selectedPet === petId ? setSelectedPet({}) : setSelectedPet(petId);
+        setSelectedPet(petId)
+        if (selectedAppointment.pet_id !== petId) {
+            setSelectedAppointment({});
+        }
     };
 
     const updatePetList = (Boolean) => {
@@ -73,11 +81,22 @@ export const PetsProvider = ({children}) => {
     }, [user, updatePetListData]);
 
 
-
-
     return (
         <PetsContext.Provider
-            value={{petList, selectedOwner, selectedPet, updateSelectedPet, updateSelectedOwner, updatePetList, selectedAppointment, setSelectedAppointment, updateSelectedAppointment, refreshAppointmentList}}>
+            value={{
+                petList,
+                selectedOwner,
+                selectedPet,
+                updateSelectedPet,
+                updateSelectedOwner,
+                updatePetList,
+                selectedAppointment,
+                setSelectedAppointment,
+                updateSelectedAppointment,
+                refreshAppointmentList,
+                changeSidebarContent,
+                sidebarContent
+            }}>
             {children}
         </PetsContext.Provider>
     );

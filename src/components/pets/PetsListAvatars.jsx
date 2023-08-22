@@ -5,7 +5,7 @@ import {PetsContext} from "../../contexts/PetsProvider";
 import AddNewPetButton from './AddNewPetButton';
 
 export default function PetsListAvatars({petList}) {
-    const {selectedOwner, updateSelectedPet, selectedPet} = useContext(PetsContext);
+    const {selectedOwner, updateSelectedPet, selectedPet, changeSidebarContent} = useContext(PetsContext);
 
 
 
@@ -28,7 +28,10 @@ export default function PetsListAvatars({petList}) {
 
     const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
-    // console.log(petList);
+    const handleClickedPet = (petId) => {
+        updateSelectedPet(petId);
+        changeSidebarContent('pet');
+    }
 
     return (
         <Stack direction={"row"} spacing={1} flexWrap="wrap" alignItems="center" justifyContent="flex-end"
@@ -47,7 +50,7 @@ export default function PetsListAvatars({petList}) {
                 petList.map(pet => (
                     <Tooltip key={pet.pet_id} title={pet.petname} placement="top" arrow>
                         <IconButton
-                            onClick={() => updateSelectedPet(pet.pet_id)}
+                            onClick={() => handleClickedPet(pet.pet_id)}
                             flex={0}
                             className={isSelected(pet.pet_id)}
                         >

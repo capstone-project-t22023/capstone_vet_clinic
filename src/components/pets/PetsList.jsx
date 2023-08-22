@@ -24,7 +24,7 @@ import {PetsContext} from "../../contexts/PetsProvider";
 import Appointments from "../appointments/Appointments";
 
 export default function PetsList() {
-    const {selectedOwner, updateSelectedOwner, selectedPet, updateSelectedPet} = useContext(PetsContext);
+    const {selectedOwner, updateSelectedOwner, selectedPet, changeSidebarContent, updateSelectedPet} = useContext(PetsContext);
 
     const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
@@ -45,6 +45,11 @@ export default function PetsList() {
             return 'https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=320&q=80';
         }
     };
+
+    const handleClickedPet = (petId) => {
+        updateSelectedPet(petId);
+        changeSidebarContent('pet');
+    }
 
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
@@ -81,7 +86,7 @@ export default function PetsList() {
                                             <Tooltip title={pet.petname} TransitionComponent={Fade} arrow
                                                      placement="top">
                                                 <IconButton
-                                                    onClick={() => updateSelectedPet(pet.pet_id)}
+                                                    onClick={() => handleClickedPet(pet.pet_id)}
                                                     flex={0}
                                                     className={isSelected(pet.pet_id)}
                                                 >

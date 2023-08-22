@@ -4,6 +4,7 @@ import {ChevronRightRounded} from '@mui/icons-material';
 import AppointmentsItem from "./AppointmentsItem";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
+import dayjs from "dayjs";
 
 
 export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
@@ -12,7 +13,7 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([]);
-    const {selectedOwner, selectedAppointment, setSelectedAppointment,updateSelectedAppointment} = useContext(PetsContext)
+    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment} = useContext(PetsContext)
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -75,11 +76,11 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
         if (filterMode === 'historic') {
-            return appointmentDate < currentDate;
-        } else if (filterMode === 'future') {
-            return appointmentDate >= currentDate;
+            return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
         } else if (filterMode === 'today') {
-            return appointmentDate === currentDate;
+            return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
+        } else if (filterMode === 'future') {
+            return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
     });
@@ -99,7 +100,8 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
 
 
     const handleAppointmentClick = (appointment) => {
-        updateSelectedAppointment(appointment)
+        changeSidebarContent("appointment");
+        updateSelectedAppointment(appointment);
     }
 
     return (

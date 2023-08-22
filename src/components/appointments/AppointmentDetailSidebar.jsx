@@ -2,6 +2,7 @@ import React, {useContext} from "react";
 import {Stack, Typography, Button} from "@mui/material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
+import BookingButton from "../booking/BookingButton";
 
 export default function AppointmentDetailSidebar({appointment}) {
     const {user} = useContext(programContext)
@@ -50,6 +51,10 @@ export default function AppointmentDetailSidebar({appointment}) {
 
     }
 
+    const handleBooking = (booking) => {
+      console.log("This is booking", booking)
+    }
+
     return (
         <Stack direction="column" p={6} spacing={5}>
             <Stack direction="column" spacing={1}>
@@ -73,6 +78,7 @@ export default function AppointmentDetailSidebar({appointment}) {
                 <Button onClick={handleStatusFinished} disabled variant="contained" color="error">Mark as
                     FINISHED</Button>
                 <Button onClick={handleStatusFinished} variant="outlined" color="error">Add Booking</Button>
+                <BookingButton booking={handleBooking} />
                 <Button onClick={handleStatusFinished} variant="outlined" color="error">Update Pet Records</Button>
                 <Button onClick={handleStatusFinished} variant="outlined" color="error">Update Inventory</Button>
                 <Button onClick={handleStatusFinished} variant="outlined" color="error">Generate Invoice</Button>

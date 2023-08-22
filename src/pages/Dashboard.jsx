@@ -10,13 +10,14 @@ import Appointments from "../components/appointments/Appointments";
 import PetsList from "../components/pets/PetsList";
 import {PetsContext} from "../contexts/PetsProvider";
 import AppointmentDetailSidebar from "../components/appointments/AppointmentDetailSidebar";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 
 export default function Dashboard() {
 
 
     const {user} = useContext(ProgramContext);
-    const {petList, selectedPet, selectedAppointment} = useContext(PetsContext);
+    const {petList, sidebarContent, changeSidebarContent, selectedAppointment} = useContext(PetsContext);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
@@ -59,8 +60,8 @@ export default function Dashboard() {
                                     </Typography>
                                 </Stack>
 
-                                <Paper sx={{borderRadius:6}} elevation={0}>
-                                    <Appointments filter="today" count={10} itemsPerPage={5} doctor />
+                                <Paper sx={{borderRadius: 6}} elevation={0}>
+                                    <Appointments filter="today" count={10} itemsPerPage={5} doctor/>
                                 </Paper>
 
 
@@ -127,7 +128,7 @@ export default function Dashboard() {
                 )}
 
             </Stack>
-            <Slide in={(selectedPet?true:Object.keys(selectedAppointment).length > 0)} direction="left" mountOnEnter unmountOnExit>
+            <Slide in={sidebarContent !== ""} direction="left" mountOnEnter unmountOnExit>
                 <Stack
                     direction="column"
                     justifyContent="space-between"
@@ -139,11 +140,20 @@ export default function Dashboard() {
                         // position: "relative"
                     }}
                 >
-                    {Object.keys(selectedAppointment).length > 0 &&
+                    <Box
+                        sx={{position: "absolute", top: 16, right: 16}}>
+                        <IconButton color="primary" onClick={() => changeSidebarContent("")}>
+                            <CloseRoundedIcon/>
+                        </IconButton>
+                    </Box>
+                    {sidebarContent === 'appointment' &&
+
+                        Object.keys(selectedAppointment).length > 0 &&
                         <AppointmentDetailSidebar appointment={selectedAppointment}/>
                     }
-
-                    <PetProfile onDelete={handleDeletePet}/>
+                    {sidebarContent === 'pet' &&
+                        <PetProfile onDelete={handleDeletePet}/>
+                    }
                 </Stack>
             </Slide>
         </Stack>

@@ -33,9 +33,11 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
         if (filterMode === 'historic') {
-            return appointmentDate < currentDate;
+            return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
+        } else if (filterMode === 'today') {
+            return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
         } else if (filterMode === 'future') {
-            return appointmentDate >= currentDate;
+            return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
     });
