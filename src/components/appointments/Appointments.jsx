@@ -1,25 +1,26 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Box, Button, Pagination, Paper, Divider, IconButton, Stack, Typography} from "@mui/material";
-import {AccessTimeFilledRounded, ForwardRounded, ChevronRightRounded} from '@mui/icons-material';
+import { Button, Pagination, Stack, Typography} from "@mui/material";
+import {ChevronRightRounded} from '@mui/icons-material';
 import AppointmentsItem from "./AppointmentsItem";
-import dayjs from "dayjs";
 import {PetsContext} from "../../contexts/PetsProvider";
+import ProgramContext from "../../contexts/ProgramContext";
 
 
-export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5}) {
+export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
 
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([]);
-    const {selectedOwner} = useContext(PetsContext)
+    const {selectedOwner, selectedAppointment, setSelectedAppointment,updateSelectedAppointment} = useContext(PetsContext)
+    const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
 
     const getAppointments = (filter, filterValue) => {
         const requestData = {
             filter: filter,
-            filter_value: selectedOwner.username
+            filter_value: doctor ? user.username : selectedOwner.username
         };
         fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
             method: 'POST',
@@ -37,7 +38,6 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
             });
         return true
     };
-
 
     useEffect(() => {
         if (Object.keys(selectedOwner).length > 0) {
@@ -98,6 +98,10 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     count = slicedByCountAppointments.length;
 
 
+    const handleAppointmentClick = (appointment) => {
+        updateSelectedAppointment(appointment)
+    }
+
     return (
         <Stack direction="column" flex={1} sx={{border: "1px solid", borderColor: "primary.50", borderRadius:6, px:2, py:2}}>
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
@@ -124,10 +128,10 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
                 {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
-                    <Typography fontWeight="bold" color="grey.300">No Records.</Typography>
+                    <Typography fontWeight="bold" color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
                 ) : (
                     displayedAppointments.map((appointment, index) => (
-                        <AppointmentsItem appointment={appointment} key={index} />
+                        <AppointmentsItem appointment={appointment} key={index} isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false }  onClick={()=>handleAppointmentClick(appointment)} />
                     ))
                 )}
                 {totalPages > 1 &&

@@ -5,19 +5,9 @@ import {PetsContext} from "../../contexts/PetsProvider";
 import AddNewPetButton from './AddNewPetButton';
 
 export default function PetsListAvatars({petList}) {
-    const [showPet, setShowPet] = useState(null);
-    const {selectedOwner, updateSelectedPet} = useContext(PetsContext);
+    const {selectedOwner, updateSelectedPet, selectedPet} = useContext(PetsContext);
 
 
-    const handleSelectedPet = (petId) => {
-        if (showPet === petId) {
-            updateSelectedPet(false);
-            setShowPet(null);
-        } else {
-            setShowPet(petId);
-            updateSelectedPet(petId);
-        }
-    };
 
     const avatarAnimalUnsplashUrl = (species) => {
         if (species === 'Dog') {
@@ -36,7 +26,7 @@ export default function PetsListAvatars({petList}) {
         }
     };
 
-    const isSelected = (petId) => showPet === petId ? "active" : "";
+    const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
     // console.log(petList);
 
@@ -57,7 +47,7 @@ export default function PetsListAvatars({petList}) {
                 petList.map(pet => (
                     <Tooltip key={pet.pet_id} title={pet.petname} placement="top" arrow>
                         <IconButton
-                            onClick={() => handleSelectedPet(pet.pet_id)}
+                            onClick={() => updateSelectedPet(pet.pet_id)}
                             flex={0}
                             className={isSelected(pet.pet_id)}
                         >

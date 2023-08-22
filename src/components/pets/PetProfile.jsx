@@ -10,11 +10,12 @@ import ProgramContext from "../../contexts/ProgramContext";
 
 import AddNewPetForm from "./AddNewPetForm";
 import LastHealthChecks from "../appointments/petProfile/LastHealthChecks";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 export default function PetProfile({onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
     const [actionForm, setActionForm] = useState(null);
-    const {selectedOwner,selectedPet} = useContext(PetsContext);
+    const {selectedOwner,selectedPet, updateSelectedPet} = useContext(PetsContext);
     const [activePet, setActivePet] = useState(selectedPet);
     const {user} = useContext(ProgramContext);
 
@@ -98,6 +99,11 @@ export default function PetProfile({onDelete}) {
 
     return (activePet && (
         <Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{p: 4}}>
+            <Box sx={{position: "absolute", top: 16, right: 16}}>
+                <IconButton color="primary" onClick={() => updateSelectedPet({})}>
+                    <CloseRoundedIcon/>
+                </IconButton>
+            </Box>
             <Stack direction="column" spacing={2} alignItems="center"
                    sx={{
                        ":hover button": {

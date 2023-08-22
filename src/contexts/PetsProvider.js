@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {ProgramContext} from "./ProgramContext";
+import app from "../App";
 
 export const PetsContext = createContext();
 
@@ -10,17 +11,32 @@ export const PetsProvider = ({children}) => {
     const [updatePetListData, setUpdateNewPetListData] = useState(false)
     const [selectedOwner, setSelectedOwner] = useState({});
     const [selectedPet, setSelectedPet] = useState({});
+    const [selectedAppointment, setSelectedAppointment] = useState({});
+    const [sidebarContent, setSidebarContent] = useState("");
 
+
+    const handleSidebarContent = (value) => {
+      setSidebarContent(value);
+    }
+
+    const refreshAppointmentList = () => {
+      console.log("need to refresh list, update has changed")
+    }
 
     const updateSelectedOwner = (owner) => {
         if (user.role !== 'pet_owner') {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
+            setSelectedPet({});
         }
     }
 
-    const updateSelectedPet = (pet) => {
-        setSelectedPet(pet); // If user is not a pet owner, use the passed owner
+    const updateSelectedAppointment = (appointment) => {
+        selectedAppointment.booking_id === appointment.booking_id ? setSelectedAppointment({}) : setSelectedAppointment(appointment)
     }
+
+    const updateSelectedPet = (petId) => {
+        selectedPet === petId ? setSelectedPet({}) : setSelectedPet(petId);
+    };
 
     const updatePetList = (Boolean) => {
         console.log("I am going to get a new data - PetsProvider/updatePetList (trying to refresh data after adding new pet..)")
@@ -61,7 +77,7 @@ export const PetsProvider = ({children}) => {
 
     return (
         <PetsContext.Provider
-            value={{petList, selectedOwner, selectedPet, updateSelectedPet, updateSelectedOwner, updatePetList}}>
+            value={{petList, selectedOwner, selectedPet, updateSelectedPet, updateSelectedOwner, updatePetList, selectedAppointment, setSelectedAppointment, updateSelectedAppointment, refreshAppointmentList}}>
             {children}
         </PetsContext.Provider>
     );

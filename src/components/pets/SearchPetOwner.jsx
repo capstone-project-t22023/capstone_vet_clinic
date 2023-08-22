@@ -72,7 +72,7 @@ export default function SearchPetOwner() {
                     {filteredOwners.map((owner) => (
                         <Chip label={`${owner.firstname} ${owner.lastname}`}
                               variant={owner.pet_owner_id === ownerIsSelected ? "" : "outlined"}
-                              key={owner.pet_owner_id} onClick={() => handleSelectedOwner(owner)} color="primary"
+                              key={owner.pet_owner_id} onClick={() => handleSelectedOwner(owner)} color={owner.pets.length > 0 ? "primary" : "error"}
                               sx={{flex: 0}}/>
                     ))}
                 </Stack>

@@ -16,27 +16,18 @@ import {
     ListItemText,
     TextField, Fade
 } from "@mui/material";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
 import Appointments from "../appointments/Appointments";
 
-export default function PetsList({petsList}) {
-    const [showPet, setShowPet] = useState(null);
-    const {selectedOwner,updateSelectedPet} = useContext(PetsContext);
+export default function PetsList() {
+    const {selectedOwner, updateSelectedOwner, selectedPet, updateSelectedPet} = useContext(PetsContext);
 
-    const isSelected = (petId) => showPet === petId ? "active" : "";
+    const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
-    const handleSelectedPet = (petId) => {
-        if (showPet === petId) {
-            updateSelectedPet(false);
-            setShowPet(null);
-        } else {
-            setShowPet(petId);
-            updateSelectedPet(petId);
-        }
-    };
 
     const avatarAnimalUnsplashUrl = (species) => {
         if (species === 'Dog') {
@@ -55,69 +46,77 @@ export default function PetsList({petsList}) {
         }
     };
 
-
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
-            <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start"
-                   sx={{
-                       "& .MuiButtonBase-root": {
-                           p: 0.5,
-                       },
-                       "& .active": {
-                           border: "2px solid",
-                           borderColor: "secondary.main"
-                       }
-                   }}
-            >
+            <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start">
 
                 {selectedOwner && Object.keys(selectedOwner).length > 0 ? (
-                    <Stack>
-                    <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
-                        {selectedOwner.pets.length > 0 ? (
-                            <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="center"
-                                   spacing={1} width={1} flex={1}>
-                                <Typography component="h5" variant="h6" color="primary">{selectedOwner.firstname} has these pets:</Typography>
-                                {selectedOwner.pets.map((pet) => (
-                                    <Stack
-                                        key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
-                                        direction="column"
-                                        flex={0}
-                                    >
-                                        <Tooltip title={pet.petname} TransitionComponent={Fade} arrow placement="top">
-                                            <IconButton
-                                                onClick={() => handleSelectedPet(pet.pet_id)}
-                                                flex={0}
-                                                className={isSelected(pet.pet_id)}
-                                            >
-                                                <Avatar
-                                                    src={avatarAnimalUnsplashUrl(pet.species)}
-                                                    alt={pet.petname}
-                                                />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Stack>
-                                ))}
-                                <AddNewPetButton petOwner={selectedOwner}/>
-                            </Stack>
+                    <Stack sx={{position: "relative"}}>
+                        <Box sx={{position: "absolute", top: 0, right: 0}}>
+                            <IconButton color="primary" onClick={() => updateSelectedOwner({})}>
+                                <CloseRoundedIcon/>
+                            </IconButton>
+                        </Box>
+                        <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
+                            {selectedOwner.pets.length > 0 ? (
+                                <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="center"
+                                       spacing={1} width={1} flex={1}
+                                       sx={{
+                                           "& .MuiButtonBase-root": {
+                                               p: 0.5,
+                                           },
+                                           "& .active": {
+                                               border: "2px solid",
+                                               borderColor: "secondary.main"
+                                           }
+                                       }}>
+                                    <Typography component="h5" variant="h6"
+                                                color="primary">{selectedOwner.firstname} has these pets:</Typography>
+                                    {selectedOwner.pets.map((pet) => (
+                                        <Stack
+                                            key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
+                                            direction="column"
+                                            flex={0}
+                                        >
+                                            <Tooltip title={pet.petname} TransitionComponent={Fade} arrow
+                                                     placement="top">
+                                                <IconButton
+                                                    onClick={() => updateSelectedPet(pet.pet_id)}
+                                                    flex={0}
+                                                    className={isSelected(pet.pet_id)}
+                                                >
+                                                    <Avatar
+                                                        src={avatarAnimalUnsplashUrl(pet.species)}
+                                                        alt={pet.petname}
+                                                    />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Stack>
+                                    ))}
+                                    <AddNewPetButton petOwner={selectedOwner}/>
+                                </Stack>
 
-                        ) : (
-                            <Stack direction="row" alignItems="center" spacing={3}>
-                                <Typography component="h5" variant="h6">{selectedOwner.firstname} has no pets</Typography>
-                                <AddNewPetButton petOwner={selectedOwner}/>
+                            ) : (
+                                <Stack direction="row" flexWrap="wrap" alignItems="center" justifyContent="center"
+                                       spacing={1} width={1} flex={1}>
+                                    <Typography component="h5" variant="h6">{selectedOwner.firstname} has no
+                                        pets</Typography>
+                                    <AddNewPetButton petOwner={selectedOwner}/>
+                                </Stack>
+                            )
+                            }
+                        </Paper>
+
+
+                        {selectedOwner.pets.length > 0 &&
+                            <Stack direction="row" spacing={2} mb={2}>
+                                <Appointments filter="today" count={3}/>
+                                <Appointments filter="historic"/>
+                                <Appointments filter="future"/>
+                                <Appointments itemsPerPage={3}/>
+
                             </Stack>
-                        )
                         }
-                    </Paper>
-
-
-
-                    <Stack direction="row" spacing={2} mb={2}>
-                        <Appointments filter="today" count={3}/>
-                        <Appointments filter="historic"/>
-                        <Appointments filter="future"/>
-                        <Appointments itemsPerPage={3}/>
-
-                    </Stack>
 
                     </Stack>
 

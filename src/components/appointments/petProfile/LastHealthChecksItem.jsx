@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 
 
 export default function LastHealthChecksItem({appointment}) {
-    console.log('appointment: ', appointment)
     return (
         <Tooltip title={`${appointment.booking_id} - ${appointment.booking_status}`} placement="left">
             <Stack direction="row" spacing={2} >

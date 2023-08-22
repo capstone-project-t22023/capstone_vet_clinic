@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 
 export default function LastHealthChecks({appointmentList, loading, count = -1}) {
     const [mergedAppointments, setMergedAppointments] = useState([]);
-    const [filterMode, setFilterMode] = useState('historic'); // 'all', 'historic', 'future'
+    const [filterMode, setFilterMode] = useState('all'); // 'all', 'historic', 'future'
 
     useEffect(() => {
         const merged = {};

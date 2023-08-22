@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {Box, Button, Paper, Divider, Container, Typography, Stack, Grid, Zoom, Slide} from '@mui/material';
+import {Box, IconButton, Button, Paper, Divider, Container, Typography, Stack, Grid, Zoom, Slide} from '@mui/material';
 import ProgramContext from '../contexts/ProgramContext';
 import Footer from '../components/Footer';
 import Aside from '../components/aside/Aside';
@@ -9,14 +9,14 @@ import PetProfile from "../components/pets/PetProfile";
 import Appointments from "../components/appointments/Appointments";
 import PetsList from "../components/pets/PetsList";
 import {PetsContext} from "../contexts/PetsProvider";
-import BookingButton from "../components/booking/BookingButton";
+import AppointmentDetailSidebar from "../components/appointments/AppointmentDetailSidebar";
 
 
 export default function Dashboard() {
 
 
     const {user} = useContext(ProgramContext);
-    const {petList, selectedPet} = useContext(PetsContext);
+    const {petList, selectedPet, selectedAppointment} = useContext(PetsContext);
 
     const navigate = useNavigate();
     const handleClick = (navigation) => {
@@ -29,6 +29,7 @@ export default function Dashboard() {
     const handleBooking = (booking) => {
         console.log("This is booking", booking)
     }
+
 
     return (
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
@@ -58,10 +59,15 @@ export default function Dashboard() {
                                     </Typography>
                                 </Stack>
 
+                                <Paper sx={{borderRadius:6}} elevation={0}>
+                                    <Appointments filter="today" count={10} itemsPerPage={5} doctor />
+                                </Paper>
+
 
                                 <Stack direction="row" spacing={2}>
                                     <Box flex={1}>
-                                        <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
+                                        <Stack direction="row" justifyContent="space-between" width="100%"
+                                               alignItems="baseline" sx={{mb: 2}}>
                                             <Typography fontWeight="bold">Search in Pet Owners List</Typography>
 
                                         </Stack>
@@ -72,8 +78,6 @@ export default function Dashboard() {
                                 </Stack>
 
                             </Stack>
-
-
 
 
                         </Stack>
@@ -104,10 +108,9 @@ export default function Dashboard() {
                                 </Paper>
 
                                 <Stack direction="row" spacing={2}>
-                                    <Appointments filter="today"/>
-                                    <Appointments filter="future" count={3} itemsPerPage={2}/>
-                                    <Appointments filter="historic" itemsPerPage={4}/>
-                                    <Appointments itemsPerPage={3}/>
+                                    <Appointments filter="future" count={3} itemsPerPage={4}/>
+                                    <Appointments filter="historic" count={3} itemsPerPage={4}/>
+                                    <Appointments itemsPerPage={4}/>
 
                                 </Stack>
 
@@ -124,7 +127,7 @@ export default function Dashboard() {
                 )}
 
             </Stack>
-            <Slide in={selectedPet ? true : false} direction="left" mountOnEnter unmountOnExit>
+            <Slide in={(selectedPet?true:Object.keys(selectedAppointment).length > 0)} direction="left" mountOnEnter unmountOnExit>
                 <Stack
                     direction="column"
                     justifyContent="space-between"
@@ -133,8 +136,13 @@ export default function Dashboard() {
                     sx={{
                         height: '100vh',
                         backgroundColor: 'white',
+                        // position: "relative"
                     }}
                 >
+                    {Object.keys(selectedAppointment).length > 0 &&
+                        <AppointmentDetailSidebar appointment={selectedAppointment}/>
+                    }
+
                     <PetProfile onDelete={handleDeletePet}/>
                 </Stack>
             </Slide>
