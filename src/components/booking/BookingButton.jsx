@@ -24,14 +24,14 @@ export default function DeleteBooking() {
     };
 
     const handleClose = (value) => {
-        setOpen(false);
+        setOpen(!value);
+        console.log(!value)
     };
 
     const handleCancel = (value) => {
         setOpen(value);
     }
 
-    console.log("selected aaaaap", selectedAppointment)
     const isSelectedAppointmentEmpty = Object.keys(selectedAppointment).length === 0;
 
     const handleRemoveBooking = () => {

@@ -27,7 +27,6 @@ export default function BookingOptionsUpdate(props) {
     const [takenSlots, setTakenSlots] = useState([]);
     const [bookingTypes, setBookingTypes] = useState([]);
 
-    console.log("Slots:", selectedSlots)
     //mount data
     useEffect(() => {
         Promise.all([
@@ -105,7 +104,7 @@ export default function BookingOptionsUpdate(props) {
                         //     pet_option.push({value: '', label: ''});
                         //     setFilteredPets(pet_option);
                         // }
-                        
+
                     } else {
                         let tmp = data[1].pets.filter( x => x.pet_owner_id === selectedBooking.pet_owner_id);
                         if (tmp.length > 0){
@@ -128,7 +127,7 @@ export default function BookingOptionsUpdate(props) {
                         setSelectedBookingType(selectedBooking.booking_type);
                         // // setSelectedPet(selectedBooking.pet_id);
                         setSelectedDoctor(selectedBooking.doctor_id);
-                    
+
                 } else {
                     // setSelectedOwner(user.id);
                     let owned_pets = data[1].pets.filter( x => x.pet_owner_id === user.id);
@@ -208,7 +207,6 @@ export default function BookingOptionsUpdate(props) {
             return booking_record;
         });
 
-
         let req_body = {
             booking_type : selectedBookingType,
             pet_owner_id : selectedOwner.pet_owner_id,
@@ -216,9 +214,6 @@ export default function BookingOptionsUpdate(props) {
             username: user.username,
             booking_slots: tmp_slots
         }
-        console.log("Add Booking: " + JSON.stringify(req_body));
-
-
 
         console.log("Add Booking: " + JSON.stringify(req_body));
 
@@ -234,7 +229,7 @@ export default function BookingOptionsUpdate(props) {
             })
             .then(data => {
                 console.log("Add Booking API: " + data.add_booking);
-                
+
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.add_booking, {
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
@@ -244,7 +239,7 @@ export default function BookingOptionsUpdate(props) {
                         return response.json();
                     })
                     .then(data => {
-                        // sendSelectedBooking(data.booking_record);
+
                         handlerRefreshAppointments(true);
                         onSave(true)
                     });
@@ -293,7 +288,7 @@ export default function BookingOptionsUpdate(props) {
                 return response.json();
             })
             .then(data => {
-                
+
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.update_booking, {
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
@@ -305,6 +300,7 @@ export default function BookingOptionsUpdate(props) {
                     .then(data => {
                         // sendSelectedBooking(data.booking_record);
                         handlerRefreshAppointments(true)
+                        onSave(true)
                     });
 
             })
@@ -330,7 +326,7 @@ export default function BookingOptionsUpdate(props) {
     }
 
     const whenBusyData = takenSlots;
-    
+
     return (
         <Box
             sx={{
@@ -339,7 +335,7 @@ export default function BookingOptionsUpdate(props) {
                 p: 3
             }}
         >
-            { editMode ? 
+            { editMode ?
             <>
                 <TextField
                     select
@@ -386,8 +382,8 @@ export default function BookingOptionsUpdate(props) {
                             onChange={slotsHandler} />
                     </Box>
                 </Box>
-            </> 
-            : 
+            </>
+            :
             <>
                 <TextField
                     select

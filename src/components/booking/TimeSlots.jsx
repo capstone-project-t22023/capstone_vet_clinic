@@ -4,10 +4,7 @@ import dayjs from "dayjs";
 
 export default function TimeSlots(props) {
     const {chosenDate, selectedSlots, onChange, whenBusyData} = props; // Destructure the selectedSlots and setSelectedSlots props
-
     const [timeSlots, setTimeSlots] = useState(generateTimeSlots())
-
-    console.log(whenBusyData, " Chosen date ", dayjs(chosenDate).format('DD-MM-YYYY'), selectedSlots)
 
     // set up the Time Slots in 30 mins 8am - 5pm
     function generateTimeSlots() {
