@@ -115,6 +115,7 @@ export default function PetsList({petsList}) {
                         <Appointments filter="today" count={3}/>
                         <Appointments filter="historic"/>
                         <Appointments filter="future"/>
+                        <Appointments itemsPerPage={3}/>
 
                     </Stack>
 

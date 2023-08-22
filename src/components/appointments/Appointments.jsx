@@ -103,12 +103,20 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
                 <Typography fontWeight="bold">
                     {filter === 'future'
-                        ? (count !==-1 ? `Upcoming ${count}` : `All Upcoming`)
+                        ? (count !== 0
+                            ? `Upcoming ${count}`
+                            : 'No upcoming')
                         : filter === 'today'
-                            ? (count !==-1 ? `Today's ${count}` : `All Today's`)
+                            ? (count !== 0
+                                ? `Today's ${count}`
+                                : 'No today\'s')
                             : filter === 'historic'
-                                ? (count !==-1 ? `Historical ${count}` : `All Historical`)
-                                : `${count} All`} appointments
+                                ? (count !== 0
+                                    ? `Historical ${count}`
+                                    : 'No historical')
+                                : (count !== 0
+                                    ? `${count} All`
+                                    : 'No')} appointments
                 </Typography>
                 <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all ({filteredAppointments.length +"/"+ count})<ChevronRightRounded
                     fontSize="inherit"/></Button>

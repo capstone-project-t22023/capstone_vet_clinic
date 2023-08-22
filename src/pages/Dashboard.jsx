@@ -106,8 +106,8 @@ export default function Dashboard() {
                                 <Stack direction="row" spacing={2}>
                                     <Appointments filter="today"/>
                                     <Appointments filter="future" count={3} itemsPerPage={2}/>
-                                    <Appointments filter="historic" count={200}  itemsPerPage={4}/>
-                                    <Appointments count={8} itemsPerPage={3}/>
+                                    <Appointments filter="historic" itemsPerPage={4}/>
+                                    <Appointments itemsPerPage={3}/>
 
                                 </Stack>
 
