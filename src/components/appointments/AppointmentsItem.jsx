@@ -65,7 +65,6 @@ const SxUpcomingAppointment = {
     }
 }
 export default function AppointmentsItem({appointment}) {
-    console.log('appointment: ', appointment)
     const sortedBookingTime = appointment.booking_time.sort((a, b) => a.localeCompare(b));
 
     return (
@@ -82,20 +81,23 @@ export default function AppointmentsItem({appointment}) {
                     <Stack direction="row" spacing={2}>
                         {appointment && appointment.booking_time.length > 1 ? (
                             appointment.booking_time.map((timeSlot, index) => (
-                                <Stack direction="row" spacing={1}>
+                                <Stack direction="row" spacing={1} key={index}>
                                     <Typography component="span" variant="timeSlots">
                                         <AccessTimeFilledRounded fontSize="inherit"/>
                                     </Typography>
-                                    <Typography component="span" variant="timeSlots" key={index}>{timeSlot}</Typography>
+                                    <Typography component="span" variant="timeSlots">
+                                        {timeSlot}
+                                    </Typography>
                                 </Stack>
                             ))
-
                         ) : (
                             <Stack direction="row" spacing={1}>
                                 <Typography component="span" variant="timeSlots">
                                     <AccessTimeFilledRounded fontSize="inherit"/>
                                 </Typography>
-                                <Typography component="span" variant="timeSlots">{appointment.booking_time[0]}</Typography>
+                                <Typography component="span" variant="timeSlots">
+                                    {appointment.booking_time[0]}
+                                </Typography>
                             </Stack>
                         )}
                     </Stack>

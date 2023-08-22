@@ -19,7 +19,6 @@ export const PetsProvider = ({children}) => {
     }
 
     const updateSelectedPet = (pet) => {
-        console.log("clickS", pet);
         setSelectedPet(pet); // If user is not a pet owner, use the passed owner
     }
 

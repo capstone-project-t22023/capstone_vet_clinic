@@ -1,18 +1,20 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Box, Button, Paper, Divider, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Button, Pagination, Paper, Divider, IconButton, Stack, Typography} from "@mui/material";
 import {AccessTimeFilledRounded, ForwardRounded, ChevronRightRounded} from '@mui/icons-material';
 import AppointmentsItem from "./AppointmentsItem";
 import dayjs from "dayjs";
 import {PetsContext} from "../../contexts/PetsProvider";
 
 
-export default function Appointments({filter}) {
+export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5}) {
 
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([]);
     const {selectedOwner} = useContext(PetsContext)
+
+    const [currentPage, setCurrentPage] = useState(1);
 
     const getAppointments = (filter, filterValue) => {
         const requestData = {
@@ -29,7 +31,6 @@ export default function Appointments({filter}) {
             .then(response => response.json())
             .then(data => {
                 setAppointmentList(data.bookings)
-                console.log("Upcomming appointments",data.bookings)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -62,7 +63,7 @@ export default function Appointments({filter}) {
         }
 
         const sortedMerged = Object.values(merged).sort((b, a) =>
-            a.booking_date.localeCompare(b.booking_date)
+           filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
 
 
@@ -83,40 +84,52 @@ export default function Appointments({filter}) {
         return true;
     });
 
-    const handleFilter = (filter) => {
-        setFilterMode(filter);
-    }
+    // filter for number of total appointments to show
+    const slicedByCountAppointments = count === -1 ? filteredAppointments : filteredAppointments.slice(0, count);
 
 
+    const totalPages = Math.ceil(slicedByCountAppointments.length / itemsPerPage);
 
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const displayedAppointments = itemsPerPage === -1 ? slicedByCountAppointments : slicedByCountAppointments.slice(startIndex, endIndex);
+
+    count = slicedByCountAppointments.length;
 
 
     return (
-        <Stack direction="Column" flex={1} sx={{border: "1px solid", borderColor: "primary.50", borderRadius:6, px:2, py:2}}>
+        <Stack direction="column" flex={1} sx={{border: "1px solid", borderColor: "primary.50", borderRadius:6, px:2, py:2}}>
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
                 <Typography fontWeight="bold">
                     {filter === 'future'
-                        ? 'Upcoming'
+                        ? (count !==-1 ? `Upcoming ${count}` : `All Upcoming`)
                         : filter === 'today'
-                            ? `Today's`
+                            ? (count !==-1 ? `Today's ${count}` : `All Today's`)
                             : filter === 'historic'
-                                ? 'Historical'
-                                : 'All'} appointments
+                                ? (count !==-1 ? `Historical ${count}` : `All Historical`)
+                                : `${count} All`} appointments
                 </Typography>
-                <Button variant="text" size="small" color="secondary">View all <ChevronRightRounded
+                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all ({filteredAppointments.length +"/"+ count})<ChevronRightRounded
                     fontSize="inherit"/></Button>
             </Stack>
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
-                {(!Array.isArray(filteredAppointments) || filteredAppointments.length === 0) ? (
-                        <Typography fontWeight="bold" color="grey.300">No Records.</Typography>
+                {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
+                    <Typography fontWeight="bold" color="grey.300">No Records.</Typography>
                 ) : (
-                    filteredAppointments.map((appointment, index) => (
+                    displayedAppointments.map((appointment, index) => (
                         <AppointmentsItem appointment={appointment} key={index} />
                     ))
                 )}
-
-
+                {totalPages > 1 &&
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={(event, page) => setCurrentPage(page)}
+                        color="primary"
+                    />
+                }
 
             </Stack>
         </Stack>

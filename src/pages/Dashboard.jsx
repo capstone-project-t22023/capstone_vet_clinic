@@ -105,9 +105,9 @@ export default function Dashboard() {
 
                                 <Stack direction="row" spacing={2}>
                                     <Appointments filter="today"/>
-                                    <Appointments filter="future"/>
-                                    <Appointments filter="historic"/>
-                                    <Appointments/>
+                                    <Appointments filter="future" count={3} itemsPerPage={2}/>
+                                    <Appointments filter="historic" count={200}  itemsPerPage={4}/>
+                                    <Appointments count={8} itemsPerPage={3}/>
 
                                 </Stack>
 
@@ -124,7 +124,7 @@ export default function Dashboard() {
                 )}
 
             </Stack>
-            <Slide in={selectedPet ? true : false} direction="left"  mountOnEnter unmountOnExit>
+            <Slide in={selectedPet ? true : false} direction="left" mountOnEnter unmountOnExit>
                 <Stack
                     direction="column"
                     justifyContent="space-between"

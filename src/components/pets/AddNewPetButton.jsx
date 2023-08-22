@@ -7,11 +7,7 @@ import dayjs from "dayjs";
 
 export default function AddNewPetButton() {
     const [openModal, setOpenModal] = useState(false);
-
     const {selectedOwner, updatePetList} = useContext(PetsContext);
-
-    console.log('owner', selectedOwner)
-
 
     const addNewPet = (petInfo) => {
 

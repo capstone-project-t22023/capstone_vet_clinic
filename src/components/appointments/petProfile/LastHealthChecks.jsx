@@ -4,7 +4,7 @@ import {ChevronRightRounded} from "@mui/icons-material";
 import LastHealthChecksItem from "./LastHealthChecksItem";
 import dayjs from "dayjs";
 
-export default function LastHealthChecks({appointmentList, loading}) {
+export default function LastHealthChecks({appointmentList, loading, count = -1}) {
     const [mergedAppointments, setMergedAppointments] = useState([]);
     const [filterMode, setFilterMode] = useState('historic'); // 'all', 'historic', 'future'
 
@@ -40,9 +40,9 @@ export default function LastHealthChecks({appointmentList, loading}) {
         return true;
     });
 
-    const handleFilter = (filter) => {
-        setFilterMode(filter);
-    }
+
+    // Apply the "count" filter on filteredAppointments
+    const displayedAppointments = count === -1 ? filteredAppointments : filteredAppointments.slice(0, count);
 
 
     if (!Array.isArray(appointmentList) || appointmentList.length === 0) {

@@ -112,7 +112,7 @@ export default function PetsList({petsList}) {
 
 
                     <Stack direction="row" spacing={2} mb={2}>
-                        <Appointments filter="today"/>
+                        <Appointments filter="today" count={3}/>
                         <Appointments filter="historic"/>
                         <Appointments filter="future"/>
 
