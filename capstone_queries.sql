@@ -142,33 +142,57 @@ CREATE TABLE `pawsome`.`booking_types` (
   UNIQUE INDEX `booking_type_UNIQUE` (`booking_type`));
 commit;
 
+
 DROP TABLE IF EXISTS `pawsome`.`invoices`;
 CREATE TABLE `pawsome`.`invoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
+  `receipt_id` int(10) DEFAULT NULL COMMENT 'Reference receipt ID',
+  `invoice_amount` decimal(10,2) NOT NULL,
   `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
-  `archived` INT(1) NULL COMMENT 'Indicates id record is active or not',
+  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) AUTO_INCREMENT=10000000;
-commit;
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
+  UNIQUE KEY `receipt_id_UNIQUE` (`receipt_id`),
+  KEY `fk_invoices_b_idx` (`booking_id`),
+  KEY `fk_invoices_r_idx` (`receipt_id`),
+  CONSTRAINT `fk_invoices_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoices_r` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) AUTO_INCREMENT=300000;
+
+DROP TABLE IF EXISTS `pawsome`.`invoice_items`;
+CREATE TABLE `pawsome`.`invoice_items` (
+  `invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
+  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
+  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
+  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
+  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
+  `total_amount` decimal(5,2) NOT NULL COMMENT 'Total amount times quantity',
+  KEY `fk_invoice_items_i_idx` (`invoice_id`),
+  KEY `fk_invoice_items_ic_idx` (`item_category_id`),
+  CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoice_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 DROP TABLE IF EXISTS `pawsome`.`receipts`;
 CREATE TABLE `pawsome`.`receipts` (
-  `id` INT(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
-  `invoice_id` INT(10) NOT NULL COMMENT 'Referenced invoice ID',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
+  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
+  `invoice_id` int(10) NOT NULL COMMENT 'Referenced invoice ID',
+  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
   `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
-  `archived` INT(1) NULL COMMENT 'Indicates id record is active or not',
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id`),
-  UNIQUE INDEX `invoice_id_UNIQUE` (`invoice_id`),
-  CONSTRAINT `fk_receipts_i`
-    FOREIGN KEY (`id`)
-    REFERENCES `pawsome`.`invoices` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) AUTO_INCREMENT=10000000;
+  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `invoice_id_UNIQUE` (`invoice_id`),
+  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
+  KEY `fk_receipts_p_idx` (`payment_id`),
+  CONSTRAINT `fk_receipts_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_receipts_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_receipts_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) AUTO_INCREMENT=500000;
 
 DROP TABLE IF EXISTS `pawsome`.`bookings`;
 CREATE TABLE `pawsome`.`bookings` (
@@ -238,8 +262,8 @@ CREATE TABLE `pawsome`.`inventory_items` (
   `threshold_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Ordering level of inventory',
   `weight_volume` decimal(10,2) NOT NULL COMMENT 'Weight or volume of item',
   `item_unit` varchar(20) NOT NULL COMMENT 'Unit (grams, pieces, tablets, etc.)',
-  `production_date` date NOT NULL COMMENT 'Production date',
-  `expiration_date` date NOT NULL COMMENT 'Expiration date',
+  `production_date` date DEFAULT NULL COMMENT 'Production date',
+  `expiration_date` date DEFAULT NULL COMMENT 'Expiration date',
   `unit_price` decimal(10,2) NOT NULL COMMENT 'Price per item',
   `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
   `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
@@ -248,39 +272,6 @@ CREATE TABLE `pawsome`.`inventory_items` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_inventory_items_iic_idx` (`inventory_item_category_id`),
   CONSTRAINT `fk_inventory_items_iic` FOREIGN KEY (`inventory_item_category_id`) REFERENCES `inventory_item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
-DROP TABLE IF EXISTS `pawsome`.`invoices`;
-CREATE TABLE `pawsome`.`invoices` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `receipt_id` int(10) DEFAULT NULL COMMENT 'Reference receipt ID',
-  `invoice_amount` decimal(10,2) NOT NULL,
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
-  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
-  UNIQUE KEY `receipt_id_UNIQUE` (`receipt_id`),
-  KEY `fk_invoices_b_idx` (`booking_id`),
-  KEY `fk_invoices_r_idx` (`receipt_id`),
-  CONSTRAINT `fk_invoices_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoices_r` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
-DROP TABLE IF EXISTS `pawsome`.`invoice_items`;
-CREATE TABLE `pawsome`.`invoice_items` (
-  `invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
-  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
-  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
-  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
-  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
-  `total_amount` decimal(5,2) NOT NULL COMMENT 'Total amount times quantity',
-  KEY `fk_invoice_items_i_idx` (`invoice_id`),
-  KEY `fk_invoice_items_ic_idx` (`item_category_id`),
-  CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoice_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 DROP TABLE IF EXISTS `pawsome`.`lodgings`;
@@ -458,24 +449,6 @@ CREATE TABLE `pawsome`.`pet_surgery_records` (
   CONSTRAINT `fk_surgery_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS `pawsome`.`receipts`;
-CREATE TABLE `pawsome`.`receipts` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `invoice_id` int(10) NOT NULL COMMENT 'Referenced invoice ID',
-  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
-  `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `invoice_id_UNIQUE` (`invoice_id`),
-  UNIQUE KEY `booking_id_UNIQUE` (`booking_id`),
-  KEY `fk_receipts_p_idx` (`payment_id`),
-  CONSTRAINT `fk_receipts_b` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_receipts_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_receipts_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
 DROP TABLE IF EXISTS `pawsome`.`sales_invoices`;
 CREATE TABLE `pawsome`.`sales_invoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
@@ -488,7 +461,7 @@ CREATE TABLE `pawsome`.`sales_invoices` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_sales_inv_p_idx` (`payment_id`),
   CONSTRAINT `fk_sales_inv_p` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
+) AUTO_INCREMENT=100000;
 
 DROP TABLE IF EXISTS `pawsome`.`sales_invoice_items`;
 CREATE TABLE `pawsome`.`sales_invoice_items` (
@@ -504,7 +477,7 @@ CREATE TABLE `pawsome`.`sales_invoice_items` (
   CONSTRAINT `fk_sales_inv_items_i` FOREIGN KEY (`item_id`) REFERENCES `inventory_items` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_sales_inv_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_sales_inv_items_si` FOREIGN KEY (`sales_invoice_id`) REFERENCES `sales_invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
+) ;
 
 DROP TABLE IF EXISTS `pawsome`.`service_categories`;
 CREATE TABLE `pawsome`.`service_categories` (
@@ -1283,6 +1256,17 @@ VALUES
 (10000051, 'PENDING', SYSDATE(),501),
 (10000052, 'PENDING', SYSDATE(),501),
 (10000053, 'PENDING', SYSDATE(),501);
+commit;
+
+INSERT INTO `pawsome`.`inventory_item_categories`
+(`item_category`,`updated_by`,`updated_date`,`archived`)
+VALUES
+('Medicines',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Pet Care',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Pet Toys',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Pet Food and Treats',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Clinical Supplies',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Others',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
 commit;
 
 SET FOREIGN_KEY_CHECKS=1;

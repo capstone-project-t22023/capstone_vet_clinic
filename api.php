@@ -1010,21 +1010,21 @@ elseif ($action === 'get_all_pets') {
 elseif ($action === 'get_all_pets_by_filter') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
-        $_GET = json_decode($rest_json, true);
-        if ($_GET['filter'] == 'petname'){
-            if ($pets = $database->getAllPetsByPetname($_GET['filter_value'])) {
+        $_POST = json_decode($rest_json, true);
+        if ($_POST['filter'] == 'petname'){
+            if ($pets = $database->getAllPetsByPetname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
-        } elseif ($_GET['filter'] == 'firstname'){
-            if ($pets = $database->getAllPetsByFname($_GET['filter_value'])) {
+        } elseif ($_POST['filter'] == 'firstname'){
+            if ($pets = $database->getAllPetsByFname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
-        } elseif ($_GET['filter'] == 'lastname'){
-            if ($pets = $database->getAllPetsByLname($_GET['filter_value'])) {
+        } elseif ($_POST['filter'] == 'lastname'){
+            if ($pets = $database->getAllPetsByLname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
-        } elseif ($_GET['filter'] == 'pet_owner_id'){
-            if ($pets = $database->getAllPetsByPetOwnerId($_GET['filter_value'])) {
+        } elseif ($_POST['filter'] == 'pet_owner_id'){
+            if ($pets = $database->getAllPetsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         }
@@ -1712,34 +1712,34 @@ elseif ($action === 'cancel_booking') {
 elseif ($action === 'search_booking') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
-        $_GET = json_decode($rest_json, true);
+        $_POST = json_decode($rest_json, true);
 
-        if ($_GET['filter'] == 'booking_id'){
-            if ($bookings = $database->getBookingsByBookingId($_GET['filter_value'])) {
+        if ($_POST['filter'] == 'booking_id'){
+            if ($bookings = $database->getBookingsByBookingId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        } elseif ($_GET['filter'] == 'booking_date'){
-            if ($bookings = $database->getBookingsByBookingDate($_GET['filter_value'])) {
+        } elseif ($_POST['filter'] == 'booking_date'){
+            if ($bookings = $database->getBookingsByBookingDate($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        } elseif ($_GET['filter'] == 'booking_status'){
-            if ($bookings = $database->getBookingsByBookingStatus($_GET['filter_value'])) {
+        } elseif ($_POST['filter'] == 'booking_status'){
+            if ($bookings = $database->getBookingsByBookingStatus($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        }  elseif ($_GET['filter'] == 'booking_type'){
-            if ($bookings = $database->getBookingsByBookingType($_GET['filter_value'])) {
+        }  elseif ($_POST['filter'] == 'booking_type'){
+            if ($bookings = $database->getBookingsByBookingType($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        }  elseif ($_GET['filter'] == 'username'){
-            if ($bookings = $database->getBookingsByUsername($_GET['filter_value'])) {
+        }  elseif ($_POST['filter'] == 'username'){
+            if ($bookings = $database->getBookingsByUsername($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        }  elseif ($_GET['filter'] == 'pet_name'){
-            if ($bookings = $database->getBookingsByPetName($_GET['filter_value'])) {
+        }  elseif ($_POST['filter'] == 'pet_name'){
+            if ($bookings = $database->getBookingsByPetName($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
-        }  elseif ($_GET['filter'] == 'pet_id'){
-            if ($bookings = $database->getBookingsByPetId($_GET['filter_value'])) {
+        }  elseif ($_POST['filter'] == 'pet_id'){
+            if ($bookings = $database->getBookingsByPetId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }
@@ -1755,8 +1755,54 @@ elseif ($action === 'search_booking') {
  */
 
 /**
+ * API endpoint when getting generating invoices
+ */ 
+elseif ($action === 'generate_invoice') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $invoice_info = [
+            'username' => $_POST['username'],
+            'booking_id' => $_POST['booking_id']
+        ];
+
+        $invoice_items = $_POST['invoice_items'];
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] === 'doctor')
+        {
+            //create invoice, return invoice ID
+            foreach($invoice_items as $item):
+                $invoice_record = [
+                    'item_category_id' => $item['item_category_id'],
+                    'item_id' => $item['item_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_amount' => $item['unit_amount'],
+                    'total_amount' => $item['total_amount']
+                ];
+                
+            endforeach;
+
+        } else {
+            return_json(['generate_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        }
+    }
+}
+
+/**
  * Inventory System Management
  */
+/**
+ * API endpoint when getting generating invoices
+ */ 
+elseif ($action === 'get_inventory_all') {
+    if ($valid_jwt_token) {
+        
+        
+    }
+}
 
 /**
  * Lodging Management
