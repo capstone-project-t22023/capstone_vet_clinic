@@ -6,7 +6,7 @@ import BookingOptionsUpdate from "./BookingOptionsUpdate";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 
 
-export default function DeleteBooking() {
+export default function BookingButton() {
     const {user, authenticated} = useContext(ProgramContext);
     const { selectedAppointment } = useContext(PetsContext)
     const [open, setOpen] = useState(false);

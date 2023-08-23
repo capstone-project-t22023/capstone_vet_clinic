@@ -107,7 +107,7 @@ export default function PetsList() {
 
 
                         {selectedOwner.pets.length > 0 &&
-                            <Stack direction="row" spacing={2} mb={2}>
+                            <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
                                 <Appointments filter="today" count={3}/>
                                 <Appointments filter="historic"/>
                                 <Appointments filter="future"/>

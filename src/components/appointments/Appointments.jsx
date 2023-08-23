@@ -69,7 +69,7 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         );
 
         setMergedAppointments(sortedMerged);
-    }, [appointmentList]);
+    }, [appointmentList,]);
 
 
     const filteredAppointments = mergedAppointments.filter(appointment => {

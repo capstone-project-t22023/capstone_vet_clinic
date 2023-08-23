@@ -52,7 +52,7 @@ export default function Dashboard() {
                 {user.role === 'doctor' && (
                     <>
 
-                        <Stack direction="column" justifyContent="space-between" height="100vh">
+                        <Stack direction="column" justifyContent="space-between">
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -108,7 +108,7 @@ export default function Dashboard() {
                                             onClick={() => handleClick("/profile")}>Update Profile</Button>
                                 </Paper>
 
-                                <Stack direction="row" spacing={2}>
+                                <Stack direction="row" spacing={2} flexWrap="wrap">
                                     <Appointments filter="future" count={3} itemsPerPage={4}/>
                                     <Appointments filter="historic" count={3} itemsPerPage={4}/>
                                     <Appointments itemsPerPage={4}/>
