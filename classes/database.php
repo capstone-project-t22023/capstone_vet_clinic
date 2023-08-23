@@ -2833,6 +2833,97 @@ class Database
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Retrieves all inventory categories records
+     * Returns inventory object array or false
+     */
+    public function getAllInventoryCategories()
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT
+            iic.id category_id,
+            iic.item_category category
+            FROM
+            inventory_item_categories iic
+            WHERE iic.archived = 0'
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all inventory records
+     * Returns inventory object array or false
+     */
+    public function getAllInventoryByCategory($category_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT
+            ii.id item_id,
+            ii.item_name,
+            ii.in_use_qty,
+            ii.in_stock_qty,
+            ii.threshold_qty,
+            ii.weight_volume,
+            ii.item_unit,
+            ii.production_date,
+            ii.expiration_date,
+            ii.unit_price
+            FROM
+            inventory_item_categories iic,
+            inventory_items ii
+            WHERE
+            iic.id = ii.inventory_item_category_id
+            AND iic.archived = 0
+            AND ii.archived = 0
+            AND iic.id = ?
+            ORDER BY iic.id,ii.item_name'
+        );
+        $sql->bind_param(
+            'i', $category_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 }
 
 ?>

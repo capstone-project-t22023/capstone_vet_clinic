@@ -483,13 +483,6 @@ elseif ($action === 'login_doctor') {
         return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
     }
 
-    if(validatePassword($_POST['password'])
-        && validateLength($_POST['password'], 20)){
-        $check = true;
-    } else {
-        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
-    }
-
     if($check){
         if (
             $doctor = $database->loginDoctor(
@@ -524,13 +517,6 @@ elseif ($action === 'login_admin') {
         return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
     }
 
-    if(validatePassword($_POST['password'])
-        && validateLength($_POST['password'], 20)){
-        $check = true;
-    } else {
-        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
-    }
-
     if($check){
         if (
             $admin = $database->loginAdmin(
@@ -563,13 +549,6 @@ elseif ($action === 'login_pet_owner') {
         $check = true;
     } else {
         return_json(['login' =>  "Error: Username must be up to 20 characters only."]);  
-    }
-
-    if(validatePassword($_POST['password'])
-        && validateLength($_POST['password'], 20)){
-        $check = true;
-    } else {
-        return_json(['login' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
     }
 
     if($check){
@@ -1799,8 +1778,52 @@ elseif ($action === 'generate_invoice') {
  */ 
 elseif ($action === 'get_inventory_all') {
     if ($valid_jwt_token) {
-        
-        
+        if ($inventory_categories = $database->getAllInventoryCategories()) {
+            $inventory_records  = array();
+
+            foreach($inventory_categories as $y):
+
+                $inventory_items = array();
+                if ($items = $database->getAllInventoryByCategory($y['category_id'])) {
+
+                    foreach($items as $i):
+                        $inventory_record = [
+                            'item_id' => $i['item_id'],
+                            'item_name' => $i['item_name'],
+                            'in_use_qty' => $i['in_use_qty'],
+                            'in_stock_qty' => $i['in_stock_qty'],
+                            'threshold_qty' => $i['threshold_qty'],
+                            'weight_volume' => $i['weight_volume'],
+                            'item_unit' => $i['item_unit'],
+                            'production_date' => $i['production_date'],
+                            'expiration_date' => $i['expiration_date'],
+                            'unit_price' => $i['unit_price']
+                        ];
+
+                        array_push($inventory_items, $inventory_record);
+                    endforeach;
+
+                    $record = [
+                        'category_id' => $y['category_id'],
+                        'category' => $y['category'],
+                        'inventory_items' => $inventory_items
+                    ];
+                    array_push($inventory_records, $record);
+                } else {
+                    $record = [
+                        'category_id' => $y['category_id'],
+                        'category' => $y['category'],
+                        'inventory_items' => []
+                    ];
+                    array_push($inventory_records, $record);
+                }
+               
+            endforeach;
+
+            return_json(['inventory_records' => $inventory_records]);
+        } else {
+            return_json(['inventory_records' => "No records found"]);
+        }
     }
 }
 
