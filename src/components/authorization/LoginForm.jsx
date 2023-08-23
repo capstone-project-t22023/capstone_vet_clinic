@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {Link, Navigate} from "react-router-dom";
-import ProgramContext from '../../ProgramContext';
+import ProgramContext from '../../contexts/ProgramContext';
 
 
 export default function LoginForm() {
@@ -338,12 +338,12 @@ export default function LoginForm() {
                     />
                     <Box sx={{
                             display: 'flex',
-                            flexDirection: 'row',
+                            flexDirection: {xs: 'column', sm: 'row'},
                             alignItems: 'center',
                             my: 2
                         }}>
                         <Button type="submit" onClick={handleLoginAdmin} fullWidth variant="contained">as Admin</Button>
-                        <Button type="submit" onClick={handleLoginDoctor} fullWidth variant="contained" sx={{px: 3, mx: 1}}>as Doctor</Button>
+                        <Button type="submit" onClick={handleLoginDoctor} fullWidth variant="contained" sx={{mx: 1, my: 2}}>as Doctor</Button>
                         <Button type="submit" onClick={handleLoginPetOwner} fullWidth variant="contained">as Customer</Button>
                     </Box>
 

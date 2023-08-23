@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import ProgramContext from '../../ProgramContext';
+import ProgramContext from '../../contexts/ProgramContext';
 
 
 export default function TrialForm(props) {

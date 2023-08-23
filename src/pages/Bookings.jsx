@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Container, Typography} from '@mui/material';
-import ProgramContext from "../ProgramContext";
+import ProgramContext from "../contexts/ProgramContext";
 import Header from "../components/Header"
 import Footer from "../components/Footer";
 import BookingButton from '../components/booking/BookingButton'

@@ -4,9 +4,7 @@ import dayjs from "dayjs";
 
 export default function TimeSlots(props) {
     const {chosenDate, selectedSlots, onChange, whenBusyData} = props; // Destructure the selectedSlots and setSelectedSlots props
-
     const [timeSlots, setTimeSlots] = useState(generateTimeSlots())
-
 
     // set up the Time Slots in 30 mins 8am - 5pm
     function generateTimeSlots() {
@@ -56,10 +54,11 @@ export default function TimeSlots(props) {
         <div>
             <Box
                 sx={{
-                    display: 'grid',
-                    gap: 1,
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    pt:3
+                    display: "flex",
+                    flexWrap: 'wrap',
+                    justifyContent: {xs: 'center', sm: 'flex-start'},
+                    alignItems: 'space-around',
+                    px: 2,
                 }}
             >
             {

@@ -1,23 +1,47 @@
 import React, {useContext} from 'react';
-import {Container, Typography} from '@mui/material';
-import ProgramContext from "../ProgramContext";
+import {Container, Typography, Stack, Paper, Button, Divider, Slide } from '@mui/material';
+import ProgramContext from "../contexts/ProgramContext";
 import Header from "../components/Header"
 import Footer from "../components/Footer";
 import UserCard from "../components/user/UserCard";
+import Aside from "../components/aside/Aside";
+
 
 export default function Home() {
 
     const {user, authenticated} = useContext(ProgramContext);
 
     return (
-        <div>
-            <Header/>
-            <Container maxWidth="lg" sx={{mt: 5, mb: 5, p:3, bgcolor: 'primary.50'}}>
-                <Typography component="h3" variant="h5">Profile Page</Typography>
+    <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
+        <Aside/>
+               <UserCard user={user}/>
 
-                <UserCard user={user}/>
-            </Container>
-            <Footer/>
-        </div>
+        <Stack
+            direction="column"
+            transition="width 0.9s ease-in-out"
+            sx={{
+                borderLeft: '1px solid',
+                borderRight: '1px solid',
+                borderColor: '#eceef2',
+                overflowY: 'auto',
+                flex: 1,
+                p: 6
+            }}>
+            {user.role === 'doctor' && (
+                <>
+                    Doctor Role
+                </>
+            )}
+
+            {user.role === 'pet_owner' && (
+                <>
+                    Pet owner Role
+                </>
+            )}
+
+
+        </Stack>
+    </Stack>
+
     )
 }

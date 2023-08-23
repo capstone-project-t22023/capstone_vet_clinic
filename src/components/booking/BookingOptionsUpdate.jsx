@@ -6,15 +6,17 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Stack, Box, Grid, Button, Paper, TextField, MenuItem } from '@mui/material';
 import TimeSlots from "./TimeSlots";
 import ProgramContext from "../../contexts/ProgramContext";
+import {PetsContext} from "../../contexts/PetsProvider";
 
 
-export default function BookingOptions(props) {
-    const { selectedBooking, sendSelectedBooking, onCancel, editMode } = props;
+export default function BookingOptionsUpdate(props) {
+    const { selectedBooking, onSave, onCancel, editMode } = props;
     const {user, authenticated} = useContext(ProgramContext);
     const [date, setDate] = useState(dayjs(new Date()));
     const [selectedSlots, setSelectedSlots] = useState([]);
-    const [selectedOwner, setSelectedOwner] = useState('');
-    const [selectedPet, setSelectedPet] = useState('');
+    const {selectedOwner,selectedPet,handlerRefreshAppointments} = useContext(PetsContext);
+    // const [selectedOwner, setSelectedOwner] = useState('');
+    // const [selectedPet, setSelectedPet] = useState('');
     const [selectedBookingType, setSelectedBookingType] = useState('');
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [doctors, setDoctors] = useState([]);
@@ -90,23 +92,23 @@ export default function BookingOptions(props) {
 
                 if(selectedBooking && editMode){
                     if(user.role === 'pet_owner'){
-                        setSelectedOwner(user.id);
-                        let owned_pets = data[1].pets.filter( x => x.pet_owner_id === user.id);
-                        if (owned_pets.length > 0){
-                            let pet_option = owned_pets[0].pets.map( x => {
-                                let pet = {};
-                                pet.value = x.pet_id;
-                                pet.label = x.petname;
-                                return pet;
-                            });
-                            pet_option.push({value: '', label: ''});
-                            setFilteredPets(pet_option);
-                        }
-                        
+                        // setSelectedOwner(user.id);
+                        // let owned_pets = data[1].pets.filter( x => x.pet_owner_id === user.id);
+                        // if (owned_pets.length > 0){
+                        //     let pet_option = owned_pets[0].pets.map( x => {
+                        //         let pet = {};
+                        //         pet.value = x.pet_id;
+                        //         pet.label = x.petname;
+                        //         return pet;
+                        //     });
+                        //     pet_option.push({value: '', label: ''});
+                        //     setFilteredPets(pet_option);
+                        // }
+
                     } else {
                         let tmp = data[1].pets.filter( x => x.pet_owner_id === selectedBooking.pet_owner_id);
                         if (tmp.length > 0){
-                            setSelectedOwner(selectedBooking.pet_owner_id);
+                            // setSelectedOwner(selectedBooking.pet_owner_id);
                             let tmp_p = tmp[0].pets.map( x => {
                                 let pet = {};
                                 pet.value = x.pet_id;
@@ -117,16 +119,17 @@ export default function BookingOptions(props) {
                             setFilteredPets(tmp_p);
                         }
                     }
-                        let d = selectedBooking.booking_date.split("-");
-                        setDate(dayjs().set('date', d[0]).set('month', d[1]-1).set('year', d[2]));
+                        // let d = selectedBooking.booking_date.split("-");
+                        // setDate(dayjs().set('date', d[0]).set('month', d[1]-1).set('year', d[2]));
+                        setDate(dayjs(selectedBooking.booking_date));
 
                         setSelectedSlots(selectedBooking.booking_time);
                         setSelectedBookingType(selectedBooking.booking_type);
-                        setSelectedPet(selectedBooking.pet_id);
+                        // // setSelectedPet(selectedBooking.pet_id);
                         setSelectedDoctor(selectedBooking.doctor_id);
-                    
+
                 } else {
-                    setSelectedOwner(user.id);
+                    // setSelectedOwner(user.id);
                     let owned_pets = data[1].pets.filter( x => x.pet_owner_id === user.id);
                     if (owned_pets.length > 0){
                         let pet_option = owned_pets[0].pets.map( x => {
@@ -146,7 +149,7 @@ export default function BookingOptions(props) {
     }, []);
 
     const changeDateHandler = (newDate) => {
-        setDate(newDate)
+        setDate(dayjs(newDate))
         setSelectedSlots([]);
         fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date", {
             method: 'POST',
@@ -173,7 +176,7 @@ export default function BookingOptions(props) {
     }
 
     const saveOwner = (event) => {
-        setSelectedPet('');
+        // setSelectedPet('');
         let tmp = pets.filter( x => x.pet_owner_id === event.target.value);
         if (tmp.length > 0){
             let tmp_p = tmp[0].pets.map( x => {
@@ -184,12 +187,12 @@ export default function BookingOptions(props) {
             });
             tmp_p.push({value: '', label: ''});
             setFilteredPets(tmp_p);
-            setSelectedOwner(tmp[0].pet_owner_id);
+            // setSelectedOwner(tmp[0].pet_owner_id);
         }
     }
 
     const savePet = (event) => {
-        setSelectedPet(event.target.value);
+        // setSelectedPet(event.target.value);
     }
 
     const saveDoctor = (event) => {
@@ -206,11 +209,12 @@ export default function BookingOptions(props) {
 
         let req_body = {
             booking_type : selectedBookingType,
-            pet_owner_id : selectedOwner,
+            pet_owner_id : selectedOwner.pet_owner_id,
             pet_id: selectedPet,
             username: user.username,
             booking_slots: tmp_slots
         }
+
         console.log("Add Booking: " + JSON.stringify(req_body));
 
         fetch("http://localhost/capstone_vet_clinic/api.php/add_booking", {
@@ -225,7 +229,7 @@ export default function BookingOptions(props) {
             })
             .then(data => {
                 console.log("Add Booking API: " + data.add_booking);
-                
+
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.add_booking, {
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
@@ -235,7 +239,9 @@ export default function BookingOptions(props) {
                         return response.json();
                     })
                     .then(data => {
-                        sendSelectedBooking(data.booking_record);
+
+                        handlerRefreshAppointments(true);
+                        onSave(true)
                     });
 
             })
@@ -255,7 +261,7 @@ export default function BookingOptions(props) {
         let req_body = {
             booking_type : selectedBookingType,
             prev_booking_status: selectedBooking.booking_status,
-            pet_owner_id : selectedOwner,
+            pet_owner_id : selectedOwner.pet_owner_id,
             pet_id: selectedPet,
             doctor_id: selectedDoctor,
             username: user.username,
@@ -282,7 +288,7 @@ export default function BookingOptions(props) {
                 return response.json();
             })
             .then(data => {
-                
+
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.update_booking, {
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
@@ -292,7 +298,9 @@ export default function BookingOptions(props) {
                         return response.json();
                     })
                     .then(data => {
-                        sendSelectedBooking(data.booking_record);
+                        // sendSelectedBooking(data.booking_record);
+                        handlerRefreshAppointments(true)
+                        onSave(true)
                     });
 
             })
@@ -318,7 +326,7 @@ export default function BookingOptions(props) {
     }
 
     const whenBusyData = takenSlots;
-    
+
     return (
         <Box
             sx={{
@@ -327,53 +335,24 @@ export default function BookingOptions(props) {
                 p: 3
             }}
         >
-            { editMode ? 
+            { editMode ?
             <>
                 <TextField
-                select
-                label="Booking Type"
-                helperText="Please select your booking type"
-                onChange={saveBookingType}
-                value={selectedBookingType || ''}
+                    select
+                    label="Booking Type"
+                    helperText={selectedBookingType ? 'Please select your booking type' : 'Please select a booking type'}
+                    onChange={saveBookingType}
+                    value={selectedBookingType || ''}
+                    error={!selectedBookingType}
+                    required
                 >
-                {bookingTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
+                    {bookingTypes.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
                 </TextField>
-                { user.role !== 'pet_owner' ? 
-                <TextField
-                select
-                label="Pet Owner"
-                helperText="Please select pet owner"
-                onChange={saveOwner}
-                value={selectedOwner || ''}
-                >
-                {owners.map((option) => (
-                    <MenuItem key={option.value} value={option.value} disabled={option.pet_length === 0}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField> :
-                <TextField
-                disabled
-                value={user.firstname + ' ' + user.lastname}
-                />
-                }
-                <TextField
-                select
-                label="Pet"
-                helperText="Please select pet"
-                onChange={savePet}
-                value={selectedPet || ''}
-                >
-                {filteredPets.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField>
+
                 { user.role === 'admin' ?
                 <TextField
                 select
@@ -403,55 +382,25 @@ export default function BookingOptions(props) {
                             onChange={slotsHandler} />
                     </Box>
                 </Box>
-            </> 
-            : 
+            </>
+            :
             <>
                 <TextField
-                select
-                label="Booking Type"
-                helperText="Please select your booking type"
-                onChange={saveBookingType}
-                defaultValue=""
-                >
-                {bookingTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField>
-                { user.role !== 'pet_owner' ?
-                    <TextField
                     select
-                    label="Pet Owner"
-                    helperText="Please select pet owner"
-                    onChange={saveOwner}
-                    defaultValue=""
-                    >
-                    {owners.map((option) => (
-                        <MenuItem key={option.value} value={option.value} disabled={option.pet_length === 0}>
-                        {option.label}
+                    label="Booking Type"
+                    helperText={selectedBookingType ? 'Please select your booking type' : 'Please select a booking type'}
+                    onChange={saveBookingType}
+                    value={selectedBookingType || ''}
+                    error={!selectedBookingType}
+                    required
+                >
+                    {bookingTypes.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
                         </MenuItem>
                     ))}
-                    </TextField>
-                    :
-                    <TextField
-                    disabled
-                    value={user.firstname + ' ' + user.lastname}
-                    />
-                }
-                <TextField
-                select
-                label="Pet"
-                helperText="Please select pet"
-                onChange={savePet}
-                defaultValue=""
-                >
-                {filteredPets.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
                 </TextField>
+
                 <Box
                     sx={{
                         display: 'grid',
