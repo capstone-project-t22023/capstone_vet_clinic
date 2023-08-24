@@ -639,63 +639,78 @@ elseif ($action === 'get_all_pet_owners') {
 
 /**
  * API endpoint when deleting doctors
- * deleteDoctor method that deletes doctor record from database.php
  */ 
 elseif ($action === 'delete_doctor') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
-        
+
+        $role = $database->checkRoleByUsername($_POST['username']);
         $record = [
             'id' => $id,
             'username' => $_POST['username']
         ];
 
-        if ($database->deleteDoctor($record)) {
-            return_json(['delete_doctor' => "success"]);
+        if($role['role'] === 'admin'){
+            if ($database->deleteDoctor($record)) {
+                return_json(['delete_doctor' => "success"]);
+            } else {
+                return_json(['delete_doctor' => "error"]);
+            }
         } else {
-            return_json(['delete_doctor' => "error"]);
+            return_json(['delete_doctor' => "You don't have the necessary privileges to perform this action."]);
         }
     }
 } 
 
 /**
  * API endpoint when deleting admins
- * deleteAdmin method that deletes admin record from database.php
  */ 
 elseif ($action === 'delete_admin') {
     if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
         $record = [
             'id' => $id,
             'username' => $_POST['username']
         ];
 
-        if ($database->deleteAdmin($record)) {
-            return_json(['delete_admin' => "success"]);
+        if($role['role'] === 'admin'){
+            if ($database->deleteAdmin($record)) {
+                return_json(['delete_admin' => "success"]);
+            } else {
+                return_json(['delete_admin' => "error"]);
+            }
         } else {
-            return_json(['delete_admin' => "error"]);
+            return_json(['delete_admin' => "You don't have the necessary privileges to perform this action."]);
         }
     }
 } 
 
 /**
  * API endpoint when deleting pet owners
- * deletePetOwner method that deletes pet owner record from database.php
  */ 
 elseif ($action === 'delete_pet_owner') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
         
+        $role = $database->checkRoleByUsername($_POST['username']);
         $record = [
             'id' => $id,
             'username' => $_POST['username']
         ];
 
-        if ($database->deletePetOwner($record)) {
-            return_json(['delete_pet_owner' => "success"]);
+        if($role['role'] === 'admin'){
+            if ($database->deletePetOwner($record)) {
+                return_json(['delete_pet_owner' => "success"]);
+            } else {
+                return_json(['delete_pet_owner' => "error"]);
+            }
         } else {
-            return_json(['delete_pet_owner' => "error"]);
+            return_json(['delete_pet_owner' => "You don't have the necessary privileges to perform this action."]);
         }
     }
 } 
@@ -1514,12 +1529,13 @@ elseif ($action === 'update_booking_by_pet_owner') {
 
 /**
  * API endpoint when moving booking status to CONFIRMED
- * updateBookingByAdmin method that updates booking information in the database
  */ 
 elseif ($action === 'confirm_booking') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
+
+        
 
         $booking = [
             'booking_id' => $id,
@@ -1533,45 +1549,48 @@ elseif ($action === 'confirm_booking') {
         ];
 
         $booking_slots = $_POST['booking_slots'];
-
         $role = $database->checkRoleByUsername($_POST['username']);
+        $current_booking_status = $database->checkBookingStatus($id);
 
         if($role['role'] === 'admin'){
-
-            foreach($booking_slots as $new_slot):
-                $booking_count = [
-                    'selected_date' => $new_slot['booking_date'],
-                    'selected_time' => $new_slot['booking_time']
-                ];
-                if($count = $database->slotCounter($booking_count)){
-                    if($count['slot_counter'] == 5){
-                        return_json(['update_booking' => "All slots taken for ".$new_slot['booking_date']." : ".$new_slot['booking_time']]);
-                    }
-                }
-            endforeach;
-
-            if ($database->updateBookingByAdmin($booking)) {
-                if($database->deleteBookingSlot($id)){
-                    foreach($booking_slots as $slot):
-                        $record = [
-                            'booking_id' => $id,
-                            'booking_date' => $slot['booking_date'],
-                            'booking_time' => $slot['booking_time']
-                        ];
-                        if($database->addBookingSlot($record)){
-                            true;
-                        }
-                    endforeach;
-
-                    $booking_history_record = [
-                        'booking_id' => $id,
-                        'prev_status' => $_POST['prev_booking_status'],
-                        'new_status' => $_POST['new_booking_status'],
-                        'username' => $_POST['username']
+            if($current_booking_status['booking_status'] === 'CONFIRMED'){
+                foreach($booking_slots as $new_slot):
+                    $booking_count = [
+                        'selected_date' => $new_slot['booking_date'],
+                        'selected_time' => $new_slot['booking_time']
                     ];
+                    if($count = $database->slotCounter($booking_count)){
+                        if($count['slot_counter'] == 5){
+                            return_json(['update_booking' => "All slots taken for ".$new_slot['booking_date']." : ".$new_slot['booking_time']]);
+                        }
+                    }
+                endforeach;
 
-                    if($database->addBookingHistoryRecord($booking_history_record)){
-                        return_json(['confirm_booking' => "success"]);
+                if ($database->updateBookingByAdmin($booking)) {
+                    if($database->deleteBookingSlot($id)){
+                        foreach($booking_slots as $slot):
+                            $record = [
+                                'booking_id' => $id,
+                                'booking_date' => $slot['booking_date'],
+                                'booking_time' => $slot['booking_time']
+                            ];
+                            if($database->addBookingSlot($record)){
+                                true;
+                            }
+                        endforeach;
+
+                        $booking_history_record = [
+                            'booking_id' => $id,
+                            'prev_status' => $_POST['prev_booking_status'],
+                            'new_status' => $_POST['new_booking_status'],
+                            'username' => $_POST['username']
+                        ];
+
+                        if($database->addBookingHistoryRecord($booking_history_record)){
+                            return_json(['confirm_booking' => "success"]);
+                        } else {
+                            return_json(['confirm_booking' => "error"]);
+                        }
                     } else {
                         return_json(['confirm_booking' => "error"]);
                     }
@@ -1579,7 +1598,7 @@ elseif ($action === 'confirm_booking') {
                     return_json(['confirm_booking' => "error"]);
                 }
             } else {
-                return_json(['confirm_booking' => "error"]);
+                return_json(['confirm_booking' => "Booking status must be in PENDING status before moving to CONFIRMED. Current status is: " . $current_booking_status['booking_status']]);
             }
         } else {
             return_json(['confirm_booking' => "You don't have the privilege to perform this action. Only admins can move bookings to CONFIRMED status."]);
@@ -1589,7 +1608,6 @@ elseif ($action === 'confirm_booking') {
 
 /**
  * API endpoint when moving booking status to FINISHED
- * finishBooking method that updates booking information in the database
  */ 
 elseif ($action === 'finish_booking') {
     if ($valid_jwt_token) {
@@ -1604,17 +1622,22 @@ elseif ($action === 'finish_booking') {
         ];
 
         $role = $database->checkRoleByUsername($_POST['username']);
+        $current_booking_status = $database->checkBookingStatus($id);
 
         if($role['role'] === 'doctor')
         {
-            if ($database->finishBooking($booking_record)) {
-                if($database->addBookingHistoryRecord($booking_record)){
-                    return_json(['finish_booking' => "success"]);
+            if($current_booking_status['booking_status'] === 'CONFIRMED'){
+                if ($database->finishBooking($booking_record)) {
+                    if($database->addBookingHistoryRecord($booking_record)){
+                        return_json(['finish_booking' => "success"]);
+                    } else {
+                        return_json(['finish_booking' => "error"]);
+                    }
                 } else {
                     return_json(['finish_booking' => "error"]);
                 }
             } else {
-                return_json(['finish_booking' => "error"]);
+                return_json(['finish_booking' => "Booking status must be in CONFIRMED status before moving to FINISHED. Current status is: " . $current_booking_status['booking_status']]);
             }
         } else {
             return_json(['finish_booking' => "You don't have the privilege to perform this action. Only doctors can move bookings to FINISHED status."]);
@@ -1624,7 +1647,6 @@ elseif ($action === 'finish_booking') {
 
 /**
  * API endpoint when getting single booking information by ID
- * getBookingById method that retrieves booking information in the database
  */ 
 elseif ($action === 'get_booking') {
     if ($valid_jwt_token) {
@@ -1656,7 +1678,6 @@ elseif ($action === 'get_booking') {
 
 /**
  * API endpoint when moving booking status to CANCELED
- * cancelBooking method that updates booking information in the database
  */ 
 elseif ($action === 'cancel_booking') {
     if ($valid_jwt_token) {
@@ -1749,21 +1770,53 @@ elseif ($action === 'generate_invoice') {
         $invoice_items = $_POST['invoice_items'];
 
         $role = $database->checkRoleByUsername($_POST['username']);
+        $current_booking_status = $database->checkBookingStatus($_POST['booking_id']);
+        $booking_fee = $database->checkBookingFee($_POST['booking_id']);
 
         if($role['role'] === 'doctor')
         {
-            //create invoice, return invoice ID
-            foreach($invoice_items as $item):
-                $invoice_record = [
-                    'item_category_id' => $item['item_category_id'],
-                    'item_id' => $item['item_id'],
-                    'quantity' => $item['quantity'],
-                    'unit_amount' => $item['unit_amount'],
-                    'total_amount' => $item['total_amount']
-                ];
-                
-            endforeach;
+            if($current_booking_status['booking_status'] === 'FINISHED'){
+                if($invoice_id=$database->createNewInvoice($invoice_info)){ 
+                    $booking_invoice_record = [
+                        'invoice_id' => $invoice_id,
+                        'item_category_id' => 1,
+                        'item_id' => $_POST['booking_id'],
+                        'quantity' => 1,
+                        'booking_fee' => $booking_fee
+                    ]; 
+                    if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
+                        foreach($invoice_items as $item):
+                            $invoice_record = [
+                                'invoice_id' => $invoice_id,
+                                'item_category_id' => $item['item_category_id'],
+                                'item_id' => $item['item_id'],
+                                'quantity' => $item['quantity']
+                            ]; 
+                            if($database->insertNewInvoiceItem($invoice_record)){
+                                true;
+                            } else {
+                                return_json(['generate_invoice' => "Error encountered while inserting invoice item."]);
+                            }
+                        endforeach;
 
+                        $invoice_amount_record = [
+                            'username' => $_POST['username'],
+                            'invoice_id' => $invoice_id,
+                            'booking_id' => $_POST['booking_id']
+                        ];
+                        if($database->updateInvoiceAmount($invoice_amount_record)){
+                            return_json(['generate_invoice' => $invoice_id]);
+                        } else {
+                            return_json(['generate_invoice' => "Invoice amount not calculated. Error encountered."]);
+                        }
+
+                    } else {
+                        return_json(['generate_invoice' => "Booking invoice item encountered an error."]);
+                    }
+                }
+            } else {
+                return_json(['generate_invoice' => "Booking status must be in FINISHED status before invoice can be generated. Current status is: " . $current_booking_status['booking_status']]);
+            }
         } else {
             return_json(['generate_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
         }
@@ -1774,7 +1827,7 @@ elseif ($action === 'generate_invoice') {
  * Inventory System Management
  */
 /**
- * API endpoint when getting generating invoices
+ * API endpoint when getting all inventory records
  */ 
 elseif ($action === 'get_inventory_all') {
     if ($valid_jwt_token) {
@@ -1820,6 +1873,57 @@ elseif ($action === 'get_inventory_all') {
                
             endforeach;
 
+            return_json(['inventory_records' => $inventory_records]);
+        } else {
+            return_json(['inventory_records' => "No records found"]);
+        }
+    }
+}
+
+/**
+ * API endpoint when getting inventory by category
+ */ 
+elseif ($action === 'get_inventory_by_category') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $inventory_items = array();
+        if ($inventory_categories = $database->getInventoryCategoriesById($id)) {
+            $inventory_records  = array();
+                if ($items = $database->getAllInventoryByCategory($id)) {
+
+                    foreach($items as $i):
+                        $inventory_record = [
+                            'item_id' => $i['item_id'],
+                            'item_name' => $i['item_name'],
+                            'in_use_qty' => $i['in_use_qty'],
+                            'in_stock_qty' => $i['in_stock_qty'],
+                            'threshold_qty' => $i['threshold_qty'],
+                            'weight_volume' => $i['weight_volume'],
+                            'item_unit' => $i['item_unit'],
+                            'production_date' => $i['production_date'],
+                            'expiration_date' => $i['expiration_date'],
+                            'unit_price' => $i['unit_price']
+                        ];
+
+                        array_push($inventory_items, $inventory_record);
+                    endforeach;
+
+                    $record = [
+                        'category_id' => $inventory_categories['category_id'],
+                        'category' => $inventory_categories['category'],
+                        'inventory_items' => $inventory_items
+                    ];
+                    array_push($inventory_records, $record);
+                } else {
+                    $record = [
+                        'category_id' => $inventory_categories['category_id'],
+                        'category' => $inventory_categories['category'],
+                        'inventory_items' => []
+                    ];
+                    array_push($inventory_records, $record);
+                }
             return_json(['inventory_records' => $inventory_records]);
         } else {
             return_json(['inventory_records' => "No records found"]);

@@ -663,7 +663,130 @@ response_body:
         ]
     }
 
+***************************************
+INVENTORY ENDPOINTS
+***************************************
+
+endpoint: /get_inventory_all
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "inventory_records": [
+            {
+                "category_id": 1,
+                "category": "Medicines",
+                "inventory_items": [
+                    {
+                        "item_id": 41,
+                        "item_name": "Alprazolam",
+                        "in_use_qty": 1,
+                        "in_stock_qty": 10,
+                        "threshold_qty": 8,
+                        "weight_volume": "10.00",
+                        "item_unit": "millilitres",
+                        "production_date": "2022-09-30",
+                        "expiration_date": "2025-09-30",
+                        "unit_price": "197.00"
+                    }
+                ]
+            },
+            {
+                "category_id": 2,
+                "category": "Pet Care",
+                "inventory_items": [
+                    {
+                        "item_id": 71,
+                        "item_name": "Cat Supplements 60tablets",
+                        "in_use_qty": 10,
+                        "in_stock_qty": 20,
+                        "threshold_qty": 5,
+                        "weight_volume": "60.00",
+                        "item_unit": "tablets",
+                        "production_date": "2022-10-30",
+                        "expiration_date": "2025-10-30",
+                        "unit_price": "50.99"
+                    }
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_inventory_by_category/<category_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+	"inventory_records": [
+		{
+			"category_id": 2,
+			"category": "Pet Care",
+			"inventory_items": [
+				{
+					"item_id": 71,
+					"item_name": "Cat Supplements 60tablets",
+					"in_use_qty": 10,
+					"in_stock_qty": 20,
+					"threshold_qty": 5,
+					"weight_volume": "60.00",
+					"item_unit": "tablets",
+					"production_date": "2022-10-30",
+					"expiration_date": "2025-10-30",
+					"unit_price": "50.99"
+				},
+				{
+					"item_id": 62,
+					"item_name": "Collar 45cm",
+					"in_use_qty": 10,
+					"in_stock_qty": 30,
+					"threshold_qty": 5,
+					"weight_volume": "45.00",
+					"item_unit": "centimetres",
+					"production_date": "2022-10-30",
+					"expiration_date": "2025-10-30",
+					"unit_price": "90.99"
+				}
+            ]
+        }
+    }
+
+
+***************************************
+BILLING ENDPOINTS
+***************************************
+endpoint: /generate_invoice
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite",
+        "booking_id": 10000001,
+        "invoice_items": [
+            {
+                "item_category_id": 1,
+                "item_id": 1,
+                "quantity": 1
+            },
+            {
+                "item_category_id": 1,
+                "item_id": 14,
+                "quantity": 3
+            },
+            {
+                "item_category_id": 5,
+                "item_id": 226,
+                "quantity": 5
+            }
+        ]
+    }
+response_body:
+    {
+        "generate_invoice": 300000
+    }
+
+
+
 endpoint: /
+method:
 request_body: 
     {
 

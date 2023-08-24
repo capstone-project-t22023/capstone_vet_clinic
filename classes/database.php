@@ -773,7 +773,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             )'
         );
@@ -840,7 +842,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             )'
         );
@@ -907,7 +911,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             )'
         );
@@ -977,11 +983,31 @@ class Database
             $this->db_name
         );
         $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare('CALL delete_admin(?, ?)');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`admins`
+            SET
+            archived = 1,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM `pawsome`.`doctors`
+                        UNION
+                        SELECT * FROM `pawsome`.`admins`
+                        UNION 
+                        SELECT * FROM `pawsome`.`pet_owners`
+                    )
+                    SELECT a.id from all_users a 
+                    WHERE UPPER(a.username) = UPPER(?)
+                    AND archived = 0
+            )
+            WHERE id = ?'
+        );
         $sql->bind_param(
             'is',
-            $record['id'], 
-            $record['username']
+            $record['username'],
+            $record['id']
         );
         if ($sql->execute()) {
             $sql->close();
@@ -1057,7 +1083,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE id = ?'
         ); 
@@ -1119,7 +1147,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE id = ?'
         ); 
@@ -1181,7 +1211,9 @@ class Database
                     UNION 
                     SELECT * FROM `pawsome`.`pet_owners`
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE id = ?'
         ); 
@@ -1582,7 +1614,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             ,0)'
         ); 
@@ -1649,7 +1683,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE
             id =?'
@@ -1933,7 +1969,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             ),
             0)'
         );
@@ -1989,7 +2027,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE
             `id` = ?
@@ -2047,7 +2087,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE
             `id` = ?
@@ -2136,7 +2178,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             WHERE id = ?'
         );
@@ -2254,7 +2298,9 @@ class Database
                     UNION 
                     SELECT * FROM pet_owners
                 )
-                SELECT id from all_users WHERE UPPER(username) = UPPER(?)
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
             )
             )'
         );
@@ -2269,6 +2315,80 @@ class Database
             $sql->close();
             $this->connection->close();
             return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves booking fee
+     */
+    public function checkBookingFee($booking_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT 
+            bt.booking_fee
+            FROM
+            `pawsome`.`booking_types` bt,
+            `pawsome`.`bookings` b
+            WHERE 
+            b.booking_type_id = bt.id
+            AND b.id = ?'
+        );
+        $sql->bind_param(
+            'i', $booking_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $row=$result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $row['booking_fee'];
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves current booking status
+     */
+    public function checkBookingStatus($booking_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT 
+            b.booking_status
+            FROM 
+            `pawsome`.`bookings` b
+            WHERE 
+            b.id = ?'
+        );
+        $sql->bind_param(
+            'i', $booking_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $row=$result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $row;
         }
         $sql->close();
         $this->connection->close();
@@ -2872,6 +2992,45 @@ class Database
     }
 
     /**
+     * Retrieves all inventory categories records
+     * Returns inventory object array or false
+     */
+    public function getInventoryCategoriesById($category_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT
+            iic.id category_id,
+            iic.item_category category
+            FROM
+            inventory_item_categories iic
+            WHERE iic.archived = 0
+            AND iic.id = ?'
+        );
+
+        $sql->bind_param(
+            'i', $category_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $item = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $item;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves all inventory records
      * Returns inventory object array or false
      */
@@ -2919,6 +3078,201 @@ class Database
             $sql->close();
             $this->connection->close();
             return $items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert data into invoice table
+     */
+    public function createNewInvoice($invoice_info)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`invoices`
+            (`booking_id`,
+            `updated_date`,
+            `updated_by`,
+            `archived`)
+            VALUES
+            (?,
+            SYSDATE(),
+            (SELECT id FROM doctors where UPPER(username) = UPPER(?)),
+            0)'
+        );
+        $sql->bind_param(
+            'is',
+            $invoice_info['booking_id'],
+            $invoice_info['username']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert data into invoice items table
+     */
+    public function insertNewInvoiceItem($invoice_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`invoice_items`
+            (`invoice_id`,
+            `item_category_id`,
+            `item_id`,
+            `quantity`,
+            `unit_amount`,
+            `total_amount`)
+            VALUES
+            ((SELECT id 
+              FROM `pawsome`.`invoices` 
+              WHERE id = ?),
+            (SELECT id 
+             FROM `pawsome`.`inventory_item_categories`
+             WHERE id = ?),
+             ?,?,
+            (SELECT unit_price 
+             FROM `pawsome`.`inventory_items` 
+             WHERE id = ?),
+            (SELECT (unit_price * ?) total_price 
+             FROM `pawsome`.`inventory_items` 
+             WHERE id = ?))'
+        );
+        $sql->bind_param(
+            'iiiiiii',
+            $invoice_record['invoice_id'],
+            $invoice_record['item_category_id'],
+            $invoice_record['item_id'],
+            $invoice_record['quantity'],
+            $invoice_record['item_id'],
+            $invoice_record['quantity'],
+            $invoice_record['item_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert data into invoice items table
+     */
+    public function insertNewInvoiceBookingItem($booking_invoice_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`invoice_items`
+            (`invoice_id`,
+            `item_category_id`,
+            `item_id`,
+            `quantity`,
+            `unit_amount`,
+            `total_amount`)
+            VALUES
+            ((SELECT id 
+              FROM `pawsome`.`invoices` 
+              WHERE id = ?),
+            (SELECT id 
+             FROM `pawsome`.`inventory_item_categories`
+             WHERE id = ?),?,?,?,?)'
+        );
+        $sql->bind_param(
+            'iiiidd',
+            $booking_invoice_record['invoice_id'],
+            $booking_invoice_record['item_category_id'],
+            $booking_invoice_record['item_id'],
+            $booking_invoice_record['quantity'],
+            $booking_invoice_record['booking_fee'],
+            $booking_invoice_record['booking_fee']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update invoice amount
+     */
+    public function updateInvoiceAmount($invoice_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`invoices` 
+             SET 
+             updated_date = SYSDATE(),
+             updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM `pawsome`.`doctors`
+                    UNION
+                    SELECT * FROM `pawsome`.`admins`
+                    UNION 
+                    SELECT * FROM `pawsome`.`pet_owners`
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+             ),
+             invoice_amount = (
+              SELECT SUM(total_amount) total_amount
+              FROM `pawsome`.`invoice_items`  
+              WHERE invoice_id = ?  
+             )
+             WHERE booking_id=?'
+        );
+        $sql->bind_param(
+            'sii',
+            $invoice_record['username'],
+            $invoice_record['invoice_id'],
+            $invoice_record['booking_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
         }
         $sql->close();
         $this->connection->close();

@@ -34,7 +34,7 @@ function validateAlpha($input){
 }
 
 function validateAlphaNumeric($input){
-    if(preg_match('/^[A-Za-z0-9]+$/', $input)){
+    if(preg_match('/^[A-Za-z0-9 ]+$/', $input)){
         return true;
     } else {
         return false;
@@ -51,7 +51,7 @@ function validateDate($input){
 }
 
 function validatePassword($input){
-    if(preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/', $input)){
+    if(preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/', $input)){
         return true;
     } else {
         return false;
