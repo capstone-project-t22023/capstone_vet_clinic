@@ -954,11 +954,31 @@ class Database
             $this->db_name
         );
         $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare('CALL delete_doctor(?, ?)');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`doctors`
+            SET
+            archived = 1,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM `pawsome`.`doctors`
+                        UNION
+                        SELECT * FROM `pawsome`.`admins`
+                        UNION 
+                        SELECT * FROM `pawsome`.`pet_owners`
+                    )
+                    SELECT a.id from all_users a 
+                    WHERE UPPER(a.username) = UPPER(?)
+                    AND archived = 0
+            )
+            WHERE id = ?'
+        );
         $sql->bind_param(
-            'is',
-            $record['id'], 
-            $record['username']
+            'si',
+            $record['username'],
+            $record['id']
         );
         if ($sql->execute()) {
             $sql->close();
@@ -1005,7 +1025,7 @@ class Database
             WHERE id = ?'
         );
         $sql->bind_param(
-            'is',
+            'si',
             $record['username'],
             $record['id']
         );
@@ -1021,7 +1041,6 @@ class Database
 
     /**
      * Delete pet owner info by id
-     * Returns true or false 
      */
     public function deletePetOwner($record)
     {
@@ -1032,11 +1051,31 @@ class Database
             $this->db_name
         );
         $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare('CALL delete_pet_owner(?, ?)');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_owners`
+            SET
+            archived = 1,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM `pawsome`.`doctors`
+                        UNION
+                        SELECT * FROM `pawsome`.`admins`
+                        UNION 
+                        SELECT * FROM `pawsome`.`pet_owners`
+                    )
+                    SELECT a.id from all_users a 
+                    WHERE UPPER(a.username) = UPPER(?)
+                    AND archived = 0
+            )
+            WHERE id = ?'
+        );
         $sql->bind_param(
-            'is',
-            $record['id'], 
-            $record['username']
+            'si',
+            $record['username'],
+            $record['id']
         );
         if ($sql->execute()) {
             $sql->close();
@@ -1050,7 +1089,6 @@ class Database
 
     /**
      * Update doctor info by id
-     * Returns true or false 
      */
     public function updateDoctor($record)
     {
@@ -1716,10 +1754,9 @@ class Database
     }
 
     /**
-     * Delete pet information
-     * Returns true or false 
+     * Archive pet
      */
-    public function deletePet($record)
+    public function archivePet($pet_record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -1728,11 +1765,22 @@ class Database
             $this->db_name
         );
         $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare('CALL delete_pet(?, ?)');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pets`
+            SET 
+            archived = 1,
+            updated_date = SYSDATE(),
+            updated_by = (
+                SELECT id 
+                FROM `pawsome`.`admins` 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0)
+            WHERE id = ?'
+        );
         $sql->bind_param(
-            'is',
-            $record['id'], 
-            $record['username']
+            'si', 
+            $pet_record['username'],
+            $pet_record['pet_id']
         );
         if ($sql->execute()) {
             $sql->close();
@@ -1746,7 +1794,6 @@ class Database
 
     /**
      * Get pet information
-     * Returns pet object or false 
      */
     public function getPet($id)
     {
@@ -2116,6 +2163,60 @@ class Database
     }
 
     /**
+     * Update data in the bookings table resulting from doctor deletion
+     */
+    public function updateBookingDoctorAndStatus($booking)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`bookings`
+            SET
+            `booking_status` = ?,
+            `doctor_id` = ?,
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            )
+            WHERE
+            `id` = ?
+            '
+        );
+        $sql->bind_param(
+            'sisi',
+            $booking['new_status'],
+            $booking['doctor_id'],
+            $booking['username'],
+            $booking['booking_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();   
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Insert booking slot/s for booked date
      */
     public function addBookingSlot($record)
@@ -2218,7 +2319,61 @@ class Database
             archived = 1,
             booking_status = ?,
             updated_date = SYSDATE(),
-            updated_by = (SELECT id from `pawsome`.`doctors` where UPPER(username) = UPPER(?))
+            updated_by = (
+                SELECT id 
+                FROM `pawsome`.`doctors` 
+                WHERE UPPER(username) = UPPER(?) 
+                AND archived = 0)
+            WHERE id = ?'
+        );
+        $sql->bind_param(
+            'ssi', 
+            $booking_record['new_status'], 
+            $booking_record['username'],
+            $booking_record['booking_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Archive booking
+     */
+    public function archiveBooking($booking_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`bookings`
+            SET 
+            archived = 1,
+            booking_status = ?,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            )
             WHERE id = ?'
         );
         $sql->bind_param(
@@ -2847,7 +3002,6 @@ class Database
 
     /**
      * Retrieves all records of bookings by pet ID
-     * Returns bookings object array or false
      */
     public function getBookingsByPetId($filter_value)
     {
@@ -2898,6 +3052,134 @@ class Database
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                array_push($bookings, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $bookings;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of bookings by doctor ID
+     */
+    public function getBookingsByDoctorId($filter_value)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT 
+            b.id booking_id,
+            bs.booking_date,
+            bs.booking_time, 
+            b.booking_status,
+            bt.booking_type,
+            b.doctor_id,
+            b.invoice_id,
+            b.receipt_id,
+            b.updated_date,
+            b.pet_owner_id,
+            po.username,
+            CONCAT(po.firstname," ",po.lastname) pet_owner,
+            b.pet_id,
+            p.petname
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`booking_types` bt, 
+            `pawsome`.`pet_owners` po, 
+            `pawsome`.`pets` p, 
+            `pawsome`.`booking_slots` bs
+            WHERE 
+            p.pet_owner_id = po.id 
+            AND b.pet_owner_id = po.id 
+            AND b.pet_id = p.id 
+            AND b.booking_type_id = bt.id
+            AND b.id = bs.booking_id
+            AND b.archived = 0
+            AND b.doctor_id = ?
+            ORDER BY b.updated_date DESC'
+        );
+        $sql->bind_param(
+            'i', $filter_value
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $bookings = array();
+            while($row=$result->fetch_assoc()){
+                array_push($bookings, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $bookings;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of bookings by pet owner ID
+     */
+    public function getBookingsByPetOwnerId($filter_value)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT 
+            b.id booking_id,
+            bs.booking_date,
+            GROUP_CONCAT(bs.booking_time separator ",") booking_time,
+            b.booking_status,
+            bt.booking_type,
+            b.doctor_id,
+            b.invoice_id,
+            b.receipt_id,
+            b.updated_date,
+            b.pet_owner_id,
+            po.username,
+            CONCAT(po.firstname," ",po.lastname) pet_owner,
+            b.pet_id,
+            p.petname
+            FROM 
+            `pawsome`.`bookings` b, 
+            `pawsome`.`booking_types` bt, 
+            `pawsome`.`pet_owners` po, 
+            `pawsome`.`pets` p, 
+            `pawsome`.`booking_slots` bs
+            WHERE 
+            p.pet_owner_id = po.id 
+            AND b.pet_owner_id = po.id 
+            AND b.pet_id = p.id 
+            AND b.booking_type_id = bt.id
+            AND b.id = bs.booking_id
+            AND b.archived = 0
+            AND b.pet_owner_id = ?
+            GROUP BY b.id, bs.booking_date
+            ORDER BY b.updated_date DESC'
+        );
+        $sql->bind_param(
+            'i', $filter_value
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $bookings = array();
+            while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();

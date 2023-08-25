@@ -52,64 +52,6 @@ response_body:
         "confirm_booking": "success"
     }
 
-endpoint: /update_booking_by_pet_owner/<booking_id>
-method: POST
-request_body: 
-    {
-        "booking_type": "Vaccine",
-        "prev_booking_status": "PENDING",
-        "pet_owner_id": 1002,
-        "pet_id": 3,
-        "username": "pawsome_admin",
-        "booking_slots": [
-            {
-                "booking_date": "19-09-2023",
-                "booking_time": "09:30"
-            },
-            {
-                "booking_date": "19-09-2023",
-                "booking_time": "10:00"
-            }
-        ]
-    }
-response_body:
-    {
-        "update_booking": "success"
-    }
-
-endpoint: /update_booking_by_admin/<booking_id>
-method: POST
-request_body: 
-    {
-        "booking_type":"Standard Consultation",
-        "prev_booking_status": "PENDING",
-        "pet_owner_id":1017,
-        "pet_id":20,
-        "doctor_id":1,
-        "username":"pawsome_admin",
-        "booking_slots":[
-            {
-                "booking_date":"17-08-2023",
-                "booking_time":"10:30"}
-            ,{
-                "booking_date":"17-08-2023",
-                "booking_time":"11:00"
-            },
-            {
-                "booking_date":"17-08-2023",
-                "booking_time":"11:30"
-            },
-            {
-                "booking_date":"17-08-2023",
-                "booking_time":"12:00"
-            }
-        ]
-    }
-response_body:
-    {
-        "update_booking": "10000069"
-    }
-
 endpoint: /add_booking
 method: POST
 request_body: 
@@ -135,7 +77,68 @@ request_body:
     }
 response_body:
     {
-        "add_booking": "success"
+        "add_booking": <booking_id>
+    }
+
+endpoint: /update_booking_by_pet_owner/<booking_id>
+method: POST
+request_body: 
+    {
+        "booking_type": "VACCINE",
+        "pet_owner_id": 1002,
+        "pet_id": 3,
+        "username": "pawsome_admin",
+        "booking_slots": [
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:00"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:30"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "09:00"
+            }
+        ]
+    }
+response_body:
+    {
+        "update_booking": "success"
+    }
+
+endpoint: /update_booking_by_admin/<booking_id>
+method: POST
+request_body: 
+    {
+        "booking_type": "VACCINE",
+        "pet_owner_id": 1002,
+        "pet_id": 3,
+        "doctor_id": 1,
+        "username": "pawsome_admin",
+        "booking_slots": [
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:00"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "08:30"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "09:00"
+            },
+            {
+                "booking_date": "18-09-2023",
+                "booking_time": "09:30"
+            }
+        ]
+    }
+response_body:
+    {
+        "update_booking": "success"
     }
 
 endpoint: /get_taken_slots_by_date
@@ -403,6 +406,69 @@ response_body:
         ]
     }
 
+endpoint: /search_booking (by doctor_id)
+method: POST
+request_body: 
+    {
+        "filter": "doctor_id",
+        "filter_value": "1"
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000032,
+                "booking_date": "2023-09-17",
+                "booking_time": "13:30",
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": 1,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-15 12:45:21",
+                "pet_owner_id": 1003,
+                "username": "abundantasparagus",
+                "pet_owner": "Flora Short",
+                "pet_id": 4,
+                "petname": "Muffin"
+            }
+        ]
+    }
+
+endpoint: /search_booking (by pet_owner_id)
+method: POST
+request_body: 
+    {
+        "filter": "pet_owner_id",
+        "filter_value": 1010
+    }
+response_body:
+    {
+        "bookings": [
+            {
+                "booking_id": 10000042,
+                "booking_date": "2023-09-07",
+                "booking_time": [
+                    "13:30",
+                    "14:00",
+                    "09:00",
+                    "14:00"
+                ],
+                "booking_status": "PENDING",
+                "booking_type": "Standard Consultation",
+                "doctor_id": null,
+                "invoice_id": null,
+                "receipt_id": null,
+                "updated_date": "2023-08-25 17:34:42",
+                "pet_owner_id": 1010,
+                "username": "efficientcornbread",
+                "pet_owner": "Eugenio Wolfe",
+                "pet_id": 11,
+                "petname": "Peaches"
+            }
+        ]
+    }
+
 
 endpoint: /get_booking/<id> (by booking id)
 method: GET
@@ -507,6 +573,80 @@ response_body:
                 "updated_by": null
             }
         ]
+    }
+
+endpoint: /delete_doctor/<doctor_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_doctor": "success"
+    }
+
+endpoint: /delete_pet_owner/<pet_owner_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_pet_owner": "success"
+    }
+
+endpoint: /delete_admin/<admin_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_admin": "success"
+    }
+
+endpoint: /add_user
+method: POST
+request_body: 
+    {
+        "role":"admin",
+        "firstname":"James",
+        "lastname":"Patterson",
+        "username":"jpatterson_2023",
+        "password":"Temp_pwd_2023",
+        "address":"78 Mount Druitt",
+        "state":"NSW",
+        "email":"jpatterson_2023@pawsome.com.au",
+        "phone":"948655543",
+        "postcode":"2761",
+        "created_by":"pawsome_admin"
+    }
+response_body:
+    {
+        "add_user": <user_id>
+    }
+
+endpoint: /update_user/<user_id>
+method: POST
+request_body: 
+    {
+        "role":"doctor",
+        "firstname":"Josh",
+        "lastname":"Mcguire",
+        "password":"Sneeringbovril_2023",
+        "address":"33 Arthur Street",
+        "state":"NSW",
+        "email":"sneeringbovril@pawsome.com.au",
+        "phone":"832775073",
+        "postcode":"2761",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "update_user": "success"
     }
 
 ***************************************
@@ -661,6 +801,61 @@ response_body:
                 "comments": "No allergies"
             }
         ]
+    }
+
+endpoint: /delete_pet/<pet_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_pet": "success"
+    }
+
+endpoint: /add_pet
+method: POST
+request_body: 
+    {
+        "pet_owner_id":1013,
+        "petname":"Gaston",
+        "species":"Dog",
+        "breed":"Alaskan Malamute",
+        "birthdate":"28-02-2023",
+        "weight":57.16,
+        "sex":"Female",
+        "microchip_no":"786549876598765",
+        "insurance_membership":"765487634",
+        "insurance_expiry":"10-09-2023",
+        "comments":"Big doggg",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "add_pet": <pet_id>
+    }
+
+endpoint: /update_pet/<pet_id>
+method: POST
+request_body: 
+    {
+        "pet_owner_id":1013,
+        "petname":"Gaston",
+        "species":"Dog",
+        "breed":"Alaskan Malamute",
+        "birthdate":"28-02-2023",
+        "weight":57.16,
+        "sex":"Female",
+        "microchip_no":"786549876598765",
+        "insurance_membership":"765487634",
+        "insurance_expiry":"10-09-2023",
+        "comments":"Big doggg",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "update_pet": "success"
     }
 
 ***************************************

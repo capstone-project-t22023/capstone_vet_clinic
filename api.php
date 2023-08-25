@@ -652,10 +652,37 @@ elseif ($action === 'delete_doctor') {
         ];
 
         if($role['role'] === 'admin'){
+            if($affected_bookings=$database->getBookingsByDoctorId($id)){
+                foreach($affected_bookings as $ab):
+                    if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
+                        $new_status = 'PENDING';
+                        $prev_status = $ab['booking_status'];
+
+                        $booking_info = [
+                            'new_status' => $new_status,
+                            'prev_status' => $prev_status,
+                            'doctor_id' => null,
+                            'username' => $_POST['username'],
+                            'booking_id' => $ab['booking_id']
+                        ];
+                        if($database->updateBookingDoctorAndStatus($booking_info)){
+                            if($database->addBookingHistoryRecord($booking_info)){
+                                true;
+                            } else {
+                                return_json(['delete_doctor' => "Error encountered."]);
+                            }
+                        } else {
+                            return_json(['delete_doctor' => "Error encountered."]);
+                        }
+                    }
+
+                endforeach;
+            }
+
             if ($database->deleteDoctor($record)) {
                 return_json(['delete_doctor' => "success"]);
             } else {
-                return_json(['delete_doctor' => "error"]);
+                return_json(['delete_doctor' => "Error encountered."]);
             }
         } else {
             return_json(['delete_doctor' => "You don't have the necessary privileges to perform this action."]);
@@ -704,11 +731,55 @@ elseif ($action === 'delete_pet_owner') {
         ];
 
         if($role['role'] === 'admin'){
+
+            if($affected_bookings=$database->getBookingsByPetOwnerId($id)){
+                foreach($affected_bookings as $ab):
+                    if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
+                        $new_status = 'ARCHIVED';
+                        $prev_status = $ab['booking_status'];
+
+                        $booking_info = [
+                            'new_status' => $new_status,
+                            'prev_status' => $prev_status,
+                            'username' => $_POST['username'],
+                            'booking_id' => $ab['booking_id']
+                        ];
+                        if($database->archiveBooking($booking_info)){
+                            if($database->deleteBookingSlot($ab['booking_id'])){
+                                if($database->addBookingHistoryRecord($booking_info)){
+                                    true;
+                                } else {
+                                    return_json(['delete_pet_owner' => "Error encountered."]);
+                                }
+                            }
+                        } else {
+                            return_json(['delete_pet_owner' => "Error encountered."]);
+                        }
+                    }
+
+                endforeach;
+            }
+
+            if($affected_pets=$database->getAllPetsByPetOwnerId($id)){
+                foreach($affected_pets as $p):
+                    $pet_info = [
+                        'username' => $_POST['username'],
+                        'pet_id' => $p['pet_id']
+                    ];
+                    if($database->archivePet($pet_info)){
+                        true;
+                    } else {
+                        return_json(['delete_pet_owner' => "Error encountered."]);
+                    }
+                endforeach;
+            }
+
             if ($database->deletePetOwner($record)) {
                 return_json(['delete_pet_owner' => "success"]);
             } else {
-                return_json(['delete_pet_owner' => "error"]);
+                return_json(['delete_pet_owner' => "Error encountered."]);
             }
+
         } else {
             return_json(['delete_pet_owner' => "You don't have the necessary privileges to perform this action."]);
         }
@@ -1100,13 +1171,6 @@ elseif ($action === 'add_pet') {
             return_json(['add_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
         }
 
-        if(validateAlpha($_POST['username'])
-        && validateLength($_POST['username'], 20)){
-            $check = true;
-        } else {
-            return_json(['add_pet' =>  "Error: Username must be up to 20 characters only."]);
-        }
-
         if($check){
             $pet = [
                 'pet_owner_id' => $_POST['pet_owner_id'],
@@ -1144,75 +1208,62 @@ elseif ($action === 'update_pet') {
         $_POST = json_decode($rest_json, true);
         $check = false;
 
-        if(validateNumeric($_POST['pet_owner_id'])){
-            $check = true;
-        } else {
-            return_json(['add_pet' =>  "Error: Pet Owner ID must be a number."]);
-        }
-
         if(validateLength($_POST['species'], 50)
         && validateAlpha($_POST['species'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Species must be up to 50 letters only."]);
+            return_json(['update_pet' =>  "Error: Species must be up to 50 letters only."]);
         }
 
         if(validateLength($_POST['breed'], 50)
         && validateAlpha($_POST['breed'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Breed must be up to 50 letters only."]);
+            return_json(['update_pet' =>  "Error: Breed must be up to 50 letters only."]);
         }
 
         if(validateDate($_POST['birthdate'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Birthdate must be a valid date with format DD-MM-YYYY."]);
+            return_json(['update_pet' =>  "Error: Birthdate must be a valid date with format DD-MM-YYYY."]);
         }
 
         if(validateDecimal($_POST['weight'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Weight must be a valid number."]);
+            return_json(['update_pet' =>  "Error: Weight must be a valid number."]);
         }
 
         if(validateAlpha($_POST['sex'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Sex must only consist of letters."]);
+            return_json(['update_pet' =>  "Error: Sex must only consist of letters."]);
         }
 
         if(validateLength($_POST['microchip_no'], 15)
         && validateNumeric($_POST['microchip_no'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
+            return_json(['update_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
         }
 
         if(validateLength($_POST['insurance_membership'], 10)
         && validateNumeric($_POST['insurance_membership'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+            return_json(['update_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
         }
 
         if(validateDate($_POST['insurance_expiry'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Insurance Expiration Date must be a valid date with format DD-MM-YYYY."]);
+            return_json(['update_pet' =>  "Error: Insurance Expiration Date must be a valid date with format DD-MM-YYYY."]);
         }
 
         if(validateLength($_POST['comments'], 1000)){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
-        }
-
-        if(validateAlpha($_POST['username'])
-        && validateLength($_POST['username'], 20)){
-            $check = true;
-        } else {
-            return_json(['add_pet' =>  "Error: Username must be up to 20 characters only."]);
+            return_json(['update_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
         }
 
         $pet = [
@@ -1237,28 +1288,62 @@ elseif ($action === 'update_pet') {
                 return_json(['update_pet' => "error"]);
             }
         }  else {
-            return_json(['add_pet' => "Error encountered."]);
+            return_json(['update_pet' => "Error encountered."]);
         }
     }
 }
 
 /**
  * API endpoint when deleting pet information
- * deletePet method that deletes pet record from database.php
  */ 
 elseif ($action === 'delete_pet') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        $role = $database->checkRoleByUsername($_POST['username']);
         $record = [
-            'id' => $id,
+            'pet_id' => $id,
             'username' => $_POST['username']
         ];
-        if ($database->deletePet($record)) {
-            return_json(['delete_pet' => "success"]);
+
+        if($role['role'] === 'admin' || $role['role'] === 'pet_owner'){
+
+            if($affected_bookings=$database->getBookingsByPetId($id)){
+                foreach($affected_bookings as $ab):
+                    if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
+                        $new_status = 'CANCELED';
+                        $prev_status = $ab['booking_status'];
+
+                        $booking_info = [
+                            'new_status' => $new_status,
+                            'prev_status' => $prev_status,
+                            'username' => $_POST['username'],
+                            'booking_id' => $ab['booking_id']
+                        ];
+                        if($database->archiveBooking($booking_info)){
+                            if($database->deleteBookingSlot($ab['booking_id'])){
+                                if($database->addBookingHistoryRecord($booking_info)){
+                                    true;
+                                } else {
+                                    return_json(['delete_pet' => "Error encountered."]);
+                                }
+                            }
+                        } else {
+                            return_json(['delete_pet' => "Error encountered."]);
+                        }
+                    }
+
+                endforeach;
+            }
+
+            if ($database->archivePet($record)) {
+                return_json(['delete_pet' => "success"]);
+            } else {
+                return_json(['delete_pet' => "Error encountered."]);
+            }
         } else {
-            return_json(['delete_pet' => "error"]);
+                return_json(['delete_pet' => "You don't have the necessary privileges to perform this action."]);
         }
     }
 }
@@ -1401,9 +1486,10 @@ elseif ($action === 'update_booking_by_admin') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        $current_booking_status = $database->checkBookingStatus($id);
         $booking = [
             'booking_id' => $id,
-            'prev_booking_status' => $_POST['prev_booking_status'],
+            'prev_booking_status' => $current_booking_status,
             'new_booking_status' => "PENDING",
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
@@ -1447,7 +1533,7 @@ elseif ($action === 'update_booking_by_admin') {
                 ];
 
                 if($database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => $id]);
+                    return_json(['update_booking' => "success"]);
                 } else {
                     return_json(['update_booking' => "error"]);
                 }
@@ -1514,7 +1600,7 @@ elseif ($action === 'update_booking_by_pet_owner') {
                 ];
 
                 if($database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => $id]);
+                    return_json(['update_booking' => "success"]);
                 } else {
                     return_json(['update_booking' => "error"]);
                 }
@@ -1740,6 +1826,14 @@ elseif ($action === 'search_booking') {
             } 
         }  elseif ($_POST['filter'] == 'pet_id'){
             if ($bookings = $database->getBookingsByPetId($_POST['filter_value'])) {
+                return_json(['bookings' => $bookings]);
+            } 
+        }  elseif ($_POST['filter'] == 'doctor_id'){
+            if ($bookings = $database->getBookingsByDoctorId($_POST['filter_value'])) {
+                return_json(['bookings' => $bookings]);
+            } 
+        }   elseif ($_POST['filter'] == 'pet_owner_id'){
+            if ($bookings = $database->getBookingsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }
