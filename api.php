@@ -1639,7 +1639,7 @@ elseif ($action === 'confirm_booking') {
         $current_booking_status = $database->checkBookingStatus($id);
 
         if($role['role'] === 'admin'){
-            if($current_booking_status['booking_status'] === 'CONFIRMED'){
+            if($current_booking_status['booking_status'] === 'PENDING'){
                 foreach($booking_slots as $new_slot):
                     $booking_count = [
                         'selected_date' => $new_slot['booking_date'],
@@ -1866,47 +1866,76 @@ elseif ($action === 'generate_invoice') {
         $role = $database->checkRoleByUsername($_POST['username']);
         $current_booking_status = $database->checkBookingStatus($_POST['booking_id']);
         $booking_fee = $database->checkBookingFee($_POST['booking_id']);
+        $invoice_count = $database->checkInvoiceByBookingId($_POST['booking_id']);
 
         if($role['role'] === 'doctor')
         {
             if($current_booking_status['booking_status'] === 'FINISHED'){
-                if($invoice_id=$database->createNewInvoice($invoice_info)){ 
-                    $booking_invoice_record = [
-                        'invoice_id' => $invoice_id,
-                        'item_category_id' => 1,
-                        'item_id' => $_POST['booking_id'],
-                        'quantity' => 1,
-                        'booking_fee' => $booking_fee
-                    ]; 
-                    if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
-                        foreach($invoice_items as $item):
-                            $invoice_record = [
-                                'invoice_id' => $invoice_id,
-                                'item_category_id' => $item['item_category_id'],
-                                'item_id' => $item['item_id'],
-                                'quantity' => $item['quantity']
-                            ]; 
-                            if($database->insertNewInvoiceItem($invoice_record)){
-                                true;
-                            } else {
-                                return_json(['generate_invoice' => "Error encountered while inserting invoice item."]);
-                            }
-                        endforeach;
-
-                        $invoice_amount_record = [
-                            'username' => $_POST['username'],
+                if($invoice_count['invoice_count'] === 0){
+                    if($invoice_id=$database->createNewInvoice($invoice_info)){ 
+                        $booking_invoice_record = [
                             'invoice_id' => $invoice_id,
-                            'booking_id' => $_POST['booking_id']
-                        ];
-                        if($database->updateInvoiceAmount($invoice_amount_record)){
-                            return_json(['generate_invoice' => $invoice_id]);
-                        } else {
-                            return_json(['generate_invoice' => "Invoice amount not calculated. Error encountered."]);
-                        }
+                            'item_category_id' => 1,
+                            'item_id' => $_POST['booking_id'],
+                            'quantity' => 1,
+                            'booking_fee' => $booking_fee
+                        ]; 
+                        if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
+                            foreach($invoice_items as $item):
+                                $invoice_record = [
+                                    'invoice_id' => $invoice_id,
+                                    'item_id' => $item['item_id'],
+                                    'quantity' => $item['quantity']
+                                ]; 
+                                
+                                if($database->insertNewInvoiceItem($invoice_record)){
+                                    true;
 
-                    } else {
-                        return_json(['generate_invoice' => "Booking invoice item encountered an error."]);
+                                } else {
+                                    return_json(['generate_invoice' => "Error encountered while inserting invoice item."]);
+                                }
+
+                                //update inventory
+                                if($in_use_qty=$database->getCurrentInUseQty($item['item_id'])){
+                                    $new_qty = $in_use_qty['in_use_qty'] - $item['quantity'];
+                                    $inventory_record = [
+                                        'in_use_qty' => $new_qty,
+                                        'item_id' => $item['item_id'],
+                                        'username' => $_POST['username']
+                                    ]; 
+                                    if($new_qty >= 0){
+                                        if($database->updateInUseQty($inventory_record)){
+                                            true;
+                                        } else {
+                                            return_json(['generate_invoice' => "Error encountered while updating inventory."]);
+                                        }
+                                    } else {
+                                        $database->deleteInvoiceItemByInvoiceId($invoice_id);
+                                        $database->deleteInvoice($invoice_id);
+                                        return_json(['generate_invoice' => "In-use Inventory below zero. Please update inventory to proceed."]);
+
+                                    }
+                                }
+
+                            endforeach;
+
+                            $invoice_amount_record = [
+                                'username' => $_POST['username'],
+                                'invoice_id' => $invoice_id,
+                                'booking_id' => $_POST['booking_id']
+                            ];
+                            if($database->updateInvoiceAmount($invoice_amount_record)){
+                                return_json(['generate_invoice' => $invoice_id]);
+                            } else {
+                                return_json(['generate_invoice' => "Invoice amount not calculated. Error encountered."]);
+                            }
+
+                        } else {
+                            return_json(['generate_invoice' => "Booking invoice item encountered an error."]);
+                        }
                     }
+                }  else {
+                    return_json(['generate_invoice' => "An existing invoice is already created for this booking."]);
                 }
             } else {
                 return_json(['generate_invoice' => "Booking status must be in FINISHED status before invoice can be generated. Current status is: " . $current_booking_status['booking_status']]);

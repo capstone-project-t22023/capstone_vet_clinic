@@ -957,19 +957,16 @@ request_body:
         "booking_id": 10000001,
         "invoice_items": [
             {
-                "item_category_id": 1,
-                "item_id": 1,
+                "item_id": 6,
                 "quantity": 1
             },
             {
-                "item_category_id": 1,
-                "item_id": 14,
+                "item_id": 19,
                 "quantity": 3
             },
             {
-                "item_category_id": 5,
                 "item_id": 226,
-                "quantity": 5
+                "quantity": 4
             }
         ]
     }

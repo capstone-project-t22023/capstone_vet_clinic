@@ -3275,7 +3275,6 @@ class Database
 
     /**
      * Retrieves all inventory categories records
-     * Returns inventory object array or false
      */
     public function getInventoryCategoriesById($category_id)
     {
@@ -3367,6 +3366,127 @@ class Database
     }
 
     /**
+     * Update inventory qty
+     */
+    public function updateInUseQty($inventory_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`inventory_items`
+            SET
+            `in_use_qty` = ?,
+            `updated_by` = (
+                            WITH
+                            all_users AS 
+                            (
+                                SELECT * FROM `pawsome`.`doctors`
+                                UNION
+                                SELECT * FROM `pawsome`.`admins`
+                                UNION 
+                                SELECT * FROM `pawsome`.`pet_owners`
+                            )
+                            SELECT id from all_users 
+                            WHERE UPPER(username) = UPPER(?)
+                            AND archived = 0
+                         ),
+            `updated_date` = SYSDATE()
+            WHERE `id` = ?'
+        );
+        $sql->bind_param(
+            'isi',
+            $inventory_record['in_use_qty'],
+            $inventory_record['username'],
+            $inventory_record['item_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Checks if existing invoice for booking
+     */
+    public function checkInvoiceByBookingId($booking_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT COUNT(*) invoice_count
+            FROM
+            `pawsome`.`invoices`
+            WHERE booking_id = ?'
+        );
+
+        $sql->bind_param(
+            'i', $booking_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $invoice_count = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $invoice_count;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves current quantity by item_id
+     */
+    public function getCurrentInUseQty($item_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT
+            in_use_qty
+            FROM
+            `pawsome`.`inventory_items`
+            WHERE archived = 0
+            AND id = ?'
+        );
+
+        $sql->bind_param(
+            'i', $item_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $in_use_qty = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $in_use_qty;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Insert data into invoice table
      */
     public function createNewInvoice($invoice_info)
@@ -3405,6 +3525,35 @@ class Database
         $this->connection->close();
         return false;
     }
+    
+    /**
+     * Delete data from invoice table
+     */
+    public function deleteInvoice($invoice_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`invoices`
+            WHERE id=?'
+        );
+        $sql->bind_param(
+            'i', $invoice_id
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 
     /**
      * Insert data into invoice items table
@@ -3430,8 +3579,8 @@ class Database
             ((SELECT id 
               FROM `pawsome`.`invoices` 
               WHERE id = ?),
-            (SELECT id 
-             FROM `pawsome`.`inventory_item_categories`
+            (SELECT inventory_item_category_id 
+             FROM `pawsome`.`inventory_items`
              WHERE id = ?),
              ?,?,
             (SELECT unit_price 
@@ -3444,11 +3593,72 @@ class Database
         $sql->bind_param(
             'iiiiiii',
             $invoice_record['invoice_id'],
-            $invoice_record['item_category_id'],
+            $invoice_record['item_id'],
             $invoice_record['item_id'],
             $invoice_record['quantity'],
             $invoice_record['item_id'],
             $invoice_record['quantity'],
+            $invoice_record['item_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete data from invoice_items table
+     */
+    public function deleteInvoiceItemByInvoiceId($invoice_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`invoice_items`
+            WHERE invoice_id=?'
+        );
+        $sql->bind_param(
+            'i', $invoice_id
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete data from invoice_items table
+     */
+    public function deleteInvoiceItemByItemId($invoice_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`invoice_items`
+            WHERE invoice_id=?
+            AND id=?'
+        );
+        $sql->bind_param(
+            'ii', 
+            $invoice_record['invoice_id'],
             $invoice_record['item_id']
         );
         if ($sql->execute()) {
