@@ -3313,7 +3313,6 @@ class Database
 
     /**
      * Retrieves all inventory records
-     * Returns inventory object array or false
      */
     public function getAllInventoryByCategory($category_id)
     {
@@ -3765,6 +3764,84 @@ class Database
             $sql->close();
             $this->connection->close();
             return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves invoice item records by ID
+     */
+    public function getInvoiceItemsByInvoiceId($invoice_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT `invoice_items`.`item_category_id`,
+            `invoice_items`.`item_id`,
+            `invoice_items`.`quantity`,
+            `invoice_items`.`unit_amount`,
+            `invoice_items`.`total_amount`
+            FROM `pawsome`.`invoice_items`
+            WHERE 
+            invoice_id = ?'
+        );
+        $sql->bind_param(
+            'i', $invoice_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves invoice records by ID
+     */
+    public function getInvoiceByInvoiceId($invoice_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT `invoices`.`id`,
+            `invoices`.`booking_id`,
+            `invoices`.`receipt_id`,
+            `invoices`.`invoice_amount`
+            FROM `pawsome`.`invoices`
+            WHERE 
+            id = ?'
+        );
+        $sql->bind_param(
+            'i', $invoice_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $row=$result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $row;
         }
         $sql->close();
         $this->connection->close();

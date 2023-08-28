@@ -171,9 +171,7 @@ CREATE TABLE `pawsome`.`invoice_items` (
   `unit_amount` decimal(5,2) NOT NULL COMMENT 'Amount per unit',
   `total_amount` decimal(5,2) NOT NULL COMMENT 'Total amount times quantity',
   KEY `fk_invoice_items_i_idx` (`invoice_id`),
-  KEY `fk_invoice_items_inv_i_idx` (`item_id`),
-  CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoice_items_inv_i` FOREIGN KEY (`item_id`) REFERENCES `inventory_items` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 DROP TABLE IF EXISTS `pawsome`.`receipts`;
@@ -503,6 +501,14 @@ CREATE TABLE `pawsome`.`service_categories_items` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_sci_sc_idx` (`service_category_id`),
   CONSTRAINT `fk_sci_sc` FOREIGN KEY (`service_category_id`) REFERENCES `service_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+DROP TABLE IF EXISTS `pawsome`.`subscribers`;
+CREATE TABLE `pawsome`.`subscribers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `date_subbed` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 );
 
 /** 
@@ -859,11 +865,11 @@ INSERT INTO `pawsome`.`inventory_items`
 `updated_date`,
 `archived`)
 VALUES
-(1,'Standard Consultation',10,20,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Diet Consultation',10,17,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Rehab',10,10,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Vaccine',10,18,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),80,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Surgery',10,16,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),120,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Standard Consultation',0,0,0,0,'',null,null,89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Diet Consultation',0,0,0,0,'',null,null,86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Rehab',0,0,0,0,'',null,null,90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Vaccine',0,0,0,0,'',null,null,80,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Surgery',0,0,0,0,'',null,null,120,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine distemper virus (CDV)',10,20,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine adenovirus (CAV)',10,17,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine parvovirus (CPV-2)',10,10,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),

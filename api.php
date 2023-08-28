@@ -1849,7 +1849,7 @@ elseif ($action === 'search_booking') {
  */
 
 /**
- * API endpoint when getting generating invoices
+ * API endpoint when generating invoices
  */ 
 elseif ($action === 'generate_invoice') {
     if ($valid_jwt_token) {
@@ -1880,6 +1880,7 @@ elseif ($action === 'generate_invoice') {
                             'quantity' => 1,
                             'booking_fee' => $booking_fee
                         ]; 
+
                         if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
                             foreach($invoice_items as $item):
                                 $invoice_record = [
@@ -1887,10 +1888,9 @@ elseif ($action === 'generate_invoice') {
                                     'item_id' => $item['item_id'],
                                     'quantity' => $item['quantity']
                                 ]; 
-                                
+
                                 if($database->insertNewInvoiceItem($invoice_record)){
                                     true;
-
                                 } else {
                                     return_json(['generate_invoice' => "Error encountered while inserting invoice item."]);
                                 }
@@ -1942,6 +1942,197 @@ elseif ($action === 'generate_invoice') {
             }
         } else {
             return_json(['generate_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when updating invoices
+ */ 
+elseif ($action === 'update_invoice') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $invoice_info = [
+            'username' => $_POST['username'],
+            'booking_id' => $_POST['booking_id']
+        ];
+
+        $invoice_items = $_POST['invoice_items'];
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+        $current_booking_status = $database->checkBookingStatus($_POST['booking_id']);
+        $booking_fee = $database->checkBookingFee($_POST['booking_id']);
+        $current_invoice_items = $database->getInvoiceItemsByInvoiceId($id);
+
+        if($role['role'] === 'doctor')
+        {
+            if($current_booking_status['booking_status'] === 'FINISHED'){
+                    if($database->deleteInvoiceItemByInvoiceId($id)){ 
+                        $booking_invoice_record = [
+                            'invoice_id' => $id,
+                            'item_category_id' => 1,
+                            'item_id' => $_POST['booking_id'],
+                            'quantity' => 1,
+                            'booking_fee' => $booking_fee
+                        ]; 
+                        if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
+                            foreach($invoice_items as $item):
+                                $invoice_record = [
+                                    'invoice_id' => $id,
+                                    'item_id' => $item['item_id'],
+                                    'quantity' => $item['quantity']
+                                ]; 
+                                
+                                if($database->insertNewInvoiceItem($invoice_record)){
+                                    true;
+
+                                } else {
+                                    return_json(['update_invoice' => "Error encountered while inserting invoice item."]);
+                                }
+
+                                //update inventory
+                                if($in_use_qty=$database->getCurrentInUseQty($item['item_id'])){
+                                    $current_qty = 0;
+                                    foreach($current_invoice_items as $current_item):
+                                        if($current_item['item_id'] === $item['item_id']){
+                                            $current_qty = $current_item['quantity'];
+                                            break;
+                                        }
+                                    endforeach;
+
+                                    $new_qty = $in_use_qty['in_use_qty'] + $current_qty - $item['quantity'];
+                                    $inventory_record = [
+                                        'in_use_qty' => $new_qty,
+                                        'item_id' => $item['item_id'],
+                                        'username' => $_POST['username']
+                                    ]; 
+                                    if($new_qty >= 0){
+                                        if($database->updateInUseQty($inventory_record)){
+                                            true;
+                                        } else {
+                                            foreach($current_invoice_items as $current_item):
+                                                $current_invoice_record = [
+                                                    'invoice_id' => $id,
+                                                    'item_id' => $current_item['item_id'],
+                                                    'quantity' => $current_item['quantity']
+                                                ]; 
+                                                $current_inventory_record = [
+                                                    'in_use_qty' => $in_use_qty['in_use_qty'],
+                                                    'item_id' => $item['item_id'],
+                                                    'username' => $_POST['username']
+                                                ]; 
+                                                if($database->insertNewInvoiceItem($current_invoice_record)){
+                                                    if($database->updateInUseQty($current_inventory_record)){
+                                                        true;
+                                                    } else {
+                                                        return_json(['update_invoice' => "Error encountered while inserting invoice item."]);
+                                                    }
+                                                } else {
+                                                    return_json(['update_invoice' => "Error encountered while inserting invoice item."]);
+                                                }
+                                            endforeach;    
+                                            return_json(['update_invoice' => "Error encountered while updating inventory."]);
+                                        }
+                                    } else {
+
+                                        return_json(['update_invoice' => "In-use Inventory below zero. Please update inventory to proceed."]);
+                                    }
+                                }
+                                
+                            endforeach;
+
+                            $invoice_amount_record = [
+                                'username' => $_POST['username'],
+                                'invoice_id' => $id,
+                                'booking_id' => $_POST['booking_id']
+                            ];
+
+                            if($database->updateInvoiceAmount($invoice_amount_record)){
+                                return_json(['update_invoice' => $id]);
+                            } else {
+                                return_json(['update_invoice' => "Invoice amount not calculated. Error encountered."]);
+                            }
+
+                        } else {
+                            return_json(['update_invoice' => "Booking invoice item encountered an error."]);
+                        }
+                    }
+            } else {
+                return_json(['update_invoice' => "Booking status must be in FINISHED status before invoice can be generated. Current status is: " . $current_booking_status['booking_status']]);
+            }
+        } else {
+            return_json(['update_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when getting invoices
+ */ 
+elseif ($action === 'get_invoice') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        if($invoice_info = $database->getInvoiceByInvoiceId($id)){
+            if($invoice_items = $database->getInvoiceItemsByInvoiceId($id)){
+                $invoice_record = [
+                    'invoice_id' => $id,
+                    'booking_id' => $invoice_info['booking_id'],
+                    'receipt_id' => $invoice_info['receipt_id'],
+                    'invoice_amount' => $invoice_info['invoice_amount'],
+                    'invoice_items' => $invoice_items
+                ];        
+                return_json(['get_invoice' => $invoice_record]);
+            }  else {
+                return_json(['get_invoice' => "Error retrieving invoice data."]);
+            }            
+        }  else {
+            return_json(['get_invoice' => "Invoice doesn't exist."]);
+        }
+        
+    }
+}
+
+/**
+ * API endpoint when getting invoices
+ */ 
+elseif ($action === 'delete_invoice') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+        $current_invoice_items = $database->getInvoiceItemsByInvoiceId($id);
+        if($role['role'] === 'doctor')
+        {
+            foreach($current_invoice_items as $current_item):
+                $in_use_qty=$database->getCurrentInUseQty($current_item['item_id']);
+                $current_inventory_record = [
+                    'in_use_qty' => $in_use_qty['in_use_qty'] + $current_item['quantity'],
+                    'item_id' => $current_item['item_id'],
+                    'username' => $_POST['username']
+                ]; 
+                if($database->updateInUseQty($current_inventory_record)){
+                    true;
+                } else {
+                    return_json(['delete_invoice' => "Error encountered while inserting invoice item."]);
+                }
+            endforeach;    
+
+            if($database->deleteInvoiceItemByInvoiceId($id)){
+                if($database->deleteInvoice($id)){
+                    return_json(['delete_invoice' => "Invoice " . $id . " deleted."]);
+                } else {
+                    return_json(['delete_invoice' => "Error deleting invoice."]);
+                }
+            } else {
+                return_json(['delete_invoice' => "Error deleting invoice."]);
+            }
+        } else {
+            return_json(['delete_invoice' => "You don't have the privilege to perform this action. Only doctors can delete invoices."]);
         }
     }
 }
