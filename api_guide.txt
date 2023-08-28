@@ -1055,6 +1055,21 @@ response_body:
         "delete_invoice": "Invoice 300000 deleted."
     }
 
+endpoint: /accept_payment
+method: POST
+request_body: 
+    {
+        "username": "pawsome_admin",
+        "payee_username": "moaningcasserole",
+        "payment_method": "STRIPE",
+        "payment_paid": 338.90,
+        "invoice_id": 300000
+    }
+response_body:
+    {
+        "accept_payment": "Payment has been accepted."
+    }
+
 endpoint: /
 method:
 request_body: 

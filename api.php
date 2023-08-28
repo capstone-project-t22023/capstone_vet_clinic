@@ -1431,7 +1431,6 @@ elseif ($action === 'get_taken_slots_all') {
 
 /**
  * API endpoint when adding bookings
- * addBooking method that adds booking information in the database
  */ 
 elseif ($action === 'add_booking') {
     if ($valid_jwt_token) {
@@ -1479,7 +1478,6 @@ elseif ($action === 'add_booking') {
 
 /**
  * API endpoint when updating bookings
- * updateBookingByAdmin method that updates booking information in the database
  */ 
 elseif ($action === 'update_booking_by_admin') {
     if ($valid_jwt_token) {
@@ -1548,7 +1546,6 @@ elseif ($action === 'update_booking_by_admin') {
 
 /**
  * API endpoint when updating bookings
- * updateBookingByPetOwner method that updates booking information in the database
  */ 
 elseif ($action === 'update_booking_by_pet_owner') {
     if ($valid_jwt_token) {
@@ -1793,7 +1790,6 @@ elseif ($action === 'cancel_booking') {
 
 /**
  * API endpoint when getting booking information
- * $bookings will execute getBookingsBy<Filter> method from database.php
  */ 
 elseif ($action === 'search_booking') {
     if ($valid_jwt_token) {
@@ -1925,7 +1921,32 @@ elseif ($action === 'generate_invoice') {
                                 'booking_id' => $_POST['booking_id']
                             ];
                             if($database->updateInvoiceAmount($invoice_amount_record)){
-                                return_json(['generate_invoice' => $invoice_id]);
+                                if($invoice=$database->getInvoiceByInvoiceId($invoice_id)){
+                                    $payment_record = [
+                                        "payment_status" => "NOT PAID",
+                                        "payment_balance" => $invoice['invoice_amount'],
+                                        'username' => $_POST['username']
+                                    ];
+                                    if($payment_id=$database->insertNewPayment($payment_record)){
+                                        $receipt_record = [
+                                            "booking_id" => $_POST['booking_id'],
+                                            "invoice_id" => $invoice_id,
+                                            "payment_id" => $payment_id,
+                                            "username" => $_POST['username']
+                                        ];
+                                        if($database->insertNewReceipt($receipt_record)){
+                                            $payment_history = [
+                                                "payment_id" => $payment_id,
+                                                "prev_payment_status" => null,
+                                                "new_payment_status" => "NOT PAID",
+                                                "username" => $_POST['username']
+                                            ];
+                                            if($database->addPaymentHistory($payment_history)){
+                                                return_json(['generate_invoice' => $invoice_id]);
+                                            }
+                                        }
+                                    }
+                                }
                             } else {
                                 return_json(['generate_invoice' => "Invoice amount not calculated. Error encountered."]);
                             }
@@ -2050,7 +2071,27 @@ elseif ($action === 'update_invoice') {
                             ];
 
                             if($database->updateInvoiceAmount($invoice_amount_record)){
-                                return_json(['update_invoice' => $id]);
+                                if($invoice=$database->getInvoiceByInvoiceId($id)){
+                                    $payment_id = $database->getPaymentId($id);
+                                    $payment_record = [
+                                        "payment_status" => "NOT PAID",
+                                        "payment_balance" => $invoice['invoice_amount'],
+                                        'username' => $_POST['username'],
+                                        "payment_id" => $payment_id['payment_id']
+                                    ];
+                                    if($database->updatePaymentBalance($payment_record)){
+                                        $prev_status = $database->getCurrentPaymentStatus($payment_id);
+                                        $payment_history = [
+                                            "payment_id" => $payment_id['payment_id'],
+                                            "prev_payment_status" => $prev_status['payment_status'],
+                                            "new_payment_status" => "NOT PAID",
+                                            "username" => $_POST['username']
+                                        ];
+                                        if($database->addPaymentHistory($payment_history)){
+                                            return_json(['update_invoice' => $id]);
+                                        }
+                                    }
+                                }
                             } else {
                                 return_json(['update_invoice' => "Invoice amount not calculated. Error encountered."]);
                             }
@@ -2121,21 +2162,112 @@ elseif ($action === 'delete_invoice') {
                     return_json(['delete_invoice' => "Error encountered while inserting invoice item."]);
                 }
             endforeach;    
-
-            if($database->deleteInvoiceItemByInvoiceId($id)){
-                if($database->deleteInvoice($id)){
-                    return_json(['delete_invoice' => "Invoice " . $id . " deleted."]);
-                } else {
-                    return_json(['delete_invoice' => "Error deleting invoice."]);
+                $receipt_info = $database->getReceiptByInvoiceId($id);
+                if($database->deletePaymentHistory($receipt_info['payment_id'])){
+                    if($database->deletePayment($receipt_info['payment_id'])){
+                            if($database->deleteInvoice($id)){
+                                return_json(['delete_invoice' => "Invoice " . $id . " deleted."]);
+                            } else {
+                                return_json(['delete_invoice' => "Error deleting invoice."]);
+                            }
+                    }  else {
+                        return_json(['delete_invoice' => "Error deleting payment information."]);
+                    }
+                }  else {
+                    return_json(['delete_invoice' => "Error payment history."]);
                 }
-            } else {
-                return_json(['delete_invoice' => "Error deleting invoice."]);
-            }
         } else {
             return_json(['delete_invoice' => "You don't have the privilege to perform this action. Only doctors can delete invoices."]);
         }
     }
 }
+
+/**
+ * API endpoint when accepting payments
+ */ 
+elseif ($action === 'accept_payment') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+        //payments   
+        if($role['role'] === 'admin'){
+            if($payment_info = $database->getPaymentInformation($_POST['invoice_id'])){
+                $new_balance = $payment_info['payment_balance'] - $_POST['payment_paid'];
+                $change = $_POST['payment_paid'] - $payment_info['payment_balance'];
+
+                $status = "NOT PAID";
+                if($new_balance <= 0){
+                    $status = "PAID";
+                }
+
+                $amount = 0;
+                if($change <= 0){
+                    $amount = $change;
+                }
+                
+                $payment_record = [
+                    "payment_by" => $_POST['payee_username'],
+                    "payment_method" => $_POST['payment_method'],
+                    "payment_status" => $status,
+                    "payment_balance" => $new_balance,
+                    "payment_paid" => $_POST['payment_paid'],
+                    "payment_change" => $amount,
+                    "payment_id" => $payment_info['id'],
+                    "username" => $_POST['username']
+                ];
+
+                if($database->acceptPayment($payment_record)){
+                    //payment_history
+                    $payment_history = [
+                        "payment_id" => $payment_info['id'],
+                        "prev_payment_status" => $payment_info['payment_status'],
+                        "new_payment_status" => $status,
+                        "username" => $_POST['username']
+                    ];
+                    
+                    if($database->addPaymentHistory($payment_history)){
+                        $receipt_record = [
+                            "username" => $_POST['username'],
+                            "payment_id" => $payment_info['id']
+                        ];
+
+                        if($database->updateReceipts($receipt_record)){
+                            if($new_balance <= 0){
+                                if($info=$database->getReceiptByPaymentId($payment_info['id'])){
+                                    $archive_records = [
+                                        "receipt_id" => $info['id'],
+                                        "payment_id" => $info['payment_id'],
+                                        "booking_id" => $info['booking_id'],
+                                        "invoice_id" => $info['invoice_id'],
+                                        "username" => $_POST['username']
+                                    ];
+                                    $database->archiveBookingWoStatusUpdate($archive_records);
+                                    $database->archiveInvoices($archive_records);
+                                    $database->archiveReceipts($archive_records);
+                                    return_json(['accept_payment' => "Payment has been accepted."]);
+                                }
+                            } else {
+                                return_json(['accept_payment' => "Remaining balance: " . $new_balance]);
+                            }
+                        } else {
+                            return_json(['accept_payment' => "Error while updating receipts."]);
+                        }
+                    } else {
+                        return_json(['accept_payment' => "Error while updating payment history."]);
+                    }
+                } else {
+                    return_json(['accept_payment' => "Error while updating payments."]);
+                }
+            }
+        }  else {
+            return_json(['accept_payment' => "You don't have the privilege to perform this action. Only admins can accept payments."]);
+        }
+        
+    }
+}
+
 
 /**
  * Inventory System Management
