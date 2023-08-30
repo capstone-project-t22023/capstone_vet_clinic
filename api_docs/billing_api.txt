@@ -1,0 +1,175 @@
+***************************************
+BILLING ENDPOINTS
+***************************************
+endpoint: /generate_invoice
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite",
+        "booking_id": 10000001,
+        "invoice_items": [
+            {
+                "item_id": 6,
+                "quantity": 1
+            },
+            {
+                "item_id": 19,
+                "quantity": 3
+            },
+            {
+                "item_id": 226,
+                "quantity": 4
+            }
+        ]
+    }
+response_body:
+    {
+        "generate_invoice": 300000
+    }
+
+endpoint: /update_invoice/<invoice_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite",
+        "booking_id": 10000001,
+        "invoice_items": [
+            {
+                "item_id": 6,
+                "quantity": 1
+            },
+            {
+                "item_id": 19,
+                "quantity": 3
+            },
+            {
+                "item_id": 226,
+                "quantity": 4
+            }
+        ]
+    }
+response_body:
+    {
+        "update_invoice": 300000
+    }
+
+endpoint: /get_invoice/300001
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "get_invoice": {
+            "invoice_id": "300001",
+            "booking_id": 10000001,
+            "receipt_id": null,
+            "invoice_amount": "338.90",
+            "invoice_items": [
+                {
+                    "item_category_id": 1,
+                    "item_id": 10000001,
+                    "quantity": 1,
+                    "unit_amount": "100.00",
+                    "total_amount": "100.00"
+                },
+                {
+                    "item_category_id": 2,
+                    "item_id": 6,
+                    "quantity": 2,
+                    "unit_amount": "89.00",
+                    "total_amount": "178.00"
+                },
+                {
+                    "item_category_id": 2,
+                    "item_id": 19,
+                    "quantity": 4,
+                    "unit_amount": "15.00",
+                    "total_amount": "60.00"
+                },
+                {
+                    "item_category_id": 6,
+                    "item_id": 226,
+                    "quantity": 5,
+                    "unit_amount": "0.18",
+                    "total_amount": "0.90"
+                }
+            ]
+        }
+    }
+
+endpoint: /delete_invoice/<invoice_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_invoice": "Invoice 300000 deleted."
+    }
+
+endpoint: /accept_payment
+method: POST
+request_body: 
+    {
+        "username": "pawsome_admin",
+        "payee_username": "moaningcasserole",
+        "payment_method": "STRIPE",
+        "payment_paid": 338.90,
+        "invoice_id": 300000
+    }
+response_body:
+    {
+        "accept_payment": "Payment has been accepted."
+    }
+
+endpoint: /get_receipt/<receipt_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "get_receipt": {
+            "pet_owner_id": 1002,
+            "username": "moaningcasserole",
+            "pet_id": 3,
+            "petname": "Snickers",
+            "booking_id": 10000001,
+            "booking_type_id": 1,
+            "doctor_id": 1,
+            "invoice_id": 300000,
+            "receipt_id": 500000,
+            "invoice_amount": "338.90",
+            "payment_paid": "338.90",
+            "payment_status": "PAID",
+            "payment_date": "2023-08-28 23:21:18",
+            "invoice_items": [
+                {
+                    "item_category_id": 1,
+                    "item_id": 10000001,
+                    "quantity": 1,
+                    "unit_amount": "100.00",
+                    "total_amount": "100.00"
+                },
+                {
+                    "item_category_id": 2,
+                    "item_id": 6,
+                    "quantity": 2,
+                    "unit_amount": "89.00",
+                    "total_amount": "178.00"
+                },
+                {
+                    "item_category_id": 2,
+                    "item_id": 19,
+                    "quantity": 4,
+                    "unit_amount": "15.00",
+                    "total_amount": "60.00"
+                },
+                {
+                    "item_category_id": 6,
+                    "item_id": 226,
+                    "quantity": 5,
+                    "unit_amount": "0.18",
+                    "total_amount": "0.90"
+                }
+            ]
+        }
+    }

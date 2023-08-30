@@ -1,0 +1,152 @@
+***************************************
+USER ENDPOINTS
+***************************************
+
+endpoint: /get_all_admins
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "admins": [
+            {
+                "id": 501,
+                "firstname": "Pawsome",
+                "lastname": "Admin",
+                "username": "pawsome_admin",
+                "password": "59c1a715843c02b63f6862dbb596be97",
+                "address": "40 Romawi Road",
+                "state": "NSW",
+                "email": "pawsome_admin@pawsome.com.au",
+                "phone": 123456789,
+                "postcode": 2570,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+endpoint: /get_all_doctors
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "doctors": [
+            {
+                "id": 1,
+                "firstname": "Joe",
+                "lastname": "Mcguire",
+                "username": "sneeringbovril",
+                "password": "5fdbec3120f1fde6bdd6106d5b2c7aca",
+                "address": "33 Arthur Street",
+                "state": "NSW",
+                "email": "sneeringbovril@pawsome.com.au",
+                "phone": 832775073,
+                "postcode": 2761,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+endpoint: /get_all_pet_owners
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "pet_owners": [
+            {
+                "id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "password": "8a01bb6762f3526d584c4e293af69263",
+                "address": "4 Taylor Street",
+                "state": "NSW",
+                "email": "ritzydonut@pawsome.com.au",
+                "phone": 515335785,
+                "postcode": 3000,
+                "archived": 0,
+                "created_date": "2023-08-21 14:05:47",
+                "updated_date": "2023-08-21 14:05:47",
+                "updated_by": null
+            }
+        ]
+    }
+
+endpoint: /delete_doctor/<doctor_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_doctor": "success"
+    }
+
+endpoint: /delete_pet_owner/<pet_owner_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_pet_owner": "success"
+    }
+
+endpoint: /delete_admin/<admin_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_admin": "success"
+    }
+
+endpoint: /add_user
+method: POST
+request_body: 
+    {
+        "role":"admin",
+        "firstname":"James",
+        "lastname":"Patterson",
+        "username":"jpatterson_2023",
+        "password":"Temp_pwd_2023",
+        "address":"78 Mount Druitt",
+        "state":"NSW",
+        "email":"jpatterson_2023@pawsome.com.au",
+        "phone":"948655543",
+        "postcode":"2761",
+        "created_by":"pawsome_admin"
+    }
+response_body:
+    {
+        "add_user": <user_id>
+    }
+
+endpoint: /update_user/<user_id>
+method: POST
+request_body: 
+    {
+        "role":"doctor",
+        "firstname":"Josh",
+        "lastname":"Mcguire",
+        "password":"Sneeringbovril_2023",
+        "address":"33 Arthur Street",
+        "state":"NSW",
+        "email":"sneeringbovril@pawsome.com.au",
+        "phone":"832775073",
+        "postcode":"2761",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "update_user": "success"
+    }

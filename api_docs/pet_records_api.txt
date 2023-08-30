@@ -1,0 +1,108 @@
+***************************************
+IMMUNISATION ENDPOINTS
+***************************************
+
+endpoint: /get_all_vaccines
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "get_all_vaccines": [
+            "Canine distemper virus (CDV) vaccine",
+            "Canine adenovirus (CAV) vaccine",
+            "Canine parvovirus (CPV-2) vaccine",
+            "Parainfluenza virus (PI) vaccine",
+            "Bordetella bronchiseptica (Bb) vaccine",
+            "Leptospira interrogans vaccine",
+            "Feline parvovirus (FPV) vaccine",
+            "Feline calicivirus (FCV) vaccine",
+            "Feline herpesvirus (FHV-1 vaccine",
+            "Feline leukaemia virus (FeLV) vaccine",
+            "Chlamydia felis vaccine",
+            "Feline immunodeficiency virus (FIV) vaccine",
+            "Rabies vaccine"
+        ]
+    }
+
+endpoint: /add_immun_record
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "vaccine_date": "30-09-2023",
+        "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
+        "comments": "No adverse reactions", 
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "add_immun_record": true
+    }
+
+endpoint: /delete_immun_record/<record_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_immun_record": true
+    }
+
+endpoint: /update_immun_record/<record_id>
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "vaccine_date": "30-10-2023",
+        "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
+        "comments": "Had adverse reactions", 
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        
+        
+    }
+
+endpoint: /get_immun_record/<pet_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "vaccine_record": [
+            {
+                "record_id": 2,
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "vaccine_date": "2023-09-30",
+                "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
+                "comments": "No adverse reactions"
+            },
+            {
+                "record_id": 3,
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "vaccine_date": "2023-09-30",
+                "vaccine": "Feline calicivirus (FCV) vaccine",
+                "comments": "No adverse reactions"
+            }
+        ]
+    }
+
+endpoint: /
+method:
+request_body: 
+    {
+
+    }
+response_body:
+    {
+        
+        
+    }

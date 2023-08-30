@@ -1,0 +1,208 @@
+***************************************
+PET ENDPOINTS
+***************************************
+
+endpoint: /get_all_pets
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "pets": [
+                    {
+                        "pet_id": 1,
+                        "petname": "Paws",
+                        "species": "Dog",
+                        "breed": "Golden Retriever",
+                        "birthdate": "2021-01-22",
+                        "weight": "36.30",
+                        "sex": "Female",
+                        "microchip_no": null,
+                        "insurance_membership": "5988040028",
+                        "insurance_expiry": "2025-05-30",
+                        "comments": "No allergies"
+                    }
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by firstname)
+method: POST
+request_body: 
+    {
+        "filter": "firstname",
+        "filter_value": "Lu"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1002,
+                "firstname": "Luigi",
+                "lastname": "Swanson",
+                "username": "moaningcasserole",
+                "pet_id": 3,
+                "petname": "Snickers",
+                "species": "Guinea Pig",
+                "breed": "Teddy",
+                "birthdate": "2021-03-14",
+                "weight": "1.00",
+                "sex": "Male",
+                "microchip_no": null,
+                "insurance_membership": null,
+                "insurance_expiry": null,
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by pet_owner_id)
+method: POST
+request_body: 
+    {
+        "filter": "pet_owner_id",
+        "filter_value": "1001"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1001,
+                "firstname": "Gilbert",
+                "lastname": "Lynch",
+                "username": "ritzydonut",
+                "pet_id": 1,
+                "petname": "Paws",
+                "species": "Dog",
+                "breed": "Golden Retriever",
+                "birthdate": "2021-01-22",
+                "weight": "36.30",
+                "sex": "Female",
+                "microchip_no": null,
+                "insurance_membership": "5988040028",
+                "insurance_expiry": "2025-05-30",
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by lname)
+method: POST
+request_body: 
+    {
+        "filter": "lastname",
+        "filter_value": "Oliver"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1017,
+                "firstname": "Vicki",
+                "lastname": "Oliver",
+                "username": "immodestdill",
+                "pet_id": 20,
+                "petname": "Stormy",
+                "species": "Dog",
+                "breed": "Poodle",
+                "birthdate": "2017-08-18",
+                "weight": "35.00",
+                "sex": "Female",
+                "microchip_no": null,
+                "insurance_membership": "7766577891",
+                "insurance_expiry": "2025-07-30",
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /get_all_pets_by_filter (by petname)
+method: POST
+request_body: 
+    {
+        "filter": "petname",
+        "filter_value": "Sni"
+    }
+response_body:
+    {
+        "pets": [
+            {
+                "pet_owner_id": 1002,
+                "firstname": "Luigi",
+                "lastname": "Swanson",
+                "username": "moaningcasserole",
+                "pet_id": 3,
+                "petname": "Snickers",
+                "species": "Guinea Pig",
+                "breed": "Teddy",
+                "birthdate": "2021-03-14",
+                "weight": 1,
+                "sex": "Male",
+                "microchip_no": null,
+                "insurance_membership": null,
+                "insurance_expiry": null,
+                "comments": "No allergies"
+            }
+        ]
+    }
+
+endpoint: /delete_pet/<pet_id>
+method: POST
+request_body: 
+    {
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "delete_pet": "success"
+    }
+
+endpoint: /add_pet
+method: POST
+request_body: 
+    {
+        "pet_owner_id":1013,
+        "petname":"Gaston",
+        "species":"Dog",
+        "breed":"Alaskan Malamute",
+        "birthdate":"28-02-2023",
+        "weight":57.16,
+        "sex":"Female",
+        "microchip_no":"786549876598765",
+        "insurance_membership":"765487634",
+        "insurance_expiry":"10-09-2023",
+        "comments":"Big doggg",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "add_pet": <pet_id>
+    }
+
+endpoint: /update_pet/<pet_id>
+method: POST
+request_body: 
+    {
+        "pet_owner_id":1013,
+        "petname":"Gaston",
+        "species":"Dog",
+        "breed":"Alaskan Malamute",
+        "birthdate":"28-02-2023",
+        "weight":57.16,
+        "sex":"Female",
+        "microchip_no":"786549876598765",
+        "insurance_membership":"765487634",
+        "insurance_expiry":"10-09-2023",
+        "comments":"Big doggg",
+        "username":"pawsome_admin"
+    }
+response_body:
+    {
+        "update_pet": "success"
+    }

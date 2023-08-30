@@ -11,6 +11,12 @@
   * File where queries called in the file are located
   */
 include './classes/database.php';
+include './classes/pet-database.php';
+include './classes/billing-database.php';
+include './classes/inventory-database.php';
+include './classes/booking-database.php';
+include './classes/lodging-database.php';
+
 
  /**
   * File where JWT functions are called in the file are located
@@ -67,6 +73,11 @@ $valid_jwt_token = isset($bearer_token) ? valid_jwt_token($bearer_token) : false
  * Initialize new instance of Database class
  */
 $database = new Database();
+$pet_database = new PetDatabase();
+$billing_database = new BillingDatabase();
+$inventory_database = new InventoryDatabase();
+$booking_database = new BookingDatabase();
+$lodging_database = new LodgingDatabase();
 
 /**
  * Authorization and User Management
@@ -178,7 +189,7 @@ if ($action === 'register_doctor') {
  * Executed when admin registers
  * A unique code will be generated to be entered by admin later to be activated
  */
-if ($action === 'register_admin') {
+elseif ($action === 'register_admin') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     $check = false;
@@ -280,7 +291,7 @@ if ($action === 'register_admin') {
  * Executed when pet owner registers
  * A unique code will be generated to be entered by pet owner later to be activated
  */
-if ($action === 'register_pet_owner') {
+elseif ($action === 'register_pet_owner') {
     $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     $check = false;
@@ -609,7 +620,6 @@ elseif ($action === 'get_pet_owner') {
 
 /**
  * API endpoint when getting all doctors that are active
- * $doctors will execute getAllDoctors method from database.php
  */ 
 elseif ($action === 'get_all_doctors') {
     if ($doctors = $database->getAllDoctors()) {
@@ -619,7 +629,6 @@ elseif ($action === 'get_all_doctors') {
 
 /**
  * API endpoint when getting all admins that are active
- * $admin will execute getAllAdmins method from database.php
  */ 
 elseif ($action === 'get_all_admins') {
     if ($admins = $database->getAllAdmins()) {
@@ -629,7 +638,6 @@ elseif ($action === 'get_all_admins') {
 
 /**
  * API endpoint when getting all pet owners that are active
- * $pet_owners will execute getAllPetOwners method from database.php
  */ 
 elseif ($action === 'get_all_pet_owners') {
     if ($pet_owners = $database->getAllPetOwners()) {
@@ -665,8 +673,8 @@ elseif ($action === 'delete_doctor') {
                             'username' => $_POST['username'],
                             'booking_id' => $ab['booking_id']
                         ];
-                        if($database->updateBookingDoctorAndStatus($booking_info)){
-                            if($database->addBookingHistoryRecord($booking_info)){
+                        if($booking_database->updateBookingDoctorAndStatus($booking_info)){
+                            if($booking_database->addBookingHistoryRecord($booking_info)){
                                 true;
                             } else {
                                 return_json(['delete_doctor' => "Error encountered."]);
@@ -744,9 +752,9 @@ elseif ($action === 'delete_pet_owner') {
                             'username' => $_POST['username'],
                             'booking_id' => $ab['booking_id']
                         ];
-                        if($database->archiveBooking($booking_info)){
-                            if($database->deleteBookingSlot($ab['booking_id'])){
-                                if($database->addBookingHistoryRecord($booking_info)){
+                        if($booking_database->archiveBooking($booking_info)){
+                            if($booking_database->deleteBookingSlot($ab['booking_id'])){
+                                if($booking_database->addBookingHistoryRecord($booking_info)){
                                     true;
                                 } else {
                                     return_json(['delete_pet_owner' => "Error encountered."]);
@@ -760,13 +768,13 @@ elseif ($action === 'delete_pet_owner') {
                 endforeach;
             }
 
-            if($affected_pets=$database->getAllPetsByPetOwnerId($id)){
+            if($affected_pets=$pet_database->getAllPetsByPetOwnerId($id)){
                 foreach($affected_pets as $p):
                     $pet_info = [
                         'username' => $_POST['username'],
                         'pet_id' => $p['pet_id']
                     ];
-                    if($database->archivePet($pet_info)){
+                    if($pet_database->archivePet($pet_info)){
                         true;
                     } else {
                         return_json(['delete_pet_owner' => "Error encountered."]);
@@ -788,7 +796,6 @@ elseif ($action === 'delete_pet_owner') {
 
 /**
  * API endpoint when adding user
- * add<Role> method that adds user record from database.php
  */ 
 elseif ($action === 'add_user') {
     if ($valid_jwt_token) {
@@ -897,7 +904,6 @@ elseif ($action === 'add_user') {
 
 /**
  * API endpoint when updating user
- * update<Role> method that updates user record from database.php
  */ 
 elseif ($action === 'update_user') {
     if ($valid_jwt_token) {
@@ -1010,7 +1016,6 @@ elseif ($action === 'update_user') {
 
 /**
  * API endpoint when getting all pet owners that are active
- * $pets will execute getAllPets method from database.php
  */ 
 elseif ($action === 'get_all_pets') {
     if ($valid_jwt_token) {
@@ -1020,7 +1025,7 @@ elseif ($action === 'get_all_pets') {
             foreach($pet_owners as $y):
 
                 $pet_records = array();
-                if ($pets = $database->getAllPetsByPetOwnerId($y['id'])) {
+                if ($pets = $pet_database->getAllPetsByPetOwnerId($y['id'])) {
 
                     foreach($pets as $p):
                         $pet_record = [
@@ -1070,26 +1075,25 @@ elseif ($action === 'get_all_pets') {
 
 /**
  * API endpoint when getting all pet owners that are active
- * $pets will execute getAllPetsBy<Filter> method from database.php
  */ 
 elseif ($action === 'get_all_pets_by_filter') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
         if ($_POST['filter'] == 'petname'){
-            if ($pets = $database->getAllPetsByPetname($_POST['filter_value'])) {
+            if ($pets = $pet_database->getAllPetsByPetname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         } elseif ($_POST['filter'] == 'firstname'){
-            if ($pets = $database->getAllPetsByFname($_POST['filter_value'])) {
+            if ($pets = $pet_database->getAllPetsByFname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         } elseif ($_POST['filter'] == 'lastname'){
-            if ($pets = $database->getAllPetsByLname($_POST['filter_value'])) {
+            if ($pets = $pet_database->getAllPetsByLname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         } elseif ($_POST['filter'] == 'pet_owner_id'){
-            if ($pets = $database->getAllPetsByPetOwnerId($_POST['filter_value'])) {
+            if ($pets = $pet_database->getAllPetsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
             } 
         }
@@ -1098,7 +1102,6 @@ elseif ($action === 'get_all_pets_by_filter') {
 
 /**
  * API endpoint when adding pet information
- * addPet method that adds pet record from database.php
  */ 
 elseif ($action === 'add_pet') {
     if ($valid_jwt_token) {
@@ -1187,7 +1190,7 @@ elseif ($action === 'add_pet') {
                 'username' => $_POST['username']
             ];
 
-            if ($pet_id = $database->addPet($pet)) {
+            if ($pet_id = $pet_database->addPet($pet)) {
                 return_json(['add_pet' => $pet_id]);
             } else {
                 return_json(['add_pet' => "error"]);
@@ -1200,7 +1203,6 @@ elseif ($action === 'add_pet') {
 
 /**
  * API endpoint when updating pet information
- * updatePet method that updates pet record from database.php
  */ 
 elseif ($action === 'update_pet') {
     if ($valid_jwt_token) {
@@ -1282,7 +1284,7 @@ elseif ($action === 'update_pet') {
         ];
 
         if($check){
-            if ($database->updatePet($pet)) {
+            if ($pet_database->updatePet($pet)) {
                 return_json(['update_pet' => "success"]);
             } else {
                 return_json(['update_pet' => "error"]);
@@ -1309,7 +1311,7 @@ elseif ($action === 'delete_pet') {
 
         if($role['role'] === 'admin' || $role['role'] === 'pet_owner'){
 
-            if($affected_bookings=$database->getBookingsByPetId($id)){
+            if($affected_bookings=$booking_database->getBookingsByPetId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'CANCELED';
@@ -1321,9 +1323,9 @@ elseif ($action === 'delete_pet') {
                             'username' => $_POST['username'],
                             'booking_id' => $ab['booking_id']
                         ];
-                        if($database->archiveBooking($booking_info)){
-                            if($database->deleteBookingSlot($ab['booking_id'])){
-                                if($database->addBookingHistoryRecord($booking_info)){
+                        if($booking_database->archiveBooking($booking_info)){
+                            if($booking_database->deleteBookingSlot($ab['booking_id'])){
+                                if($booking_database->addBookingHistoryRecord($booking_info)){
                                     true;
                                 } else {
                                     return_json(['delete_pet' => "Error encountered."]);
@@ -1337,7 +1339,7 @@ elseif ($action === 'delete_pet') {
                 endforeach;
             }
 
-            if ($database->archivePet($record)) {
+            if ($pet_database->archivePet($record)) {
                 return_json(['delete_pet' => "success"]);
             } else {
                 return_json(['delete_pet' => "Error encountered."]);
@@ -1350,11 +1352,10 @@ elseif ($action === 'delete_pet') {
 
 /**
  * API endpoint when selecting pet information
- * getPet method that retrieves pet record from database.php
  */ 
 elseif ($action === 'get_pet') {
     if ($valid_jwt_token) {
-        if ($pet_record = $database->getPet($id)) {
+        if ($pet_record = $pet_database->getPet($id)) {
             return_json(['get_pet' => $pet_record]);
         }
     }
@@ -1366,11 +1367,10 @@ elseif ($action === 'get_pet') {
 
 /**
  * API endpoint when getting taken slots
- * getBookingTypes method that retrieves taken slots by date
  */ 
 elseif ($action === 'get_booking_types') {
     if ($valid_jwt_token) {
-        if($booking_types = $database->getBookingTypes()){
+        if($booking_types = $booking_database->getBookingTypes()){
             return_json(['booking_types' => $booking_types]);
         } else {
             return_json(['booking_types' => "No booking types"]);
@@ -1380,14 +1380,13 @@ elseif ($action === 'get_booking_types') {
 
 /**
  * API endpoint when getting taken slots
- * getTakenSlotsByDate method that retrieves taken slots by date
  */ 
 elseif ($action === 'get_taken_slots_by_date') {
     if ($valid_jwt_token) {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        if ($taken_slots = $database->getTakenSlotsByDate($_POST['selected_date'])) {
+        if ($taken_slots = $booking_database->getTakenSlotsByDate($_POST['selected_date'])) {
             $slots  = array();
 
             foreach($taken_slots as $y):
@@ -1407,11 +1406,10 @@ elseif ($action === 'get_taken_slots_by_date') {
 
 /**
  * API endpoint when getting taken slots
- * getTakenSlotsAll method that retrieves taken slots by date
  */ 
 elseif ($action === 'get_taken_slots_all') {
     if ($valid_jwt_token) {
-        if ($taken_slots = $database->getTakenSlotsAll()) {
+        if ($taken_slots = $booking_database->getTakenSlotsAll()) {
             $slots  = array();
 
             foreach($taken_slots as $y):
@@ -1447,14 +1445,14 @@ elseif ($action === 'add_booking') {
         $booking_slots = $_POST['booking_slots'];
 
 
-        if ($booking_id = $database->addBooking($booking)) {
+        if ($booking_id = $booking_database->addBooking($booking)) {
             foreach($booking_slots as $slot):
                 $record = [
                     'booking_id' => $booking_id,
                     'booking_date' => $slot['booking_date'],
                     'booking_time' => $slot['booking_time']
                 ];
-                if($database->addBookingSlot($record)){
+                if($booking_database->addBookingSlot($record)){
                     true;
                 }
             endforeach;
@@ -1466,7 +1464,7 @@ elseif ($action === 'add_booking') {
                 'username' => $_POST['username']
             ];
 
-            if($database->addBookingHistoryRecord($booking_history_record)){
+            if($booking_database->addBookingHistoryRecord($booking_history_record)){
                 return_json(['add_booking' => $booking_id ]);
             }
 
@@ -1484,7 +1482,7 @@ elseif ($action === 'update_booking_by_admin') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $current_booking_status = $database->checkBookingStatus($id);
+        $current_booking_status = $booking_database->checkBookingStatus($id);
         $booking = [
             'booking_id' => $id,
             'prev_booking_status' => $current_booking_status,
@@ -1503,22 +1501,22 @@ elseif ($action === 'update_booking_by_admin') {
                 'selected_date' => $new_slot['booking_date'],
                 'selected_time' => $new_slot['booking_time']
             ];
-            if($count = $database->slotCounter($booking_count)){
+            if($count = $booking_database->slotCounter($booking_count)){
                 if($count['slot_counter'] == 5){
                     return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
                 }
             }
         endforeach;
 
-        if ($database->updateBookingByAdmin($booking)) {
-            if($database->deleteBookingSlot($id)){
+        if ($booking_database->updateBookingByAdmin($booking)) {
+            if($booking_database->deleteBookingSlot($id)){
                 foreach($booking_slots as $slot):
                     $record = [
                         'booking_id' => $id,
                         'booking_date' => $slot['booking_date'],
                         'booking_time' => $slot['booking_time']
                     ];
-                    if($database->addBookingSlot($record)){
+                    if($booking_database->addBookingSlot($record)){
                         true;
                     }
                 endforeach;
@@ -1530,7 +1528,7 @@ elseif ($action === 'update_booking_by_admin') {
                     'username' => $_POST['username']
                 ];
 
-                if($database->addBookingHistoryRecord($booking_history_record)){
+                if($booking_database->addBookingHistoryRecord($booking_history_record)){
                     return_json(['update_booking' => "success"]);
                 } else {
                     return_json(['update_booking' => "error"]);
@@ -1569,22 +1567,22 @@ elseif ($action === 'update_booking_by_pet_owner') {
                 'selected_date' => $new_slot['booking_date'],
                 'selected_time' => $new_slot['booking_time']
             ];
-            if($count = $database->slotCounter($booking_count)){
+            if($count = $booking_database->slotCounter($booking_count)){
                 if($count['slot_counter'] == 5){
                     return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
                 }
             }
         endforeach;
 
-        if ($database->updateBookingByPetOwner($booking)) {
-            if($database->deleteBookingSlot($id)){
+        if ($booking_database->updateBookingByPetOwner($booking)) {
+            if($booking_database->deleteBookingSlot($id)){
                 foreach($booking_slots as $slot):
                     $record = [
                         'booking_id' => $id,
                         'booking_date' => $slot['booking_date'],
                         'booking_time' => $slot['booking_time']
                     ];
-                    if($database->addBookingSlot($record)){
+                    if($booking_database->addBookingSlot($record)){
                         true;
                     }
                 endforeach;
@@ -1596,7 +1594,7 @@ elseif ($action === 'update_booking_by_pet_owner') {
                     'username' => $_POST['username']
                 ];
 
-                if($database->addBookingHistoryRecord($booking_history_record)){
+                if($booking_database->addBookingHistoryRecord($booking_history_record)){
                     return_json(['update_booking' => "success"]);
                 } else {
                     return_json(['update_booking' => "error"]);
@@ -1633,7 +1631,7 @@ elseif ($action === 'confirm_booking') {
 
         $booking_slots = $_POST['booking_slots'];
         $role = $database->checkRoleByUsername($_POST['username']);
-        $current_booking_status = $database->checkBookingStatus($id);
+        $current_booking_status = $booking_database->checkBookingStatus($id);
 
         if($role['role'] === 'admin'){
             if($current_booking_status['booking_status'] === 'PENDING'){
@@ -1642,22 +1640,22 @@ elseif ($action === 'confirm_booking') {
                         'selected_date' => $new_slot['booking_date'],
                         'selected_time' => $new_slot['booking_time']
                     ];
-                    if($count = $database->slotCounter($booking_count)){
+                    if($count = $booking_database->slotCounter($booking_count)){
                         if($count['slot_counter'] == 5){
                             return_json(['update_booking' => "All slots taken for ".$new_slot['booking_date']." : ".$new_slot['booking_time']]);
                         }
                     }
                 endforeach;
 
-                if ($database->updateBookingByAdmin($booking)) {
-                    if($database->deleteBookingSlot($id)){
+                if ($booking_database->updateBookingByAdmin($booking)) {
+                    if($booking_database->deleteBookingSlot($id)){
                         foreach($booking_slots as $slot):
                             $record = [
                                 'booking_id' => $id,
                                 'booking_date' => $slot['booking_date'],
                                 'booking_time' => $slot['booking_time']
                             ];
-                            if($database->addBookingSlot($record)){
+                            if($booking_database->addBookingSlot($record)){
                                 true;
                             }
                         endforeach;
@@ -1669,7 +1667,7 @@ elseif ($action === 'confirm_booking') {
                             'username' => $_POST['username']
                         ];
 
-                        if($database->addBookingHistoryRecord($booking_history_record)){
+                        if($booking_database->addBookingHistoryRecord($booking_history_record)){
                             return_json(['confirm_booking' => "success"]);
                         } else {
                             return_json(['confirm_booking' => "error"]);
@@ -1705,13 +1703,13 @@ elseif ($action === 'finish_booking') {
         ];
 
         $role = $database->checkRoleByUsername($_POST['username']);
-        $current_booking_status = $database->checkBookingStatus($id);
+        $current_booking_status = $booking_database->checkBookingStatus($id);
 
         if($role['role'] === 'doctor')
         {
             if($current_booking_status['booking_status'] === 'CONFIRMED'){
-                if ($database->finishBooking($booking_record)) {
-                    if($database->addBookingHistoryRecord($booking_record)){
+                if ($booking_database->finishBooking($booking_record)) {
+                    if($booking_database->addBookingHistoryRecord($booking_record)){
                         return_json(['finish_booking' => "success"]);
                     } else {
                         return_json(['finish_booking' => "error"]);
@@ -1733,7 +1731,7 @@ elseif ($action === 'finish_booking') {
  */ 
 elseif ($action === 'get_booking') {
     if ($valid_jwt_token) {
-        if ($record=$database->getBookingById($id)) {
+        if ($record=$booking_database->getBookingById($id)) {
 
             $booking_record = [
                 'booking_id' => $record['booking_id'],
@@ -1774,9 +1772,9 @@ elseif ($action === 'cancel_booking') {
             'username' => $_POST['username']
         ];
 
-        if ($database->cancelBooking($booking_record)) {
-            if($database->deleteBookingSlot($id)){
-                if($database->addBookingHistoryRecord($booking_record)){
+        if ($booking_database->cancelBooking($booking_record)) {
+            if($booking_database->deleteBookingSlot($id)){
+                if($booking_database->addBookingHistoryRecord($booking_record)){
                     return_json(['cancel_booking' => "success"]);
                 } else {
                     return_json(['cancel_booking' => "error"]);
@@ -1797,39 +1795,39 @@ elseif ($action === 'search_booking') {
         $_POST = json_decode($rest_json, true);
 
         if ($_POST['filter'] == 'booking_id'){
-            if ($bookings = $database->getBookingsByBookingId($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByBookingId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         } elseif ($_POST['filter'] == 'booking_date'){
-            if ($bookings = $database->getBookingsByBookingDate($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByBookingDate($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         } elseif ($_POST['filter'] == 'booking_status'){
-            if ($bookings = $database->getBookingsByBookingStatus($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByBookingStatus($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }  elseif ($_POST['filter'] == 'booking_type'){
-            if ($bookings = $database->getBookingsByBookingType($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByBookingType($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }  elseif ($_POST['filter'] == 'username'){
-            if ($bookings = $database->getBookingsByUsername($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByUsername($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }  elseif ($_POST['filter'] == 'pet_name'){
-            if ($bookings = $database->getBookingsByPetName($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByPetName($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }  elseif ($_POST['filter'] == 'pet_id'){
-            if ($bookings = $database->getBookingsByPetId($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByPetId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }  elseif ($_POST['filter'] == 'doctor_id'){
-            if ($bookings = $database->getBookingsByDoctorId($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByDoctorId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }   elseif ($_POST['filter'] == 'pet_owner_id'){
-            if ($bookings = $database->getBookingsByPetOwnerId($_POST['filter_value'])) {
+            if ($bookings = $booking_database->getBookingsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } 
         }
@@ -1839,6 +1837,118 @@ elseif ($action === 'search_booking') {
 /**
  * Pet Health Record Management
  */
+/**
+ * API endpoint when getting vaccines
+ */ 
+elseif ($action === 'get_all_vaccines') {
+    if ($valid_jwt_token) {
+        if ($vaccines=$pet_database->getAllVaccines()) {
+            return_json(['get_all_vaccines' => $vaccines]);
+        } else {
+            return_json(['get_all_vaccines' => "error"]);
+        }
+    }
+}
+
+/**
+ * API endpoint when adding immunisation record
+ */ 
+elseif ($action === 'add_immun_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "vaccine_date" => $_POST['vaccine_date'],
+                "vaccine" => $_POST['vaccine'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username']
+            ];
+            if($pet_database->addPetVaccine($record)){
+                return_json(['add_immun_record' => true]);
+            } else {
+                return_json(['add_immun_record' => "Error during transaction."]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating immunisation record
+ */ 
+elseif ($action === 'update_immun_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['update_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "vaccine_date" => $_POST['vaccine_date'],
+                "vaccine" => $_POST['vaccine'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username'],
+                "id" => $id,
+            ];
+            if($pet_database->updatePetVaccine($record)){
+                return_json(['update_immun_record' => true]);
+            } else {
+                return_json(['update_immun_record' => "Error during transaction."]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting immunisation record
+ */ 
+elseif ($action === 'delete_immun_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+        } else {
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deletePetVaccine($record)){
+                return_json(['delete_immun_record' => true]);
+            } else {
+                return_json(['delete_immun_record' => "Error during transaction."]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when getting immunisation record
+ */ 
+elseif ($action === 'get_immun_record') {
+    if ($valid_jwt_token) {
+        if($pet_info=$pet_database->getPetVaccineByPetId($id)){
+            return_json(['vaccine_record' => $pet_info]);
+        } else {
+            return_json(['get_immun_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
 
 /**
  * Invoice/Billing Management
@@ -1860,15 +1970,15 @@ elseif ($action === 'generate_invoice') {
         $invoice_items = $_POST['invoice_items'];
 
         $role = $database->checkRoleByUsername($_POST['username']);
-        $current_booking_status = $database->checkBookingStatus($_POST['booking_id']);
-        $booking_fee = $database->checkBookingFee($_POST['booking_id']);
-        $invoice_count = $database->checkInvoiceByBookingId($_POST['booking_id']);
+        $current_booking_status = $booking_database->checkBookingStatus($_POST['booking_id']);
+        $booking_fee = $booking_database->checkBookingFee($_POST['booking_id']);
+        $invoice_count = $billing_database->checkInvoiceByBookingId($_POST['booking_id']);
 
         if($role['role'] === 'doctor')
         {
             if($current_booking_status['booking_status'] === 'FINISHED'){
                 if($invoice_count['invoice_count'] === 0){
-                    if($invoice_id=$database->createNewInvoice($invoice_info)){ 
+                    if($invoice_id=$billing_database->createNewInvoice($invoice_info)){ 
                         $booking_invoice_record = [
                             'invoice_id' => $invoice_id,
                             'item_category_id' => 1,
@@ -1877,7 +1987,7 @@ elseif ($action === 'generate_invoice') {
                             'booking_fee' => $booking_fee
                         ]; 
 
-                        if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
+                        if($billing_database->insertNewInvoiceBookingItem($booking_invoice_record)){
                             foreach($invoice_items as $item):
                                 $invoice_record = [
                                     'invoice_id' => $invoice_id,
@@ -1885,14 +1995,14 @@ elseif ($action === 'generate_invoice') {
                                     'quantity' => $item['quantity']
                                 ]; 
 
-                                if($database->insertNewInvoiceItem($invoice_record)){
+                                if($billing_database->insertNewInvoiceItem($invoice_record)){
                                     true;
                                 } else {
                                     return_json(['generate_invoice' => "Error encountered while inserting invoice item."]);
                                 }
 
                                 //update inventory
-                                if($in_use_qty=$database->getCurrentInUseQty($item['item_id'])){
+                                if($in_use_qty=$inventory_database->getCurrentInUseQty($item['item_id'])){
                                     $new_qty = $in_use_qty['in_use_qty'] - $item['quantity'];
                                     $inventory_record = [
                                         'in_use_qty' => $new_qty,
@@ -1900,14 +2010,14 @@ elseif ($action === 'generate_invoice') {
                                         'username' => $_POST['username']
                                     ]; 
                                     if($new_qty >= 0){
-                                        if($database->updateInUseQty($inventory_record)){
+                                        if($inventory_database->updateInUseQty($inventory_record)){
                                             true;
                                         } else {
                                             return_json(['generate_invoice' => "Error encountered while updating inventory."]);
                                         }
                                     } else {
-                                        $database->deleteInvoiceItemByInvoiceId($invoice_id);
-                                        $database->deleteInvoice($invoice_id);
+                                        $billing_database->deleteInvoiceItemByInvoiceId($invoice_id);
+                                        $billing_database->deleteInvoice($invoice_id);
                                         return_json(['generate_invoice' => "In-use Inventory below zero. Please update inventory to proceed."]);
 
                                     }
@@ -1920,28 +2030,28 @@ elseif ($action === 'generate_invoice') {
                                 'invoice_id' => $invoice_id,
                                 'booking_id' => $_POST['booking_id']
                             ];
-                            if($database->updateInvoiceAmount($invoice_amount_record)){
-                                if($invoice=$database->getInvoiceByInvoiceId($invoice_id)){
+                            if($billing_database->updateInvoiceAmount($invoice_amount_record)){
+                                if($invoice=$billing_database->getInvoiceByInvoiceId($invoice_id)){
                                     $payment_record = [
                                         "payment_status" => "NOT PAID",
                                         "payment_balance" => $invoice['invoice_amount'],
                                         'username' => $_POST['username']
                                     ];
-                                    if($payment_id=$database->insertNewPayment($payment_record)){
+                                    if($payment_id=$billing_database->insertNewPayment($payment_record)){
                                         $receipt_record = [
                                             "booking_id" => $_POST['booking_id'],
                                             "invoice_id" => $invoice_id,
                                             "payment_id" => $payment_id,
                                             "username" => $_POST['username']
                                         ];
-                                        if($database->insertNewReceipt($receipt_record)){
+                                        if($billing_database->insertNewReceipt($receipt_record)){
                                             $payment_history = [
                                                 "payment_id" => $payment_id,
                                                 "prev_payment_status" => null,
                                                 "new_payment_status" => "NOT PAID",
                                                 "username" => $_POST['username']
                                             ];
-                                            if($database->addPaymentHistory($payment_history)){
+                                            if($billing_database->addPaymentHistory($payment_history)){
                                                 return_json(['generate_invoice' => $invoice_id]);
                                             }
                                         }
@@ -1983,14 +2093,14 @@ elseif ($action === 'update_invoice') {
         $invoice_items = $_POST['invoice_items'];
 
         $role = $database->checkRoleByUsername($_POST['username']);
-        $current_booking_status = $database->checkBookingStatus($_POST['booking_id']);
-        $booking_fee = $database->checkBookingFee($_POST['booking_id']);
-        $current_invoice_items = $database->getInvoiceItemsByInvoiceId($id);
+        $current_booking_status = $booking_database->checkBookingStatus($_POST['booking_id']);
+        $booking_fee = $booking_database->checkBookingFee($_POST['booking_id']);
+        $current_invoice_items = $billing_database->getInvoiceItemsByInvoiceId($id);
 
         if($role['role'] === 'doctor')
         {
             if($current_booking_status['booking_status'] === 'FINISHED'){
-                    if($database->deleteInvoiceItemByInvoiceId($id)){ 
+                    if($billing_database->deleteInvoiceItemByInvoiceId($id)){ 
                         $booking_invoice_record = [
                             'invoice_id' => $id,
                             'item_category_id' => 1,
@@ -1998,7 +2108,7 @@ elseif ($action === 'update_invoice') {
                             'quantity' => 1,
                             'booking_fee' => $booking_fee
                         ]; 
-                        if($database->insertNewInvoiceBookingItem($booking_invoice_record)){
+                        if($billing_database->insertNewInvoiceBookingItem($booking_invoice_record)){
                             foreach($invoice_items as $item):
                                 $invoice_record = [
                                     'invoice_id' => $id,
@@ -2006,7 +2116,7 @@ elseif ($action === 'update_invoice') {
                                     'quantity' => $item['quantity']
                                 ]; 
                                 
-                                if($database->insertNewInvoiceItem($invoice_record)){
+                                if($billing_database->insertNewInvoiceItem($invoice_record)){
                                     true;
 
                                 } else {
@@ -2014,7 +2124,7 @@ elseif ($action === 'update_invoice') {
                                 }
 
                                 //update inventory
-                                if($in_use_qty=$database->getCurrentInUseQty($item['item_id'])){
+                                if($in_use_qty=$inventory_database->getCurrentInUseQty($item['item_id'])){
                                     $current_qty = 0;
                                     foreach($current_invoice_items as $current_item):
                                         if($current_item['item_id'] === $item['item_id']){
@@ -2030,7 +2140,7 @@ elseif ($action === 'update_invoice') {
                                         'username' => $_POST['username']
                                     ]; 
                                     if($new_qty >= 0){
-                                        if($database->updateInUseQty($inventory_record)){
+                                        if($inventory_database->updateInUseQty($inventory_record)){
                                             true;
                                         } else {
                                             foreach($current_invoice_items as $current_item):
@@ -2044,8 +2154,8 @@ elseif ($action === 'update_invoice') {
                                                     'item_id' => $item['item_id'],
                                                     'username' => $_POST['username']
                                                 ]; 
-                                                if($database->insertNewInvoiceItem($current_invoice_record)){
-                                                    if($database->updateInUseQty($current_inventory_record)){
+                                                if($billing_database->insertNewInvoiceItem($current_invoice_record)){
+                                                    if($inventory_database->updateInUseQty($current_inventory_record)){
                                                         true;
                                                     } else {
                                                         return_json(['update_invoice' => "Error encountered while inserting invoice item."]);
@@ -2070,24 +2180,24 @@ elseif ($action === 'update_invoice') {
                                 'booking_id' => $_POST['booking_id']
                             ];
 
-                            if($database->updateInvoiceAmount($invoice_amount_record)){
-                                if($invoice=$database->getInvoiceByInvoiceId($id)){
-                                    $payment_id = $database->getPaymentId($id);
+                            if($billing_database->updateInvoiceAmount($invoice_amount_record)){
+                                if($invoice=$billing_database->getInvoiceByInvoiceId($id)){
+                                    $payment_id = $billing_database->getPaymentId($id);
                                     $payment_record = [
                                         "payment_status" => "NOT PAID",
                                         "payment_balance" => $invoice['invoice_amount'],
                                         'username' => $_POST['username'],
                                         "payment_id" => $payment_id['payment_id']
                                     ];
-                                    if($database->updatePaymentBalance($payment_record)){
-                                        $prev_status = $database->getCurrentPaymentStatus($payment_id);
+                                    if($billing_database->updatePaymentBalance($payment_record)){
+                                        $prev_status = $billing_database->getCurrentPaymentStatus($payment_id);
                                         $payment_history = [
                                             "payment_id" => $payment_id['payment_id'],
                                             "prev_payment_status" => $prev_status['payment_status'],
                                             "new_payment_status" => "NOT PAID",
                                             "username" => $_POST['username']
                                         ];
-                                        if($database->addPaymentHistory($payment_history)){
+                                        if($billing_database->addPaymentHistory($payment_history)){
                                             return_json(['update_invoice' => $id]);
                                         }
                                     }
@@ -2117,8 +2227,8 @@ elseif ($action === 'get_invoice') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        if($invoice_info = $database->getInvoiceByInvoiceId($id)){
-            if($invoice_items = $database->getInvoiceItemsByInvoiceId($id)){
+        if($invoice_info = $billing_database->getInvoiceByInvoiceId($id)){
+            if($invoice_items = $billing_database->getInvoiceItemsByInvoiceId($id)){
                 $invoice_record = [
                     'invoice_id' => $id,
                     'booking_id' => $invoice_info['booking_id'],
@@ -2146,26 +2256,26 @@ elseif ($action === 'delete_invoice') {
         $_POST = json_decode($rest_json, true);
 
         $role = $database->checkRoleByUsername($_POST['username']);
-        $current_invoice_items = $database->getInvoiceItemsByInvoiceId($id);
+        $current_invoice_items = $billing_database->getInvoiceItemsByInvoiceId($id);
         if($role['role'] === 'doctor')
         {
             foreach($current_invoice_items as $current_item):
-                $in_use_qty=$database->getCurrentInUseQty($current_item['item_id']);
+                $in_use_qty=$inventory_database->getCurrentInUseQty($current_item['item_id']);
                 $current_inventory_record = [
                     'in_use_qty' => $in_use_qty['in_use_qty'] + $current_item['quantity'],
                     'item_id' => $current_item['item_id'],
                     'username' => $_POST['username']
                 ]; 
-                if($database->updateInUseQty($current_inventory_record)){
+                if($inventory_database->updateInUseQty($current_inventory_record)){
                     true;
                 } else {
                     return_json(['delete_invoice' => "Error encountered while inserting invoice item."]);
                 }
             endforeach;    
-                $receipt_info = $database->getReceiptByInvoiceId($id);
-                if($database->deletePaymentHistory($receipt_info['payment_id'])){
-                    if($database->deletePayment($receipt_info['payment_id'])){
-                            if($database->deleteInvoice($id)){
+                $receipt_info = $billing_database->getReceiptByInvoiceId($id);
+                if($billing_database->deletePaymentHistory($receipt_info['payment_id'])){
+                    if($billing_database->deletePayment($receipt_info['payment_id'])){
+                            if($billing_database->deleteInvoice($id)){
                                 return_json(['delete_invoice' => "Invoice " . $id . " deleted."]);
                             } else {
                                 return_json(['delete_invoice' => "Error deleting invoice."]);
@@ -2193,7 +2303,7 @@ elseif ($action === 'accept_payment') {
         $role = $database->checkRoleByUsername($_POST['username']);
         //payments   
         if($role['role'] === 'admin'){
-            if($payment_info = $database->getPaymentInformation($_POST['invoice_id'])){
+            if($payment_info = $billing_database->getPaymentInformation($_POST['invoice_id'])){
                 $new_balance = $payment_info['payment_balance'] - $_POST['payment_paid'];
                 $change = $_POST['payment_paid'] - $payment_info['payment_balance'];
 
@@ -2218,7 +2328,7 @@ elseif ($action === 'accept_payment') {
                     "username" => $_POST['username']
                 ];
 
-                if($database->acceptPayment($payment_record)){
+                if($billing_database->acceptPayment($payment_record)){
                     //payment_history
                     $payment_history = [
                         "payment_id" => $payment_info['id'],
@@ -2227,15 +2337,15 @@ elseif ($action === 'accept_payment') {
                         "username" => $_POST['username']
                     ];
                     
-                    if($database->addPaymentHistory($payment_history)){
+                    if($billing_database->addPaymentHistory($payment_history)){
                         $receipt_record = [
                             "username" => $_POST['username'],
                             "payment_id" => $payment_info['id']
                         ];
 
-                        if($database->updateReceipts($receipt_record)){
+                        if($billing_database->updateReceipts($receipt_record)){
                             if($new_balance <= 0){
-                                if($info=$database->getReceiptByPaymentId($payment_info['id'])){
+                                if($info=$billing_database->getReceiptByPaymentId($payment_info['id'])){
                                     $archive_records = [
                                         "receipt_id" => $info['id'],
                                         "payment_id" => $info['payment_id'],
@@ -2243,9 +2353,9 @@ elseif ($action === 'accept_payment') {
                                         "invoice_id" => $info['invoice_id'],
                                         "username" => $_POST['username']
                                     ];
-                                    $database->archiveBookingWoStatusUpdate($archive_records);
-                                    $database->archiveInvoices($archive_records);
-                                    $database->archiveReceipts($archive_records);
+                                    $booking_database->archiveBookingWoStatusUpdate($archive_records);
+                                    $billing_database->archiveInvoices($archive_records);
+                                    $billing_database->archiveReceipts($archive_records);
                                     return_json(['accept_payment' => "Payment has been accepted."]);
                                 }
                             } else {
@@ -2268,6 +2378,42 @@ elseif ($action === 'accept_payment') {
     }
 }
 
+/**
+ * API endpoint when getting receipts
+ */ 
+elseif ($action === 'get_receipt') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        if($receipt_info = $billing_database->getAllReceiptInfoById($id)){
+            if($invoice_items = $billing_database->getInvoiceItemsByInvoiceId($receipt_info['invoice_id'])){ 
+                $receipt_record = [
+                    "pet_owner_id" => $receipt_info['pet_owner_id'],
+                    "username" => $receipt_info['username'],
+                    "pet_id" => $receipt_info['pet_id'],
+                    "petname" => $receipt_info['petname'],
+                    "booking_id" => $receipt_info['booking_id'],
+                    "booking_type_id" => $receipt_info['booking_type_id'],
+                    "doctor_id" => $receipt_info['doctor_id'],
+                    "invoice_id" => $receipt_info['invoice_id'],
+                    "receipt_id" => $receipt_info['receipt_id'],
+                    "invoice_amount" => $receipt_info['invoice_amount'],
+                    "payment_paid" => $receipt_info['payment_paid'],
+                    "payment_status" => $receipt_info['payment_status'],
+                    "payment_date" => $receipt_info['payment_date'],
+                    "invoice_items" => $invoice_items
+                ];     
+                return_json(['get_receipt' => $receipt_record]);
+            }  else {
+                return_json(['get_receipt' => "Error retrieving receipt data."]);
+            }            
+        }  else {
+            return_json(['get_receipt' => "Receipt doesn't exist."]);
+        }
+        
+    }
+}
 
 /**
  * Inventory System Management
@@ -2277,13 +2423,13 @@ elseif ($action === 'accept_payment') {
  */ 
 elseif ($action === 'get_inventory_all') {
     if ($valid_jwt_token) {
-        if ($inventory_categories = $database->getAllInventoryCategories()) {
+        if ($inventory_categories = $inventory_database->getAllInventoryCategories()) {
             $inventory_records  = array();
 
             foreach($inventory_categories as $y):
 
                 $inventory_items = array();
-                if ($items = $database->getAllInventoryByCategory($y['category_id'])) {
+                if ($items = $inventory_database->getAllInventoryByCategory($y['category_id'])) {
 
                     foreach($items as $i):
                         $inventory_record = [
@@ -2335,9 +2481,9 @@ elseif ($action === 'get_inventory_by_category') {
         $_POST = json_decode($rest_json, true);
 
         $inventory_items = array();
-        if ($inventory_categories = $database->getInventoryCategoriesById($id)) {
+        if ($inventory_categories = $inventory_database->getInventoryCategoriesById($id)) {
             $inventory_records  = array();
-                if ($items = $database->getAllInventoryByCategory($id)) {
+                if ($items = $inventory_database->getAllInventoryByCategory($id)) {
 
                     foreach($items as $i):
                         $inventory_record = [
@@ -2376,6 +2522,7 @@ elseif ($action === 'get_inventory_by_category') {
         }
     }
 }
+
 
 /**
  * Lodging Management
