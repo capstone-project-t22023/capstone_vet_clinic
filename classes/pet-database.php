@@ -777,6 +777,1225 @@ class PetDatabase
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Add prescription
+     */
+    public function addPrescription($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`prescriptions`
+                (`pet_id`,
+                `doctor_id`,
+                `prescription_date`,
+                `updated_date`,
+                `updated_by`,
+                `archived`)
+                VALUES
+                (
+                (SELECT id FROM pets WHERE id = ?),
+                (SELECT id FROM doctors WHERE id = ?),
+                STR_TO_DATE(?, "%d-%m-%Y"),
+                SYSDATE(),
+                (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+                0)'
+        ); 
+        $sql->bind_param(
+            'iiss', 
+            $record['pet_id'],
+            $record['doctor_id'],
+            $record['prescription_date'],
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update prescription
+     */
+    public function updatePrescription($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`prescriptions`
+            SET
+            `pet_id` = (SELECT id FROM pets WHERE id = ?),
+            `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `prescription_date` = STR_TO_DATE(?, "%d-%m-%Y"),
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                )
+            WHERE `id` = ?'
+        ); 
+        $sql->bind_param(
+            'iissi', 
+            $record['pet_id'],
+            $record['doctor_id'],
+            $record['prescription_date'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete prescription
+     */
+    public function deletePrescription($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`prescriptions`
+            SET
+            `updated_date`=SYSDATE(),
+            `updated_by`=(
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            archived=1
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'si', 
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Add diet record
+     */
+    public function addDietRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`pet_diet_records`
+            (`prescription_id`,
+            `product`,
+            `serving_portion`,
+            `morning`,
+            `evening`,
+            `comments`,
+            `updated_date`,
+            `updated_by`,
+            `archived`)
+            VALUES
+            (
+            (SELECT id FROM prescriptions WHERE id = ?),
+            ?,?,?,?,?,
+            SYSDATE(),
+            (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+            0)'
+        ); 
+        $sql->bind_param(
+            'issssss', 
+            $record['prescription_id'],
+            $record['product'],
+            $record['serving_portion'],
+            $record['morning'],
+            $record['evening'],
+            $record['comments'],
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update diet record
+     */
+    public function updateDietRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_diet_records`
+            SET
+            `product` = ?,
+            `serving_portion` = ?,
+            `morning` = ?,
+            `evening` = ?,
+            `comments` = ?,
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                )
+            WHERE `id` = ?'
+        ); 
+        $sql->bind_param(
+            'ssssssi', 
+            $record['product'],
+            $record['serving_portion'],
+            $record['morning'],
+            $record['evening'],
+            $record['comments'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete diet record
+     */
+    public function deleteDietRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_diet_records`
+            SET
+            `updated_date`=SYSDATE(),
+            `updated_by`=(
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            archived=1
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'si', 
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all diet records by pet
+     */
+    public function getDietRecordIdsByPrescriptionId($prescription_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT `pet_diet_records`.`id`
+            FROM `pawsome`.`pet_diet_records`
+            WHERE `prescription_id` = ?
+            AND `archived` = 0'
+        );
+        $sql->bind_param(
+            'i', $prescription_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $diet_records = array();
+            while($row=$result->fetch_assoc()){
+                array_push($diet_records, $row['id']);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $diet_records;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all diet records by pet
+     */
+    public function getDietRecordsByPrescriptionId($prescription_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT 
+            `pet_diet_records`.`product`,
+            `pet_diet_records`.`serving_portion`,
+            `pet_diet_records`.`morning`,
+            `pet_diet_records`.`evening`,
+            `pet_diet_records`.`comments`
+            FROM `pawsome`.`pet_diet_records`
+            WHERE `prescription_id` = ?
+            AND `archived` = 0'
+        );
+        $sql->bind_param(
+            'i', $prescription_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $diet_records = array();
+            while($row=$result->fetch_assoc()){
+                array_push($diet_records, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $diet_records;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all prescription by id
+     */
+    public function getPrescriptionById($prescription_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT pr.`pet_id`,
+                pr.`doctor_id`,
+                CONCAT(d.firstname, " ", d.lastname) veterinarian,
+                pr.`prescription_date`
+            FROM 
+            `pawsome`.`prescriptions` pr,
+            `pawsome`.`doctors` d,
+            `pawsome`.`pets` p
+            WHERE
+            pr.id = ?
+            AND pr.doctor_id = d.id
+            AND pr.pet_id = p.id'
+        );
+        $sql->bind_param(
+            'i', $prescription_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $prescriptions = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $prescriptions;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all prescription by pet id
+     */
+    public function getAllPrescriptionByPetId($pet_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT pr.`id`,
+                pr.`pet_id`,
+                pr.`doctor_id`,
+                CONCAT(d.firstname, " ", d.lastname) veterinarian,
+                pr.`prescription_date`,
+                pr.archived
+            FROM 
+            `pawsome`.`prescriptions` pr,
+            `pawsome`.`doctors` d,
+            `pawsome`.`pets` p
+            WHERE
+            pr.pet_id = ?
+            AND pr.doctor_id = d.id
+            AND pr.pet_id = p.id
+            ORDER BY pr.`prescription_date` DESC'
+        );
+        $sql->bind_param(
+            'i', $pet_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $prescriptions = array();
+            while($row=$result->fetch_assoc()){
+                array_push($prescriptions, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $prescriptions;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Add referral
+     */
+    public function addReferral($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`referrals`
+                (`pet_id`,
+                `doctor_id`,
+                `referral_date`,
+                `diagnosis`,
+                `updated_date`,
+                `updated_by`,
+                `archived`)
+                VALUES
+                (
+                (SELECT id FROM pets WHERE id = ?),
+                (SELECT id FROM doctors WHERE id = ?),
+                STR_TO_DATE(?, "%d-%m-%Y"), ?,
+                SYSDATE(),
+                (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+                0)'
+        ); 
+        $sql->bind_param(
+            'iisss', 
+            $record['pet_id'],
+            $record['doctor_id'],
+            $record['referral_date'],
+            $record['diagnosis'],
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update referral
+     */
+    public function updateReferral($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`referrals`
+            SET
+            `pet_id` = (SELECT id FROM pets WHERE id = ?),
+            `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `referral_date` = STR_TO_DATE(?, "%d-%m-%Y"),
+            `diagnosis` = ?,
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                )
+            WHERE `id` = ?'
+        ); 
+        $sql->bind_param(
+            'iisssi', 
+            $record['pet_id'],
+            $record['doctor_id'],
+            $record['referral_date'],
+            $record['diagnosis'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all rehab records by pet
+     */
+    public function getRehabRecordIdsByReferralId($referral_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT `pet_rehab_records`.`id`
+            FROM `pawsome`.`pet_rehab_records`
+            WHERE `referral_id` = ?
+            AND `archived` = 0'
+        );
+        $sql->bind_param(
+            'i', $referral_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $rehab_records = array();
+            while($row=$result->fetch_assoc()){
+                array_push($rehab_records, $row['id']);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $rehab_records;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all rehab records by pet
+     */
+    public function getRehabRecordsByReferralId($referral_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT 
+            `pet_rehab_records`.`treatment_date`,
+            `pet_rehab_records`.`attended`,
+            `pet_rehab_records`.`comments`,
+            `pet_rehab_records`.`archived`
+            FROM `pawsome`.`pet_rehab_records`
+            WHERE `referral_id` = ?'
+        );
+        $sql->bind_param(
+            'i', $referral_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $rehab_records = array();
+            while($row=$result->fetch_assoc()){
+                array_push($rehab_records, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $rehab_records;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all referral by id
+     */
+    public function getReferralById($referral_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT r.`pet_id`,
+                r.`doctor_id`,
+                CONCAT(d.firstname, " ", d.lastname) veterinarian,
+                r.`referral_date`,
+                r.`diagnosis`,
+                r.`archived`
+            FROM 
+            `pawsome`.`referrals` r,
+            `pawsome`.`doctors` d,
+            `pawsome`.`pets` p
+            WHERE
+            r.id = ?
+            AND r.doctor_id = d.id
+            AND r.pet_id = p.id'
+        );
+        $sql->bind_param(
+            'i', $referral_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $referrals = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $referrals;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all referrals by pet id
+     */
+    public function getAllReferralsByPetId($pet_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT r.`id`,
+                r.`pet_id`,
+                r.`doctor_id`,
+                CONCAT(d.firstname, " ", d.lastname) veterinarian,
+                r.`referral_date`,
+                r.`diagnosis`,
+                r.archived
+            FROM 
+            `pawsome`.`referrals` r,
+            `pawsome`.`doctors` d,
+            `pawsome`.`pets` p
+            WHERE
+            r.pet_id = ?
+            AND r.doctor_id = d.id
+            AND r.pet_id = p.id
+            ORDER BY r.`referral_date` DESC'
+        );
+        $sql->bind_param(
+            'i', $pet_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $referrals = array();
+            while($row=$result->fetch_assoc()){
+                array_push($referrals, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $referrals;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete referral
+     */
+    public function deleteReferral($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`referrals`
+            SET
+            `updated_date`=SYSDATE(),
+            `updated_by`=(
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            archived=1
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'si', 
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Add rehab record
+     */
+    public function addRehabRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`pet_rehab_records`
+            (`referral_id`,
+            `treatment_date`,
+            `attended`,
+            `comments`,
+            `updated_date`,
+            `updated_by`,
+            `archived`)
+            VALUES
+            (
+            (SELECT id FROM referrals WHERE id = ?),
+            STR_TO_DATE(?, "%d-%m-%Y"),?,?,
+            SYSDATE(),
+            (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+            0)'
+        ); 
+        $sql->bind_param(
+            'issss', 
+            $record['referral_id'],
+            $record['treatment_date'],
+            $record['attended'],
+            $record['comments'],
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update rehab record
+     */
+    public function updateRehabRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_rehab_records`
+            SET
+            `treatment_date` = STR_TO_DATE(?, "%d-%m-%Y"),
+            `attended` = ?,
+            `comments` = ?,
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                )
+            WHERE `id` = ?'
+        ); 
+        $sql->bind_param(
+            'ssssi', 
+            $record['treatment_date'],
+            $record['attended'],
+            $record['comments'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete rehab record
+     */
+    public function deleteRehabRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_rehab_records`
+            SET
+            `updated_date`=SYSDATE(),
+            `updated_by`=(
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            archived=1
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'si', 
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Add surgery
+     */
+    public function addSurgery($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`pet_surgery_records`
+                (`pet_id`,
+                `doctor_id`,
+                `surgery`,
+                `surgery_date`,
+                `discharge_date`,
+                `comments`,
+                `updated_date`,
+                `updated_by`,
+                `archived`)
+                VALUES
+                (
+                (SELECT id FROM pets WHERE id = ?),
+                (SELECT id FROM doctors WHERE id = ?),
+                ?,
+                STR_TO_DATE(?, "%d-%m-%Y"),
+                STR_TO_DATE(?, "%d-%m-%Y"),
+                ?,
+                SYSDATE(),
+                (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+                0)'
+        ); 
+        $sql->bind_param(
+            'iisssss', 
+            $record['pet_id'],
+            $record['doctor_id'],
+            $record['surgery'],
+            $record['surgery_date'],
+            $record['discharge_date'],
+            $record['comments'],
+            $record['username']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Update surgery
+     */
+    public function updateSurgery($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_surgery_records`
+            SET
+            `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `surgery` = ?,
+            `surgery_date` = STR_TO_DATE(?, "%d-%m-%Y"),
+            `discharge_date` = STR_TO_DATE(?, "%d-%m-%Y"),
+            `comments` = ?,
+            `updated_date` = SYSDATE(),
+            `updated_by` = (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM doctors
+                        UNION
+                        SELECT * FROM admins
+                        UNION 
+                        SELECT * FROM pet_owners
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                )
+            WHERE `id` = ?'
+        ); 
+        $sql->bind_param(
+            'isssssi', 
+            $record['doctor_id'],
+            $record['surgery'],
+            $record['surgery_date'],
+            $record['discharge_date'],
+            $record['comments'],
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete surgery
+     */
+    public function deleteSurgery($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `pawsome`.`pet_surgery_records`
+            SET
+            `updated_date`=SYSDATE(),
+            `updated_by`=(
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            archived=1
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'si', 
+            $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all surgery records by pet id
+     */
+    public function getAllSurgeriesByPetId($pet_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT psr.`id`,
+                psr.`pet_id`,
+                psr.`doctor_id`,
+                CONCAT(d.firstname, " ", d.lastname) veterinarian,
+                psr.`surgery`,
+                psr.`surgery_date`,
+                psr.`discharge_date`,
+                psr.`comments`,
+                psr.archived
+            FROM 
+            `pawsome`.`pet_surgery_records` psr,
+            `pawsome`.`doctors` d,
+            `pawsome`.`pets` p
+            WHERE
+            psr.pet_id = ?
+            AND psr.doctor_id = d.id
+            AND psr.pet_id = p.id
+            ORDER BY psr.`surgery_date` DESC'
+        );
+        $sql->bind_param(
+            'i', $pet_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $surgeries = array();
+            while($row=$result->fetch_assoc()){
+                array_push($surgeries, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $surgeries;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 }
 
 ?>

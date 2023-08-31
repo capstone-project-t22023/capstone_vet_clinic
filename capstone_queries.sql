@@ -312,7 +312,7 @@ CREATE TABLE `pawsome`.`payment_history` (
 
 DROP TABLE IF EXISTS `pawsome`.`prescriptions`;
 CREATE TABLE `pawsome`.`prescriptions` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
   `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
   `doctor_id` int(10) NOT NULL COMMENT 'Referenced doctor ID',
   `prescription_date` date NOT NULL COMMENT 'Date of prescription',
@@ -401,7 +401,6 @@ CREATE TABLE `pawsome`.`referrals` (
 DROP TABLE IF EXISTS `pawsome`.`pet_rehab_records`;
 CREATE TABLE `pawsome`.`pet_rehab_records` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
   `referral_id` int(10) NOT NULL COMMENT 'Referenced referral',
   `treatment_date` date NOT NULL COMMENT 'Date of treatments',
   `attended` varchar(1) DEFAULT NULL COMMENT 'Pet attended session',
@@ -411,9 +410,7 @@ CREATE TABLE `pawsome`.`pet_rehab_records` (
   `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_rehab_p_idx` (`pet_id`),
   KEY `fk_rehab_r_idx` (`referral_id`),
-  CONSTRAINT `fk_rehab_p` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_rehab_r` FOREIGN KEY (`referral_id`) REFERENCES `referrals` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 

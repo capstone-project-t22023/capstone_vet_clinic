@@ -64,8 +64,7 @@ request_body:
     }
 response_body:
     {
-        
-        
+        "update_immun_record": true
     }
 
 endpoint: /get_immun_record/<pet_id>
@@ -93,6 +92,435 @@ response_body:
                 "comments": "No adverse reactions"
             }
         ]
+    }
+
+endpoint: /get_diet_record/<prescription_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "diet_record": {
+            "pet_id": 6,
+            "doctor_id": 1,
+            "veterinarian": "Joe Mcguire",
+            "prescription_date": "2023-10-30",
+            "diet_records": [
+                {
+                    "product": "Canned Tuna",
+                    "serving_portion": "90 grams",
+                    "morning": "",
+                    "evening": "Y",
+                    "comments": "Stop if adverse reaction occurs."
+                },
+                {
+                    "product": "Cooked beef",
+                    "serving_portion": "90 grams",
+                    "morning": "",
+                    "evening": "Y",
+                    "comments": "Stop if adverse reaction occurs."
+                }
+            ]
+        }
+    }
+
+endpoint: /get_all_diet_record_by_pet/<pet_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "diet_record": [
+            {
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "prescription_date": "2023-12-30",
+                "diet_records": [
+                    {
+                        "product": "Canned Tuna",
+                        "serving_portion": "90 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    },
+                    {
+                        "product": "Cooked chicken",
+                        "serving_portion": "90 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    }
+                ]
+            },
+            {
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "prescription_date": "2023-11-30",
+                "diet_records": [
+                    {
+                        "product": "Catnip",
+                        "serving_portion": "10 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    },
+                    {
+                        "product": "Canned Tuna",
+                        "serving_portion": "90 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    }
+                ]
+            },
+            {
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "prescription_date": "2023-10-30",
+                "diet_records": [
+                    {
+                        "product": "Canned Tuna",
+                        "serving_portion": "90 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    },
+                    {
+                        "product": "Cooked beef",
+                        "serving_portion": "90 grams",
+                        "morning": "",
+                        "evening": "Y",
+                        "comments": "Stop if adverse reaction occurs."
+                    }
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_rehab_record/<referral_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "rehab_record": {
+            "pet_id": 6,
+            "doctor_id": 1,
+            "veterinarian": "Joe Mcguire",
+            "referral_date": "2023-10-30",
+            "diagnosis": "Comminuted Fracture",
+            "archived": 1,
+            "rehab_records": [
+                {
+                    "treatment_date": "2023-11-11",
+                    "attended": "",
+                    "comments": "",
+                    "archived": 1
+                },
+                {
+                    "treatment_date": "2023-11-12",
+                    "attended": "",
+                    "comments": "",
+                    "archived": 1
+                },
+                {
+                    "treatment_date": "2023-11-13",
+                    "attended": "",
+                    "comments": "",
+                    "archived": 1
+                },
+                {
+                    "treatment_date": "2023-11-14",
+                    "attended": "",
+                    "comments": "",
+                    "archived": 1
+                },
+                {
+                    "treatment_date": "2023-11-15",
+                    "attended": "",
+                    "comments": "",
+                    "archived": 1
+                }
+            ]
+        }
+    }
+
+endpoint: /get_all_rehab_record_by_pet/<pet_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "rehab_record": [
+            {
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "referral_date": "2023-10-30",
+                "diagnosis": "Comminuted Fracture",
+                "archived": 1,
+                "rehab_records": [
+                    {
+                        "treatment_date": "2023-11-11",
+                        "attended": "",
+                        "comments": "",
+                        "archived": 1
+                    },
+                    {
+                        "treatment_date": "2023-11-12",
+                        "attended": "",
+                        "comments": "",
+                        "archived": 1
+                    },
+                    {
+                        "treatment_date": "2023-11-13",
+                        "attended": "",
+                        "comments": "",
+                        "archived": 1
+                    },
+                    {
+                        "treatment_date": "2023-11-14",
+                        "attended": "",
+                        "comments": "",
+                        "archived": 1
+                    },
+                    {
+                        "treatment_date": "2023-11-15",
+                        "attended": "",
+                        "comments": "",
+                        "archived": 1
+                    }
+                ]
+            }
+        ]
+    }
+
+endpoint: /get_all_surgery_record_by_pet/<pet_id>
+method: GET
+request_body: NO BODY
+response_body:
+    {
+        "surgery_record": [
+            {
+                "id": 1,
+                "pet_id": 6,
+                "doctor_id": 1,
+                "veterinarian": "Joe Mcguire",
+                "surgery": "Joint Replacement",
+                "surgery_date": "2023-09-26",
+                "discharge_date": "2023-09-30",
+                "comments": "For follow-up checkup",
+                "archived": 1
+            }
+        ]
+    }
+
+endpoint: /add_prescription
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "prescription_date": "30-12-2023",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "add_prescription": <prescription_id>
+    }
+
+endpoint: /update_prescription/<prescription_id>
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "prescription_date": "30-11-2023",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "update_prescription": true
+    }
+
+endpoint: /delete_prescription/<prescription_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_prescription": true
+    }
+
+endpoint: /add_diet_record
+method: POST
+request_body: 
+    {
+        "prescription_id" : 2,
+        "product" : "Cooked beef",
+        "serving_portion" : "90 grams",
+        "morning" : "",
+        "evening" : "Y",
+        "comments" : "Stop if adverse reaction occurs.",
+        "username" : "cutemarmite"
+    }
+response_body:
+    {
+        "add_diet_record": true
+    }
+
+endpoint: /update_diet_record/<diet_record_id>
+method: POST
+request_body: 
+    {
+        "prescription_id" : 1,
+        "product" : "Canned Tuna",
+        "serving_portion" : "60 grams",
+        "morning" : "",
+        "evening" : "Y",
+        "comments" : "Stop if adverse reaction occurs.",
+        "username" : "cutemarmite"
+    }
+response_body:
+    {
+        "update_diet_record": true
+    }
+
+endpoint: /delete_diet_record/<diet_record_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_diet_record": true
+    }
+
+endpoint: /add_referral
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "referral_date": "30-09-2023",
+        "diagnosis": "Comminuted Fracture",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "add_referral": <referral_id>
+    }
+
+endpoint: /update_referral<referral_id>
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "referral_date": "30-10-2023",
+        "diagnosis": "Comminuted Fracture",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "update_referral": true
+    }
+
+endpoint: /delete_referral/<referral_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_referral": true
+    }
+
+endpoint: /add_rehab_record
+method: POST
+request_body: 
+    {
+        "referral_id" : 1,
+        "treatment_date": "15-11-2023",
+        "attended" : "",
+        "comments" : "",
+        "username" : "cutemarmite"
+    }
+response_body:
+    {
+        "add_rehab_record": true
+    }
+
+endpoint: /update_rehab_record/<rehab_record_id>
+method: POST
+request_body: 
+    {
+        "treatment_date": "11-11-2023",
+        "attended" : "",
+        "comments" : "",
+        "username" : "cutemarmite"
+    }
+response_body:
+    {
+        "update_rehab_record": true
+    }
+
+endpoint: /delete_rehab_record/<rehab_record_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_rehab_record": true
+    }
+
+endpoint: /add_surgery
+method: POST
+request_body: 
+    {
+        "pet_id": 6,
+        "doctor_id": 1,
+        "surgery": "Joint Replacement",
+        "surgery_date": "25-09-2023",
+        "discharge_date": "30-09-2023",
+        "comments": "For follow-up checkup",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "add_surgery": true
+    }
+
+endpoint: /update_surgery/<surgery_record_id>
+method: POST
+request_body: 
+    {
+        "doctor_id": 1,
+        "surgery": "Joint Replacement",
+        "surgery_date": "26-09-2023",
+        "discharge_date": "30-09-2023",
+        "comments": "For follow-up checkup",
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "update_surgery": true
+    }
+
+endpoint: /delete_surgery/<surgery_record_id>
+method: POST
+request_body: 
+    {
+        "username": "cutemarmite"
+    }
+response_body:
+    {
+        "delete_surgery": true
     }
 
 endpoint: /

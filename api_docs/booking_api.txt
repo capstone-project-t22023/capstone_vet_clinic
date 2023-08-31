@@ -11,7 +11,7 @@ request_body:
     }
 response_body:
     {
-        "cancel_booking": "success"
+        "cancel_booking": true
     }
 
 endpoint: /finish_booking/<booking_id>
@@ -21,7 +21,7 @@ request_body:
     }
 response_body:
     {
-        "finish_booking": "success"
+        "finish_booking": true
     }
 
 endpoint: /confirm_booking/<booking_id>
@@ -49,7 +49,7 @@ request_body:
     }
 response_body:
     {
-        "confirm_booking": "success"
+        "confirm_booking": true
     }
 
 endpoint: /add_booking
@@ -105,7 +105,7 @@ request_body:
     }
 response_body:
     {
-        "update_booking": "success"
+        "update_booking": true
     }
 
 endpoint: /update_booking_by_admin/<booking_id>
@@ -138,7 +138,7 @@ request_body:
     }
 response_body:
     {
-        "update_booking": "success"
+        "update_booking": true
     }
 
 endpoint: /get_taken_slots_by_date

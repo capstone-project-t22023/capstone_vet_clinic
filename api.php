@@ -181,7 +181,7 @@ if ($action === 'register_doctor') {
             }
         }
     } else {
-        return_json(['register_user' => "Error occured."]);
+        return_json(['register_user' => false]);
     }
 }  
 
@@ -283,7 +283,7 @@ elseif ($action === 'register_admin') {
             }
         }
     } else {
-        return_json(['register_user' => "Error occured."]);
+        return_json(['register_user' => false]);
     }
 }  
 
@@ -385,7 +385,7 @@ elseif ($action === 'register_pet_owner') {
             }
         }
     } else {
-        return_json(['register_user' => "Error occured."]);
+        return_json(['register_user' => false]);
     }
 } 
 
@@ -507,7 +507,7 @@ elseif ($action === 'login_doctor') {
             return_json(['login' => $jwt]);
         }
     } else {
-        return_json(['login' => "Error occurred."]); 
+        return_json(['login' => false]); 
     }
 }
 
@@ -541,7 +541,7 @@ elseif ($action === 'login_admin') {
             return_json(['login' => $jwt]);
         }
     } else {
-        return_json(['login' => "Error occurred."]); 
+        return_json(['login' => false]); 
     }
 }
 
@@ -575,46 +575,49 @@ elseif ($action === 'login_pet_owner') {
             return_json(['login' => $jwt]);
         }
     } else {
-        return_json(['login' => "Error occurred."]); 
+        return_json(['login' => false]); 
     }
 }
 
 /**
  * API endpoint when getting doctor information
- * $doctor will execute getDoctor method that accepts $username parameter from database.php
  */ 
 elseif ($action === 'get_doctor') {
    if ($valid_jwt_token) {
        $username = getPayload($bearer_token)->user->username;
         if ($doctor = $database->getDoctor($username)) {
             return_json(['user' => $doctor]);
+        }  else {
+            return_json(['user' => false]); 
         }
    }
 } 
 
 /**
  * API endpoint when getting admin information
- * $admin will execute getAdmin method that accepts $username parameter from database.php
  */ 
 elseif ($action === 'get_admin') {
     if ($valid_jwt_token) {
         $username = getPayload($bearer_token)->user->username;
-         if ($admin = $database->getAdmin($username)) {
-             return_json(['user' => $admin]);
-         }
+        if ($admin = $database->getAdmin($username)) {
+            return_json(['user' => $admin]);
+        }  else {
+            return_json(['user' => false]); 
+        }
     }
 } 
 
 /**
  * API endpoint when getting pet owner information
- * $pet_owner will execute getPetOwner method that accepts $username parameter from database.php
  */ 
 elseif ($action === 'get_pet_owner') {
     if ($valid_jwt_token) {
         $username = getPayload($bearer_token)->user->username;
-         if ($pet_owner = $database->getPetOwner($username)) {
+        if ($pet_owner = $database->getPetOwner($username)) {
              return_json(['user' => $pet_owner]);
-         }
+        }  else {
+            return_json(['user' => false]); 
+        }
     }
 } 
 
@@ -624,6 +627,8 @@ elseif ($action === 'get_pet_owner') {
 elseif ($action === 'get_all_doctors') {
     if ($doctors = $database->getAllDoctors()) {
         return_json(['doctors' => $doctors]);
+    }  else {
+        return_json(['doctors' => false]); 
     }
 } 
 
@@ -633,6 +638,8 @@ elseif ($action === 'get_all_doctors') {
 elseif ($action === 'get_all_admins') {
     if ($admins = $database->getAllAdmins()) {
         return_json(['admins' => $admins]);
+    }  else {
+        return_json(['admins' => false]); 
     }
 } 
 
@@ -642,6 +649,8 @@ elseif ($action === 'get_all_admins') {
 elseif ($action === 'get_all_pet_owners') {
     if ($pet_owners = $database->getAllPetOwners()) {
         return_json(['pet_owners' => $pet_owners]);
+    }  else {
+        return_json(['pet_owners' => false]); 
     }
 } 
 
@@ -677,10 +686,10 @@ elseif ($action === 'delete_doctor') {
                             if($booking_database->addBookingHistoryRecord($booking_info)){
                                 true;
                             } else {
-                                return_json(['delete_doctor' => "Error encountered."]);
+                                return_json(['delete_doctor' => false]);
                             }
                         } else {
-                            return_json(['delete_doctor' => "Error encountered."]);
+                            return_json(['delete_doctor' => false]);
                         }
                     }
 
@@ -688,9 +697,9 @@ elseif ($action === 'delete_doctor') {
             }
 
             if ($database->deleteDoctor($record)) {
-                return_json(['delete_doctor' => "success"]);
+                return_json(['delete_doctor' => true]);
             } else {
-                return_json(['delete_doctor' => "Error encountered."]);
+                return_json(['delete_doctor' => false]);
             }
         } else {
             return_json(['delete_doctor' => "You don't have the necessary privileges to perform this action."]);
@@ -714,9 +723,9 @@ elseif ($action === 'delete_admin') {
 
         if($role['role'] === 'admin'){
             if ($database->deleteAdmin($record)) {
-                return_json(['delete_admin' => "success"]);
+                return_json(['delete_admin' => true]);
             } else {
-                return_json(['delete_admin' => "error"]);
+                return_json(['delete_admin' => false]);
             }
         } else {
             return_json(['delete_admin' => "You don't have the necessary privileges to perform this action."]);
@@ -757,11 +766,11 @@ elseif ($action === 'delete_pet_owner') {
                                 if($booking_database->addBookingHistoryRecord($booking_info)){
                                     true;
                                 } else {
-                                    return_json(['delete_pet_owner' => "Error encountered."]);
+                                    return_json(['delete_pet_owner' => false]);
                                 }
                             }
                         } else {
-                            return_json(['delete_pet_owner' => "Error encountered."]);
+                            return_json(['delete_pet_owner' => false]);
                         }
                     }
 
@@ -777,15 +786,15 @@ elseif ($action === 'delete_pet_owner') {
                     if($pet_database->archivePet($pet_info)){
                         true;
                     } else {
-                        return_json(['delete_pet_owner' => "Error encountered."]);
+                        return_json(['delete_pet_owner' => false]);
                     }
                 endforeach;
             }
 
             if ($database->deletePetOwner($record)) {
-                return_json(['delete_pet_owner' => "success"]);
+                return_json(['delete_pet_owner' => true]);
             } else {
-                return_json(['delete_pet_owner' => "Error encountered."]);
+                return_json(['delete_pet_owner' => false]);
             }
 
         } else {
@@ -884,19 +893,19 @@ elseif ($action === 'add_user') {
             if ($user_id = $database->addPetOwnerByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {
-                return_json(['add_user' => "error"]);
+                return_json(['add_user' => false]);
             }
         } elseif ($_POST['role'] === 'doctor'){
             if ($user_id = $database->addDoctorByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {
-                return_json(['add_user' => "error"]);
+                return_json(['add_user' => false]);
             }
         } elseif ($_POST['role'] === 'admin'){
             if ($user_id = $database->addAdminByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {
-                return_json(['add_user' => "error"]);
+                return_json(['add_user' => false]);
             }
         }
     }
@@ -990,21 +999,21 @@ elseif ($action === 'update_user') {
 
         if($_POST['role'] === 'pet_owner'){
             if ($database->updatePetOwner($user)) {
-                return_json(['update_user' => "success"]);
+                return_json(['update_user' => true]);
             } else {
-                return_json(['update_user' => "error"]);
+                return_json(['update_user' => false]);
             }
         } elseif ($_POST['role'] === 'doctor'){
             if ($database->updateDoctor($user)) {
-                return_json(['update_user' => "success"]);
+                return_json(['update_user' => true]);
             } else {
-                return_json(['update_user' => "error"]);
+                return_json(['update_user' => false]);
             }
         } elseif ($_POST['role'] === 'admin'){
             if ($database->updateAdmin($user)) {
-                return_json(['update_user' => "success"]);
+                return_json(['update_user' => true]);
             } else {
-                return_json(['update_user' => "error"]);
+                return_json(['update_user' => false]);
             }
         }
     }
@@ -1083,19 +1092,27 @@ elseif ($action === 'get_all_pets_by_filter') {
         if ($_POST['filter'] == 'petname'){
             if ($pets = $pet_database->getAllPetsByPetname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
-            } 
+            }  else {
+                return_json(['pets' => "No pets found"]);
+            }
         } elseif ($_POST['filter'] == 'firstname'){
             if ($pets = $pet_database->getAllPetsByFname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
-            } 
+            }  else {
+                return_json(['pets' => "No pets found"]);
+            }
         } elseif ($_POST['filter'] == 'lastname'){
             if ($pets = $pet_database->getAllPetsByLname($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
-            } 
+            }  else {
+                return_json(['pets' => "No pets found"]);
+            }
         } elseif ($_POST['filter'] == 'pet_owner_id'){
             if ($pets = $pet_database->getAllPetsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['pets' => $pets]);
-            } 
+            }  else {
+                return_json(['pets' => "No pets found"]);
+            }
         }
     }
 } 
@@ -1193,10 +1210,10 @@ elseif ($action === 'add_pet') {
             if ($pet_id = $pet_database->addPet($pet)) {
                 return_json(['add_pet' => $pet_id]);
             } else {
-                return_json(['add_pet' => "error"]);
+                return_json(['add_pet' => false]);
             }
         } else {
-            return_json(['add_pet' => "Error encountered."]);
+            return_json(['add_pet' => false]);
         }
     }
 }
@@ -1285,12 +1302,12 @@ elseif ($action === 'update_pet') {
 
         if($check){
             if ($pet_database->updatePet($pet)) {
-                return_json(['update_pet' => "success"]);
+                return_json(['update_pet' => true]);
             } else {
-                return_json(['update_pet' => "error"]);
+                return_json(['update_pet' => false]);
             }
         }  else {
-            return_json(['update_pet' => "Error encountered."]);
+            return_json(['update_pet' => false]);
         }
     }
 }
@@ -1328,11 +1345,11 @@ elseif ($action === 'delete_pet') {
                                 if($booking_database->addBookingHistoryRecord($booking_info)){
                                     true;
                                 } else {
-                                    return_json(['delete_pet' => "Error encountered."]);
+                                    return_json(['delete_pet' => false]);
                                 }
                             }
                         } else {
-                            return_json(['delete_pet' => "Error encountered."]);
+                            return_json(['delete_pet' => false]);
                         }
                     }
 
@@ -1340,9 +1357,9 @@ elseif ($action === 'delete_pet') {
             }
 
             if ($pet_database->archivePet($record)) {
-                return_json(['delete_pet' => "success"]);
+                return_json(['delete_pet' => true]);
             } else {
-                return_json(['delete_pet' => "Error encountered."]);
+                return_json(['delete_pet' => false]);
             }
         } else {
                 return_json(['delete_pet' => "You don't have the necessary privileges to perform this action."]);
@@ -1357,6 +1374,8 @@ elseif ($action === 'get_pet') {
     if ($valid_jwt_token) {
         if ($pet_record = $pet_database->getPet($id)) {
             return_json(['get_pet' => $pet_record]);
+        } else {
+            return_json(['get_pet' => false]);
         }
     }
 }
@@ -1469,7 +1488,7 @@ elseif ($action === 'add_booking') {
             }
 
         } else {
-            return_json(['add_booking' => "error"]);
+            return_json(['add_booking' => false]);
         }
     }
 }
@@ -1529,15 +1548,15 @@ elseif ($action === 'update_booking_by_admin') {
                 ];
 
                 if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => "success"]);
+                    return_json(['update_booking' => true]);
                 } else {
-                    return_json(['update_booking' => "error"]);
+                    return_json(['update_booking' => false]);
                 }
             } else {
-                return_json(['update_booking' => "error"]);
+                return_json(['update_booking' => false]);
             }
         } else {
-            return_json(['update_booking' => "error"]);
+            return_json(['update_booking' => false]);
         }
     }
 }
@@ -1595,15 +1614,15 @@ elseif ($action === 'update_booking_by_pet_owner') {
                 ];
 
                 if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => "success"]);
+                    return_json(['update_booking' => true]);
                 } else {
-                    return_json(['update_booking' => "error"]);
+                    return_json(['update_booking' => false]);
                 }
             } else {
-                return_json(['update_booking' => "error"]);
+                return_json(['update_booking' => false]);
             }
         } else {
-            return_json(['update_booking' => "error"]);
+            return_json(['update_booking' => false]);
         }
     }
 }
@@ -1668,15 +1687,15 @@ elseif ($action === 'confirm_booking') {
                         ];
 
                         if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                            return_json(['confirm_booking' => "success"]);
+                            return_json(['confirm_booking' => true]);
                         } else {
-                            return_json(['confirm_booking' => "error"]);
+                            return_json(['confirm_booking' => false]);
                         }
                     } else {
-                        return_json(['confirm_booking' => "error"]);
+                        return_json(['confirm_booking' => false]);
                     }
                 } else {
-                    return_json(['confirm_booking' => "error"]);
+                    return_json(['confirm_booking' => false]);
                 }
             } else {
                 return_json(['confirm_booking' => "Booking status must be in PENDING status before moving to CONFIRMED. Current status is: " . $current_booking_status['booking_status']]);
@@ -1710,12 +1729,12 @@ elseif ($action === 'finish_booking') {
             if($current_booking_status['booking_status'] === 'CONFIRMED'){
                 if ($booking_database->finishBooking($booking_record)) {
                     if($booking_database->addBookingHistoryRecord($booking_record)){
-                        return_json(['finish_booking' => "success"]);
+                        return_json(['finish_booking' => true]);
                     } else {
-                        return_json(['finish_booking' => "error"]);
+                        return_json(['finish_booking' => false]);
                     }
                 } else {
-                    return_json(['finish_booking' => "error"]);
+                    return_json(['finish_booking' => false]);
                 }
             } else {
                 return_json(['finish_booking' => "Booking status must be in CONFIRMED status before moving to FINISHED. Current status is: " . $current_booking_status['booking_status']]);
@@ -1752,7 +1771,7 @@ elseif ($action === 'get_booking') {
 
             return_json(['booking_record' => $booking_record]);
         } else {
-            return_json(['booking_record' => "error"]);
+            return_json(['booking_record' => false]);
         }
     }
 }
@@ -1775,13 +1794,13 @@ elseif ($action === 'cancel_booking') {
         if ($booking_database->cancelBooking($booking_record)) {
             if($booking_database->deleteBookingSlot($id)){
                 if($booking_database->addBookingHistoryRecord($booking_record)){
-                    return_json(['cancel_booking' => "success"]);
+                    return_json(['cancel_booking' => true]);
                 } else {
-                    return_json(['cancel_booking' => "error"]);
+                    return_json(['cancel_booking' => false]);
                 }
             }
         } else {
-            return_json(['cancel_booking' => "error"]);
+            return_json(['cancel_booking' => false]);
         }
     }
 }
@@ -1797,38 +1816,56 @@ elseif ($action === 'search_booking') {
         if ($_POST['filter'] == 'booking_id'){
             if ($bookings = $booking_database->getBookingsByBookingId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         } elseif ($_POST['filter'] == 'booking_date'){
             if ($bookings = $booking_database->getBookingsByBookingDate($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         } elseif ($_POST['filter'] == 'booking_status'){
             if ($bookings = $booking_database->getBookingsByBookingStatus($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }  elseif ($_POST['filter'] == 'booking_type'){
             if ($bookings = $booking_database->getBookingsByBookingType($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }  elseif ($_POST['filter'] == 'username'){
             if ($bookings = $booking_database->getBookingsByUsername($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }  elseif ($_POST['filter'] == 'pet_name'){
             if ($bookings = $booking_database->getBookingsByPetName($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }  elseif ($_POST['filter'] == 'pet_id'){
             if ($bookings = $booking_database->getBookingsByPetId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }  elseif ($_POST['filter'] == 'doctor_id'){
             if ($bookings = $booking_database->getBookingsByDoctorId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }   elseif ($_POST['filter'] == 'pet_owner_id'){
             if ($bookings = $booking_database->getBookingsByPetOwnerId($_POST['filter_value'])) {
                 return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
             } 
         }
     }
@@ -1845,7 +1882,7 @@ elseif ($action === 'get_all_vaccines') {
         if ($vaccines=$pet_database->getAllVaccines()) {
             return_json(['get_all_vaccines' => $vaccines]);
         } else {
-            return_json(['get_all_vaccines' => "error"]);
+            return_json(['get_all_vaccines' => false]);
         }
     }
 }
@@ -1861,7 +1898,7 @@ elseif ($action === 'add_immun_record') {
         $role = $database->checkRoleByUsername($_POST['username']);
 
         if($role['role'] == 'pet_owner'){
-            return_json(['add_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+            return_json(['add_immun_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "pet_id" => $_POST['pet_id'],
@@ -1874,7 +1911,7 @@ elseif ($action === 'add_immun_record') {
             if($pet_database->addPetVaccine($record)){
                 return_json(['add_immun_record' => true]);
             } else {
-                return_json(['add_immun_record' => "Error during transaction."]);
+                return_json(['add_immun_record' => false]);
             }
         }
     }
@@ -1891,7 +1928,7 @@ elseif ($action === 'update_immun_record') {
         $role = $database->checkRoleByUsername($_POST['username']);
 
         if($role['role'] == 'pet_owner'){
-            return_json(['update_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+            return_json(['update_immun_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "pet_id" => $_POST['pet_id'],
@@ -1905,7 +1942,7 @@ elseif ($action === 'update_immun_record') {
             if($pet_database->updatePetVaccine($record)){
                 return_json(['update_immun_record' => true]);
             } else {
-                return_json(['update_immun_record' => "Error during transaction."]);
+                return_json(['update_immun_record' => false]);
             }
         }
     }
@@ -1922,7 +1959,7 @@ elseif ($action === 'delete_immun_record') {
         $role = $database->checkRoleByUsername($_POST['username']);
 
         if($role['role'] == 'pet_owner'){
-            return_json(['delete_immun_record' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
+            return_json(['delete_immun_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "id" => $id,
@@ -1931,7 +1968,7 @@ elseif ($action === 'delete_immun_record') {
             if($pet_database->deletePetVaccine($record)){
                 return_json(['delete_immun_record' => true]);
             } else {
-                return_json(['delete_immun_record' => "Error during transaction."]);
+                return_json(['delete_immun_record' => false]);
             }
         }
     }
@@ -1946,6 +1983,594 @@ elseif ($action === 'get_immun_record') {
             return_json(['vaccine_record' => $pet_info]);
         } else {
             return_json(['get_immun_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when adding prescription record
+ */ 
+elseif ($action === 'add_prescription') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_prescription' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "prescription_date" => $_POST['prescription_date'],
+                "username" => $_POST['username']
+            ];
+            if($prescription_id=$pet_database->addPrescription($record)){
+                return_json(['add_prescription' => $prescription_id]);
+            } else {
+                return_json(['add_prescription' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating prescription record
+ */ 
+elseif ($action === 'update_prescription') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_prescription' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "prescription_date" => $_POST['prescription_date'],
+                "username" => $_POST['username'],
+                "id" => $id
+            ];
+            if($pet_database->updatePrescription($record)){
+                return_json(['update_prescription' => true]);
+            } else {
+                return_json(['update_prescription' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting prescription record
+ */ 
+elseif ($action === 'delete_prescription') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_prescription' => "You don't have the privilege to perform this action"]);
+        } else {
+            $diet_records = $pet_database->getDietRecordIdsByPrescriptionId($id);
+            foreach($diet_records as $d):
+                $diet_record = [
+                    "id" => $d,
+                    "username" => $_POST['username']
+                ];
+                if($pet_database->deleteDietRecord($diet_record)){
+                    true;
+                } else {
+                    return_json(['delete_prescription' => false]);
+                }
+            endforeach;
+
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deletePrescription($record)){
+                return_json(['delete_prescription' => true]);
+            } else {
+                return_json(['delete_prescription' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when adding diet record
+ */ 
+elseif ($action === 'add_diet_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_diet_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "prescription_id" => $_POST['prescription_id'],
+                "product" => $_POST['product'],
+                "serving_portion" => $_POST['serving_portion'],
+                "morning" => $_POST['morning'],
+                "evening" => $_POST['evening'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username']
+            ];
+            if($pet_database->addDietRecord($record)){
+                return_json(['add_diet_record' => true]);
+            } else {
+                return_json(['add_diet_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating diet record
+ */ 
+elseif ($action === 'update_diet_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['update_diet_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "product" => $_POST['product'],
+                "serving_portion" => $_POST['serving_portion'],
+                "morning" => $_POST['morning'],
+                "evening" => $_POST['evening'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username'],
+                "id" => $id
+            ];
+            if($pet_database->updateDietRecord($record)){
+                return_json(['update_diet_record' => true]);
+            } else {
+                return_json(['update_diet_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting diet record
+ */ 
+elseif ($action === 'delete_diet_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_diet_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deleteDietRecord($record)){
+                return_json(['delete_diet_record' => true]);
+            } else {
+                return_json(['delete_diet_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when getting prescription diet records
+ */ 
+elseif ($action === 'get_diet_record') {
+    if ($valid_jwt_token) {
+        if($prescriptions=$pet_database->getPrescriptionById($id)){
+            if($diet_records=$pet_database->getDietRecordsByPrescriptionId($id)){
+                $prescription_diet=[
+                    "pet_id" => $prescriptions['pet_id'],
+                    "doctor_id" => $prescriptions['doctor_id'],
+                    "veterinarian" => $prescriptions['veterinarian'],
+                    "prescription_date" => $prescriptions['prescription_date'],
+                    "diet_records" => $diet_records
+                ];
+                return_json(['diet_record' => $prescription_diet]);
+            }
+        } else {
+            return_json(['get_diet_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when getting prescription diet records
+ */ 
+elseif ($action === 'get_all_diet_record_by_pet') {
+    if ($valid_jwt_token) {
+        if($prescriptions=$pet_database->getAllPrescriptionByPetId($id)){
+            $prescription_diet_arr=array();
+            foreach($prescriptions as $p):
+                if($diet_records=$pet_database->getDietRecordsByPrescriptionId($p['id'])){
+                    $prescription_diet=[
+                        "pet_id" => $p['pet_id'],
+                        "doctor_id" => $p['doctor_id'],
+                        "veterinarian" => $p['veterinarian'],
+                        "prescription_date" => $p['prescription_date'],
+                        "diet_records" => $diet_records
+                    ];
+                    array_push($prescription_diet_arr, $prescription_diet);
+                }    
+            endforeach;
+            return_json(['diet_record' => $prescription_diet_arr]);
+        } else {
+            return_json(['get_diet_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when adding referral record
+ */ 
+elseif ($action === 'add_referral') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_referral' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "referral_date" => $_POST['referral_date'],
+                "diagnosis" => $_POST['diagnosis'],
+                "username" => $_POST['username']
+            ];
+            if($referral_id=$pet_database->addReferral($record)){
+                return_json(['add_referral' => $referral_id]);
+            } else {
+                return_json(['add_referral' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating referral record
+ */ 
+elseif ($action === 'update_referral') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['update_referral' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "referral_date" => $_POST['referral_date'],
+                "diagnosis" => $_POST['diagnosis'],
+                "username" => $_POST['username'],
+                "id" => $id
+            ];
+            if($pet_database->updateReferral($record)){
+                return_json(['update_referral' => true]);
+            } else {
+                return_json(['update_referral' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting referral record
+ */ 
+elseif ($action === 'delete_referral') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_referral' => "You don't have the privilege to perform this action"]);
+        } else {
+            $rehab_records = $pet_database->getRehabRecordIdsByReferralId($id);
+            foreach($rehab_records as $r):
+                $rehab_record = [
+                    "id" => $r,
+                    "username" => $_POST['username']
+                ];
+                if($pet_database->deleteRehabRecord($rehab_record)){
+                    true;
+                } else {
+                    return_json(['delete_referral' => false]);
+                }
+            endforeach;
+
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deleteReferral($record)){
+                return_json(['delete_referral' => true]);
+            } else {
+                return_json(['delete_referral' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when adding rehab record
+ */ 
+elseif ($action === 'add_rehab_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_rehab_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "referral_id" => $_POST['referral_id'],
+                "treatment_date" => $_POST['treatment_date'],
+                "attended" => $_POST['attended'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username']
+            ];
+            if($pet_database->addRehabRecord($record)){
+                return_json(['add_rehab_record' => true]);
+            } else {
+                return_json(['add_rehab_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating rehab record
+ */ 
+elseif ($action === 'update_rehab_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['update_rehab_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+               "treatment_date" => $_POST['treatment_date'],
+                "attended" => $_POST['attended'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username'],
+                "id" => $id
+            ];
+            if($pet_database->updateRehabRecord($record)){
+                return_json(['update_rehab_record' => true]);
+            } else {
+                return_json(['update_rehab_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting rehab record
+ */ 
+elseif ($action === 'delete_rehab_record') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_rehab_record' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deleteRehabRecord($record)){
+                return_json(['delete_rehab_record' => true]);
+            } else {
+                return_json(['delete_rehab_record' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when getting rehab records
+ */ 
+elseif ($action === 'get_rehab_record') {
+    if ($valid_jwt_token) {
+        if($referrals=$pet_database->getReferralById($id)){
+            if($rehab_records=$pet_database->getRehabRecordsByReferralId($id)){
+                $referral_rehab=[
+                    "pet_id" => $referrals['pet_id'],
+                    "doctor_id" => $referrals['doctor_id'],
+                    "veterinarian" => $referrals['veterinarian'],
+                    "referral_date" => $referrals['referral_date'],
+                    "diagnosis" => $referrals['diagnosis'],
+                    "archived" => $referrals['archived'],
+                    "rehab_records" => $rehab_records
+                ];
+                return_json(['rehab_record' => $referral_rehab]);
+            } else {
+                $referral_rehab=[
+                    "pet_id" => $referrals['pet_id'],
+                    "doctor_id" => $referrals['doctor_id'],
+                    "veterinarian" => $referrals['veterinarian'],
+                    "referral_date" => $referrals['referral_date'],
+                    "diagnosis" => $referrals['diagnosis'],
+                    "rehab_records" => []
+                ];
+                return_json(['rehab_record' => $referral_rehab]);
+            }
+        } else {
+            return_json(['get_rehab_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when getting rehab records
+ */ 
+elseif ($action === 'get_all_rehab_record_by_pet') {
+    if ($valid_jwt_token) {
+        if($referrals=$pet_database->getAllReferralsByPetId($id)){
+            $referral_rehab_arr=array();
+            foreach($referrals as $r):
+                if($rehab_records=$pet_database->getRehabRecordsByReferralId($r['id'])){
+                    $referral_rehab=[
+                        "pet_id" => $r['pet_id'],
+                        "doctor_id" => $r['doctor_id'],
+                        "veterinarian" => $r['veterinarian'],
+                        "referral_date" => $r['referral_date'],
+                        "diagnosis" => $r['diagnosis'],
+                        "archived" => $r['archived'],
+                        "rehab_records" => $rehab_records
+                    ];
+                    array_push($referral_rehab_arr, $referral_rehab);
+                } else {
+                    $referral_rehab=[
+                        "pet_id" => $r['pet_id'],
+                        "doctor_id" => $r['doctor_id'],
+                        "veterinarian" => $r['veterinarian'],
+                        "referral_date" => $r['referral_date'],
+                        "diagnosis" => $r['diagnosis'],
+                        "archived" => $r['archived'],
+                        "rehab_records" => []
+                    ];
+                    array_push($referral_rehab_arr, $referral_rehab);
+                }    
+            endforeach;
+            return_json(['rehab_record' => $referral_rehab_arr]);
+        } else {
+            return_json(['get_rehab_record' => "No record " . $id . " existing."]);
+        }
+    }
+}
+
+/**
+ * API endpoint when adding surgery record
+ */ 
+elseif ($action === 'add_surgery') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['add_surgery' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "pet_id" => $_POST['pet_id'],
+                "doctor_id" => $_POST['doctor_id'],
+                "surgery" => $_POST['surgery'],
+                "surgery_date" => $_POST['surgery_date'],
+                "discharge_date" => $_POST['discharge_date'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username']
+            ];
+            if($pet_database->addSurgery($record)){
+                return_json(['add_surgery' => true]);
+            } else {
+                return_json(['add_surgery' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when updating surgery record
+ */ 
+elseif ($action === 'update_surgery') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['update_surgery' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "doctor_id" => $_POST['doctor_id'],
+                "surgery" => $_POST['surgery'],
+                "surgery_date" => $_POST['surgery_date'],
+                "discharge_date" => $_POST['discharge_date'],
+                "comments" => $_POST['comments'],
+                "username" => $_POST['username'],
+                "id" => $id
+            ];
+            if($pet_database->updateSurgery($record)){
+                return_json(['update_surgery' => true]);
+            } else {
+                return_json(['update_surgery' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when deleting surgery record
+ */ 
+elseif ($action === 'delete_surgery') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($_POST['username']);
+
+        if($role['role'] == 'pet_owner'){
+            return_json(['delete_surgery' => "You don't have the privilege to perform this action"]);
+        } else {
+            $record = [
+                "id" => $id,
+                "username" => $_POST['username']
+            ];
+            if($pet_database->deleteSurgery($record)){
+                return_json(['delete_surgery' => true]);
+            } else {
+                return_json(['delete_surgery' => false]);
+            }
+        }
+    }
+}
+
+/**
+ * API endpoint when getting rehab records
+ */ 
+elseif ($action === 'get_all_surgery_record_by_pet') {
+    if ($valid_jwt_token) {
+        if($surgeries=$pet_database->getAllSurgeriesByPetId($id)){
+            return_json(['surgery_record' => $surgeries]);
+        } else {
+            return_json(['get_surgery_record' => "No record " . $id . " existing."]);
         }
     }
 }
@@ -2238,7 +2863,7 @@ elseif ($action === 'get_invoice') {
                 ];        
                 return_json(['get_invoice' => $invoice_record]);
             }  else {
-                return_json(['get_invoice' => "Error retrieving invoice data."]);
+                return_json(['get_invoice' => false]);
             }            
         }  else {
             return_json(['get_invoice' => "Invoice doesn't exist."]);
@@ -2406,7 +3031,7 @@ elseif ($action === 'get_receipt') {
                 ];     
                 return_json(['get_receipt' => $receipt_record]);
             }  else {
-                return_json(['get_receipt' => "Error retrieving receipt data."]);
+                return_json(['get_receipt' => false]);
             }            
         }  else {
             return_json(['get_receipt' => "Receipt doesn't exist."]);

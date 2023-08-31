@@ -85,7 +85,7 @@ request_body:
     }
 response_body:
     {
-        "delete_doctor": "success"
+        "delete_doctor": true
     }
 
 endpoint: /delete_pet_owner/<pet_owner_id>
@@ -96,7 +96,7 @@ request_body:
     }
 response_body:
     {
-        "delete_pet_owner": "success"
+        "delete_pet_owner": true
     }
 
 endpoint: /delete_admin/<admin_id>
@@ -107,7 +107,7 @@ request_body:
     }
 response_body:
     {
-        "delete_admin": "success"
+        "delete_admin": true
     }
 
 endpoint: /add_user
@@ -148,5 +148,5 @@ request_body:
     }
 response_body:
     {
-        "update_user": "success"
+        "update_user": true
     }
