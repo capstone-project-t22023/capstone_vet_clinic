@@ -523,6 +523,23 @@ response_body:
         "delete_surgery": true
     }
 
+endpoint: /upload_file
+method: POST
+request_body: 
+    <see Trial Form>
+response_body:
+    {
+        "file_info": <file id>
+    }
+
+endpoint: /download_file?filename=<filename>
+method: GET
+request_body: NO BODY
+response_body:
+    <see Trial form>>
+        
+      
+
 endpoint: /
 method:
 request_body: 

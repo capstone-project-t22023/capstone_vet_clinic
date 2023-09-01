@@ -1996,6 +1996,65 @@ class PetDatabase
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Upload File
+     */
+    public function uploadFile($file)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`pet_doc_uploads`
+                (`pet_id`,
+                `file_type`,
+                `file_name`,
+                `upload_date`,
+                `uploaded_by`,
+                `archived`)
+                VALUES
+                (
+                (SELECT id FROM `pawsome`.`pets` WHERE id = ?),
+                ?,?,
+                SYSDATE(),
+                (
+                    WITH
+                    all_users AS 
+                    (
+                        SELECT * FROM `pawsome`.`doctors`
+                        UNION
+                        SELECT * FROM `pawsome`.`admins`
+                        UNION 
+                        SELECT * FROM `pawsome`.`pet_owners`
+                    )
+                    SELECT id from all_users 
+                    WHERE UPPER(username) = UPPER(?)
+                    AND archived = 0
+                ),
+                0)'
+        ); 
+        $sql->bind_param(
+            'isss', 
+            $file['pet_id'],
+            $file['file_type'],
+            $file['file_name'],
+            $file['username']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 }
 
 ?>

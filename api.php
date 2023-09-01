@@ -2576,6 +2576,71 @@ elseif ($action === 'get_all_surgery_record_by_pet') {
 }
 
 /**
+ * API endpoint when uploading documents
+ */ 
+elseif ($action === 'upload_file') {
+    if ($valid_jwt_token) {
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $upload_dir = "/Applications/XAMPP/xamppfiles/uploads/"; 
+        return_json(['file_info' => $_FILES]);
+        if(!empty($_FILES["file"]["name"])){
+            $file_name = basename($_FILES["file"]["name"]);
+            $tmp_file = $_FILES["file"]["tmp_name"]; 
+            $file_path = $upload_dir . $file_name; 
+            $file_extension = pathinfo($file_path,PATHINFO_EXTENSION);
+            $file_info = [
+                "file_name" => $file_name,
+                "pet_id" => $_POST['pet_id'],
+                "file_type" => $_POST['file_type'],
+                "username" => $_POST['username'],
+                "metadata" => $_FILES
+            ];
+
+            
+            if($file_id = $pet_database->uploadFile($file_info)){
+                if(move_uploaded_file($tmp_file, $file_path)){
+                    return_json(['file_info' => $file_id]);
+                } else {
+                    return_json(['file_info' => false]);
+                }
+            }  else {
+                return_json(['file_info' => "Insertion error"]);
+            }
+        }  else {
+            return_json(['file_info' => $_POST]);
+        }
+    }
+}
+
+/**
+ * API endpoint when download documents
+ */ 
+elseif ($action === 'download_file') {
+    if ($valid_jwt_token) {
+        $upload_dir = "/Applications/XAMPP/xamppfiles/uploads/";
+        $file_requested = $upload_dir . $_GET['filename']; 
+
+        clearstatcache();
+        
+        if(file_exists($file_requested)){
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file_requested).'"');
+            header('Content-Length: ' . filesize($file_requested));
+            header('Pragma: public');
+
+            flush();
+
+            return readfile($file_requested, true);
+        } else {
+            return_json(['download_file' => false]);
+        }
+    }
+}
+
+/**
  * Invoice/Billing Management
  */
 
