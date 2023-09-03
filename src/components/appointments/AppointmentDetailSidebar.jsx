@@ -4,21 +4,19 @@ import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
 
-export default function AppointmentDetailSidebar({appointment}) {
-    const {user} = useContext(programContext)
-    const {handlerRefreshAppointments, appointmentList} = useContext(PetsContext)
-    const [appointmentData, setAppointmentData] = useState({})
+export default function AppointmentDetailSidebar({appointmentId}) {
+    const { user } = useContext(programContext);
+    const { refreshAppointmentList, appointmentList } = useContext(PetsContext);
+    const [appointment, setAppointment] = useState({});
+            console.log("appdata",appointment)
 
-    console.log("THISNOW appointmentList", appointmentList, appointment)
-
-    let appointmentShow = null; // Initialize the appointment variable
-
-// Check if appointmentList is not empty
-    if (appointmentList && Object.keys(appointmentList).length > 0) {
-        // Use Object.values to get an array of appointments, then find the desired appointment
-        const appointmentsArray = Object.values(appointmentList);
-        appointmentShow = appointmentsArray.find(item => item.booking_id === appointment.booking_id);
-    }
+    useEffect(() => {
+        if (appointmentList && Object.keys(appointmentList).length > 0) {
+            const appointmentsArray = Object.values(appointmentList);
+            const foundAppointment = appointmentsArray.find(item => item.booking_id === appointmentId);
+            setAppointment(foundAppointment);
+        }
+    }, [appointmentList, appointmentId]);
 
     const updateStatusToFinish = (appointment) => {
         const reqData = {
@@ -59,7 +57,7 @@ export default function AppointmentDetailSidebar({appointment}) {
 
     const handleStatusFinished = () => {
         console.log("THIS NEEDS TO BE DONE BY DATABASE");
-        updateStatusToFinish(appointmentShow)
+        updateStatusToFinish(appointment)
 
     }
 
@@ -69,26 +67,26 @@ export default function AppointmentDetailSidebar({appointment}) {
 
     return (
         <Stack direction="column" p={6} spacing={5}>
-            {appointmentShow &&
+            {Object.keys(appointment).length !== 0 && (
                 <Stack direction="column" spacing={1}>
                     <Typography variant="h6">Appointment Details</Typography>
                     <Divider/>
-                    <Typography><strong>Booking ID:</strong> {appointmentShow.booking_id}</Typography>
-                    <Typography><strong>Booking Date:</strong> {appointmentShow.booking_date}</Typography>
-                    <Typography><strong>Booking Time:</strong> {appointmentShow.booking_time.join(', ')}</Typography>
-                    <Typography><strong>Booking Status:</strong> {appointmentShow.booking_status}</Typography>
-                    <Typography><strong>Booking Type:</strong> {appointmentShow.booking_type}</Typography>
-                    <Typography><strong>Doctor ID:</strong> {appointmentShow.doctor_id}</Typography>
-                    <Typography><strong>Invoice ID:</strong> {appointmentShow.invoice_id}</Typography>
-                    <Typography><strong>Receipt ID:</strong> {appointmentShow.receipt_id}</Typography>
-                    <Typography><strong>Updated Date:</strong> {appointmentShow.updated_date}</Typography>
-                    <Typography><strong>Pet Owner ID:</strong> {appointmentShow.pet_owner_id}</Typography>
-                    <Typography><strong>Username:</strong> {appointmentShow.username}</Typography>
-                    <Typography><strong>Pet Owner:</strong> {appointmentShow.pet_owner}</Typography>
-                    <Typography><strong>Pet ID:</strong> {appointmentShow.pet_id}</Typography>
-                    <Typography><strong>Pet Name:</strong> {appointmentShow.petname}</Typography>
+                    <Typography><strong>Booking ID:</strong> {appointment.booking_id}</Typography>
+                    <Typography><strong>Booking Date:</strong> {appointment.booking_date}</Typography>
+                    <Typography><strong>Booking Time:</strong> {appointment.booking_time.join(', ')}</Typography>
+                    <Typography><strong>Booking Status:</strong> {appointment.booking_status}</Typography>
+                    <Typography><strong>Booking Type:</strong> {appointment.booking_type}</Typography>
+                    <Typography><strong>Doctor ID:</strong> {appointment.doctor_id}</Typography>
+                    <Typography><strong>Invoice ID:</strong> {appointment.invoice_id}</Typography>
+                    <Typography><strong>Receipt ID:</strong> {appointment.receipt_id}</Typography>
+                    <Typography><strong>Updated Date:</strong> {appointment.updated_date}</Typography>
+                    <Typography><strong>Pet Owner ID:</strong> {appointment.pet_owner_id}</Typography>
+                    <Typography><strong>Username:</strong> {appointment.username}</Typography>
+                    <Typography><strong>Pet Owner:</strong> {appointment.pet_owner}</Typography>
+                    <Typography><strong>Pet ID:</strong> {appointment.pet_id}</Typography>
+                    <Typography><strong>Pet Name:</strong> {appointment.petname}</Typography>
                 </Stack>
-            }
+            )}
             <Stack direction="column" spacing={2}>
                 <BookingButton/>
                 <Button onClick={handleStatusFinished} disabled variant="contained" color="error">Mark as

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import { Button, Pagination, Stack, Typography} from "@mui/material";
+import {Button, Pagination, Stack, Typography} from "@mui/material";
 import {ChevronRightRounded} from '@mui/icons-material';
 import AppointmentsItem from "./AppointmentsItem";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -12,7 +12,16 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
-    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment, refreshAppointments, handlerRefreshAppointments, appointmentList, setAppointmentList} = useContext(PetsContext)
+    const {
+        selectedOwner,
+        selectedAppointment,
+        changeSidebarContent,
+        updateSelectedAppointment,
+        refreshAppointments,
+        handlerRefreshAppointments,
+        appointmentList,
+        setAppointmentList
+    } = useContext(PetsContext)
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +56,7 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
                 }
                 setAppointmentList(merged)
                 // setAppointmentList(data.bookings)
-                console.log("getData merged",merged)
+                console.log("getData merged", merged)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -60,31 +69,17 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
             setAppointmentList(getAppointments('username', selectedOwner.username));
         }
         handlerRefreshAppointments(false);
-    }, [selectedOwner,refreshAppointments]);
+    }, [selectedOwner, refreshAppointments]);
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);
     const [filterMode, setFilterMode] = useState(filter); // 'all', 'historic', 'future'
 
     useEffect(() => {
-        // const merged = {};
-        // if (Array.isArray(appointmentList)) {
-        //     appointmentList.forEach(appointment => {
-        //         const bookingId = appointment.booking_id;
-        //         if (!merged[bookingId]) {
-        //             merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-        //         } else {
-        //             merged[bookingId].booking_time.push(appointment.booking_time);
-        //         }
-        //     });
-        // }
-
         const sortedMerged = Object.values(appointmentList).sort((b, a) =>
-           filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
+            filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
-
         setMergedAppointments(sortedMerged);
-        // updateSelectedAppointment
     }, [appointmentList]);
 
 
@@ -121,8 +116,9 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     }
 
     return (
-        <Stack direction="column" flex={1} sx={{border: "1px solid", borderColor: "primary.50", borderRadius:6, px:2, py:2}}>
-            <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
+        <Stack direction="column" flex={1}
+               sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2}}>
+            <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
                     {filter === 'future'
                         ? (count !== 0
@@ -140,16 +136,20 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
                                     ? `${count} All`
                                     : 'No')} appointments
                 </Typography>
-                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all ({filteredAppointments.length +"/"+ count})<ChevronRightRounded
-                    fontSize="inherit"/></Button>
+                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all
+                    ({filteredAppointments.length + "/" + count})<ChevronRightRounded
+                        fontSize="inherit"/></Button>
             </Stack>
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
                 {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
-                    <Typography fontWeight="bold" color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
+                    <Typography fontWeight="bold"
+                                color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
                 ) : (
                     displayedAppointments.map((appointment, index) => (
-                        <AppointmentsItem appointment={appointment} key={index} isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false }  onClick={()=>handleAppointmentClick(appointment)} />
+                        <AppointmentsItem appointment={appointment} key={index}
+                                          isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false}
+                                          onClick={() => handleAppointmentClick(appointment)}/>
                     ))
                 )}
                 {totalPages > 1 &&
