@@ -1,12 +1,30 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {Stack, Typography, Button, Divider} from "@mui/material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
 
-export default function AppointmentDetailSidebar({appointment}) {
+export default function AppointmentDetailSidebar({appointmentId}) {
     const {user} = useContext(programContext)
-    const {refreshAppointmentList} = useContext(PetsContext)
+    const {refreshAppointmentList, appointmentList} = useContext(PetsContext)
+
+    let filtered = {};
+    let appointment = {};
+    if (appointmentList && appointmentList.length > 0) {
+
+        if (appointmentList.length > 0) {
+            filtered = appointmentList.filter(appointment => appointment.booking_id === appointmentId)
+
+            appointment = {
+                ...filtered[0], // Use the properties from the first object
+                booking_time: filtered.map(record => record.booking_time) // Map booking_time values to an array
+            };
+            console.log("this appointment: ", appointment)
+        }
+    }
+
+
+
 
     const updateStatusToFinish = (appointment) => {
         const reqData = {
@@ -62,13 +80,12 @@ export default function AppointmentDetailSidebar({appointment}) {
                 <Divider />
                 <Typography><strong>Booking ID:</strong> {appointment.booking_id}</Typography>
                 <Typography><strong>Booking Date:</strong> {appointment.booking_date}</Typography>
-                <Typography><strong>Booking Time:</strong> {appointment.booking_time.join(', ')}</Typography>
+                <Typography><strong>Booking Time:</strong> {appointment.booking_time?.join(', ')}</Typography>
                 <Typography><strong>Booking Status:</strong> {appointment.booking_status}</Typography>
                 <Typography><strong>Booking Type:</strong> {appointment.booking_type}</Typography>
                 <Typography><strong>Doctor ID:</strong> {appointment.doctor_id}</Typography>
                 <Typography><strong>Invoice ID:</strong> {appointment.invoice_id}</Typography>
                 <Typography><strong>Receipt ID:</strong> {appointment.receipt_id}</Typography>
-                <Typography><strong>Updated Date:</strong> {appointment.updated_date}</Typography>
                 <Typography><strong>Pet Owner ID:</strong> {appointment.pet_owner_id}</Typography>
                 <Typography><strong>Username:</strong> {appointment.username}</Typography>
                 <Typography><strong>Pet Owner:</strong> {appointment.pet_owner}</Typography>

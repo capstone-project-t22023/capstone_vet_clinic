@@ -25,7 +25,6 @@ export default function BookingButton() {
 
     const handleClose = (value) => {
         setOpen(!value);
-        console.log(!value)
     };
 
     const handleCancel = (value) => {
@@ -82,7 +81,7 @@ export default function BookingButton() {
                     {!isSelectedAppointmentEmpty ? "Already selected:" : "Choose the Date of appointment"}
                 </DialogTitle>
                 {!isSelectedAppointmentEmpty ? <p className={"text-center text-primary"}>{selectedAppointment.booking_date } <AlarmOnIcon fontSize="small" color="action" /> { selectedAppointment.booking_time +"" }</p> : null}
-                <BookingOptionsUpdate onCancel={handleCancel} onSave={handleClose} selectedBooking={selectedAppointment} editMode={editMode}/>
+                <BookingOptionsUpdate onCancel={handleCancel} onSave={handleClose} selectedBooking={selectedAppointment} editMode={editMode} />
             </Dialog>
         </>
     );

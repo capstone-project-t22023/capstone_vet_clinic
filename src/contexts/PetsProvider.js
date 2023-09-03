@@ -14,6 +14,7 @@ export const PetsProvider = ({children}) => {
     const [selectedAppointment, setSelectedAppointment] = useState({});
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
     const [refreshAppointments, setRefreshAppoinmtents] = useState(false)
+    const [appointmentList, setAppointmentList] = useState([]);
 
 
     const changeSidebarContent = (value) => {
@@ -29,6 +30,28 @@ export const PetsProvider = ({children}) => {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
             setSelectedPet({});
         }
+    }
+
+
+    function updateObjectWithNewData(existingData, newData) {
+        const updatedObject = {
+            ...existingData,  // Copy over properties from the existing object
+            ...newData,       // Copy over properties from the new data object
+            id: existingData.id  // Keep the ID from the existing object
+        };
+
+        return updatedObject;
+    }
+
+
+    const reloadSelectedAppointmentData = (appointment) => {
+        setSelectedAppointment(prevState => ({
+            ...prevState,
+            ...appointment,
+            id: prevState.id
+        }));
+console.log("this is happening: reloadSelectedAppointmentData");
+
     }
 
     const updateSelectedAppointment = (appointment) => {
@@ -91,11 +114,13 @@ export const PetsProvider = ({children}) => {
                 handlerReloadPetList,
                 selectedAppointment,
                 setSelectedAppointment,
+                reloadSelectedAppointmentData,
                 updateSelectedAppointment,
                 handlerRefreshAppointments,
                 refreshAppointments,
                 changeSidebarContent,
-                sidebarContent
+                sidebarContent,
+                appointmentList, setAppointmentList
             }}>
             {children}
         </PetsContext.Provider>
