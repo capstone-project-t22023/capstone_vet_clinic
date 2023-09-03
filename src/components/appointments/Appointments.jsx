@@ -17,7 +17,6 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
 
     const [currentPage, setCurrentPage] = useState(1);
 
-
     const getAppointments = (filter, filterValue) => {
         const requestData = {
             filter: filter,
@@ -119,7 +118,6 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     const handleAppointmentClick = (appointment) => {
         changeSidebarContent("appointment");
         updateSelectedAppointment(appointment);
-        console.log("clckckcc",appointment)
     }
 
     return (

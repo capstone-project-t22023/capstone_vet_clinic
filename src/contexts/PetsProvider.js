@@ -32,12 +32,33 @@ export const PetsProvider = ({children}) => {
         }
     }
 
+
+    function updateObjectWithNewData(existingData, newData) {
+        const updatedObject = {
+            ...existingData,  // Copy over properties from the existing object
+            ...newData,       // Copy over properties from the new data object
+            id: existingData.id  // Keep the ID from the existing object
+        };
+
+        return updatedObject;
+    }
+
+
+    const reloadSelectedAppointmentData = (appointment) => {
+        setSelectedAppointment(prevState => ({
+            ...prevState,
+            ...appointment,
+            id: prevState.id
+        }));
+console.log("this is happening: reloadSelectedAppointmentData");
+
+    }
+
     const updateSelectedAppointment = (appointment) => {
         // selectedAppointment.booking_id === appointment.booking_id ? setSelectedAppointment({}) : setSelectedAppointment(appointment)
         // updateSelectedPet(appointment.pet_id)
         setSelectedPet(appointment.pet_id)
         setSelectedAppointment(appointment)
-        console.log("UPDATE SELECTED APPO IS HAPPENING")
     }
 
     const updateSelectedPet = (petId) => {

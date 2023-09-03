@@ -52,7 +52,7 @@ export default function Dashboard() {
                 {user.role === 'doctor' && (
                     <>
 
-                        <Stack direction="column" justifyContent="space-between" height="100vh">
+                        <Stack direction="column" justifyContent="space-between">
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -89,7 +89,7 @@ export default function Dashboard() {
 
                 {user.role === 'pet_owner' && (
                     <>
-                        <Stack direction="column" justifyContent="space-between" height="100vh">
+                        <Stack direction="column" justifyContent="space-between">
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -98,17 +98,7 @@ export default function Dashboard() {
                                     <PetsListAvatars petList={petList}/>
                                 </Stack>
 
-                                <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                    <Typography component="h3" variant="h5" sx={{color: "primary.main", mb: 3}}>
-                                        So far these pages are real pages:
-                                    </Typography>
-                                    <Button color="secondary" variant="contained" sx={{mx: 1}}
-                                            onClick={() => handleClick("/bookings")}>Bookings</Button>
-                                    <Button color="secondary" variant="contained" sx={{mx: 1}}
-                                            onClick={() => handleClick("/profile")}>Update Profile</Button>
-                                </Paper>
-
-                                <Stack direction="row" spacing={2}>
+                                <Stack direction="row" spacing={2} flexWrap="wrap">
                                     <Appointments filter="future" count={3} itemsPerPage={4}/>
                                     <Appointments filter="historic" count={3} itemsPerPage={4}/>
                                     <Appointments itemsPerPage={4}/>
@@ -135,7 +125,9 @@ export default function Dashboard() {
                     alignItems="center"
                     spacing={5}
                     sx={{
-                        height: '100vh',
+                        // minHeight: '100vh',
+                        // height: '100vh', maxHeight: '100%',
+                        overflowY: 'scroll',
                         backgroundColor: 'white',
                         // position: "relative"
                     }}
@@ -149,7 +141,7 @@ export default function Dashboard() {
                     {sidebarContent === 'appointment' &&
 
                         Object.keys(selectedAppointment).length > 0 &&
-                        <AppointmentDetailSidebar appointment={selectedAppointment}/>
+                        <AppointmentDetailSidebar appointmentId={selectedAppointment.booking_id}/>
                     }
                     {sidebarContent === 'pet' &&
                         <PetProfile onDelete={handleDeletePet}/>

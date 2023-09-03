@@ -46,6 +46,7 @@ export default function AppointmentDetailSidebar({appointment}) {
             .then(data => {
                 if (data.finish_booking && data.finish_booking !== 'error') {
                     // Pet added successfully, you can update UI or take any other actions
+                    refreshAppointmentList(true);
                 } else {
                     // Handle error case
                 }

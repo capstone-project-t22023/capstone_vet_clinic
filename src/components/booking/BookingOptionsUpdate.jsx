@@ -150,7 +150,7 @@ export default function BookingOptionsUpdate(props) {
 
     const changeDateHandler = (newDate) => {
         setDate(dayjs(newDate))
-        setSelectedSlots([]);
+        selectedBooking.booking_date === dayjs(newDate).format('YYYY-MM-DD') ? setSelectedSlots(selectedBooking.booking_time) : setSelectedSlots([]);
         fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date", {
             method: 'POST',
             headers: {
