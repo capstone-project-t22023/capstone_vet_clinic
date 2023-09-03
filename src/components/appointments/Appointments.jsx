@@ -12,11 +12,11 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
-    const [appointmentList, setAppointmentList] = useState([]);
-    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment, refreshAppointments, handlerRefreshAppointments} = useContext(PetsContext)
+    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment, refreshAppointments, handlerRefreshAppointments, appointmentList, setAppointmentList} = useContext(PetsContext)
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
+
 
     const getAppointments = (filter, filterValue) => {
         const requestData = {
@@ -32,7 +32,23 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         })
             .then(response => response.json())
             .then(data => {
-                setAppointmentList(data.bookings)
+
+                const merged = {};
+                if (Array.isArray(data.bookings)) {
+                    data.bookings.forEach(appointment => {
+                        const bookingId = appointment.booking_id;
+                        if (!merged[bookingId]) {
+                            merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
+                        } else {
+                            merged[bookingId].booking_time.push(appointment.booking_time);
+                            // Sort the booking_time array in ascending order
+                            merged[bookingId].booking_time.sort((a, b) => a.localeCompare(b));
+                        }
+                    });
+                }
+                setAppointmentList(merged)
+                // setAppointmentList(data.bookings)
+                console.log("getData merged",merged)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -52,23 +68,24 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     const [filterMode, setFilterMode] = useState(filter); // 'all', 'historic', 'future'
 
     useEffect(() => {
-        const merged = {};
-        if (Array.isArray(appointmentList)) {
-            appointmentList.forEach(appointment => {
-                const bookingId = appointment.booking_id;
-                if (!merged[bookingId]) {
-                    merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-                } else {
-                    merged[bookingId].booking_time.push(appointment.booking_time);
-                }
-            });
-        }
+        // const merged = {};
+        // if (Array.isArray(appointmentList)) {
+        //     appointmentList.forEach(appointment => {
+        //         const bookingId = appointment.booking_id;
+        //         if (!merged[bookingId]) {
+        //             merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
+        //         } else {
+        //             merged[bookingId].booking_time.push(appointment.booking_time);
+        //         }
+        //     });
+        // }
 
-        const sortedMerged = Object.values(merged).sort((b, a) =>
+        const sortedMerged = Object.values(appointmentList).sort((b, a) =>
            filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
 
         setMergedAppointments(sortedMerged);
+        // updateSelectedAppointment
     }, [appointmentList]);
 
 
@@ -102,6 +119,7 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     const handleAppointmentClick = (appointment) => {
         changeSidebarContent("appointment");
         updateSelectedAppointment(appointment);
+        console.log("clckckcc",appointment)
     }
 
     return (

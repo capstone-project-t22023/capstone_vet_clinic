@@ -72,7 +72,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
 
 
 
-    const sortedBookingTime = appointment.booking_time.sort((a, b) => a.localeCompare(b));
+
 
     return (
         <Tooltip title={`${appointment.booking_id} - ${appointment.booking_status} - ${appointment.petname}`} placement="top">

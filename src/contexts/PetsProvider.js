@@ -13,7 +13,8 @@ export const PetsProvider = ({children}) => {
     const [selectedPet, setSelectedPet] = useState({});
     const [selectedAppointment, setSelectedAppointment] = useState({});
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
-    const [refreshAppointments, setRefreshAppoinmtents] = useState(false)
+    const [refreshAppointments, setRefreshAppoinmtents] = useState(false);
+    const [appointmentList, setAppointmentList] = useState([]);
 
 
     const changeSidebarContent = (value) => {
@@ -36,6 +37,7 @@ export const PetsProvider = ({children}) => {
         // updateSelectedPet(appointment.pet_id)
         setSelectedPet(appointment.pet_id)
         setSelectedAppointment(appointment)
+        console.log("UPDATE SELECTED APPO IS HAPPENING")
     }
 
     const updateSelectedPet = (petId) => {
@@ -95,7 +97,8 @@ export const PetsProvider = ({children}) => {
                 handlerRefreshAppointments,
                 refreshAppointments,
                 changeSidebarContent,
-                sidebarContent
+                sidebarContent,
+                appointmentList, setAppointmentList
             }}>
             {children}
         </PetsContext.Provider>

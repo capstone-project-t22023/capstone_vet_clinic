@@ -25,7 +25,6 @@ export default function DeleteBooking() {
 
     const handleClose = (value) => {
         setOpen(!value);
-        console.log(!value)
     };
 
     const handleCancel = (value) => {
