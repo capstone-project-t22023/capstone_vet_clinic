@@ -7,7 +7,7 @@ import ProgramContext from "../../contexts/ProgramContext";
 import dayjs from "dayjs";
 
 
-export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
+export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
 
 
     // APPOINTMENTS LIST
@@ -26,10 +26,10 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const getAppointments = (filter, filterValue) => {
+    const fetchAppointments = (filterType, filterValue) => {
         const requestData = {
-            filter: filter,
-            filter_value: doctor ? user.username : selectedOwner.username
+            filter: filterType,
+            filter_value: filterValue
         };
         fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
             method: 'POST',
@@ -63,19 +63,25 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     };
 
     useEffect(() => {
-        if (Object.keys(selectedOwner).length > 0) {
-            setAppointmentList(getAppointments('username', selectedOwner.username));
+        if (doctor) {fetchAppointments('pet_id', user.id)}
+        else if (Object.keys(selectedOwner).length > 0) {
+            fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
     }, [selectedOwner, refreshAppointments]);
 
 
+
+
+
+
+
     const [mergedAppointments, setMergedAppointments] = useState([]);
-    const [filterMode, setFilterMode] = useState(filter); // 'all', 'historic', 'future'
+    const [timeframeMode, setTimeFrame] = useState(timeframe); // 'all', 'historic', 'future'
 
     useEffect(() => {
         const sortedMerged = Object.values(appointmentList).sort((b, a) =>
-            filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
+            timeframe === 'historic' || timeframe === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);
@@ -84,11 +90,11 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     const filteredAppointments = mergedAppointments.filter(appointment => {
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
-        if (filterMode === 'historic') {
+        if (timeframeMode === 'historic') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
-        } else if (filterMode === 'today') {
+        } else if (timeframeMode === 'today') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
-        } else if (filterMode === 'future') {
+        } else if (timeframeMode === 'future') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
@@ -113,20 +119,25 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         updateSelectedAppointment(appointment);
     }
 
+
+
+
     return (
         <Stack direction="column" flex={1}
                sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2}}>
+
+
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
-                    {filter === 'future'
+                    {timeframe === 'future'
                         ? (count !== 0
                             ? `Upcoming ${count}`
                             : 'No upcoming')
-                        : filter === 'today'
+                        : timeframe === 'today'
                             ? (count !== 0
                                 ? `Today's ${count}`
                                 : 'No today\'s')
-                            : filter === 'historic'
+                            : timeframe === 'historic'
                                 ? (count !== 0
                                     ? `Historical ${count}`
                                     : 'No historical')

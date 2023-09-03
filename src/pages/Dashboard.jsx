@@ -49,6 +49,57 @@ export default function Dashboard() {
                     p: 6
                 }}>
 
+                {user.role === 'admin' && (
+                    <>
+
+                        <Stack direction="column" justifyContent="space-between">
+                            <Stack direction="column" spacing={3}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="baseline">
+                                    <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
+                                        Welcome Back Admin - {user.firstname}!
+                                    </Typography>
+                                </Stack>
+
+                                <Paper sx={{borderRadius: 6}} elevation={0}>
+                                    <Appointments timeframe="today" count={10} itemsPerPage={5} doctor filter/>
+                                </Paper>
+
+
+                                <Stack direction="row" spacing={2}>
+                                    <Box flex={1}>
+                                        <Stack direction="row" justifyContent="space-between" width="100%"
+                                               alignItems="baseline" sx={{mb: 2}}>
+                                            <Typography fontWeight="bold">Search in Pet Owners List</Typography>
+
+                                        </Stack>
+                                        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
+                                            <PetsList petsList={petList}/>
+                                        </Paper>
+                                    </Box>
+                                </Stack>
+
+                                {/*<Stack direction="row" spacing={2}>*/}
+                                {/*    <Box flex={1}>*/}
+                                {/*        <Stack direction="row" justifyContent="space-between" width="100%"*/}
+                                {/*               alignItems="baseline" sx={{mb: 2}}>*/}
+                                {/*            <Typography fontWeight="bold">List of all Pending Appointments:</Typography>*/}
+
+                                {/*        </Stack>*/}
+                                {/*        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>*/}
+                                {/*            <PetsList petsList={petList}/>*/}
+                                {/*        </Paper>*/}
+                                {/*    </Box>*/}
+                                {/*</Stack>*/}
+
+                            </Stack>
+
+
+                        </Stack>
+                        <Divider sx={{my: 2, border: '1px dashed red'}}/>
+                        <Footer/>
+                    </>
+                )}
+
                 {user.role === 'doctor' && (
                     <>
 
@@ -61,7 +112,10 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Paper sx={{borderRadius: 6}} elevation={0}>
-                                    <Appointments filter="today" count={10} itemsPerPage={5} doctor/>
+                                    <Appointments timeframe="today" count={10} itemsPerPage={5} doctor/>
+                                </Paper>
+                                <Paper sx={{borderRadius: 6}} elevation={0}>
+                                    <Appointments timeframe="future" count={10} itemsPerPage={5} doctor/>
                                 </Paper>
 
 
@@ -99,8 +153,8 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Stack direction="row" spacing={2} flexWrap="wrap">
-                                    <Appointments filter="future" count={3} itemsPerPage={4}/>
-                                    <Appointments filter="historic" count={3} itemsPerPage={4}/>
+                                    <Appointments timeframe="future" count={3} itemsPerPage={4}/>
+                                    <Appointments timeframe="historic" count={3} itemsPerPage={4}/>
                                     <Appointments itemsPerPage={4}/>
 
                                 </Stack>

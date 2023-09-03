@@ -4,10 +4,10 @@ import {FavoriteRounded, FavoriteBorderRounded} from "@mui/icons-material";
 import dayjs from "dayjs";
 
 
-export default function LastHealthChecksItem({appointment}) {
+export default function LastHealthChecksItem({appointment, onClick}) {
     return (
         <Tooltip title={`${appointment.booking_id} - ${appointment.booking_status}`} placement="left">
-            <Stack direction="row" spacing={2} >
+            <Stack direction="row" spacing={2} onClick={onClick}>
                 <Stack direction="column" flex={0} alignItems="center">
                     <Avatar>
                         {/*<FavoriteBorderRounded fontSize="small"/>*/}

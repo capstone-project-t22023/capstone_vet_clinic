@@ -67,7 +67,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
 
     return (
         <Stack direction="column" p={6} spacing={5}>
-            {Object.keys(appointment).length !== 0 && (
+            {appointment && Object.keys(appointment).length !== 0 && (
                 <Stack direction="column" spacing={1}>
                     <Typography variant="h6">Appointment Details</Typography>
                     <Divider/>
