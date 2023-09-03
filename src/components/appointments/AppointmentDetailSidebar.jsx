@@ -3,12 +3,12 @@ import {Stack, Typography, Button, Divider} from "@mui/material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
+import dayjs from "dayjs";
 
 export default function AppointmentDetailSidebar({appointmentId}) {
-    const { user } = useContext(programContext);
-    const { refreshAppointmentList, appointmentList } = useContext(PetsContext);
+    const {user} = useContext(programContext);
+    const {refreshAppointmentList, appointmentList} = useContext(PetsContext);
     const [appointment, setAppointment] = useState({});
-            console.log("appdata",appointment)
 
     useEffect(() => {
         if (appointmentList && Object.keys(appointmentList).length > 0) {
@@ -72,7 +72,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     <Typography variant="h6">Appointment Details</Typography>
                     <Divider/>
                     <Typography><strong>Booking ID:</strong> {appointment.booking_id}</Typography>
-                    <Typography><strong>Booking Date:</strong> {appointment.booking_date}</Typography>
+                    <Typography><strong>Booking Date:</strong> {dayjs(appointment.booking_date).format("DD MMM YYYY")}</Typography>
                     <Typography><strong>Booking Time:</strong> {appointment.booking_time.join(', ')}</Typography>
                     <Typography><strong>Booking Status:</strong> {appointment.booking_status}</Typography>
                     <Typography><strong>Booking Type:</strong> {appointment.booking_type}</Typography>
@@ -89,14 +89,18 @@ export default function AppointmentDetailSidebar({appointmentId}) {
             )}
             <Stack direction="column" spacing={2}>
                 <BookingButton/>
-                <Button onClick={handleStatusFinished} disabled variant="contained" color="error">Mark as
-                    FINISHED</Button>
-                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update Pet
-                    Records??</Button>
-                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update
-                    Inventory??</Button>
-                <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Generate
-                    Invoice??</Button>
+                {user.role !== "pet_owner" &&
+                    <>
+                        <Button onClick={handleStatusFinished} disabled variant="contained" color="error">Mark as
+                            FINISHED</Button>
+                        <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update Pet
+                            Records??</Button>
+                        <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Update
+                            Inventory??</Button>
+                        <Button onClick={handleStatusFinished} disabled variant="outlined" color="error">Generate
+                            Invoice??</Button>
+                    </>
+                }
             </Stack>
         </Stack>
     )

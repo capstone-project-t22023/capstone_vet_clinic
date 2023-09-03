@@ -55,8 +55,6 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
                     });
                 }
                 setAppointmentList(merged)
-                // setAppointmentList(data.bookings)
-                console.log("getData merged", merged)
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -50,7 +50,6 @@ export const PetsProvider = ({children}) => {
             ...appointment,
             id: prevState.id
         }));
-console.log("this is happening: reloadSelectedAppointmentData");
 
     }
 
