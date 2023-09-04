@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Box, InputAdornment, IconButton, Chip, Typography, TextField, List, Stack, ListItemButton, ListItemText} from "@mui/material";
 import {Clear} from "@mui/icons-material";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -25,6 +25,11 @@ export default function SearchPetOwner() {
 
         setFilteredOwners(filtered);
     };
+
+    useEffect(() => {
+        // when created new pet the list has to be updated
+        setFilteredOwners(petList); // You can change the default filter here
+    }, [petList]);
     const handleSelectedOwner = (owner) => {
         setOwnerIsSelected(owner.pet_owner_id)
         updateSelectedOwner(owner);

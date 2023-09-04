@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import { Button, Pagination, Stack, Typography} from "@mui/material";
+import {Button, Pagination, Stack, Typography} from "@mui/material";
 import {ChevronRightRounded} from '@mui/icons-material';
 import AppointmentsItem from "./AppointmentsItem";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -7,21 +7,29 @@ import ProgramContext from "../../contexts/ProgramContext";
 import dayjs from "dayjs";
 
 
-export default function Appointments({filter = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
+export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
 
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
-    const [appointmentList, setAppointmentList] = useState([]);
-    const {selectedOwner, selectedAppointment, changeSidebarContent, updateSelectedAppointment, refreshAppointments, handlerRefreshAppointments} = useContext(PetsContext)
+    const {
+        selectedOwner,
+        selectedAppointment,
+        changeSidebarContent,
+        updateSelectedAppointment,
+        refreshAppointments,
+        handlerRefreshAppointments,
+        appointmentList,
+        setAppointmentList
+    } = useContext(PetsContext)
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const getAppointments = (filter, filterValue) => {
+    const fetchAppointments = (filterType, filterValue) => {
         const requestData = {
-            filter: filter,
-            filter_value: doctor ? user.username : selectedOwner.username
+            filter: filterType,
+            filter_value: filterValue
         };
         fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
             method: 'POST',
@@ -32,7 +40,21 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         })
             .then(response => response.json())
             .then(data => {
-                setAppointmentList(data.bookings)
+
+                const merged = {};
+                if (Array.isArray(data.bookings)) {
+                    data.bookings.forEach(appointment => {
+                        const bookingId = appointment.booking_id;
+                        if (!merged[bookingId]) {
+                            merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
+                        } else {
+                            merged[bookingId].booking_time.push(appointment.booking_time);
+                            // Sort the booking_time array in ascending order
+                            merged[bookingId].booking_time.sort((a, b) => a.localeCompare(b));
+                        }
+                    });
+                }
+                setAppointmentList(merged)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -41,33 +63,26 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     };
 
     useEffect(() => {
-        if (Object.keys(selectedOwner).length > 0) {
-            setAppointmentList(getAppointments('username', selectedOwner.username));
+        if (doctor) {fetchAppointments('pet_id', user.id)}
+        else if (Object.keys(selectedOwner).length > 0) {
+            fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
-    }, [selectedOwner,refreshAppointments]);
+    }, [selectedOwner, refreshAppointments]);
+
+
+
+
+
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);
-    const [filterMode, setFilterMode] = useState(filter); // 'all', 'historic', 'future'
+    const [timeframeMode, setTimeFrame] = useState(timeframe); // 'all', 'historic', 'future'
 
     useEffect(() => {
-        const merged = {};
-        if (Array.isArray(appointmentList)) {
-            appointmentList.forEach(appointment => {
-                const bookingId = appointment.booking_id;
-                if (!merged[bookingId]) {
-                    merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-                } else {
-                    merged[bookingId].booking_time.push(appointment.booking_time);
-                }
-            });
-        }
-
-        const sortedMerged = Object.values(merged).sort((b, a) =>
-           filter === 'historic' || filter === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
+        const sortedMerged = Object.values(appointmentList).sort((b, a) =>
+            timeframe === 'historic' || timeframe === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
         );
-
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);
 
@@ -75,11 +90,11 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
     const filteredAppointments = mergedAppointments.filter(appointment => {
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
-        if (filterMode === 'historic') {
+        if (timeframeMode === 'historic') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
-        } else if (filterMode === 'today') {
+        } else if (timeframeMode === 'today') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
-        } else if (filterMode === 'future') {
+        } else if (timeframeMode === 'future') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
@@ -104,19 +119,25 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
         updateSelectedAppointment(appointment);
     }
 
+
+
+
     return (
-        <Stack direction="column" flex={1} sx={{border: "1px solid", borderColor: "primary.50", borderRadius:6, px:2, py:2}}>
-            <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb:2}}>
+        <Stack direction="column" flex={1}
+               sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2}}>
+
+
+            <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
-                    {filter === 'future'
+                    {timeframe === 'future'
                         ? (count !== 0
                             ? `Upcoming ${count}`
                             : 'No upcoming')
-                        : filter === 'today'
+                        : timeframe === 'today'
                             ? (count !== 0
                                 ? `Today's ${count}`
                                 : 'No today\'s')
-                            : filter === 'historic'
+                            : timeframe === 'historic'
                                 ? (count !== 0
                                     ? `Historical ${count}`
                                     : 'No historical')
@@ -124,16 +145,20 @@ export default function Appointments({filter = 'all', count = -1, itemsPerPage =
                                     ? `${count} All`
                                     : 'No')} appointments
                 </Typography>
-                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all ({filteredAppointments.length +"/"+ count})<ChevronRightRounded
-                    fontSize="inherit"/></Button>
+                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all
+                    ({filteredAppointments.length + "/" + count})<ChevronRightRounded
+                        fontSize="inherit"/></Button>
             </Stack>
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
                 {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
-                    <Typography fontWeight="bold" color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
+                    <Typography fontWeight="bold"
+                                color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
                 ) : (
                     displayedAppointments.map((appointment, index) => (
-                        <AppointmentsItem appointment={appointment} key={index} isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false }  onClick={()=>handleAppointmentClick(appointment)} />
+                        <AppointmentsItem appointment={appointment} key={index}
+                                          isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false}
+                                          onClick={() => handleAppointmentClick(appointment)}/>
                     ))
                 )}
                 {totalPages > 1 &&

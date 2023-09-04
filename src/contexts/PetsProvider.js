@@ -13,7 +13,8 @@ export const PetsProvider = ({children}) => {
     const [selectedPet, setSelectedPet] = useState({});
     const [selectedAppointment, setSelectedAppointment] = useState({});
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
-    const [refreshAppointments, setRefreshAppoinmtents] = useState(false)
+    const [refreshAppointments, setRefreshAppoinmtents] = useState(false);
+    const [appointmentList, setAppointmentList] = useState([]);
 
 
     const changeSidebarContent = (value) => {
@@ -27,14 +28,19 @@ export const PetsProvider = ({children}) => {
     const updateSelectedOwner = (owner) => {
         if (user.role !== 'pet_owner') {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
+            console.log("owner", owner)
             setSelectedPet({});
+            changeSidebarContent('');
         }
     }
+
 
     const updateSelectedAppointment = (appointment) => {
         // selectedAppointment.booking_id === appointment.booking_id ? setSelectedAppointment({}) : setSelectedAppointment(appointment)
         // updateSelectedPet(appointment.pet_id)
-        setSelectedPet(appointment.pet_id)
+        if (appointment) {
+            setSelectedPet(appointment.pet_id);
+        }
         setSelectedAppointment(appointment)
     }
 
@@ -95,7 +101,8 @@ export const PetsProvider = ({children}) => {
                 handlerRefreshAppointments,
                 refreshAppointments,
                 changeSidebarContent,
-                sidebarContent
+                sidebarContent,
+                appointmentList, setAppointmentList
             }}>
             {children}
         </PetsContext.Provider>

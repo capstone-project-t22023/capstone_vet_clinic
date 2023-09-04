@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Box, Typography, Button, Stack, Divider} from "@mui/material";
 import {ChevronRightRounded} from "@mui/icons-material";
 import LastHealthChecksItem from "./LastHealthChecksItem";
 import dayjs from "dayjs";
+import {PetsContext} from "../../../contexts/PetsProvider";
 
 export default function LastHealthChecks({appointmentList, loading, count = -1}) {
     const [mergedAppointments, setMergedAppointments] = useState([]);
     const [filterMode, setFilterMode] = useState('all'); // 'all', 'historic', 'future'
+    const { changeSidebarContent, updateSelectedAppointment } = useContext(PetsContext)
 
     useEffect(() => {
         const merged = {};
@@ -51,6 +53,11 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
         return <Typography fontWeight="bold" color="secondary.300">No previous appointments.</Typography>;
     }
 
+    const handleAppointmentClick = (appointment) => {
+        changeSidebarContent("appointment");
+        updateSelectedAppointment(appointment);
+    }
+
 
     return (// updatedAppointmentsByDay && updatedAppointmentsByDay.length > 0 && (
         <Box flex={1} sx={{width:"100%"}}>
@@ -76,8 +83,8 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
                            color: "primary.200", textTransform: "uppercase", fontSize: ".75rem", fontWeight: "bold",
                        },
                    }}>
-                {filteredAppointments.map((appointment, index) => (
-                    <LastHealthChecksItem appointment={appointment} key={index}/>
+                {displayedAppointments.map((appointment, index) => (
+                    <LastHealthChecksItem appointment={appointment} key={index} onClick={() => handleAppointmentClick(appointment)}/>
                 ))}
                 <Divider flexItem/>
             </Stack>

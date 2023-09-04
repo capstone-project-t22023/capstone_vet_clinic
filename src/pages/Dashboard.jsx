@@ -49,10 +49,61 @@ export default function Dashboard() {
                     p: 6
                 }}>
 
+                {user.role === 'admin' && (
+                    <>
+
+                        <Stack direction="column" justifyContent="space-between">
+                            <Stack direction="column" spacing={3}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="baseline">
+                                    <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
+                                        Welcome Back Admin - {user.firstname}!
+                                    </Typography>
+                                </Stack>
+
+                                <Paper sx={{borderRadius: 6}} elevation={0}>
+                                    <Appointments timeframe="today" count={10} itemsPerPage={5} doctor filter/>
+                                </Paper>
+
+
+                                <Stack direction="row" spacing={2}>
+                                    <Box flex={1}>
+                                        <Stack direction="row" justifyContent="space-between" width="100%"
+                                               alignItems="baseline" sx={{mb: 2}}>
+                                            <Typography fontWeight="bold">Search in Pet Owners List</Typography>
+
+                                        </Stack>
+                                        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
+                                            <PetsList petsList={petList}/>
+                                        </Paper>
+                                    </Box>
+                                </Stack>
+
+                                {/*<Stack direction="row" spacing={2}>*/}
+                                {/*    <Box flex={1}>*/}
+                                {/*        <Stack direction="row" justifyContent="space-between" width="100%"*/}
+                                {/*               alignItems="baseline" sx={{mb: 2}}>*/}
+                                {/*            <Typography fontWeight="bold">List of all Pending Appointments:</Typography>*/}
+
+                                {/*        </Stack>*/}
+                                {/*        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>*/}
+                                {/*            <PetsList petsList={petList}/>*/}
+                                {/*        </Paper>*/}
+                                {/*    </Box>*/}
+                                {/*</Stack>*/}
+
+                            </Stack>
+
+
+                        </Stack>
+                        <Divider sx={{my: 2, border: '1px dashed red'}}/>
+                        <Footer/>
+                    </>
+                )}
+
                 {user.role === 'doctor' && (
                     <>
 
-                        <Stack direction="column" justifyContent="space-between" height="100vh">
+                        <Stack direction="column" justifyContent="space-between">
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -61,7 +112,10 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Paper sx={{borderRadius: 6}} elevation={0}>
-                                    <Appointments filter="today" count={10} itemsPerPage={5} doctor/>
+                                    <Appointments timeframe="today" count={10} itemsPerPage={5} doctor/>
+                                </Paper>
+                                <Paper sx={{borderRadius: 6}} elevation={0}>
+                                    <Appointments timeframe="future" count={10} itemsPerPage={5} doctor/>
                                 </Paper>
 
 
@@ -89,7 +143,7 @@ export default function Dashboard() {
 
                 {user.role === 'pet_owner' && (
                     <>
-                        <Stack direction="column" justifyContent="space-between" height="100vh">
+                        <Stack direction="column" justifyContent="space-between">
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -98,19 +152,9 @@ export default function Dashboard() {
                                     <PetsListAvatars petList={petList}/>
                                 </Stack>
 
-                                <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                    <Typography component="h3" variant="h5" sx={{color: "primary.main", mb: 3}}>
-                                        So far these pages are real pages:
-                                    </Typography>
-                                    <Button color="secondary" variant="contained" sx={{mx: 1}}
-                                            onClick={() => handleClick("/bookings")}>Bookings</Button>
-                                    <Button color="secondary" variant="contained" sx={{mx: 1}}
-                                            onClick={() => handleClick("/profile")}>Update Profile</Button>
-                                </Paper>
-
-                                <Stack direction="row" spacing={2}>
-                                    <Appointments filter="future" count={3} itemsPerPage={4}/>
-                                    <Appointments filter="historic" count={3} itemsPerPage={4}/>
+                                <Stack direction="row" spacing={2} flexWrap="wrap">
+                                    <Appointments timeframe="future" count={3} itemsPerPage={4}/>
+                                    <Appointments timeframe="historic" count={3} itemsPerPage={4}/>
                                     <Appointments itemsPerPage={4}/>
 
                                 </Stack>
@@ -135,7 +179,9 @@ export default function Dashboard() {
                     alignItems="center"
                     spacing={5}
                     sx={{
-                        height: '100vh',
+                        // minHeight: '100vh',
+                        // height: '100vh', maxHeight: '100%',
+                        overflowY: 'scroll',
                         backgroundColor: 'white',
                         // position: "relative"
                     }}
@@ -149,7 +195,7 @@ export default function Dashboard() {
                     {sidebarContent === 'appointment' &&
 
                         Object.keys(selectedAppointment).length > 0 &&
-                        <AppointmentDetailSidebar appointment={selectedAppointment}/>
+                        <AppointmentDetailSidebar appointmentId={selectedAppointment.booking_id}/>
                     }
                     {sidebarContent === 'pet' &&
                         <PetProfile onDelete={handleDeletePet}/>
