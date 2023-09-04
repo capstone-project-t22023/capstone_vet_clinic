@@ -789,64 +789,6 @@ class BookingDatabase
     /**
      * Retrieves all records of bookings by booking ID
      */
-    public function getBookingById($booking_id)
-    {
-        $this->connection = new mysqli(
-            $this->server,
-            $this->db_uname,
-            $this->db_pwd,
-            $this->db_name
-        );
-        $this->connection->set_charset('utf8');
-        $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            DATE_FORMAT(bs.booking_date, "%d-%m-%Y") booking_date,
-            GROUP_CONCAT(bs.booking_time separator ",") booking_time,
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND b.id = ?
-            ORDER BY b.updated_date DESC'
-        );
-        $sql->bind_param(
-            'i', $booking_id
-        );
-        $sql->execute();
-        $result = $sql->get_result();
-        if ($result->num_rows > 0) {
-            $row=$result->fetch_assoc();
-            $sql->close();
-            $this->connection->close();
-            return $row;
-        }
-        $sql->close();
-        $this->connection->close();
-        return false;
-    }
-
-    /**
-     * Retrieves all records of bookings by booking ID
-     */
     public function getBookingsByBookingId($filter_value)
     {
         $this->connection = new mysqli(
@@ -857,34 +799,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND b.id LIKE ?
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE booking_info.booking_id LIKE ?'
+
         );
         $q = '%' . $filter_value . '%';
         $sql->bind_param(
@@ -895,6 +885,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -919,34 +910,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND bs.booking_date = STR_TO_DATE(?,"%d-%m-%Y")
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE booking_info.booking_date = STR_TO_DATE(?,"%d-%m-%Y")'
+
         );
         $sql->bind_param(
             's', $filter_value
@@ -956,6 +995,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -980,34 +1020,81 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND UPPER(b.booking_status) LIKE UPPER(?)
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE UPPER(booking_info.booking_status) LIKE UPPER(?)'
         );
         $q = '%' . $filter_value . '%';
         $sql->bind_param(
@@ -1018,6 +1105,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1042,34 +1130,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND UPPER(bt.booking_type) LIKE UPPER(?)
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE UPPER(booking_info.booking_type) LIKE UPPER(?)'
+
         );
         $q = '%' . $filter_value . '%';
         $sql->bind_param(
@@ -1080,6 +1216,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1104,34 +1241,81 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND UPPER(po.username) LIKE UPPER(?)
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE UPPER(pet_info.username) LIKE UPPER(?)'
         );
         $q = '%' . $filter_value . '%';
         $sql->bind_param(
@@ -1142,6 +1326,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1166,34 +1351,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND UPPER(p.petname) LIKE UPPER(?)
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE UPPER(pet_info.petname) LIKE UPPER(?)'
+
         );
         $q = '%' . $filter_value . '%';
         $sql->bind_param(
@@ -1204,6 +1437,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1228,34 +1462,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND p.id = ?
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE pet_info.pet_id = ?'
+
         );
         $sql->bind_param(
             'i', $filter_value
@@ -1265,6 +1547,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1289,34 +1572,82 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            bs.booking_time, 
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND b.doctor_id = ?
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE booking_info.doctor_id = ?'
+
         );
         $sql->bind_param(
             'i', $filter_value
@@ -1326,6 +1657,7 @@ class BookingDatabase
         if ($result->num_rows > 0) {
             $bookings = array();
             while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
                 array_push($bookings, $row);
             }
             $sql->close();
@@ -1350,35 +1682,302 @@ class BookingDatabase
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT 
-            b.id booking_id,
-            bs.booking_date,
-            GROUP_CONCAT(bs.booking_time separator ",") booking_time,
-            b.booking_status,
-            bt.booking_type,
-            b.doctor_id,
-            b.updated_date,
-            b.pet_owner_id,
-            po.username,
-            CONCAT(po.firstname," ",po.lastname) pet_owner,
-            b.pet_id,
-            p.petname
-            FROM 
-            `pawsome`.`bookings` b, 
-            `pawsome`.`booking_types` bt, 
-            `pawsome`.`pet_owners` po, 
-            `pawsome`.`pets` p, 
-            `pawsome`.`booking_slots` bs
-            WHERE 
-            p.pet_owner_id = po.id 
-            AND b.pet_owner_id = po.id 
-            AND b.pet_id = p.id 
-            AND b.booking_type_id = bt.id
-            AND b.id = bs.booking_id
-            AND b.archived = 0
-            AND b.pet_owner_id = ?
-            GROUP BY b.id, bs.booking_date
-            ORDER BY b.updated_date DESC'
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE pet_info.pet_owner_id = ?'
+
+        );
+        $sql->bind_param(
+            'i', $filter_value
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $bookings = array();
+            while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
+                array_push($bookings, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $bookings;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of bookings by invoice ID
+     */
+    public function getBookingsByInvoiceId($filter_value)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE payment_info.invoice_id = ?'
+
+        );
+        $sql->bind_param(
+            'i', $filter_value
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $bookings = array();
+            while($row=$result->fetch_assoc()){
+                $row['booking_time'] = explode(',', $row['booking_time']);
+                array_push($bookings, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $bookings;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves all records of bookings by receipt ID
+     */
+    public function getBookingsByReceiptId($filter_value)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'WITH
+            payment_info AS (
+                SELECT 
+                r.booking_id,
+                i.id invoice_id,
+                r.id receipt_id,
+                i.invoice_amount,
+                p.payment_status
+                FROM
+                `pawsome`.`invoices` i,
+                `pawsome`.`receipts` r,
+                `pawsome`.`payments` p
+                WHERE
+                r.invoice_id = i.id
+                AND r.payment_id = p.id
+                AND r.booking_id = i.booking_id
+            ),
+            booking_info AS (
+                SELECT DISTINCT 
+                b.id booking_id,
+                bs.booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time, 
+                b.booking_status,
+                bt.booking_type,
+                b.doctor_id,
+                b.updated_date,
+                b.pet_owner_id,
+                b.pet_id,
+                IF(b.archived = 0, "ACTIVE", "ARCHIVED") record_status
+                FROM 
+                `pawsome`.`bookings` b, 
+                `pawsome`.`booking_types` bt, 
+                `pawsome`.`booking_slots` bs
+                WHERE 
+                b.booking_type_id = bt.id
+                AND b.id = bs.booking_id
+                GROUP BY b.id, bs.booking_date
+                ORDER BY b.updated_date DESC
+            ),
+            pet_info AS (
+                SELECT DISTINCT 
+                po.id pet_owner_id,
+                po.username,
+                CONCAT(po.firstname," ",po.lastname) pet_owner,
+                p.id pet_id,
+                p.petname
+                FROM 
+                `pawsome`.`pet_owners` po, 
+                `pawsome`.`pets` p
+                WHERE 
+                p.pet_owner_id = po.id 
+            )
+            SELECT DISTINCT 
+                booking_info.booking_id,
+                booking_info.booking_date,
+                booking_info.booking_time, 
+                booking_info.booking_status,
+                booking_info.booking_type,
+                booking_info.doctor_id,
+                booking_info.updated_date,
+                pet_info.pet_owner_id,
+                pet_info.username,
+                pet_info.pet_owner,
+                pet_info.pet_id,
+                pet_info.petname,
+                payment_info.invoice_id,
+                payment_info.receipt_id,
+                payment_info.invoice_amount,
+                payment_info.payment_status,
+                booking_info.record_status
+                FROM 
+                booking_info 
+                LEFT JOIN pet_info ON booking_info.pet_id = pet_info.pet_id
+                LEFT JOIN payment_info ON booking_info.booking_id = payment_info.booking_id
+                WHERE payment_info.receipt_id = ?'
+
         );
         $sql->bind_param(
             'i', $filter_value

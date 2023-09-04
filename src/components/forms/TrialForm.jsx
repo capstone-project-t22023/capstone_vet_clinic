@@ -11,7 +11,7 @@ export default function TrialForm(props) {
     const [file, setFile] = useState([]);
 
     function handleUpload(event){
-      console.log("Uploading", file.files[0]);
+      console.log("Uploading", file);
       event.preventDefault();
 
       const formData = new FormData();
@@ -25,12 +25,11 @@ export default function TrialForm(props) {
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data'
         },
         body: formData
       })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => console.log("data", data))
       .catch((err) => console.error(err));
     }
 
@@ -40,7 +39,7 @@ export default function TrialForm(props) {
 
     function handleDownload(){
       console.log("Downloading");
-      let file_name = "Capstone ERD.png";
+      let file_name = "Moodle error.png";
       fetch("http://localhost/capstone_vet_clinic/api.php/download_file?filename="+file_name, {
         method: 'GET',
         headers: {
@@ -66,7 +65,7 @@ export default function TrialForm(props) {
 
   return (
     <div>
-      <input id="fileforupload" type="file" onChange={handleFileChange}></input>
+      <TextField type="file" onChange={handleFileChange}/>
        <Button onClick={handleUpload}>
           Upload File
         </Button>

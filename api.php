@@ -68,6 +68,7 @@ $id = $req[4];
  */
 $bearer_token = get_bearer_token();
 $valid_jwt_token = isset($bearer_token) ? valid_jwt_token($bearer_token) : false;
+$req_username = isset($bearer_token) ? getPayload($bearer_token)->user->username : false;
 
 /**
  * Initialize new instance of Database class
@@ -78,6 +79,11 @@ $billing_database = new BillingDatabase();
 $inventory_database = new InventoryDatabase();
 $booking_database = new BookingDatabase();
 $lodging_database = new LodgingDatabase();
+
+/**
+ * Upload directory
+ */
+$upload_dir = "/Applications/XAMPP/xamppfiles/uploads/"; 
 
 /**
  * Authorization and User Management
@@ -413,6 +419,8 @@ elseif ($action === 'confirm_doctor') {
  */
 elseif ($action === 'confirm_admin') {
     if ($valid_jwt_token) {
+        
+
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
         $admin_id = getPayload($bearer_token)->user->id;
@@ -584,13 +592,14 @@ elseif ($action === 'login_pet_owner') {
  */ 
 elseif ($action === 'get_doctor') {
    if ($valid_jwt_token) {
-       $username = getPayload($bearer_token)->user->username;
-        if ($doctor = $database->getDoctor($username)) {
+        if ($doctor = $database->getDoctor($req_username)) {
             return_json(['user' => $doctor]);
         }  else {
-            return_json(['user' => false]); 
+            return_json(['user' => "NOT FOUND"]); 
         }
-   }
+   }  else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]);  
+    }
 } 
 
 /**
@@ -598,12 +607,13 @@ elseif ($action === 'get_doctor') {
  */ 
 elseif ($action === 'get_admin') {
     if ($valid_jwt_token) {
-        $username = getPayload($bearer_token)->user->username;
-        if ($admin = $database->getAdmin($username)) {
+        if ($admin = $database->getAdmin($req_username)) {
             return_json(['user' => $admin]);
         }  else {
-            return_json(['user' => false]); 
+            return_json(['user' => "NOT FOUND"]); 
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -612,12 +622,13 @@ elseif ($action === 'get_admin') {
  */ 
 elseif ($action === 'get_pet_owner') {
     if ($valid_jwt_token) {
-        $username = getPayload($bearer_token)->user->username;
-        if ($pet_owner = $database->getPetOwner($username)) {
+        if ($pet_owner = $database->getPetOwner($req_username)) {
              return_json(['user' => $pet_owner]);
         }  else {
-            return_json(['user' => false]); 
+            return_json(['user' => "NOT FOUND"]); 
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -662,10 +673,10 @@ elseif ($action === 'delete_doctor') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $record = [
             'id' => $id,
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         if($role['role'] === 'admin'){
@@ -679,7 +690,7 @@ elseif ($action === 'delete_doctor') {
                             'new_status' => $new_status,
                             'prev_status' => $prev_status,
                             'doctor_id' => null,
-                            'username' => $_POST['username'],
+                            'username' => $req_username,
                             'booking_id' => $ab['booking_id']
                         ];
                         if($booking_database->updateBookingDoctorAndStatus($booking_info)){
@@ -704,6 +715,8 @@ elseif ($action === 'delete_doctor') {
         } else {
             return_json(['delete_doctor' => "You don't have the necessary privileges to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -715,10 +728,10 @@ elseif ($action === 'delete_admin') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $record = [
             'id' => $id,
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         if($role['role'] === 'admin'){
@@ -730,6 +743,8 @@ elseif ($action === 'delete_admin') {
         } else {
             return_json(['delete_admin' => "You don't have the necessary privileges to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -741,10 +756,10 @@ elseif ($action === 'delete_pet_owner') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
         
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $record = [
             'id' => $id,
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         if($role['role'] === 'admin'){
@@ -758,7 +773,7 @@ elseif ($action === 'delete_pet_owner') {
                         $booking_info = [
                             'new_status' => $new_status,
                             'prev_status' => $prev_status,
-                            'username' => $_POST['username'],
+                            'username' => $req_username,
                             'booking_id' => $ab['booking_id']
                         ];
                         if($booking_database->archiveBooking($booking_info)){
@@ -780,7 +795,7 @@ elseif ($action === 'delete_pet_owner') {
             if($affected_pets=$pet_database->getAllPetsByPetOwnerId($id)){
                 foreach($affected_pets as $p):
                     $pet_info = [
-                        'username' => $_POST['username'],
+                        'username' => $req_username,
                         'pet_id' => $p['pet_id']
                     ];
                     if($pet_database->archivePet($pet_info)){
@@ -800,6 +815,8 @@ elseif ($action === 'delete_pet_owner') {
         } else {
             return_json(['delete_pet_owner' => "You don't have the necessary privileges to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -908,6 +925,8 @@ elseif ($action === 'add_user') {
                 return_json(['add_user' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -994,7 +1013,7 @@ elseif ($action === 'update_user') {
             'email' => $_POST['email'],
             'phone' => $_POST['phone'],
             'postcode' => $_POST['postcode'],
-            'username' => $_POST['username'],
+            'username' => $req_username,
         ];
 
         if($_POST['role'] === 'pet_owner'){
@@ -1016,6 +1035,8 @@ elseif ($action === 'update_user') {
                 return_json(['update_user' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -1079,6 +1100,8 @@ elseif ($action === 'get_all_pets') {
         } else {
             return_json(['pets' => "No pets found"]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -1087,33 +1110,33 @@ elseif ($action === 'get_all_pets') {
  */ 
 elseif ($action === 'get_all_pets_by_filter') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-        if ($_POST['filter'] == 'petname'){
-            if ($pets = $pet_database->getAllPetsByPetname($_POST['filter_value'])) {
+        if ($_GET['filter'] == 'petname'){
+            if ($pets = $pet_database->getAllPetsByPetname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
                 return_json(['pets' => "No pets found"]);
             }
-        } elseif ($_POST['filter'] == 'firstname'){
-            if ($pets = $pet_database->getAllPetsByFname($_POST['filter_value'])) {
+        } elseif ($_GET['filter'] == 'firstname'){
+            if ($pets = $pet_database->getAllPetsByFname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
                 return_json(['pets' => "No pets found"]);
             }
-        } elseif ($_POST['filter'] == 'lastname'){
-            if ($pets = $pet_database->getAllPetsByLname($_POST['filter_value'])) {
+        } elseif ($_GET['filter'] == 'lastname'){
+            if ($pets = $pet_database->getAllPetsByLname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
                 return_json(['pets' => "No pets found"]);
             }
-        } elseif ($_POST['filter'] == 'pet_owner_id'){
-            if ($pets = $pet_database->getAllPetsByPetOwnerId($_POST['filter_value'])) {
+        } elseif ($_GET['filter'] == 'pet_owner_id'){
+            if ($pets = $pet_database->getAllPetsByPetOwnerId($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
                 return_json(['pets' => "No pets found"]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -1204,7 +1227,7 @@ elseif ($action === 'add_pet') {
                 'insurance_membership' => $_POST['insurance_membership'],
                 'insurance_expiry' => $_POST['insurance_expiry'],
                 'comments' => $_POST['comments'],
-                'username' => $_POST['username']
+                'username' => $req_username
             ];
 
             if ($pet_id = $pet_database->addPet($pet)) {
@@ -1215,6 +1238,8 @@ elseif ($action === 'add_pet') {
         } else {
             return_json(['add_pet' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1296,7 +1321,7 @@ elseif ($action === 'update_pet') {
             'microchip_no' => $_POST['microchip_no'],
             'insurance_membership' => $_POST['insurance_membership'],
             'insurance_expiry' => $_POST['insurance_expiry'],
-            'username' => $_POST['username'],
+            'username' => $req_username,
             'comments' => $_POST['comments']
         ];
 
@@ -1309,6 +1334,8 @@ elseif ($action === 'update_pet') {
         }  else {
             return_json(['update_pet' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1320,10 +1347,10 @@ elseif ($action === 'delete_pet') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $record = [
             'pet_id' => $id,
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         if($role['role'] === 'admin' || $role['role'] === 'pet_owner'){
@@ -1337,7 +1364,7 @@ elseif ($action === 'delete_pet') {
                         $booking_info = [
                             'new_status' => $new_status,
                             'prev_status' => $prev_status,
-                            'username' => $_POST['username'],
+                            'username' => $req_username,
                             'booking_id' => $ab['booking_id']
                         ];
                         if($booking_database->archiveBooking($booking_info)){
@@ -1364,6 +1391,8 @@ elseif ($action === 'delete_pet') {
         } else {
                 return_json(['delete_pet' => "You don't have the necessary privileges to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1377,6 +1406,8 @@ elseif ($action === 'get_pet') {
         } else {
             return_json(['get_pet' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1394,6 +1425,8 @@ elseif ($action === 'get_booking_types') {
         } else {
             return_json(['booking_types' => "No booking types"]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1402,10 +1435,7 @@ elseif ($action === 'get_booking_types') {
  */ 
 elseif ($action === 'get_taken_slots_by_date') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        if ($taken_slots = $booking_database->getTakenSlotsByDate($_POST['selected_date'])) {
+        if ($taken_slots = $booking_database->getTakenSlotsByDate($_GET['selected_date'])) {
             $slots  = array();
 
             foreach($taken_slots as $y):
@@ -1420,6 +1450,8 @@ elseif ($action === 'get_taken_slots_by_date') {
         } else {
             return_json(['taken_slots_by_date' => []]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1428,6 +1460,7 @@ elseif ($action === 'get_taken_slots_by_date') {
  */ 
 elseif ($action === 'get_taken_slots_all') {
     if ($valid_jwt_token) {
+
         if ($taken_slots = $booking_database->getTakenSlotsAll()) {
             $slots  = array();
 
@@ -1443,6 +1476,8 @@ elseif ($action === 'get_taken_slots_all') {
         } else {
             return_json(['taken_slots_all' => []]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1458,11 +1493,10 @@ elseif ($action === 'add_booking') {
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         $booking_slots = $_POST['booking_slots'];
-
 
         if ($booking_id = $booking_database->addBooking($booking)) {
             foreach($booking_slots as $slot):
@@ -1480,7 +1514,7 @@ elseif ($action === 'add_booking') {
                 'booking_id' => $booking_id,
                 'prev_status' => null,
                 'new_status' => "PENDING",
-                'username' => $_POST['username']
+                'username' => $req_username
             ];
 
             if($booking_database->addBookingHistoryRecord($booking_history_record)){
@@ -1490,6 +1524,8 @@ elseif ($action === 'add_booking') {
         } else {
             return_json(['add_booking' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1501,6 +1537,7 @@ elseif ($action === 'update_booking_by_admin') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        $role = $database->checkRoleByUsername($req_username);
         $current_booking_status = $booking_database->checkBookingStatus($id);
         $booking = [
             'booking_id' => $id,
@@ -1510,45 +1547,49 @@ elseif ($action === 'update_booking_by_admin') {
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
             'doctor_id' => $_POST['doctor_id'],
-            'username' => $_POST['username'],
+            'username' => $req_username,
         ];
 
         $booking_slots = $_POST['booking_slots'];
 
-        foreach($booking_slots as $new_slot):
-            $booking_count = [
-                'selected_date' => $new_slot['booking_date'],
-                'selected_time' => $new_slot['booking_time']
-            ];
-            if($count = $booking_database->slotCounter($booking_count)){
-                if($count['slot_counter'] == 5){
-                    return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
-                }
-            }
-        endforeach;
-
-        if ($booking_database->updateBookingByAdmin($booking)) {
-            if($booking_database->deleteBookingSlot($id)){
-                foreach($booking_slots as $slot):
-                    $record = [
-                        'booking_id' => $id,
-                        'booking_date' => $slot['booking_date'],
-                        'booking_time' => $slot['booking_time']
-                    ];
-                    if($booking_database->addBookingSlot($record)){
-                        true;
-                    }
-                endforeach;
-
-                $booking_history_record = [
-                    'booking_id' => $id,
-                    'prev_status' => $_POST['prev_booking_status'],
-                    'new_status' => "PENDING",
-                    'username' => $_POST['username']
+        if($role['role'] === 'admin'){
+            foreach($booking_slots as $new_slot):
+                $booking_count = [
+                    'selected_date' => $new_slot['booking_date'],
+                    'selected_time' => $new_slot['booking_time']
                 ];
+                if($count = $booking_database->slotCounter($booking_count)){
+                    if($count['slot_counter'] == 5){
+                        return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
+                    }
+                }
+            endforeach;
 
-                if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => true]);
+            if ($booking_database->updateBookingByAdmin($booking)) {
+                if($booking_database->deleteBookingSlot($id)){
+                    foreach($booking_slots as $slot):
+                        $record = [
+                            'booking_id' => $id,
+                            'booking_date' => $slot['booking_date'],
+                            'booking_time' => $slot['booking_time']
+                        ];
+                        if($booking_database->addBookingSlot($record)){
+                            true;
+                        }
+                    endforeach;
+
+                    $booking_history_record = [
+                        'booking_id' => $id,
+                        'prev_status' => $_POST['prev_booking_status'],
+                        'new_status' => "PENDING",
+                        'username' => $req_username
+                    ];
+
+                    if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                        return_json(['update_booking' => true]);
+                    } else {
+                        return_json(['update_booking' => false]);
+                    }
                 } else {
                     return_json(['update_booking' => false]);
                 }
@@ -1556,8 +1597,10 @@ elseif ($action === 'update_booking_by_admin') {
                 return_json(['update_booking' => false]);
             }
         } else {
-            return_json(['update_booking' => false]);
+            return_json(['update_booking' => "You don't have the privilege to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1569,6 +1612,7 @@ elseif ($action === 'update_booking_by_pet_owner') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        $role = $database->checkRoleByUsername($req_username);
         $booking = [
             'booking_id' => $id,
             'prev_booking_status' => $_POST['prev_booking_status'],
@@ -1576,45 +1620,49 @@ elseif ($action === 'update_booking_by_pet_owner') {
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
-            'username' => $_POST['username'],
+            'username' => $req_username,
         ];
 
         $booking_slots = $_POST['booking_slots'];
 
-        foreach($booking_slots as $new_slot):
-            $booking_count = [
-                'selected_date' => $new_slot['booking_date'],
-                'selected_time' => $new_slot['booking_time']
-            ];
-            if($count = $booking_database->slotCounter($booking_count)){
-                if($count['slot_counter'] == 5){
-                    return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
-                }
-            }
-        endforeach;
-
-        if ($booking_database->updateBookingByPetOwner($booking)) {
-            if($booking_database->deleteBookingSlot($id)){
-                foreach($booking_slots as $slot):
-                    $record = [
-                        'booking_id' => $id,
-                        'booking_date' => $slot['booking_date'],
-                        'booking_time' => $slot['booking_time']
-                    ];
-                    if($booking_database->addBookingSlot($record)){
-                        true;
-                    }
-                endforeach;
-
-                $booking_history_record = [
-                    'booking_id' => $id,
-                    'prev_status' => $_POST['prev_booking_status'],
-                    'new_status' => "PENDING",
-                    'username' => $_POST['username']
+        if($role['role'] === 'pet_owner'){
+            foreach($booking_slots as $new_slot):
+                $booking_count = [
+                    'selected_date' => $new_slot['booking_date'],
+                    'selected_time' => $new_slot['booking_time']
                 ];
+                if($count = $booking_database->slotCounter($booking_count)){
+                    if($count['slot_counter'] == 5){
+                        return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
+                    }
+                }
+            endforeach;
 
-                if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                    return_json(['update_booking' => true]);
+            if ($booking_database->updateBookingByPetOwner($booking)) {
+                if($booking_database->deleteBookingSlot($id)){
+                    foreach($booking_slots as $slot):
+                        $record = [
+                            'booking_id' => $id,
+                            'booking_date' => $slot['booking_date'],
+                            'booking_time' => $slot['booking_time']
+                        ];
+                        if($booking_database->addBookingSlot($record)){
+                            true;
+                        }
+                    endforeach;
+
+                    $booking_history_record = [
+                        'booking_id' => $id,
+                        'prev_status' => $_POST['prev_booking_status'],
+                        'new_status' => "PENDING",
+                        'username' => $req_username
+                    ];
+
+                    if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                        return_json(['update_booking' => true]);
+                    } else {
+                        return_json(['update_booking' => false]);
+                    }
                 } else {
                     return_json(['update_booking' => false]);
                 }
@@ -1622,8 +1670,10 @@ elseif ($action === 'update_booking_by_pet_owner') {
                 return_json(['update_booking' => false]);
             }
         } else {
-            return_json(['update_booking' => false]);
+            return_json(['update_booking' => "You don't have the privilege to perform this action."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1635,8 +1685,6 @@ elseif ($action === 'confirm_booking') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        
-
         $booking = [
             'booking_id' => $id,
             'prev_booking_status' => $_POST['prev_booking_status'],
@@ -1645,11 +1693,11 @@ elseif ($action === 'confirm_booking') {
             'pet_owner_id' => $_POST['pet_owner_id'],
             'pet_id' => $_POST['pet_id'],
             'doctor_id' => $_POST['doctor_id'],
-            'username' => $_POST['username'],
+            'username' => $req_username,
         ];
 
         $booking_slots = $_POST['booking_slots'];
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $current_booking_status = $booking_database->checkBookingStatus($id);
 
         if($role['role'] === 'admin'){
@@ -1683,7 +1731,7 @@ elseif ($action === 'confirm_booking') {
                             'booking_id' => $id,
                             'prev_status' => $_POST['prev_booking_status'],
                             'new_status' => $_POST['new_booking_status'],
-                            'username' => $_POST['username']
+                            'username' => $req_username
                         ];
 
                         if($booking_database->addBookingHistoryRecord($booking_history_record)){
@@ -1703,6 +1751,8 @@ elseif ($action === 'confirm_booking') {
         } else {
             return_json(['confirm_booking' => "You don't have the privilege to perform this action. Only admins can move bookings to CONFIRMED status."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1711,17 +1761,14 @@ elseif ($action === 'confirm_booking') {
  */ 
 elseif ($action === 'finish_booking') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
         $booking_record = [
             'booking_id' => $id,
             'prev_status' => "CONFIRMED",
             'new_status' => "FINISHED",
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $current_booking_status = $booking_database->checkBookingStatus($id);
 
         if($role['role'] === 'doctor')
@@ -1742,6 +1789,8 @@ elseif ($action === 'finish_booking') {
         } else {
             return_json(['finish_booking' => "You don't have the privilege to perform this action. Only doctors can move bookings to FINISHED status."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1750,29 +1799,13 @@ elseif ($action === 'finish_booking') {
  */ 
 elseif ($action === 'get_booking') {
     if ($valid_jwt_token) {
-        if ($record=$booking_database->getBookingById($id)) {
-
-            $booking_record = [
-                'booking_id' => $record['booking_id'],
-                'booking_date' => $record['booking_date'],
-                'booking_time' => explode(',', $record['booking_time']),
-                'booking_status' => $record['booking_status'],
-                'booking_type' => $record['booking_type'],
-                'doctor_id' => $record['doctor_id'],
-                'invoice_id' => $record['invoice_id'],
-                'receipt_id' => $record['receipt_id'],
-                'updated_date' => $record['updated_date'],
-                'pet_owner_id' => $record['pet_owner_id'],
-                'username' => $record['username'],
-                'pet_owner' => $record['pet_owner'],
-                'pet_id' => $record['pet_id'],
-                'petname' => $record['petname']
-            ];
-
-            return_json(['booking_record' => $booking_record]);
+        if ($record=$booking_database->getBookingsByBookingId($id)) {
+            return_json(['booking_record' => $record]);
         } else {
             return_json(['booking_record' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1788,7 +1821,7 @@ elseif ($action === 'cancel_booking') {
             'booking_id' => $id,
             'prev_status' => $_POST['prev_booking_status'],
             'new_status' => "CANCELED",
-            'username' => $_POST['username']
+            'username' => $req_username
         ];
 
         if ($booking_database->cancelBooking($booking_record)) {
@@ -1802,6 +1835,8 @@ elseif ($action === 'cancel_booking') {
         } else {
             return_json(['cancel_booking' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1810,64 +1845,75 @@ elseif ($action === 'cancel_booking') {
  */ 
 elseif ($action === 'search_booking') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        if ($_POST['filter'] == 'booking_id'){
-            if ($bookings = $booking_database->getBookingsByBookingId($_POST['filter_value'])) {
+        if ($_GET['filter'] == 'booking_id'){
+            if ($bookings = $booking_database->getBookingsByBookingId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        } elseif ($_POST['filter'] == 'booking_date'){
-            if ($bookings = $booking_database->getBookingsByBookingDate($_POST['filter_value'])) {
+        } elseif ($_GET['filter'] == 'booking_date'){
+            if ($bookings = $booking_database->getBookingsByBookingDate($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        } elseif ($_POST['filter'] == 'booking_status'){
-            if ($bookings = $booking_database->getBookingsByBookingStatus($_POST['filter_value'])) {
+        } elseif ($_GET['filter'] == 'booking_status'){
+            if ($bookings = $booking_database->getBookingsByBookingStatus($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }  elseif ($_POST['filter'] == 'booking_type'){
-            if ($bookings = $booking_database->getBookingsByBookingType($_POST['filter_value'])) {
+        }  elseif ($_GET['filter'] == 'booking_type'){
+            if ($bookings = $booking_database->getBookingsByBookingType($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }  elseif ($_POST['filter'] == 'username'){
-            if ($bookings = $booking_database->getBookingsByUsername($_POST['filter_value'])) {
+        }  elseif ($_GET['filter'] == 'username'){
+            if ($bookings = $booking_database->getBookingsByUsername($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }  elseif ($_POST['filter'] == 'pet_name'){
-            if ($bookings = $booking_database->getBookingsByPetName($_POST['filter_value'])) {
+        }  elseif ($_GET['filter'] == 'pet_name'){
+            if ($bookings = $booking_database->getBookingsByPetName($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }  elseif ($_POST['filter'] == 'pet_id'){
-            if ($bookings = $booking_database->getBookingsByPetId($_POST['filter_value'])) {
+        }  elseif ($_GET['filter'] == 'pet_id'){
+            if ($bookings = $booking_database->getBookingsByPetId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }  elseif ($_POST['filter'] == 'doctor_id'){
-            if ($bookings = $booking_database->getBookingsByDoctorId($_POST['filter_value'])) {
+        }  elseif ($_GET['filter'] == 'doctor_id'){
+            if ($bookings = $booking_database->getBookingsByDoctorId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
-        }   elseif ($_POST['filter'] == 'pet_owner_id'){
-            if ($bookings = $booking_database->getBookingsByPetOwnerId($_POST['filter_value'])) {
+        }   elseif ($_GET['filter'] == 'pet_owner_id'){
+            if ($bookings = $booking_database->getBookingsByPetOwnerId($_GET['filter_value'])) {
+                return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
+            } 
+        }    elseif ($_GET['filter'] == 'invoice_id'){
+            if ($bookings = $booking_database->getBookingsByInvoiceId($_GET['filter_value'])) {
+                return_json(['bookings' => $bookings]);
+            } else {
+                return_json(['bookings' => "No bookings found"]);
+            } 
+        }    elseif ($_GET['filter'] == 'receipt_id'){
+            if ($bookings = $booking_database->getBookingsByReceiptId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
                 return_json(['bookings' => "No bookings found"]);
             } 
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 } 
 
@@ -1884,6 +1930,8 @@ elseif ($action === 'get_all_vaccines') {
         } else {
             return_json(['get_all_vaccines' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1895,7 +1943,7 @@ elseif ($action === 'add_immun_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_immun_record' => "You don't have the privilege to perform this action"]);
@@ -1906,7 +1954,7 @@ elseif ($action === 'add_immun_record') {
                 "vaccine_date" => $_POST['vaccine_date'],
                 "vaccine" => $_POST['vaccine'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->addPetVaccine($record)){
                 return_json(['add_immun_record' => true]);
@@ -1914,6 +1962,8 @@ elseif ($action === 'add_immun_record') {
                 return_json(['add_immun_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1925,7 +1975,7 @@ elseif ($action === 'update_immun_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['update_immun_record' => "You don't have the privilege to perform this action"]);
@@ -1936,7 +1986,7 @@ elseif ($action === 'update_immun_record') {
                 "vaccine_date" => $_POST['vaccine_date'],
                 "vaccine" => $_POST['vaccine'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id,
             ];
             if($pet_database->updatePetVaccine($record)){
@@ -1945,6 +1995,8 @@ elseif ($action === 'update_immun_record') {
                 return_json(['update_immun_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1956,14 +2008,14 @@ elseif ($action === 'delete_immun_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_immun_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deletePetVaccine($record)){
                 return_json(['delete_immun_record' => true]);
@@ -1971,6 +2023,8 @@ elseif ($action === 'delete_immun_record') {
                 return_json(['delete_immun_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1984,6 +2038,8 @@ elseif ($action === 'get_immun_record') {
         } else {
             return_json(['get_immun_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -1995,7 +2051,7 @@ elseif ($action === 'add_prescription') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_prescription' => "You don't have the privilege to perform this action"]);
@@ -2004,7 +2060,7 @@ elseif ($action === 'add_prescription') {
                 "pet_id" => $_POST['pet_id'],
                 "doctor_id" => $_POST['doctor_id'],
                 "prescription_date" => $_POST['prescription_date'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($prescription_id=$pet_database->addPrescription($record)){
                 return_json(['add_prescription' => $prescription_id]);
@@ -2012,6 +2068,8 @@ elseif ($action === 'add_prescription') {
                 return_json(['add_prescription' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2023,7 +2081,7 @@ elseif ($action === 'update_prescription') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_prescription' => "You don't have the privilege to perform this action"]);
@@ -2032,7 +2090,7 @@ elseif ($action === 'update_prescription') {
                 "pet_id" => $_POST['pet_id'],
                 "doctor_id" => $_POST['doctor_id'],
                 "prescription_date" => $_POST['prescription_date'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id
             ];
             if($pet_database->updatePrescription($record)){
@@ -2041,6 +2099,8 @@ elseif ($action === 'update_prescription') {
                 return_json(['update_prescription' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2049,10 +2109,7 @@ elseif ($action === 'update_prescription') {
  */ 
 elseif ($action === 'delete_prescription') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_prescription' => "You don't have the privilege to perform this action"]);
@@ -2061,7 +2118,7 @@ elseif ($action === 'delete_prescription') {
             foreach($diet_records as $d):
                 $diet_record = [
                     "id" => $d,
-                    "username" => $_POST['username']
+                    "username" => $req_username
                 ];
                 if($pet_database->deleteDietRecord($diet_record)){
                     true;
@@ -2072,7 +2129,7 @@ elseif ($action === 'delete_prescription') {
 
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deletePrescription($record)){
                 return_json(['delete_prescription' => true]);
@@ -2080,6 +2137,8 @@ elseif ($action === 'delete_prescription') {
                 return_json(['delete_prescription' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2091,7 +2150,7 @@ elseif ($action === 'add_diet_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_diet_record' => "You don't have the privilege to perform this action"]);
@@ -2103,7 +2162,7 @@ elseif ($action === 'add_diet_record') {
                 "morning" => $_POST['morning'],
                 "evening" => $_POST['evening'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->addDietRecord($record)){
                 return_json(['add_diet_record' => true]);
@@ -2111,6 +2170,8 @@ elseif ($action === 'add_diet_record') {
                 return_json(['add_diet_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2122,7 +2183,7 @@ elseif ($action === 'update_diet_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['update_diet_record' => "You don't have the privilege to perform this action"]);
@@ -2133,7 +2194,7 @@ elseif ($action === 'update_diet_record') {
                 "morning" => $_POST['morning'],
                 "evening" => $_POST['evening'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id
             ];
             if($pet_database->updateDietRecord($record)){
@@ -2142,6 +2203,8 @@ elseif ($action === 'update_diet_record') {
                 return_json(['update_diet_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2153,14 +2216,14 @@ elseif ($action === 'delete_diet_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_diet_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deleteDietRecord($record)){
                 return_json(['delete_diet_record' => true]);
@@ -2168,6 +2231,8 @@ elseif ($action === 'delete_diet_record') {
                 return_json(['delete_diet_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2190,6 +2255,8 @@ elseif ($action === 'get_diet_record') {
         } else {
             return_json(['get_diet_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2216,6 +2283,8 @@ elseif ($action === 'get_all_diet_record_by_pet') {
         } else {
             return_json(['get_diet_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2227,7 +2296,7 @@ elseif ($action === 'add_referral') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_referral' => "You don't have the privilege to perform this action"]);
@@ -2237,7 +2306,7 @@ elseif ($action === 'add_referral') {
                 "doctor_id" => $_POST['doctor_id'],
                 "referral_date" => $_POST['referral_date'],
                 "diagnosis" => $_POST['diagnosis'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($referral_id=$pet_database->addReferral($record)){
                 return_json(['add_referral' => $referral_id]);
@@ -2245,6 +2314,8 @@ elseif ($action === 'add_referral') {
                 return_json(['add_referral' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2256,7 +2327,7 @@ elseif ($action === 'update_referral') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['update_referral' => "You don't have the privilege to perform this action"]);
@@ -2266,7 +2337,7 @@ elseif ($action === 'update_referral') {
                 "doctor_id" => $_POST['doctor_id'],
                 "referral_date" => $_POST['referral_date'],
                 "diagnosis" => $_POST['diagnosis'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id
             ];
             if($pet_database->updateReferral($record)){
@@ -2275,6 +2346,8 @@ elseif ($action === 'update_referral') {
                 return_json(['update_referral' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2286,7 +2359,7 @@ elseif ($action === 'delete_referral') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_referral' => "You don't have the privilege to perform this action"]);
@@ -2295,7 +2368,7 @@ elseif ($action === 'delete_referral') {
             foreach($rehab_records as $r):
                 $rehab_record = [
                     "id" => $r,
-                    "username" => $_POST['username']
+                    "username" => $req_username
                 ];
                 if($pet_database->deleteRehabRecord($rehab_record)){
                     true;
@@ -2306,7 +2379,7 @@ elseif ($action === 'delete_referral') {
 
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deleteReferral($record)){
                 return_json(['delete_referral' => true]);
@@ -2314,6 +2387,8 @@ elseif ($action === 'delete_referral') {
                 return_json(['delete_referral' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2325,7 +2400,7 @@ elseif ($action === 'add_rehab_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_rehab_record' => "You don't have the privilege to perform this action"]);
@@ -2335,7 +2410,7 @@ elseif ($action === 'add_rehab_record') {
                 "treatment_date" => $_POST['treatment_date'],
                 "attended" => $_POST['attended'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->addRehabRecord($record)){
                 return_json(['add_rehab_record' => true]);
@@ -2343,6 +2418,8 @@ elseif ($action === 'add_rehab_record') {
                 return_json(['add_rehab_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2354,7 +2431,7 @@ elseif ($action === 'update_rehab_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['update_rehab_record' => "You don't have the privilege to perform this action"]);
@@ -2363,7 +2440,7 @@ elseif ($action === 'update_rehab_record') {
                "treatment_date" => $_POST['treatment_date'],
                 "attended" => $_POST['attended'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id
             ];
             if($pet_database->updateRehabRecord($record)){
@@ -2372,6 +2449,8 @@ elseif ($action === 'update_rehab_record') {
                 return_json(['update_rehab_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2383,14 +2462,14 @@ elseif ($action === 'delete_rehab_record') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_rehab_record' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deleteRehabRecord($record)){
                 return_json(['delete_rehab_record' => true]);
@@ -2398,6 +2477,8 @@ elseif ($action === 'delete_rehab_record') {
                 return_json(['delete_rehab_record' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2432,6 +2513,8 @@ elseif ($action === 'get_rehab_record') {
         } else {
             return_json(['get_rehab_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2471,6 +2554,8 @@ elseif ($action === 'get_all_rehab_record_by_pet') {
         } else {
             return_json(['get_rehab_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2482,7 +2567,7 @@ elseif ($action === 'add_surgery') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['add_surgery' => "You don't have the privilege to perform this action"]);
@@ -2494,7 +2579,7 @@ elseif ($action === 'add_surgery') {
                 "surgery_date" => $_POST['surgery_date'],
                 "discharge_date" => $_POST['discharge_date'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->addSurgery($record)){
                 return_json(['add_surgery' => true]);
@@ -2502,6 +2587,8 @@ elseif ($action === 'add_surgery') {
                 return_json(['add_surgery' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2513,7 +2600,7 @@ elseif ($action === 'update_surgery') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['update_surgery' => "You don't have the privilege to perform this action"]);
@@ -2524,7 +2611,7 @@ elseif ($action === 'update_surgery') {
                 "surgery_date" => $_POST['surgery_date'],
                 "discharge_date" => $_POST['discharge_date'],
                 "comments" => $_POST['comments'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "id" => $id
             ];
             if($pet_database->updateSurgery($record)){
@@ -2533,6 +2620,8 @@ elseif ($action === 'update_surgery') {
                 return_json(['update_surgery' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2544,14 +2633,14 @@ elseif ($action === 'delete_surgery') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
 
         if($role['role'] == 'pet_owner'){
             return_json(['delete_surgery' => "You don't have the privilege to perform this action"]);
         } else {
             $record = [
                 "id" => $id,
-                "username" => $_POST['username']
+                "username" => $req_username
             ];
             if($pet_database->deleteSurgery($record)){
                 return_json(['delete_surgery' => true]);
@@ -2559,6 +2648,8 @@ elseif ($action === 'delete_surgery') {
                 return_json(['delete_surgery' => false]);
             }
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2572,6 +2663,8 @@ elseif ($action === 'get_all_surgery_record_by_pet') {
         } else {
             return_json(['get_surgery_record' => "No record " . $id . " existing."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2580,11 +2673,6 @@ elseif ($action === 'get_all_surgery_record_by_pet') {
  */ 
 elseif ($action === 'upload_file') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $upload_dir = "/Applications/XAMPP/xamppfiles/uploads/"; 
-        return_json(['file_info' => $_FILES]);
         if(!empty($_FILES["file"]["name"])){
             $file_name = basename($_FILES["file"]["name"]);
             $tmp_file = $_FILES["file"]["tmp_name"]; 
@@ -2594,7 +2682,7 @@ elseif ($action === 'upload_file') {
                 "file_name" => $file_name,
                 "pet_id" => $_POST['pet_id'],
                 "file_type" => $_POST['file_type'],
-                "username" => $_POST['username'],
+                "username" => $req_username,
                 "metadata" => $_FILES
             ];
 
@@ -2609,8 +2697,10 @@ elseif ($action === 'upload_file') {
                 return_json(['file_info' => "Insertion error"]);
             }
         }  else {
-            return_json(['file_info' => $_POST]);
+            return_json(['file_info' => "No file attached"]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2637,6 +2727,8 @@ elseif ($action === 'download_file') {
         } else {
             return_json(['download_file' => false]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2653,13 +2745,13 @@ elseif ($action === 'generate_invoice') {
         $_POST = json_decode($rest_json, true);
 
         $invoice_info = [
-            'username' => $_POST['username'],
+            'username' => $req_username,
             'booking_id' => $_POST['booking_id']
         ];
 
         $invoice_items = $_POST['invoice_items'];
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $current_booking_status = $booking_database->checkBookingStatus($_POST['booking_id']);
         $booking_fee = $booking_database->checkBookingFee($_POST['booking_id']);
         $invoice_count = $billing_database->checkInvoiceByBookingId($_POST['booking_id']);
@@ -2697,7 +2789,7 @@ elseif ($action === 'generate_invoice') {
                                     $inventory_record = [
                                         'in_use_qty' => $new_qty,
                                         'item_id' => $item['item_id'],
-                                        'username' => $_POST['username']
+                                        'username' => $req_username
                                     ]; 
                                     if($new_qty >= 0){
                                         if($inventory_database->updateInUseQty($inventory_record)){
@@ -2716,7 +2808,7 @@ elseif ($action === 'generate_invoice') {
                             endforeach;
 
                             $invoice_amount_record = [
-                                'username' => $_POST['username'],
+                                'username' => $req_username,
                                 'invoice_id' => $invoice_id,
                                 'booking_id' => $_POST['booking_id']
                             ];
@@ -2725,21 +2817,21 @@ elseif ($action === 'generate_invoice') {
                                     $payment_record = [
                                         "payment_status" => "NOT PAID",
                                         "payment_balance" => $invoice['invoice_amount'],
-                                        'username' => $_POST['username']
+                                        'username' => $req_username
                                     ];
                                     if($payment_id=$billing_database->insertNewPayment($payment_record)){
                                         $receipt_record = [
                                             "booking_id" => $_POST['booking_id'],
                                             "invoice_id" => $invoice_id,
                                             "payment_id" => $payment_id,
-                                            "username" => $_POST['username']
+                                            "username" => $req_username
                                         ];
                                         if($billing_database->insertNewReceipt($receipt_record)){
                                             $payment_history = [
                                                 "payment_id" => $payment_id,
                                                 "prev_payment_status" => null,
                                                 "new_payment_status" => "NOT PAID",
-                                                "username" => $_POST['username']
+                                                "username" => $req_username
                                             ];
                                             if($billing_database->addPaymentHistory($payment_history)){
                                                 return_json(['generate_invoice' => $invoice_id]);
@@ -2764,6 +2856,8 @@ elseif ($action === 'generate_invoice') {
         } else {
             return_json(['generate_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2776,13 +2870,13 @@ elseif ($action === 'update_invoice') {
         $_POST = json_decode($rest_json, true);
 
         $invoice_info = [
-            'username' => $_POST['username'],
+            'username' => $req_username,
             'booking_id' => $_POST['booking_id']
         ];
 
         $invoice_items = $_POST['invoice_items'];
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $current_booking_status = $booking_database->checkBookingStatus($_POST['booking_id']);
         $booking_fee = $booking_database->checkBookingFee($_POST['booking_id']);
         $current_invoice_items = $billing_database->getInvoiceItemsByInvoiceId($id);
@@ -2827,7 +2921,7 @@ elseif ($action === 'update_invoice') {
                                     $inventory_record = [
                                         'in_use_qty' => $new_qty,
                                         'item_id' => $item['item_id'],
-                                        'username' => $_POST['username']
+                                        'username' => $req_username
                                     ]; 
                                     if($new_qty >= 0){
                                         if($inventory_database->updateInUseQty($inventory_record)){
@@ -2842,7 +2936,7 @@ elseif ($action === 'update_invoice') {
                                                 $current_inventory_record = [
                                                     'in_use_qty' => $in_use_qty['in_use_qty'],
                                                     'item_id' => $item['item_id'],
-                                                    'username' => $_POST['username']
+                                                    'username' => $req_username
                                                 ]; 
                                                 if($billing_database->insertNewInvoiceItem($current_invoice_record)){
                                                     if($inventory_database->updateInUseQty($current_inventory_record)){
@@ -2865,7 +2959,7 @@ elseif ($action === 'update_invoice') {
                             endforeach;
 
                             $invoice_amount_record = [
-                                'username' => $_POST['username'],
+                                'username' => $req_username,
                                 'invoice_id' => $id,
                                 'booking_id' => $_POST['booking_id']
                             ];
@@ -2876,7 +2970,7 @@ elseif ($action === 'update_invoice') {
                                     $payment_record = [
                                         "payment_status" => "NOT PAID",
                                         "payment_balance" => $invoice['invoice_amount'],
-                                        'username' => $_POST['username'],
+                                        'username' => $req_username,
                                         "payment_id" => $payment_id['payment_id']
                                     ];
                                     if($billing_database->updatePaymentBalance($payment_record)){
@@ -2885,7 +2979,7 @@ elseif ($action === 'update_invoice') {
                                             "payment_id" => $payment_id['payment_id'],
                                             "prev_payment_status" => $prev_status['payment_status'],
                                             "new_payment_status" => "NOT PAID",
-                                            "username" => $_POST['username']
+                                            "username" => $req_username
                                         ];
                                         if($billing_database->addPaymentHistory($payment_history)){
                                             return_json(['update_invoice' => $id]);
@@ -2906,6 +3000,8 @@ elseif ($action === 'update_invoice') {
         } else {
             return_json(['update_invoice' => "You don't have the privilege to perform this action. Only doctors can create invoices."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2934,6 +3030,8 @@ elseif ($action === 'get_invoice') {
             return_json(['get_invoice' => "Invoice doesn't exist."]);
         }
         
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2942,10 +3040,7 @@ elseif ($action === 'get_invoice') {
  */ 
 elseif ($action === 'delete_invoice') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         $current_invoice_items = $billing_database->getInvoiceItemsByInvoiceId($id);
         if($role['role'] === 'doctor')
         {
@@ -2954,7 +3049,7 @@ elseif ($action === 'delete_invoice') {
                 $current_inventory_record = [
                     'in_use_qty' => $in_use_qty['in_use_qty'] + $current_item['quantity'],
                     'item_id' => $current_item['item_id'],
-                    'username' => $_POST['username']
+                    'username' => $req_username
                 ]; 
                 if($inventory_database->updateInUseQty($current_inventory_record)){
                     true;
@@ -2979,6 +3074,8 @@ elseif ($action === 'delete_invoice') {
         } else {
             return_json(['delete_invoice' => "You don't have the privilege to perform this action. Only doctors can delete invoices."]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -2990,7 +3087,7 @@ elseif ($action === 'accept_payment') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
-        $role = $database->checkRoleByUsername($_POST['username']);
+        $role = $database->checkRoleByUsername($req_username);
         //payments   
         if($role['role'] === 'admin'){
             if($payment_info = $billing_database->getPaymentInformation($_POST['invoice_id'])){
@@ -3015,7 +3112,7 @@ elseif ($action === 'accept_payment') {
                     "payment_paid" => $_POST['payment_paid'],
                     "payment_change" => $amount,
                     "payment_id" => $payment_info['id'],
-                    "username" => $_POST['username']
+                    "username" => $req_username
                 ];
 
                 if($billing_database->acceptPayment($payment_record)){
@@ -3024,12 +3121,12 @@ elseif ($action === 'accept_payment') {
                         "payment_id" => $payment_info['id'],
                         "prev_payment_status" => $payment_info['payment_status'],
                         "new_payment_status" => $status,
-                        "username" => $_POST['username']
+                        "username" => $req_username
                     ];
                     
                     if($billing_database->addPaymentHistory($payment_history)){
                         $receipt_record = [
-                            "username" => $_POST['username'],
+                            "username" => $req_username,
                             "payment_id" => $payment_info['id']
                         ];
 
@@ -3041,7 +3138,7 @@ elseif ($action === 'accept_payment') {
                                         "payment_id" => $info['payment_id'],
                                         "booking_id" => $info['booking_id'],
                                         "invoice_id" => $info['invoice_id'],
-                                        "username" => $_POST['username']
+                                        "username" => $req_username
                                     ];
                                     $booking_database->archiveBookingWoStatusUpdate($archive_records);
                                     $billing_database->archiveInvoices($archive_records);
@@ -3065,6 +3162,8 @@ elseif ($action === 'accept_payment') {
             return_json(['accept_payment' => "You don't have the privilege to perform this action. Only admins can accept payments."]);
         }
         
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -3102,6 +3201,8 @@ elseif ($action === 'get_receipt') {
             return_json(['get_receipt' => "Receipt doesn't exist."]);
         }
         
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -3159,6 +3260,8 @@ elseif ($action === 'get_inventory_all') {
         } else {
             return_json(['inventory_records' => "No records found"]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 
@@ -3210,6 +3313,8 @@ elseif ($action === 'get_inventory_by_category') {
         } else {
             return_json(['inventory_records' => "No records found"]);
         }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
 

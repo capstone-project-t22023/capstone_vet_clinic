@@ -351,7 +351,6 @@ CREATE TABLE `pawsome`.`pet_doc_uploads` (
   `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
   `file_type` varchar(100) NOT NULL COMMENT 'Document type (referral, lab, invoice, other)',
   `file_name` varchar(100) NOT NULL COMMENT 'Name of file',
-  `file` blob NOT NULL COMMENT 'File attached',
   `upload_date` date NOT NULL COMMENT 'Upload date',
   `uploaded_by` int(10) NOT NULL COMMENT 'Uploaded by user',
   `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
@@ -499,18 +498,15 @@ CREATE TABLE `pawsome`.`subscribers` (
 );
 
 /** 
-Initial data scripts
+DATA SET UP
 */
 
-TRUNCATE TABLE `pawsome`.`admins`;
-ALTER TABLE `pawsome`.`admins` AUTO_INCREMENT=501;
 INSERT INTO `pawsome`.`admins`
 (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`,`updated_date`)
 VALUES
 ('Pawsome','Admin','pawsome_admin',md5('pawsome_admin2023'),'40 Romawi Road','NSW','pawsome_admin@pawsome.com.au',123456789,2570,0,SYSDATE(),SYSDATE());
 commit;
 
-TRUNCATE TABLE `pawsome`.`doctors`;
 INSERT INTO `pawsome`.`doctors`
 (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`,`updated_date`)
 VALUES
@@ -521,8 +517,6 @@ VALUES
 ('Sherman','Bray','teemingbroth',md5('teemingbroth_2023'),'56 Boonah Qld','NSW','teemingbroth@pawsome.com.au',734111089,4022,0,SYSDATE(),SYSDATE());
 commit;
 
-TRUNCATE TABLE `pawsome`.`pet_owners`;
-ALTER TABLE `pawsome`.`pet_owners` AUTO_INCREMENT=1001;
 INSERT INTO `pawsome`.`pet_owners`
 (`firstname`, `lastname`, `username`, `password`, `address`, `state`, `email`, `phone`, `postcode`, `archived`, `created_date`,`updated_date`)
 VALUES
@@ -553,7 +547,6 @@ VALUES
 ;
 commit;
 
-TRUNCATE TABLE `pawsome`.`pets`;
 INSERT INTO `pawsome`.`pets`
 (`pet_owner_id`,
 `petname`,
@@ -571,13 +564,19 @@ INSERT INTO `pawsome`.`pets`
 VALUES
 (1001, 'Paws', 'Dog', 'Golden Retriever', STR_TO_DATE("22-01-2021","%d-%m-%Y"),36.3,'Female','No allergies','5988040028',STR_TO_DATE("30-05-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1001, 'Buttons', 'Dog', 'Maltese', STR_TO_DATE("11-02-2020","%d-%m-%Y"),4,'Female','No allergies','8291669232',STR_TO_DATE("30-04-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1001, 'Sunny', 'Hamster', 'Campbell''s Dwarf', STR_TO_DATE("21-02-2021","%d-%m-%Y"),0.13,'Male','No allergies',null,null,SYSDATE(),501,0),
 (1002, 'Snickers', 'Guinea Pig', 'Teddy', STR_TO_DATE("14-03-2021","%d-%m-%Y"),1,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1002, 'Maple', 'Cat', 'Exotic Shorthair', STR_TO_DATE("21-07-2018","%d-%m-%Y"),4.37,'Female','No allergies','9086804387',STR_TO_DATE("30-06-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1003, 'Luna', 'Guinea Pig', 'Peruvian', STR_TO_DATE("23-03-2022","%d-%m-%Y"),0.93,'Female','No allergies',null,null,SYSDATE(),501,0),
 (1003, 'Muffin', 'Dog', 'Rottweiler', STR_TO_DATE("12-04-2020","%d-%m-%Y"),54.5,'Male','No allergies','9382754683',STR_TO_DATE("30-06-2027","%d-%m-%Y"),SYSDATE(),501,0),
 (1004, 'Pudding', 'Dog', 'Beagle', STR_TO_DATE("30-05-2021","%d-%m-%Y"),16,'Female','No allergies','5647291745',STR_TO_DATE("30-07-2028","%d-%m-%Y"),SYSDATE(),501,0),
 (1005, 'Mocha', 'Cat', 'Siamese', STR_TO_DATE("29-06-2020","%d-%m-%Y"),4.6,'Female','No allergies','7543759385',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1006, 'Sniffles', 'Dog', 'Chihuahua', STR_TO_DATE("29-05-2020","%d-%m-%Y"),4.6,'Female','No allergies','7543569385',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
 (1007, 'Biscuit', 'Hamster', 'Roborovski Dwarf', STR_TO_DATE("18-07-2021","%d-%m-%Y"),0.15,'Female','No allergies',null,null,SYSDATE(),501,0),
 (1008, 'Oreo', 'Dog', 'Samoyed', STR_TO_DATE("16-08-2021","%d-%m-%Y"),25,'Male','No allergies','1606852875',STR_TO_DATE("30-09-2026","%d-%m-%Y"),SYSDATE(),501,0),
+(1008, 'Puffy', 'Rabbit', 'Dutch', STR_TO_DATE("17-01-2020","%d-%m-%Y"),4.9,'Female','No allergies',null,null,SYSDATE(),501,0),
 (1009, 'Peanut', 'Rabbit', 'Mini Lop', STR_TO_DATE("23-09-2020","%d-%m-%Y"),4.2,'Male','No allergies',null,null,SYSDATE(),501,0),
+(1009, 'Lady', 'Cat', 'Abyssinian', STR_TO_DATE("15-12-2018","%d-%m-%Y"),4.26,'Female','No allergies','8673170001',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
 (1010, 'Cocoa', 'Dog', 'Bulldog', STR_TO_DATE("21-10-2019","%d-%m-%Y"),25,'Male','No allergies','3075355527',STR_TO_DATE("30-01-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1010, 'Peaches', 'Cat', 'British Shorthair', STR_TO_DATE("19-11-2020","%d-%m-%Y"),4.65,'Male','No allergies','8171549774',STR_TO_DATE("30-10-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1011, 'Waffles', 'Cat', 'Persian', STR_TO_DATE("17-12-2019","%d-%m-%Y"),4.53,'Female','No allergies','5837259435',STR_TO_DATE("30-11-2024","%d-%m-%Y"),SYSDATE(),501,0),
@@ -587,82 +586,19 @@ VALUES
 (1014, 'Sam', 'Dog', 'Chihuahua', STR_TO_DATE("23-04-2019","%d-%m-%Y"),2.7,'Male','No allergies','6254619187',STR_TO_DATE("30-09-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1015, 'Rain', 'Cat', 'Burmese', STR_TO_DATE("28-05-2018","%d-%m-%Y"),4.23,'Male','No allergies','7028076622',STR_TO_DATE("30-05-2024","%d-%m-%Y"),SYSDATE(),501,0),
 (1016, 'Daisy', 'Dog', 'Dachshund', STR_TO_DATE("22-06-2015","%d-%m-%Y"),12,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1002, 'Maple', 'Cat', 'Exotic Shorthair', STR_TO_DATE("21-07-2018","%d-%m-%Y"),4.37,'Female','No allergies','9086804387',STR_TO_DATE("30-06-2024","%d-%m-%Y"),SYSDATE(),501,0),
 (1017, 'Stormy', 'Dog', 'Poodle', STR_TO_DATE("18-08-2017","%d-%m-%Y"),35,'Female','No allergies','7766577891',STR_TO_DATE("30-07-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1018, 'Pippin', 'Guinea Pig', 'Texel', STR_TO_DATE("16-09-2020","%d-%m-%Y"),0.9,'Male','No allergies',null,null,SYSDATE(),501,0),
 (1019, 'Yoda', 'Dog', 'Border Collie', STR_TO_DATE("11-10-2015","%d-%m-%Y"),24,'Female','No allergies','9833517263',STR_TO_DATE("30-08-2025","%d-%m-%Y"),SYSDATE(),501,0),
 (1020, 'Toto', 'Dog', 'Bichon Frisé', STR_TO_DATE("13-11-2018","%d-%m-%Y"),9,'Male','No allergies','1054943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
-(1009, 'Lady', 'Cat', 'Abyssinian', STR_TO_DATE("15-12-2018","%d-%m-%Y"),4.26,'Female','No allergies','8673170001',STR_TO_DATE("30-08-2026","%d-%m-%Y"),SYSDATE(),501,0),
-(1008, 'Puffy', 'Rabbit', 'Dutch', STR_TO_DATE("17-01-2020","%d-%m-%Y"),4.9,'Female','No allergies',null,null,SYSDATE(),501,0),
-(1001, 'Sunny', 'Hamster', 'Campbell''s Dwarf', STR_TO_DATE("21-02-2021","%d-%m-%Y"),0.13,'Male','No allergies',null,null,SYSDATE(),501,0),
-(1003, 'Luna', 'Guinea Pig', 'Peruvian', STR_TO_DATE("23-03-2022","%d-%m-%Y"),0.93,'Female','No allergies',null,null,SYSDATE(),501,0);
-commit;
-
-TRUNCATE TABLE `pawsome`.`bookings`;
-ALTER TABLE `pawsome`.`bookings` AUTO_INCREMENT=10000000;
-INSERT INTO `pawsome`.`bookings`
-(`booking_status`,
-`booking_type_id`,
-`pet_owner_id`,
-`pet_id`,
-`updated_date`,
-`updated_by`,
-`archived`)
-VALUES
-("PENDING", 1, 1001, 1, SYSDATE(), 501, 0),
-("PENDING", 1, 1001, 2, SYSDATE(), 501, 0),
-("PENDING", 1, 1001, 26, SYSDATE(), 501, 0),
-("PENDING", 1, 1002, 3, SYSDATE(), 501, 0),
-("PENDING", 1, 1002, 19, SYSDATE(), 501, 0),
-("PENDING", 1, 1003, 4, SYSDATE(), 501, 0),
-("PENDING", 1, 1003, 27, SYSDATE(), 501, 0),
-("PENDING", 1, 1004, 5, SYSDATE(), 501, 0),
-("PENDING", 1, 1005, 6, SYSDATE(), 501, 0),
-("PENDING", 1, 1007, 7, SYSDATE(), 501, 0),
-("PENDING", 1, 1008, 8, SYSDATE(), 501, 0),
-("PENDING", 1, 1008, 25, SYSDATE(), 501, 0),
-("PENDING", 1, 1009, 9, SYSDATE(), 501, 0),
-("PENDING", 1, 1009, 24, SYSDATE(), 501, 0),
-("PENDING", 1, 1010, 10, SYSDATE(), 501, 0),
-("PENDING", 1, 1010, 11, SYSDATE(), 501, 0),
-("PENDING", 1, 1011, 12, SYSDATE(), 501, 0),
-("PENDING", 1, 1011, 13, SYSDATE(), 501, 0),
-("PENDING", 1, 1012, 14, SYSDATE(), 501, 0),
-("PENDING", 1, 1013, 15, SYSDATE(), 501, 0),
-("PENDING", 1, 1014, 16, SYSDATE(), 501, 0),
-("PENDING", 1, 1015, 17, SYSDATE(), 501, 0),
-("PENDING", 1, 1016, 18, SYSDATE(), 501, 0),
-("PENDING", 1, 1017, 20, SYSDATE(), 501, 0),
-("PENDING", 1, 1018, 21, SYSDATE(), 501, 0),
-("PENDING", 1, 1019, 22, SYSDATE(), 501, 0),
-("PENDING", 1, 1020, 23, SYSDATE(), 501, 0),
-("PENDING", 1, 1001, 1, SYSDATE(), 501, 0),
-("PENDING", 1, 1001, 2, SYSDATE(), 501, 0),
-("PENDING", 1, 1001, 26, SYSDATE(), 501, 0),
-("PENDING", 1, 1002, 3, SYSDATE(), 501, 0),
-("PENDING", 1, 1002, 19, SYSDATE(), 501, 0),
-("PENDING", 1, 1003, 4, SYSDATE(), 501, 0),
-("PENDING", 1, 1003, 27, SYSDATE(),501, 0),
-("PENDING", 1, 1004, 5, SYSDATE(), 501, 0),
-("PENDING", 1, 1005, 6, SYSDATE(), 501, 0),
-("PENDING", 1, 1007, 7, SYSDATE(), 501, 0),
-("PENDING", 1, 1008, 8, SYSDATE(), 501, 0),
-("PENDING", 1, 1008, 25, SYSDATE(), 501, 0),
-("PENDING", 1, 1009, 9, SYSDATE(), 501, 0),
-("PENDING", 1, 1009, 24, SYSDATE(), 501, 0),
-("PENDING", 1, 1010, 10, SYSDATE(), 501, 0),
-("PENDING", 1, 1010, 11, SYSDATE(), 501, 0),
-("PENDING", 1, 1011, 12, SYSDATE(), 501, 0),
-("PENDING", 1, 1011, 13, SYSDATE(), 501, 0),
-("PENDING", 1, 1012, 14, SYSDATE(), 501, 0),
-("PENDING", 1, 1013, 15, SYSDATE(), 501, 0),
-("PENDING", 1, 1014, 16, SYSDATE(), 501, 0),
-("PENDING", 1, 1015, 17, SYSDATE(), 501, 0),
-("PENDING", 1, 1016, 18, SYSDATE(), 501, 0),
-("PENDING", 1, 1017, 20, SYSDATE(), 501, 0),
-("PENDING", 1, 1018, 21, SYSDATE(), 501, 0),
-("PENDING", 1, 1019, 22, SYSDATE(), 501, 0),
-("PENDING", 1, 1020, 23, SYSDATE(), 501, 0);
+(1021, 'Affie', 'Dog', 'Afghan Hound', STR_TO_DATE("20-11-2018","%d-%m-%Y"),16,'Female','No allergies','1021343276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1022, 'Yorkie', 'Dog', 'Yorkshire Terrier', STR_TO_DATE("13-08-2022","%d-%m-%Y"),9,'Male','No allergies','1054654376',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1022, 'Blue', 'Bird', 'Parrot', STR_TO_DATE("13-08-2022","%d-%m-%Y"),9,'Male','No allergies','1054654763',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1022, 'Marge', 'Bird', 'Lovebird', STR_TO_DATE("13-12-2022","%d-%m-%Y"),4,'Female','No allergies','1054124376',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1022, 'Homer', 'Bird', 'Lovebird', STR_TO_DATE("13-12-2022","%d-%m-%Y"),3,'Male','No allergies','8154654376',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1023, 'Foundy', 'Dog', 'Newfoundland', STR_TO_DATE("18-04-2021","%d-%m-%Y"),25.2,'Female','No allergies','7651943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1023, 'Birrie', 'Cat', 'Birman', STR_TO_DATE("18-03-2021","%d-%m-%Y"),5.2,'Male','No allergies','7651943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1024, 'Turks', 'Cat', 'Turkish Van', STR_TO_DATE("18-03-2021","%d-%m-%Y"),4.56,'Female','No allergies','7935943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0),
+(1024, 'Poo', 'Dog', 'Maltipoo', STR_TO_DATE("11-02-2020","%d-%m-%Y"),9,'Female','No allergies','0943943276',STR_TO_DATE("30-07-2024","%d-%m-%Y"),SYSDATE(),501,0);
 commit;
 
 TRUNCATE TABLE `pawsome`.`booking_types`;
@@ -678,149 +614,6 @@ VALUES
 ('Rehab', 100.00, SYSDATE(), 501, 0),
 ('Vaccine', 90.00, SYSDATE(), 501, 0),
 ('Surgery', 100.00, SYSDATE(), 501, 0);
-commit;
-
-TRUNCATE TABLE `pawsome`.`booking_slots`;
-INSERT INTO `pawsome`.`booking_slots`
-(`booking_id`,
-`booking_date`,
-`booking_time`)
-VALUES
-(10000000, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:30"),
-(10000001, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:00"),
-(10000001, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:30"),
-(10000001, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"10:00"),
-(10000002, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"10:30"),
-(10000003, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"11:30"),
-(10000004, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"13:30"),
-(10000004, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:00"),
-(10000004, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:30"),
-(10000005, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:00"),
-(10000006, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:00"),
-(10000007, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:00"),
-(10000008, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:00"),
-(10000009, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:00"),
-(10000009, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"17:00"),
-(10000010, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:00"),
-(10000011, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:00"),
-(10000012, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:00"),
-(10000013, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"13:30"),
-(10000013, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:00"),
-(10000014, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:00"),
-(10000015, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:00"),
-(10000016, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:00"),
-(10000017, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:00"),
-(10000018, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:00"),
-(10000019, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:30"),
-(10000020, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:00"),
-(10000020, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:30"),
-(10000020, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:00"),
-(10000020, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:30"),
-(10000021, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:00"),
-(10000022, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"15:00"),
-(10000023, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"09:30"),
-(10000023, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"11:30"),
-(10000024, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:00"),
-(10000025, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:00"),
-(10000025, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"16:30"),
-(10000025, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"17:00"),
-(10000026, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:00"),
-(10000026, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"14:00"),
-(10000027, STR_TO_DATE("08-09-2023", "%d-%m-%Y"),"08:00"),
-(10000028, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"08:00"),
-(10000029, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:00"),
-(10000030, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"10:30"),
-(10000031, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"11:30"),
-(10000032, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"13:30"),
-(10000032, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:00"),
-(10000033, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:30"),
-(10000035, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:00"),
-(10000035, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"16:00"),
-(10000036, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:00"),
-(10000037, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"08:00"),
-(10000038, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:00"),
-(10000039, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"17:00"),
-(10000040, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:00"),
-(10000041, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:00"),
-(10000042, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:00"),
-(10000042, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"13:30"),
-(10000042, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:00"),
-(10000043, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"16:00"),
-(10000044, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"16:00"),
-(10000045, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"16:00"),
-(10000046, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:00"),
-(10000047, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"08:00"),
-(10000048, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:30"),
-(10000049, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:00"),
-(10000049, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"14:30"),
-(10000050, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:00"),
-(10000050, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:30"),
-(10000051, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:00"),
-(10000052, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"15:00"),
-(10000053, STR_TO_DATE("07-09-2023", "%d-%m-%Y"),"09:30");
-commit;
-
-TRUNCATE TABLE `pawsome`.`booking_history`;
-INSERT INTO `pawsome`.`booking_history`
-(`booking_id`,
-`new_status`,
-`updated_date`,
-`updated_by`)
-VALUES
-(10000000, 'PENDING', SYSDATE(),501),
-(10000001, 'PENDING', SYSDATE(),501),
-(10000002, 'PENDING', SYSDATE(),501),
-(10000003, 'PENDING', SYSDATE(),501),
-(10000004, 'PENDING', SYSDATE(),501),
-(10000005, 'PENDING', SYSDATE(),501),
-(10000006, 'PENDING', SYSDATE(),501),
-(10000007, 'PENDING', SYSDATE(),501),
-(10000008, 'PENDING', SYSDATE(),501),
-(10000009, 'PENDING', SYSDATE(),501),
-(10000010, 'PENDING', SYSDATE(),501),
-(10000011, 'PENDING', SYSDATE(),501),
-(10000012, 'PENDING', SYSDATE(),501),
-(10000013, 'PENDING', SYSDATE(),501),
-(10000014, 'PENDING', SYSDATE(),501),
-(10000015, 'PENDING', SYSDATE(),501),
-(10000016, 'PENDING', SYSDATE(),501),
-(10000017, 'PENDING', SYSDATE(),501),
-(10000018, 'PENDING', SYSDATE(),501),
-(10000019, 'PENDING', SYSDATE(),501),
-(10000020, 'PENDING', SYSDATE(),501),
-(10000021, 'PENDING', SYSDATE(),501),
-(10000022, 'PENDING', SYSDATE(),501),
-(10000023, 'PENDING', SYSDATE(),501),
-(10000024, 'PENDING', SYSDATE(),501),
-(10000025, 'PENDING', SYSDATE(),501),
-(10000026, 'PENDING', SYSDATE(),501),
-(10000027, 'PENDING', SYSDATE(),501),
-(10000028, 'PENDING', SYSDATE(),501),
-(10000029, 'PENDING', SYSDATE(),501),
-(10000030, 'PENDING', SYSDATE(),501),
-(10000031, 'PENDING', SYSDATE(),501),
-(10000032, 'PENDING', SYSDATE(),501),
-(10000033, 'PENDING', SYSDATE(),501),
-(10000035, 'PENDING', SYSDATE(),501),
-(10000036, 'PENDING', SYSDATE(),501),
-(10000037, 'PENDING', SYSDATE(),501),
-(10000038, 'PENDING', SYSDATE(),501),
-(10000039, 'PENDING', SYSDATE(),501),
-(10000040, 'PENDING', SYSDATE(),501),
-(10000041, 'PENDING', SYSDATE(),501),
-(10000042, 'PENDING', SYSDATE(),501),
-(10000043, 'PENDING', SYSDATE(),501),
-(10000044, 'PENDING', SYSDATE(),501),
-(10000045, 'PENDING', SYSDATE(),501),
-(10000046, 'PENDING', SYSDATE(),501),
-(10000047, 'PENDING', SYSDATE(),501),
-(10000048, 'PENDING', SYSDATE(),501),
-(10000049, 'PENDING', SYSDATE(),501),
-(10000050, 'PENDING', SYSDATE(),501),
-(10000050, 'PENDING', SYSDATE(),501),
-(10000051, 'PENDING', SYSDATE(),501),
-(10000052, 'PENDING', SYSDATE(),501),
-(10000053, 'PENDING', SYSDATE(),501);
 commit;
 
 INSERT INTO `pawsome`.`inventory_item_categories`
@@ -1122,4 +915,3268 @@ VALUES
 (7,'Single Door Dog Carrier Cream White Large',2,0,0,1,'piece',null,null,89.99,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
 commit;
 
+INSERT INTO `pawsome`.`bookings`
+(`booking_status`,
+`booking_type_id`,
+`pet_owner_id`,
+`pet_id`,
+`doctor_id`,
+`updated_date`,
+`updated_by`,
+`archived`)
+VALUES
+('CONFIRMED',1,1001,1,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1001,2,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1002,5,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1003,6,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1006,10,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1006,10,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1008,12,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1008,12,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1008,13,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1009,15,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1010,16,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1010,17,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1011,18,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1011,18,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',4,1011,19,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1011,19,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',4,1013,21,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1013,21,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1014,22,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1016,24,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1017,25,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1018,26,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1019,27,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1020,28,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1022,31,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',4,1022,33,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1023,35,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1024,36,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+
+('CONFIRMED',3,1001,1,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1001,3,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1002,4,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1003,7,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1004,8,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1005,9,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1008,13,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1009,14,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',4,1009,15,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1013,21,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1014,22,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',5,1015,23,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',4,1016,24,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1021,29,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',3,1022,30,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',1,1022,31,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1022,32,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('CONFIRMED',2,1023,34,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+
+('FINISHED',4,1001,1,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',2,1001,2,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',4,1001,3,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',5,1002,4,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',2,1003,7,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',3,1004,8,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+('FINISHED',4,1005,9,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',4,1007,11,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',1,1009,14,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',5,1012,20,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',3,1015,23,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+('FINISHED',1,1021,29,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',1,1022,30,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',3,1022,32,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+('FINISHED',4,1023,34,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',4,1023,35,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',4,1024,37,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+
+('FINISHED',3,1001,2,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+('FINISHED',2,1002,5,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',2,1003,6,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',5,1006,10,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',4,1007,11,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',2,1008,12,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',4,1010,16,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',2,1010,17,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',5,1011,18,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',1,1011,19,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',3,1012,20,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+('FINISHED',4,1017,25,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',2,1018,26,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2,1),
+('FINISHED',5,1019,27,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',1,1020,28,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',4,1022,33,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('FINISHED',5,1023,35,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('FINISHED',1,1024,36,1,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('FINISHED',3,1024,37,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+
+('CANCELED',3,1006,10,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('CANCELED',2,1019,27,2,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4,1),
+('CANCELED',3,1022,30,3,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5,1),
+('CANCELED',4,1001,3,4,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1,1),
+('CANCELED',5,1017,25,5,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3,1),
+
+('PENDING',1,1001,1,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',2,1001,2,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',3,1001,3,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',4,1002,4,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',5,1002,5,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',5,1003,6,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',4,1003,7,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',3,1004,8,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',1,1005,9,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',1,1006,10,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',3,1007,11,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',2,1008,12,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',4,1008,13,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',5,1009,14,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',5,1009,15,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',2,1010,16,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',1,1010,17,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',1,1011,18,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',2,1011,19,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',3,1012,20,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',4,1013,21,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',5,1014,22,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',3,1015,23,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0),
+('PENDING',4,1016,24,null,DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501,0);
+
+INSERT INTO `pawsome`.`booking_slots`
+(`booking_id`,
+`booking_date`,
+`booking_time`)
+VALUES
+(10000000, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000000, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000000, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000001, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000001, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000001, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000002, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000002, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000003, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000004, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000005, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000005, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000005, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000005, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000006, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000006, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000007, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000007, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000007, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000008, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000009, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000010, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000010, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000010, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000010, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000011, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000011, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000012, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000012, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000013, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000013, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000013, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000013, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000014, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000014, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000014, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000015, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000015, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000015, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000015, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000016, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000016, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000016, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000017, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000018, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000019, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000019, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000019, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000020, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000021, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000022, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000023, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000024, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000024, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000024, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000024, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000025, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000025, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000025, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000027, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000028, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000029, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000030, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000031, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000032, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000033, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000034, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000034, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000034, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000035, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000035, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000035, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000036, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000036, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000037, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000037, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000038, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000038, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000039, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000039, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000039, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000040, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000040, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000040, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000041, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000041, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000041, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000041, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000042, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000042, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000042, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000043, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000043, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000044, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000044, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000045, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000045, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000046, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000047, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000048, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000048, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000049, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000049, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000049, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000049, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000050, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000051, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000052, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000053, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000054, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000054, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000055, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000056, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000056, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000056, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000057, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000057, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000058, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000059, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000060, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000061, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000062, 
+IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000063, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000064, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000065, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000066, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000067, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000068, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000068, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000068, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000069, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000069, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000069, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000070, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000070, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000071, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000071, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000071, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000072, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000072, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000073, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000073, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000074, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000074, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000075, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000075, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000075, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000076, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000076, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000077, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000077, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000078, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000078, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000078, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000079, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000079, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000079, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000080, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000080, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000080, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000081, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000081, 
+IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000087, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000087, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000087, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000087, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000088, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000088, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000088, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000089, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000089, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000090, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:00"),
+(10000090, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"09:30"),
+(10000090, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000090, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000091, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:00"),
+(10000091, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"08:30"),
+(10000092, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000092, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000093, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000093, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000094, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000094, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000094, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:00"),
+(10000095, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:00"),
+(10000095, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"10:30"),
+(10000096, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000096, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000096, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000097, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000097, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000097, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000098, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000098, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000099, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"11:30"),
+(10000099, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000100, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:00"),
+(10000100, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000100, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000101, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000101, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000102, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000102, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000102, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000103, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000103, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000103, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000103, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30"),
+(10000104, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000104, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000105, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000105, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000105, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000106, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:00"),
+(10000106, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000107, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"15:30"),
+(10000107, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000107, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000108, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:00"),
+(10000108, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"16:30"),
+(10000108, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000109, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:00"),
+(10000109, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"17:30"),
+(10000110, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"12:30"),
+(10000110, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:00"),
+(10000110, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"13:30"),
+(10000110, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:00"),
+(10000110, 
+IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 2 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 2 DAY, INTERVAL +1 DAY)
+                )
+			)
+),
+"14:30");
+
+INSERT INTO `pawsome`.`booking_history`
+(`booking_id`,
+`prev_status`,
+`new_status`,
+`updated_date`,
+`updated_by`)
+VALUES
+(10000000, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000000,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000000, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000001, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000001,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000001, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000002, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000002,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000002, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000003, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000003,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000003, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000004, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1006),
+(10000004,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000004, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000005, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1006),
+(10000005,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000005, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000006, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000006, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000007, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000007, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000008, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000008, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000009, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000009,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000009, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000010, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000010, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000011, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000011, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000011, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000011, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000012, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000012, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000013, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000013, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000013, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000013, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000014, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000014, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000014, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000014, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000015, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000015, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000016, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1013),
+(10000016, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000017, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1013),
+(10000017,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000017, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000018, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1014),
+(10000018, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000018, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000018, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000019, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1016),
+(10000019, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000020, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1017),
+(10000020, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000021, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1018),
+(10000021, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000022, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1019),
+(10000022, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000023, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1020),
+(10000023,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000023, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000024, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000024, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000025, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000025, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000025, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000025, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000027, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1024),
+(10000027, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000027, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000027, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000028, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000028,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000028, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000029, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000029, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000030, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000030, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000031, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000031, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000032, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1004),
+(10000032, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000033, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1005),
+(10000033,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000033, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000034, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000034, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000034, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000034, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000035, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000035,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000035, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000036, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000036, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000037, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1013),
+(10000037, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000038, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1014),
+(10000038, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000039, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1015),
+(10000039, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000040, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1016),
+(10000040, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000041, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1021),
+(10000041,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000041, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000042, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000042, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000042, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000042, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000043, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000043,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000043, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000044, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000044,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000044, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000045, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1023),
+(10000045,'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000045, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000046, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000046, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000046, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000046, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000046, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000047, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000047, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000047, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000048, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000048, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000048, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000048, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000048, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000049, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000049, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000049, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000050, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000050, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000050, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000050, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000051, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1004),
+(10000051, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000051, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000052, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1005),
+(10000052, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000052, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000053, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1007),
+(10000053, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000053, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000053, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000053, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000054, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000054, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000054, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000055, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1012),
+(10000055, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000055, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000055, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000056, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1015),
+(10000056, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000056, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000057, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1021),
+(10000057, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000057, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000058, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000058, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000058, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000059, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000059, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000059, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000059, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000060, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1023),
+(10000060, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000060, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000061, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1023),
+(10000061, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000061, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000061, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000062, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1024),
+(10000062, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000062, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000063, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000063, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000063, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000064, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000064, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000064, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000064, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000064, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000065, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000065, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000065, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000065, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000066, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1006),
+(10000066, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000066, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000066, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000067, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1007),
+(10000067, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000067, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000068, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000068, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000068, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000068, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000068, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000069, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000069, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000069, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000070, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000070, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000070, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000070, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000070, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000071, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000071, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000071, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000071, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000071, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000072, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000072, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000072, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000073, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1012),
+(10000073, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000073, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000073, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000073, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000074, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1017),
+(10000074, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000074, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000075, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1018),
+(10000075, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000075, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000075, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),2),
+
+(10000076, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1019),
+(10000076, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000076, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000077, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1020),
+(10000077, 'PENDING', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000077, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000077, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000078, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000078, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000078, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),4),
+
+(10000079, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1023),
+(10000079, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000079, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000079, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000079, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),5),
+
+(10000080, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1024),
+(10000080, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000080, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1),
+
+(10000081, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1024),
+(10000081, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000081, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000081, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000081, 'CONFIRMED', 'FINISHED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),3),
+
+(10000082, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1006),
+(10000082, 'PENDING', 'CANCELED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000083, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1019),
+(10000083, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000083, 'CONFIRMED', 'CANCELED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000084, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1022),
+(10000084, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000084, 'CONFIRMED', 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000084, 'PENDING', 'CANCELED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000085, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000085, 'PENDING', 'CANCELED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000086, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1017),
+(10000086, 'PENDING', 'CONFIRMED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+(10000086, 'CONFIRMED', 'CANCELED', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),501),
+
+(10000087, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000088, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000089, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1001),
+(10000090, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000091, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1002),
+(10000092, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000093, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1003),
+(10000094, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1004),
+(10000095, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1005),
+(10000096, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1006),
+(10000097, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1007),
+(10000098, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000099, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1008),
+(10000100, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000101, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1009),
+(10000102, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000103, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1010),
+(10000104, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000105, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1011),
+(10000106, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1012),
+(10000107, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1013),
+(10000108, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1014),
+(10000109, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1014),
+(10000110, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1016);
+
+
+
 SET FOREIGN_KEY_CHECKS=1;
+
+
+

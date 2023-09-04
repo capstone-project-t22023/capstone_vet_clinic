@@ -6,8 +6,7 @@ endpoint: /cancel_booking/<booking_id>
 method: POST
 request_body: 
     {
-        "prev_booking_status": "PENDING",
-        "username": "pawsome_admin"
+        "prev_booking_status": "PENDING"
     }
 response_body:
     {
@@ -15,10 +14,8 @@ response_body:
     }
 
 endpoint: /finish_booking/<booking_id>
-request_body: 
-    {
-        "username": "sneeringbovril"
-    }
+METHOD: POST
+request_body: NO BODY
 response_body:
     {
         "finish_booking": true
@@ -35,7 +32,6 @@ request_body:
         "pet_owner_id": 1002,
         "pet_id": 3,
         "doctor_id": 1,
-        "username": "pawsome_admin",
         "booking_slots": [
             {
                 "booking_date": "19-09-2023",
@@ -59,7 +55,6 @@ request_body:
         "booking_type": "STANDARD CONSULTATION",
         "pet_owner_id": 1002,
         "pet_id": 3,
-        "username": "pawsome_admin",
         "booking_slots": [
             {
                 "booking_date": "18-09-2023",
@@ -87,7 +82,6 @@ request_body:
         "booking_type": "VACCINE",
         "pet_owner_id": 1002,
         "pet_id": 3,
-        "username": "pawsome_admin",
         "booking_slots": [
             {
                 "booking_date": "18-09-2023",
@@ -116,7 +110,6 @@ request_body:
         "pet_owner_id": 1002,
         "pet_id": 3,
         "doctor_id": 1,
-        "username": "pawsome_admin",
         "booking_slots": [
             {
                 "booking_date": "18-09-2023",
@@ -141,12 +134,9 @@ response_body:
         "update_booking": true
     }
 
-endpoint: /get_taken_slots_by_date
-method: POST
-request_body: 
-    {
-        "selected_date": "07-09-2023"
-    }
+endpoint: /get_taken_slots_by_date?selected_date=07-09-2023
+method: GET
+request_body: NO BODY
 response_body:
     {
         "taken_slots_by_date": [
@@ -197,13 +187,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by pet ID)
-method: POST
-request_body: 
-    {
-        "filter": "pet_id",
-        "filter_value": 1
-    }
+endpoint: /search_booking?filter=pet_id&filter_value=1
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -227,13 +213,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by pet name)
-method: POST
-request_body: 
-    {
-        "filter": "pet_name",
-        "filter_value": "Ma"
-    }
+endpoint: /search_booking?filter=pet_name&filter_value=Ma
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -257,13 +239,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by username)
-method: POST
-request_body: 
-    {
-        "filter": "username",
-        "filter_value": "a"
-    }
+endpoint: /search_booking?filter=username&filter_value=a
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -287,13 +265,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by booking type)
-method: POST
-request_body: 
-    {
-        "filter": "booking_type",
-        "filter_value": "Consultation"
-    }
+endpoint: /search_booking?filter=booking_type&filter_value=Consultation
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -317,13 +291,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by booking status)
-method: POST
-request_body: 
-    {
-        "filter": "booking_status",
-        "filter_value": "Pending"
-    }
+endpoint: /search_booking?filter=booking_status&filter_value=Pending
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -347,13 +317,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by booking date)
-method: POST
-request_body: 
-    {
-        "filter": "booking_date",
-        "filter_value": "16-09-2023"
-    }
+endpoint: /search_booking?filter=booking_date&filter_value=16-09-2023
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -377,13 +343,9 @@ response_body:
     }
 
 
-endpoint: /search_booking (by booking_id)
-method: POST
-request_body: 
-    {
-        "filter": "booking_id",
-        "filter_value": "32"
-    }
+endpoint: /search_booking?filter=booking_id&filter_value=32
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -406,13 +368,9 @@ response_body:
         ]
     }
 
-endpoint: /search_booking (by doctor_id)
-method: POST
-request_body: 
-    {
-        "filter": "doctor_id",
-        "filter_value": "1"
-    }
+endpoint: /search_booking?filter=doctor_id&filter_value=1
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -435,13 +393,9 @@ response_body:
         ]
     }
 
-endpoint: /search_booking (by pet_owner_id)
-method: POST
-request_body: 
-    {
-        "filter": "pet_owner_id",
-        "filter_value": 1010
-    }
+endpoint: /search_booking?filter=pet_owner_id&filter_value=1010
+method: GET
+request_body: NO BODY
 response_body:
     {
         "bookings": [
@@ -470,7 +424,7 @@ response_body:
     }
 
 
-endpoint: /get_booking/<id> (by booking id)
+endpoint: /get_booking/<booking_id>
 method: GET
 request_body: NO BODY
 response_body:
