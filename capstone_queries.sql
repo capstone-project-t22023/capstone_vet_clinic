@@ -625,7 +625,8 @@ VALUES
 ('Pet Toys',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 ('Pet Food and Treats',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 ('Clinical Supplies',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-('Others',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
+('Others',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+('Lodging',(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
 commit;
 
 INSERT INTO `pawsome`.`inventory_items`
@@ -912,7 +913,80 @@ VALUES
 (7,'Single Door Dog Carrier Cream Blue Large',2,0,0,1,'piece',null,null,89.99,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (7,'Single Door Dog Carrier Cream White Small',2,0,0,1,'piece',null,null,44.81,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (7,'Single Door Dog Carrier Cream White Medium',2,0,0,1,'piece',null,null,54.77,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(7,'Single Door Dog Carrier Cream White Large',2,0,0,1,'piece',null,null,89.99,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
+(7,'Single Door Dog Carrier Cream White Large',2,0,0,1,'piece',null,null,89.99,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 1',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 2',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 3',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 4',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 5',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 6',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 7',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 8',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 9',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 10',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 11',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 12',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 13',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 14',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 15',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 16',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 17',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 18',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 19',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 20',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 21',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 22',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 23',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 24',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 25',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 26',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 27',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 28',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 29',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 30',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
+commit;
+
+INSERT INTO `pawsome`.`lodgings`
+(`cage_status`,
+`pet_id`,
+`assigned_doctor`,
+`confinement_date`,
+`discharge_date`,
+`comments`,
+`updated_date`,
+`updated_by`,
+`archived`)
+VALUES
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0),
+('AVAILABLE',null,null,null,null,null,SYSDATE(),501,0);
 commit;
 
 INSERT INTO `pawsome`.`bookings`
@@ -4174,6 +4248,463 @@ VALUES
 (10000109, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1014),
 (10000110, null, 'PENDING', DATE_ADD(SYSDATE(), INTERVAL -7 DAY),1016);
 
+INSERT INTO `pawsome`.`invoices`
+(`booking_id`,
+`invoice_amount`,
+`updated_date`,
+`updated_by`,
+`archived`)
+VALUES
+(10000046,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000047,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000048,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000049,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000050,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000051,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),3,0),
+(10000052,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000053,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000054,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000055,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000056,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),3,0),
+(10000057,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000058,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000059,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),3,0),
+(10000060,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000061,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000062,0.00,IF (DAYNAME(SYSDATE()) = 'Friday', 
+			DATE_ADD(SYSDATE(), INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE()) = 'Thursday', 
+				DATE_ADD(SYSDATE(), INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE()) = 'Saturday', 
+					DATE_ADD(SYSDATE(), INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE(), INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+
+
+(10000063,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),3,0),
+(10000064,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000065,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000066,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000067,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000068,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000069,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000070,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000071,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000072,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000073,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),3,0),
+(10000074,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000075,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),2,0),
+(10000076,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000077,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000078,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),4,0),
+(10000079,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),5,0),
+(10000080,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),1,0),
+(10000081,0.00,IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Friday', 
+			DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY),
+			IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Thursday', 
+				DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +3 DAY), 
+                IF (DAYNAME(SYSDATE() + INTERVAL 1 DAY) = 'Saturday', 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +2 DAY), 
+					DATE_ADD(SYSDATE() + INTERVAL 1 DAY, INTERVAL +1 DAY)
+                )
+			)
+),3,0);
+
+INSERT INTO `pawsome`.`invoice_items`
+(`invoice_id`,
+`item_category_id`,
+`item_id`,
+`quantity`,
+`unit_amount`,
+`total_amount`)
+VALUES
+(300000,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300001,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300002,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300003,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300004,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300005,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3)),
+(300006,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300007,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300008,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300009,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300010,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3)),
+(300011,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300012,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300013,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3)),
+(300014,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300015,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300016,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300017,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3)),
+(300018,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300019,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300020,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300021,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300022,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300023,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300024,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300025,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300026,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300027,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3)),
+(300028,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300029,1,2,1,(SELECT booking_fee FROM booking_types WHERE id = 2),(SELECT booking_fee FROM booking_types WHERE id = 2)),
+(300030,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300031,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300032,1,4,1,(SELECT booking_fee FROM booking_types WHERE id = 4),(SELECT booking_fee FROM booking_types WHERE id = 4)),
+(300033,1,5,1,(SELECT booking_fee FROM booking_types WHERE id = 5),(SELECT booking_fee FROM booking_types WHERE id = 5)),
+(300034,1,1,1,(SELECT booking_fee FROM booking_types WHERE id = 1),(SELECT booking_fee FROM booking_types WHERE id = 1)),
+(300035,1,3,1,(SELECT booking_fee FROM booking_types WHERE id = 3),(SELECT booking_fee FROM booking_types WHERE id = 3));
+
+INSERT INTO `pawsome`.`invoice_items`
+(`invoice_id`,
+`item_category_id`,
+`item_id`,
+`quantity`,
+`unit_amount`,
+`total_amount`)
+VALUES
+(300008,2,23,1,(SELECT unit_price FROM inventory_items WHERE id = 23),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300008,2,24,1,(SELECT unit_price FROM inventory_items WHERE id = 24),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300008,2,25,1,(SELECT unit_price FROM inventory_items WHERE id = 25),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300008,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300008,5,209,2,(SELECT unit_price FROM inventory_items WHERE id = 209),(SELECT unit_price * 2 FROM inventory_items WHERE id = 2)),
+(300011,2,26,1,(SELECT unit_price FROM inventory_items WHERE id = 26),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300011,2,27,1,(SELECT unit_price FROM inventory_items WHERE id = 27),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300011,2,28,1,(SELECT unit_price FROM inventory_items WHERE id = 28),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300011,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300011,5,217,3,(SELECT unit_price FROM inventory_items WHERE id = 217),(SELECT unit_price * 3 FROM inventory_items WHERE id = 3)),
+(300011,5,214,2,(SELECT unit_price FROM inventory_items WHERE id = 214),(SELECT unit_price * 2 FROM inventory_items WHERE id = 2)),
+(300012,2,29,1,(SELECT unit_price FROM inventory_items WHERE id = 29),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300012,2,30,1,(SELECT unit_price FROM inventory_items WHERE id = 30),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300012,2,31,1,(SELECT unit_price FROM inventory_items WHERE id = 31),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300012,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300012,5,186,2,(SELECT unit_price FROM inventory_items WHERE id = 186),(SELECT unit_price * 2 FROM inventory_items WHERE id = 2)),
+(300012,5,176,3,(SELECT unit_price FROM inventory_items WHERE id = 176),(SELECT unit_price * 3 FROM inventory_items WHERE id = 3)),
+(300026,2,31,1,(SELECT unit_price FROM inventory_items WHERE id = 31),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300026,2,32,1,(SELECT unit_price FROM inventory_items WHERE id = 32),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300026,2,33,1,(SELECT unit_price FROM inventory_items WHERE id = 33),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300026,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300026,5,170,3,(SELECT unit_price FROM inventory_items WHERE id = 170),(SELECT unit_price * 3 FROM inventory_items WHERE id = 3)),
+(300026,5,185,2,(SELECT unit_price FROM inventory_items WHERE id = 185),(SELECT unit_price * 2 FROM inventory_items WHERE id = 2)),
+(300031,2,34,1,(SELECT unit_price FROM inventory_items WHERE id = 34),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300031,2,35,1,(SELECT unit_price FROM inventory_items WHERE id = 35),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300031,2,36,1,(SELECT unit_price FROM inventory_items WHERE id = 36),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300031,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300031,5,153,2,(SELECT unit_price FROM inventory_items WHERE id = 153),(SELECT unit_price * 2 FROM inventory_items WHERE id = 2)),
+(300031,5,157,3,(SELECT unit_price FROM inventory_items WHERE id = 157),(SELECT unit_price * 3 FROM inventory_items WHERE id = 3)),
+(300034,2,37,1,(SELECT unit_price FROM inventory_items WHERE id = 37),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300034,2,38,1,(SELECT unit_price FROM inventory_items WHERE id = 38),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300034,2,39,1,(SELECT unit_price FROM inventory_items WHERE id = 39),(SELECT unit_price * 1 FROM inventory_items WHERE id = 1)),
+(300034,6,226,5,(SELECT unit_price FROM inventory_items WHERE id = 226),(SELECT unit_price * 5 FROM inventory_items WHERE id = 5)),
+(300034,5,133,3,(SELECT unit_price FROM inventory_items WHERE id = 133),(SELECT unit_price * 3 FROM inventory_items WHERE id = 3));
 
 
 SET FOREIGN_KEY_CHECKS=1;
