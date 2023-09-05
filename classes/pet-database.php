@@ -505,10 +505,19 @@ class PetDatabase
             archived = 1,
             updated_date = SYSDATE(),
             updated_by = (
-                SELECT id 
-                FROM `pawsome`.`admins` 
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
                 WHERE UPPER(username) = UPPER(?)
-                AND archived = 0)
+                AND archived = 0
+            )
             WHERE id = ?'
         );
         $sql->bind_param(
