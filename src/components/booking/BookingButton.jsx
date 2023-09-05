@@ -4,6 +4,7 @@ import ProgramContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingOptionsUpdate from "./BookingOptionsUpdate";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
+import dayjs from "dayjs";
 
 
 export default function BookingButton() {
@@ -80,7 +81,7 @@ export default function BookingButton() {
                     sx={{ mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold' }}>
                     {!isSelectedAppointmentEmpty ? "Already selected:" : "Choose the Date of appointment"}
                 </DialogTitle>
-                {!isSelectedAppointmentEmpty ? <p className={"text-center text-primary"}>{selectedAppointment.booking_date } <AlarmOnIcon fontSize="small" color="action" /> { selectedAppointment.booking_time +"" }</p> : null}
+                {!isSelectedAppointmentEmpty ? <p className={"text-center text-primary"}>{dayjs(selectedAppointment.booking_date).format("DD MMM YYYY") } <AlarmOnIcon fontSize="small" color="action" /> { selectedAppointment.booking_time +"" }</p> : null}
                 <BookingOptionsUpdate onCancel={handleCancel} onSave={handleClose} selectedBooking={selectedAppointment} editMode={editMode} />
             </Dialog>
         </>

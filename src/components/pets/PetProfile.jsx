@@ -75,7 +75,7 @@ export default function PetProfile({onDelete}) {
         return fetch(apiUrl, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
             .then((response) => {

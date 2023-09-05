@@ -6,13 +6,14 @@ export default function TimeSlots(props) {
     const {chosenDate, selectedSlots, onChange, whenBusyData} = props; // Destructure the selectedSlots and setSelectedSlots props
     const [timeSlots, setTimeSlots] = useState(generateTimeSlots())
 
-    console.log("selected slots: ",selectedSlots)
+    // console.log("selected slots: ",selectedSlots)
+    // console.log("taken slots: ",whenBusyData.booking_time)
 
     // set up the Time Slots in 30 mins 8am - 5pm
     function generateTimeSlots() {
         const tempSlots = [];
         const startHour = 8; // 8 am
-        const endHour = 17; // 5 pm
+        const endHour = 18; // 6 pm
         const slotDurationMinutes = 30;
         for (let hour = startHour; hour < endHour; hour++) {
             for (let minute = 0; minute < 60; minute += slotDurationMinutes) {

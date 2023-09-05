@@ -38,20 +38,20 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             .then(response => response.json())
             .then(data => {
 
-                const merged = {};
-                if (Array.isArray(data.bookings)) {
-                    data.bookings.forEach(appointment => {
-                        const bookingId = appointment.booking_id;
-                        if (!merged[bookingId]) {
-                            merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-                        } else {
-                            merged[bookingId].booking_time.push(appointment.booking_time);
-                            // Sort the booking_time array in ascending order
-                            merged[bookingId].booking_time.sort((a, b) => a.localeCompare(b));
-                        }
-                    });
-                }
-                setAppointmentList(merged)
+                // const merged = {};
+                // if (Array.isArray(data.bookings)) {
+                //     data.bookings.forEach(appointment => {
+                //         const bookingId = appointment.booking_id;
+                //         if (!merged[bookingId]) {
+                //             merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
+                //         } else {
+                //             merged[bookingId].booking_time.push(appointment.booking_time);
+                //             // Sort the booking_time array in ascending order
+                //             merged[bookingId].booking_time.sort((a, b) => a.localeCompare(b));
+                //         }
+                //     });
+                // }
+                setAppointmentList(data.bookings)
             })
             .catch(error => {
                 console.error('Error:', error);

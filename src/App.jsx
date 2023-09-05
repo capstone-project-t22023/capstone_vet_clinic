@@ -43,20 +43,22 @@ function App() {
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
 
-
     useEffect(() => {
         Promise.all([
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_admins", {
+                method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors", {
+                method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pet_owners", {
+                method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },

@@ -40,7 +40,8 @@ export default function BookingOptionsUpdate(props) {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_all", {
+            fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(selectedBooking.booking_date).format('DD-MM-YYYY')}`, {
+                method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
@@ -58,7 +59,7 @@ export default function BookingOptionsUpdate(props) {
             })
             .then(data => {
                 setPets(data[1].pets);
-                setTakenSlots(data[2].taken_slots_all);
+                setTakenSlots(data[2].taken_slots_by_date);
 
                 let tmp_d = data[0].doctors.map( x => {
                     let tmp = {};
@@ -147,6 +148,7 @@ export default function BookingOptionsUpdate(props) {
                 console.error(error);
             });
     }, []);
+
 
     const changeDateHandler = (newDate) => {
         setDate(dayjs(newDate))
@@ -259,12 +261,12 @@ export default function BookingOptionsUpdate(props) {
 
         let req_body = {
             booking_type : selectedBookingType,
-            prev_booking_status: selectedBooking.booking_status,
             pet_owner_id : selectedOwner.pet_owner_id,
             pet_id: selectedPet,
-            doctor_id: selectedDoctor,
-            username: user.username,
             booking_slots: tmp_slots
+        }
+        if (user.role === 'admin') {
+            req_body.doctor_id = selectedDoctor;
         }
 
         console.log("Update Booking: " + JSON.stringify(req_body));
