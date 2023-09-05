@@ -36,10 +36,15 @@ export default function TimeSlots(props) {
 
 
     const slotIsBusy = (slot) => {
-        let day = whenBusyData.length > 0 ? whenBusyData.filter( x => x.booking_date === dayjs(chosenDate).format('DD-MM-YYYY')) : [];
-        let daySlots = day.length > 0 ? day[0].booking_time : [];
-        return daySlots && daySlots.includes(slot.time) ? true : false;
-    }
+        if (whenBusyData.booking_time) {
+                if (
+                    whenBusyData.booking_time.includes(slot.time)
+                ) {
+                    return true; // Slot is busy on the specified day and time
+                }
+        }
+        return false; // Slot is not busy
+    };
 
     const isSelected = (slot) => {
 

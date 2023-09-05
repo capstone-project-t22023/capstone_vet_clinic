@@ -46,17 +46,17 @@ function App() {
 
     useEffect(() => {
         Promise.all([
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_admins", {
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors", {
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pet_owners", {
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },

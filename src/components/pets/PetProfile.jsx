@@ -25,7 +25,7 @@ export default function PetProfile({onDelete}) {
 
     useEffect (() => {
         setActivePet(getPetById(selectedPet))
-        setAppointmentList(getAppointments('pet_id',selectedPet));
+        setAppointmentList(fetchAppointments('pet_id',selectedPet));
     }, [selectedPet])
 
     const handleBooking = (booking) => {
@@ -63,10 +63,39 @@ export default function PetProfile({onDelete}) {
         setShowDialog(true);
     }
     const handleConfirmDelete = () => {
-        onDelete(activePet.pet_id);
+        deletePet(activePet.pet_id);
         setShowDialog(false);
         handlerReloadPetList(true);
     };
+
+    const deletePet = (petId) => {
+        const apiUrl = `http://localhost/capstone_vet_clinic/api.php/delete_pet/${petId}`;
+        console.log("apiUrl ",apiUrl)
+
+        return fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete pet');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.delete_pet === true) {
+                    return true; // Pet was successfully deleted
+                } else {
+                    throw new Error('Failed to delete pet');
+                }
+            })
+            .catch((error) => {
+                console.error('Error deleting pet:', error);
+                return false; // Pet deletion failed
+            });
+    }
 
 
 
@@ -75,17 +104,14 @@ export default function PetProfile({onDelete}) {
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([])
 
-    const getAppointments = (filter, filterValue) => {
-        const requestData = {
-            filter: filter,
-            filter_value: filterValue
-        };
-        fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
-            method: 'POST',
+    const fetchAppointments = (filterType, filterValue) => {
+        const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
+
+        fetch(url, {
+            method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token'),
             },
-            body: JSON.stringify(requestData)
         })
             .then(response => response.json())
             .then(data => {

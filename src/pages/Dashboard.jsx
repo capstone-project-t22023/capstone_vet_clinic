@@ -24,9 +24,6 @@ export default function Dashboard() {
         navigate(navigation);
     }
 
-    const handleDeletePet = (petId) => {
-        console.log("This Pet has to be removed", petId)
-    }
     const handleBooking = (booking) => {
         console.log("This is booking", booking)
     }
@@ -153,8 +150,8 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Stack direction="row" spacing={2} flexWrap="wrap">
-                                    <Appointments timeframe="future" count={3} itemsPerPage={4}/>
-                                    <Appointments timeframe="historic" count={3} itemsPerPage={4}/>
+                                    <Appointments timeframe="future" count={5} itemsPerPage={4}/>
+                                    <Appointments timeframe="historic" count={4} itemsPerPage={3}/>
                                     <Appointments itemsPerPage={4}/>
 
                                 </Stack>
@@ -198,7 +195,7 @@ export default function Dashboard() {
                         <AppointmentDetailSidebar appointmentId={selectedAppointment.booking_id}/>
                     }
                     {sidebarContent === 'pet' &&
-                        <PetProfile onDelete={handleDeletePet}/>
+                        <PetProfile />
                     }
                 </Stack>
             </Slide>

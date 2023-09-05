@@ -6,32 +6,11 @@ import dayjs from "dayjs";
 import {PetsContext} from "../../../contexts/PetsProvider";
 
 export default function LastHealthChecks({appointmentList, loading, count = -1}) {
-    const [mergedAppointments, setMergedAppointments] = useState([]);
-    const [filterMode, setFilterMode] = useState('all'); // 'all', 'historic', 'future'
+    const [filterMode, setFilterMode] = useState('historic'); // 'all', 'historic', 'future'
     const { changeSidebarContent, updateSelectedAppointment } = useContext(PetsContext)
 
-    useEffect(() => {
-        const merged = {};
-        if (Array.isArray(appointmentList)) {
-            appointmentList.forEach(appointment => {
-                const bookingId = appointment.booking_id;
-                if (!merged[bookingId]) {
-                    merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-                } else {
-                    merged[bookingId].booking_time.push(appointment.booking_time);
-                }
-            });
-        }
 
-        const sortedMerged = Object.values(merged).sort((b, a) =>
-            a.booking_date.localeCompare(b.booking_date)
-        );
-
-        setMergedAppointments(sortedMerged);
-    }, [appointmentList]);
-
-
-    const filteredAppointments = mergedAppointments.filter(appointment => {
+    const filteredAppointments = appointmentList ? appointmentList.filter(appointment => {
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
         if (filterMode === 'historic') {
@@ -42,14 +21,13 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
             return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
-    });
-
+    }) : [];
 
     // Apply the "count" filter on filteredAppointments
     const displayedAppointments = count === -1 ? filteredAppointments : filteredAppointments.slice(0, count);
 
 
-    if (!Array.isArray(appointmentList) || appointmentList.length === 0) {
+    if (!filteredAppointments || filteredAppointments.length === 0) {
         return <Typography fontWeight="bold" color="secondary.300">No previous appointments.</Typography>;
     }
 
@@ -58,6 +36,7 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
         updateSelectedAppointment(appointment);
     }
 
+    console.log(filteredAppointments)
 
     return (// updatedAppointmentsByDay && updatedAppointmentsByDay.length > 0 && (
         <Box flex={1} sx={{width:"100%"}}>

@@ -18,6 +18,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
     const {user} = useContext(ProgramContext);
 
     const initialFormData = {
+        pet_owner_id: ownerId,
         petname: '',
         species: '',
         breed: '',
@@ -27,9 +28,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         microchip_no: '',
         insurance_membership: '',
         insurance_expiry: '',
-        comments: '',
-        pet_owner_id: ownerId,
-        username: user.username
+        comments: ''
     };
 
     const [formData, setFormData] = useState(initialFormData);
