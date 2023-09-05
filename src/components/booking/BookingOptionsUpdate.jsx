@@ -151,14 +151,11 @@ export default function BookingOptionsUpdate(props) {
     const changeDateHandler = (newDate) => {
         setDate(dayjs(newDate))
         selectedBooking.booking_date === dayjs(newDate).format('YYYY-MM-DD') ? setSelectedSlots(selectedBooking.booking_time) : setSelectedSlots([]);
-        fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date", {
-            method: 'POST',
+        fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(newDate).format('DD-MM-YYYY')}`, {
+            method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token'),
             },
-            body: JSON.stringify({
-                selected_date: dayjs(newDate).format('DD-MM-YYYY')
-            })
         })
             .then((response) => {
                 return response.json();
@@ -207,13 +204,14 @@ export default function BookingOptionsUpdate(props) {
             return booking_record;
         });
 
+        console.log("slots", tmp_slots);
+
         let req_body = {
-            booking_type : selectedBookingType,
-            pet_owner_id : selectedOwner.pet_owner_id,
+            booking_type: selectedBookingType,
+            pet_owner_id: selectedOwner.pet_owner_id,
             pet_id: selectedPet,
-            username: user.username,
-            booking_slots: tmp_slots
-        }
+            booking_slots: tmp_slots,
+        };
 
         console.log("Add Booking: " + JSON.stringify(req_body));
 
@@ -221,8 +219,9 @@ export default function BookingOptionsUpdate(props) {
             method: 'POST',
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                'Content-Type': 'application/json', // Set the content type
             },
-            body: JSON.stringify(req_body)
+            body: JSON.stringify(req_body),
         })
             .then((response) => {
                 return response.json();
@@ -230,25 +229,25 @@ export default function BookingOptionsUpdate(props) {
             .then(data => {
                 console.log("Add Booking API: " + data.add_booking);
 
-                fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.add_booking, {
+                // Now, you can fetch the booking details using the booking_id from the response
+                fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/" + data.add_booking, {
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                    }
+                    },
                 })
                     .then((response) => {
                         return response.json();
                     })
                     .then(data => {
-
                         handlerRefreshAppointments(true);
-                        onSave(true)
+                        onSave(true);
                     });
-
             })
             .catch(error => {
                 console.error(error);
             });
     };
+
 
     const changeDate = () => {
         let tmp_slots = selectedSlots.map(x => {

@@ -27,16 +27,13 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchAppointments = (filterType, filterValue) => {
-        const requestData = {
-            filter: filterType,
-            filter_value: filterValue
-        };
-        fetch("http://localhost/capstone_vet_clinic/api.php/search_booking", {
-            method: 'POST',
+        const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
+
+        fetch(url, {
+            method: 'GET',
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token'),
             },
-            body: JSON.stringify(requestData)
         })
             .then(response => response.json())
             .then(data => {
@@ -61,6 +58,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             });
         return true
     };
+
 
     useEffect(() => {
         if (doctor) {fetchAppointments('pet_id', user.id)}
