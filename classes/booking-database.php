@@ -79,10 +79,13 @@ class BookingDatabase
         $sql->execute();
         $result = $sql->get_result();
         if ($result->num_rows > 0) {
-            $taken_slots = array();
-            while($row=$result->fetch_assoc()){
-                array_push($taken_slots, $row);
-            }
+            $row=$result->fetch_assoc();
+            $booking_date = $row['booking_date'];
+            $booking_slots = explode(',', $row['booking_time']);
+            $taken_slots = [
+                'booking_date' => $booking_date,
+                'booking_time' => $booking_slots
+            ];
             $sql->close();
             $this->connection->close();
             return $taken_slots;
@@ -1993,6 +1996,51 @@ class BookingDatabase
             $sql->close();
             $this->connection->close();
             return $bookings;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves current booking slots by booking ID
+     */
+    public function getBookingSlotByBookingId($booking_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT DISTINCT 
+                DATE_FORMAT(bs.booking_date, "%d-%m-%Y") booking_date,
+                GROUP_CONCAT(bs.booking_time separator ",") booking_time
+            FROM 
+                `pawsome`.`booking_slots` bs
+            WHERE 
+                bs.booking_id = ? 
+            GROUP BY bs.booking_date'
+
+        );
+        $sql->bind_param(
+            'i', $booking_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $row=$result->fetch_assoc();
+            $booking_date = $row['booking_date'];
+            $booking_slots = explode(',', $row['booking_time']);
+            $booking = [
+                'booking_date' => $booking_date,
+                'booking_time' => $booking_slots
+            ];
+            $sql->close();
+            $this->connection->close();
+            return $booking;
         }
         $sql->close();
         $this->connection->close();

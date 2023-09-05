@@ -1436,17 +1436,7 @@ elseif ($action === 'get_booking_types') {
 elseif ($action === 'get_taken_slots_by_date') {
     if ($valid_jwt_token) {
         if ($taken_slots = $booking_database->getTakenSlotsByDate($_GET['selected_date'])) {
-            $slots  = array();
-
-            foreach($taken_slots as $y):
-                $date = [
-                    'booking_date' => $y['booking_date'],
-                    'booking_time' => explode(',', $y['booking_time'])
-                ];
-                array_push($slots, $date);
-            endforeach;
-
-            return_json(['taken_slots_by_date' => $slots]);
+            return_json(['taken_slots_by_date' => $taken_slots]);
         } else {
             return_json(['taken_slots_by_date' => []]);
         }
@@ -1537,7 +1527,10 @@ elseif ($action === 'update_booking_by_admin') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        
         $role = $database->checkRoleByUsername($req_username);
+        $current_slots = $booking_database->getBookingSlotByBookingId($id);
+        
         $current_booking_status = $booking_database->checkBookingStatus($id);
         $booking = [
             'booking_id' => $id,
@@ -1552,50 +1545,154 @@ elseif ($action === 'update_booking_by_admin') {
 
         $booking_slots = $_POST['booking_slots'];
 
+        $ns = array();
+        $bd = "";
+        foreach($booking_slots as $new_slot):
+            $bd = $new_slot['booking_date'];
+            array_push($ns, $new_slot['booking_time']);    
+        endforeach;
+        $new_slots = [
+            'booking_date' => $bd,
+            'booking_time' => $ns
+        ];
+
+        $taken_slots = $booking_database->getTakenSlotsByDate($new_slots['booking_date']);
+
         if($role['role'] === 'admin'){
-            foreach($booking_slots as $new_slot):
-                $booking_count = [
-                    'selected_date' => $new_slot['booking_date'],
-                    'selected_time' => $new_slot['booking_time']
-                ];
-                if($count = $booking_database->slotCounter($booking_count)){
-                    if($count['slot_counter'] == 5){
-                        return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
-                    }
+            if ($current_slots['booking_date'] === $new_slots['booking_date']){
+
+                $diff_slot = array_values(array_diff($new_slots['booking_time'], $current_slots['booking_time']));
+                $allowed_slot = array_values(array_diff($diff_slot, $taken_slots['booking_time']));
+                $decision = 'no';
+                $disallowed = array_values(array_diff($diff_slot, $allowed_slot));
+                    
+                if(count($diff_slot) === 0){
+                    return_json([
+                        'current_slots:' => $current_slots,
+                        'new_slots:' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'diff_slot' => $diff_slot,
+                        'allowed_slot' => $allowed_slot,
+                        'decision' => $decision,
+                        'disallowed_slot' => $disallowed,
+                        'update_booking' => "Same time slots provided. No update."
+                    ]);
                 }
-            endforeach;
 
-            if ($booking_database->updateBookingByAdmin($booking)) {
-                if($booking_database->deleteBookingSlot($id)){
-                    foreach($booking_slots as $slot):
-                        $record = [
-                            'booking_id' => $id,
-                            'booking_date' => $slot['booking_date'],
-                            'booking_time' => $slot['booking_time']
-                        ];
-                        if($booking_database->addBookingSlot($record)){
-                            true;
+                if(count($disallowed) === 0){
+                    $decision = 'yes';
+                    
+                    if ($booking_database->updateBookingByAdmin($booking)) {
+                        if($booking_database->deleteBookingSlot($id)){
+                            foreach($booking_slots as $slot):
+                                $record = [
+                                    'booking_id' => $id,
+                                    'booking_date' => $slot['booking_date'],
+                                    'booking_time' => $slot['booking_time']
+                                ];
+                                if($booking_database->addBookingSlot($record)){
+                                    true;
+                                }
+                            endforeach;
+
+                            $booking_history_record = [
+                                'booking_id' => $id,
+                                'prev_status' => $_POST['prev_booking_status'],
+                                'new_status' => "PENDING",
+                                'username' => $req_username
+                            ];
+
+                            if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                                return_json([
+                                    'current_slots:' => $current_slots,
+                                    'new_slots:' => $new_slots,
+                                    'taken_slots' => $taken_slots,
+                                    'diff_slot' => $diff_slot,
+                                    'allowed_slot' => $allowed_slot,
+                                    'decision' => $decision,
+                                    'disallowed_slot' => $disallowed,
+                                    'update_booking' => true
+                                ]);
+                            } else {
+                                return_json(['update_booking' => false]);
+                            }
+                        } else {
+                            return_json(['update_booking' => false]);
                         }
-                    endforeach;
-
-                    $booking_history_record = [
-                        'booking_id' => $id,
-                        'prev_status' => $_POST['prev_booking_status'],
-                        'new_status' => "PENDING",
-                        'username' => $req_username
-                    ];
-
-                    if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                        return_json(['update_booking' => true]);
                     } else {
                         return_json(['update_booking' => false]);
                     }
                 } else {
-                    return_json(['update_booking' => false]);
+                    return_json([
+                        'current_slots' => $current_slots,
+                        'new_slots' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'diff_slot' => $diff_slot,
+                        'allowed_slot' => $allowed_slot,
+                        'disallowed_slot' => $disallowed,
+                        'decision' => "One of the new slots are full. Please check your selection."
+                    ]);
                 }
             } else {
-                return_json(['update_booking' => false]);
+                $allowed_slot = array_values(array_diff($new_slots['booking_time'], $taken_slots['booking_time']));
+                $decision = 'no';
+                $disallowed = array_values(array_diff($new_slots['booking_time'], $allowed_slot));
+
+                if(count($disallowed) === 0){
+                    $decision = 'yes';
+                    if ($booking_database->updateBookingByAdmin($booking)) {
+                        if($booking_database->deleteBookingSlot($id)){
+                            foreach($booking_slots as $slot):
+                                $record = [
+                                    'booking_id' => $id,
+                                    'booking_date' => $slot['booking_date'],
+                                    'booking_time' => $slot['booking_time']
+                                ];
+                                if($booking_database->addBookingSlot($record)){
+                                    true;
+                                }
+                            endforeach;
+
+                            $booking_history_record = [
+                                'booking_id' => $id,
+                                'prev_status' => $_POST['prev_booking_status'],
+                                'new_status' => "PENDING",
+                                'username' => $req_username
+                            ];
+
+                            if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                                return_json([
+                                    'current_slots:' => $current_slots,
+                                    'new_slots:' => $new_slots,
+                                    'taken_slots' => $taken_slots,
+                                    'allowed_slot' => $allowed_slot,
+                                    'disallowed_slot' => $disallowed,
+                                    'update_booking' => true,
+                                    'decision' => $decision
+                                ]);
+                            } else {
+                                return_json(['update_booking' => false]);
+                            }
+                        } else {
+                            return_json(['update_booking' => false]);
+                        }
+                    } else {
+                        return_json(['update_booking' => false]);
+                    }
+                } else {
+                    
+                    return_json([
+                        'current_slots' => $current_slots,
+                        'new_slots' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'allowed_slot' => $allowed_slot,
+                        'disallowed_slot' => $disallowed,
+                        'decision' => "One of the new slots are full. Please check your selection."
+                    ]);
+                }
             }
+            
+            
         } else {
             return_json(['update_booking' => "You don't have the privilege to perform this action."]);
         }
@@ -1612,10 +1709,14 @@ elseif ($action === 'update_booking_by_pet_owner') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
 
+        
         $role = $database->checkRoleByUsername($req_username);
+        $current_slots = $booking_database->getBookingSlotByBookingId($id);
+        
+        $current_booking_status = $booking_database->checkBookingStatus($id);
         $booking = [
             'booking_id' => $id,
-            'prev_booking_status' => $_POST['prev_booking_status'],
+            'prev_booking_status' => $current_booking_status,
             'new_booking_status' => "PENDING",
             'booking_type' => $_POST['booking_type'],
             'pet_owner_id' => $_POST['pet_owner_id'],
@@ -1625,50 +1726,154 @@ elseif ($action === 'update_booking_by_pet_owner') {
 
         $booking_slots = $_POST['booking_slots'];
 
+        $ns = array();
+        $bd = "";
+        foreach($booking_slots as $new_slot):
+            $bd = $new_slot['booking_date'];
+            array_push($ns, $new_slot['booking_time']);    
+        endforeach;
+        $new_slots = [
+            'booking_date' => $bd,
+            'booking_time' => $ns
+        ];
+
+        $taken_slots = $booking_database->getTakenSlotsByDate($new_slots['booking_date']);
+
         if($role['role'] === 'pet_owner'){
-            foreach($booking_slots as $new_slot):
-                $booking_count = [
-                    'selected_date' => $new_slot['booking_date'],
-                    'selected_time' => $new_slot['booking_time']
-                ];
-                if($count = $booking_database->slotCounter($booking_count)){
-                    if($count['slot_counter'] == 5){
-                        return_json(['update_booking' => "All slots taken for at least one slot for ".$new_slot['booking_time']]);
-                    }
+            if ($current_slots['booking_date'] === $new_slots['booking_date']){
+
+                $diff_slot = array_values(array_diff($new_slots['booking_time'], $current_slots['booking_time']));
+                $allowed_slot = array_values(array_diff($diff_slot, $taken_slots['booking_time']));
+                $decision = 'no';
+                $disallowed = array_values(array_diff($diff_slot, $allowed_slot));
+                    
+                if(count($diff_slot) === 0){
+                    return_json([
+                        'current_slots:' => $current_slots,
+                        'new_slots:' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'diff_slot' => $diff_slot,
+                        'allowed_slot' => $allowed_slot,
+                        'decision' => $decision,
+                        'disallowed_slot' => $disallowed,
+                        'update_booking' => "Same time slots provided. No update."
+                    ]);
                 }
-            endforeach;
 
-            if ($booking_database->updateBookingByPetOwner($booking)) {
-                if($booking_database->deleteBookingSlot($id)){
-                    foreach($booking_slots as $slot):
-                        $record = [
-                            'booking_id' => $id,
-                            'booking_date' => $slot['booking_date'],
-                            'booking_time' => $slot['booking_time']
-                        ];
-                        if($booking_database->addBookingSlot($record)){
-                            true;
+                if(count($disallowed) === 0){
+                    $decision = 'yes';
+                    
+                    if ($booking_database->updateBookingByPetOwner($booking)) {
+                        if($booking_database->deleteBookingSlot($id)){
+                            foreach($booking_slots as $slot):
+                                $record = [
+                                    'booking_id' => $id,
+                                    'booking_date' => $slot['booking_date'],
+                                    'booking_time' => $slot['booking_time']
+                                ];
+                                if($booking_database->addBookingSlot($record)){
+                                    true;
+                                }
+                            endforeach;
+
+                            $booking_history_record = [
+                                'booking_id' => $id,
+                                'prev_status' => $_POST['prev_booking_status'],
+                                'new_status' => "PENDING",
+                                'username' => $req_username
+                            ];
+
+                            if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                                return_json([
+                                    'current_slots:' => $current_slots,
+                                    'new_slots:' => $new_slots,
+                                    'taken_slots' => $taken_slots,
+                                    'diff_slot' => $diff_slot,
+                                    'allowed_slot' => $allowed_slot,
+                                    'decision' => $decision,
+                                    'disallowed_slot' => $disallowed,
+                                    'update_booking' => true
+                                ]);
+                            } else {
+                                return_json(['update_booking' => false]);
+                            }
+                        } else {
+                            return_json(['update_booking' => false]);
                         }
-                    endforeach;
-
-                    $booking_history_record = [
-                        'booking_id' => $id,
-                        'prev_status' => $_POST['prev_booking_status'],
-                        'new_status' => "PENDING",
-                        'username' => $req_username
-                    ];
-
-                    if($booking_database->addBookingHistoryRecord($booking_history_record)){
-                        return_json(['update_booking' => true]);
                     } else {
                         return_json(['update_booking' => false]);
                     }
                 } else {
-                    return_json(['update_booking' => false]);
+                    return_json([
+                        'current_slots' => $current_slots,
+                        'new_slots' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'diff_slot' => $diff_slot,
+                        'allowed_slot' => $allowed_slot,
+                        'disallowed_slot' => $disallowed,
+                        'decision' => "One of the new slots are full. Please check your selection."
+                    ]);
                 }
             } else {
-                return_json(['update_booking' => false]);
+                $allowed_slot = array_values(array_diff($new_slots['booking_time'], $taken_slots['booking_time']));
+                $decision = 'no';
+                $disallowed = array_values(array_diff($new_slots['booking_time'], $allowed_slot));
+
+                if(count($disallowed) === 0){
+                    $decision = 'yes';
+                    if ($booking_database->updateBookingByPetOwner($booking)) {
+                        if($booking_database->deleteBookingSlot($id)){
+                            foreach($booking_slots as $slot):
+                                $record = [
+                                    'booking_id' => $id,
+                                    'booking_date' => $slot['booking_date'],
+                                    'booking_time' => $slot['booking_time']
+                                ];
+                                if($booking_database->addBookingSlot($record)){
+                                    true;
+                                }
+                            endforeach;
+
+                            $booking_history_record = [
+                                'booking_id' => $id,
+                                'prev_status' => $_POST['prev_booking_status'],
+                                'new_status' => "PENDING",
+                                'username' => $req_username
+                            ];
+
+                            if($booking_database->addBookingHistoryRecord($booking_history_record)){
+                                return_json([
+                                    'current_slots:' => $current_slots,
+                                    'new_slots:' => $new_slots,
+                                    'taken_slots' => $taken_slots,
+                                    'allowed_slot' => $allowed_slot,
+                                    'disallowed_slot' => $disallowed,
+                                    'update_booking' => true,
+                                    'decision' => $decision
+                                ]);
+                            } else {
+                                return_json(['update_booking' => false]);
+                            }
+                        } else {
+                            return_json(['update_booking' => false]);
+                        }
+                    } else {
+                        return_json(['update_booking' => false]);
+                    }
+                } else {
+                    
+                    return_json([
+                        'current_slots' => $current_slots,
+                        'new_slots' => $new_slots,
+                        'taken_slots' => $taken_slots,
+                        'allowed_slot' => $allowed_slot,
+                        'disallowed_slot' => $disallowed,
+                        'decision' => "One of the new slots are full. Please check your selection."
+                    ]);
+                }
             }
+            
+            
         } else {
             return_json(['update_booking' => "You don't have the privilege to perform this action."]);
         }
