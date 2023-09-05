@@ -418,10 +418,12 @@ class BillingDatabase
         $sql = $this->connection->prepare(
             'SELECT `invoices`.`id`,
             `invoices`.`booking_id`,
-            `invoices`.`invoice_amount`
-            FROM `pawsome`.`invoices`
+            `invoices`.`invoice_amount`,
+            `receipts`.`id` as receipt_id
+            FROM `pawsome`.`invoices`, `pawsome`.`receipts`
             WHERE 
-            id = ?'
+            `invoices`.id = ?
+            AND `invoices`.id = `receipts`.invoice_id'
         );
         $sql->bind_param(
             'i', $invoice_id
