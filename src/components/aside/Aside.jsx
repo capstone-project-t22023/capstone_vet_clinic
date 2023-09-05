@@ -37,6 +37,7 @@ export default function Aside() {
         sessionStorage.removeItem('authenticated');
         setAuthenticated(false)
         console.log("Bye Bye! Logging out now");
+        window.location.replace("http://localhost:3000/pawsome_public/index.html");
     }
 
 

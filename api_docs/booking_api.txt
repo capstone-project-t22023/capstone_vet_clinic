@@ -79,26 +79,54 @@ endpoint: /update_booking_by_pet_owner/<booking_id>
 method: POST
 request_body: 
     {
-        "booking_type": "VACCINE",
-        "pet_owner_id": 1002,
-        "pet_id": 3,
+        "booking_type": "Standard Consultation",
+        "pet_owner_id": 1001,
+        "pet_id": 1,
         "booking_slots": [
             {
-                "booking_date": "18-09-2023",
+                "booking_date": "07-09-2023",
                 "booking_time": "08:00"
             },
             {
-                "booking_date": "18-09-2023",
-                "booking_time": "08:30"
-            },
-            {
-                "booking_date": "18-09-2023",
-                "booking_time": "09:00"
+                "booking_date": "07-09-2023",
+                "booking_time": "09:30"
             }
         ]
     }
 response_body:
     {
+        "current_slots:": {
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "08:00",
+                "08:30"
+            ]
+        },
+        "new_slots:": {
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "08:00",
+                "09:30"
+            ]
+        },
+        "taken_slots": {
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "09:00",
+                "10:00",
+                "11:30",
+                "12:30",
+                "13:00"
+            ]
+        },
+        "diff_slot": [
+            "09:30"
+        ],
+        "allowed_slot": [
+            "09:30"
+        ],
+        "decision": "yes",
+        "disallowed_slot": [],
         "update_booking": true
     }
 
@@ -106,32 +134,55 @@ endpoint: /update_booking_by_admin/<booking_id>
 method: POST
 request_body: 
     {
-        "booking_type": "VACCINE",
-        "pet_owner_id": 1002,
-        "pet_id": 3,
+        "booking_type": "Standard Consultation",
+        "pet_owner_id": 1001,
+        "pet_id": 1,
         "doctor_id": 1,
         "booking_slots": [
             {
-                "booking_date": "18-09-2023",
+                "booking_date": "07-09-2023",
                 "booking_time": "08:00"
             },
             {
-                "booking_date": "18-09-2023",
+                "booking_date": "07-09-2023",
                 "booking_time": "08:30"
-            },
-            {
-                "booking_date": "18-09-2023",
-                "booking_time": "09:00"
-            },
-            {
-                "booking_date": "18-09-2023",
-                "booking_time": "09:30"
             }
         ]
     }
 response_body:
     {
-        "update_booking": true
+        "current_slots:": {
+            "booking_date": "06-09-2023",
+            "booking_time": [
+                "08:00",
+                "08:30",
+                "13:00"
+            ]
+        },
+        "new_slots:": {
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "08:00",
+                "08:30"
+            ]
+        },
+        "taken_slots": {
+            "booking_date": "07-09-2023",
+            "booking_time": [
+                "09:00",
+                "10:00",
+                "11:30",
+                "12:30",
+                "13:00"
+            ]
+        },
+        "allowed_slot": [
+            "08:00",
+            "08:30"
+        ],
+        "disallowed_slot": [],
+        "update_booking": true,
+        "decision": "yes"
     }
 
 endpoint: /get_taken_slots_by_date?selected_date=07-09-2023

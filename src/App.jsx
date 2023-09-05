@@ -19,6 +19,8 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard";
 import Signup from './pages/Signup';
+import StaticLanding from './pages/StaticLanding';
+
 //Components import
 import Protected from './components/Protected';
 import Logout from './components/authorization/Logout';
@@ -68,19 +70,25 @@ function App() {
             .then(data => {
                 if (data[0].user) {
                     let tmp = data[0].user;
-                    tmp.role = 'admin';
+                    if(tmp.role){
+                        tmp.role = 'admin';
+                    }
                     setUser(tmp);
                     setAuthenticated(true);
                     sessionStorage.setItem('user', JSON.stringify(tmp));
                 } else if (data[1].user) {
                     let tmp = data[1].user;
-                    tmp.role = 'doctor';
+                    if(tmp.role){
+                        tmp.role = 'doctor';
+                    }
                     setUser(tmp);
                     setAuthenticated(true);
                     sessionStorage.setItem('user', JSON.stringify(tmp));
                 } else if (data[2].user) {
                     let tmp = data[2].user;
-                    tmp.role = 'pet_owner';
+                    if(tmp.role){
+                        tmp.role = 'pet_owner';
+                    }
                     setUser(tmp);
                     setAuthenticated(true);
                     sessionStorage.setItem('user', JSON.stringify(tmp));
@@ -103,7 +111,14 @@ function App() {
                         <CssBaseline/>
                         <BrowserRouter>
                             <Routes>
-                                <Route index element={<Home/>}/>
+
+                                <Route path="/home" element={
+                                    <StaticLanding/>
+                                }
+                                />
+                                <Route index element={
+                                    <Home/>
+                                }/>
                                 <Route path="/dashboard" element={
                                     <Protected isLoggedIn={authenticated}>
                                             <PetsProvider>
