@@ -748,6 +748,68 @@ class BillingDatabase
     }
 
     /**
+     * Insert data into payments table from sales
+     */
+    public function insertNewPaymentSales($payment_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pawsome`.`payments`
+            (
+            `payment_by`,
+            `payment_date`,
+            `payment_method`,
+            `payment_status`,
+            `payment_balance`,
+            `payment_paid`,
+            `payment_change`,
+            `updated_by`,
+            `updated_date`)
+            VALUES
+            (
+            (
+                SELECT id from pet_owners 
+                WHERE id = ?
+                AND archived = 0
+            ),
+            SYSDATE(),"STRIPE","PAID",0,
+            (
+              SELECT SUM(total_amount) total_amount
+              FROM `pawsome`.`sales_invoice_items`  
+              WHERE sales_invoice_id = ?  
+            ),
+            0,
+            (
+                SELECT id from `pawsome`.`admins` 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            ),
+            SYSDATE())'
+        );
+        $sql->bind_param(
+            'iis', 
+            $payment_record['payment_by'],
+            $payment_record['sales_invoice_id'],
+            $payment_record['username']
+        );
+        if ($sql->execute()) {
+            $id = $this->connection->insert_id;
+            $sql->close();
+            $this->connection->close();
+            return $id;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Update payments record
      */
     public function updatePaymentBalance($payment_record)

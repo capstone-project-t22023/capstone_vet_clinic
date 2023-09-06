@@ -16,7 +16,7 @@ include './classes/billing-database.php';
 include './classes/inventory-database.php';
 include './classes/booking-database.php';
 include './classes/lodging-database.php';
-
+include './classes/sales-database.php';
 
  /**
   * File where JWT functions are called in the file are located
@@ -79,6 +79,7 @@ $billing_database = new BillingDatabase();
 $inventory_database = new InventoryDatabase();
 $booking_database = new BookingDatabase();
 $lodging_database = new LodgingDatabase();
+$sales_database = new SalesDatabase();
 
 /**
  * Upload directory
@@ -3808,7 +3809,28 @@ elseif ($action === 'delete_inventory_item') {
  */ 
 elseif ($action === 'add_lodging') {
     if ($valid_jwt_token) {
-        
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            $record = [
+                'cage_status' => $_POST['cage_status'],
+                'pet_id' => $_POST['pet_id'],
+                'assigned_doctor' => $_POST['assigned_doctor'],
+                'confinement_date' => $_POST['confinement_date'],
+                'discharge_date' => $_POST['discharge_date'],
+                'comments' => $_POST['comments'],
+                'username' => $req_username
+            ];
+            if($lodging_id=$lodging_database->addLodging($record)){
+                return_json(['add_lodging' => $lodging_id]);
+            } else {
+                return_json(['add_lodging' => false]);
+            }
+        } else {
+            return_json(['add_lodging' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
@@ -3819,7 +3841,29 @@ elseif ($action === 'add_lodging') {
  */ 
 elseif ($action === 'update_lodging') {
     if ($valid_jwt_token) {
-        
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
+
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            $record = [
+                'cage_status' => $_POST['cage_status'],
+                'pet_id' => $_POST['pet_id'],
+                'assigned_doctor' => $_POST['assigned_doctor'],
+                'confinement_date' => $_POST['confinement_date'],
+                'discharge_date' => $_POST['discharge_date'],
+                'comments' => $_POST['comments'],
+                'username' => $req_username,
+                'id' => $id
+            ];
+            if($lodging_database->updateLodging($record)){
+                return_json(['update_lodging' => true]);
+            } else {
+                return_json(['update_lodging' => false]);
+            }
+        } else {
+            return_json(['update_lodging' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
@@ -3830,7 +3874,16 @@ elseif ($action === 'update_lodging') {
  */ 
 elseif ($action === 'delete_lodging') {
     if ($valid_jwt_token) {
-        
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            if($lodging_database->deleteLodging($id)){
+                return_json(['delete_lodging' => true]);
+            } else {
+                return_json(['delete_lodging' => false]);
+            }
+        } else {
+            return_json(['delete_lodging' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
@@ -3842,99 +3895,64 @@ elseif ($action === 'delete_lodging') {
 /**
  * API endpoint when adding sales item
  */ 
-elseif ($action === 'add_sales item') {
+elseif ($action === 'generate_sales_invoice') {
     if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
+        $rest_json = file_get_contents('php://input');
+        $_POST = json_decode($rest_json, true);
 
-/**
- * API endpoint when updating sales item
- */ 
-elseif ($action === 'update_sales_item') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
+        $invoice_items = $_POST['sales_items'];
 
-/**
- * API endpoint when deleting sales item
- */ 
-elseif ($action === 'delete_sales_item') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            if($invoice_id=$sales_database->createNewSalesInvoice($req_username)){
+                
+                foreach($invoice_items as $items):
+                    $record = [
+                        'sales_invoice_id' => $invoice_id,
+                        'item_id' => $items['item_id'],
+                        'quantity' => $items['quantity']
+                    ];
+                    if($sales_database->createNewSalesInvoiceItem($record)){
+                        true;
+                    } else {
+                        $sales_database->deleteSalesInvoiceItembyInvoiceId($invoice_id);
+                        $sales_database->deleteSalesInvoicebyId($invoice_id);
+                        return_json(['generate_sales_invoice' => false]); 
+                    }
+                endforeach;
 
-/**
- * Configuration Management
- */
-/**
- * API endpoint when adding service category
- */ 
-elseif ($action === 'add_service_category') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
+                $record = [
+                    'username' => $req_username,
+                    'sales_invoice_id' => $invoice_id,
+                    'payment_by' => $_POST['payment_by']
+                ];
 
-/**
- * API endpoint when updating service category
- */ 
-elseif ($action === 'update_service_category') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
-
-/**
- * API endpoint when deleting service category
- */ 
-elseif ($action === 'delete_service_category') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
-/**
- * API endpoint when adding service category item
- */ 
-elseif ($action === 'add_service_item') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
-
-/**
- * API endpoint when updating service category item
- */ 
-elseif ($action === 'update_service_item') {
-    if ($valid_jwt_token) {
-        
-    } else {
-        return_json(['ERROR:' => "UNAUTHORIZED"]); 
-    }
-}
-
-/**
- * API endpoint when deleting service category item
- */ 
-elseif ($action === 'delete_service_item') {
-    if ($valid_jwt_token) {
-        
+                if($payment_id=$billing_database->insertNewPaymentSales($record)){
+                    $payment_record = [
+                        'payment_id' => $payment_id,
+                        'username' => $req_username,
+                        'sales_invoice_id' => $invoice_id,
+                        "prev_payment_status" => "NOT PAID",
+                        "new_payment_status" => "PAID",
+                    ];
+                    if($sales_database->updateSalesInvoiceAmount($payment_record)){
+                        if($billing_database->addPaymentHistory($payment_record)){
+                            return_json(['generate_sales_invoice' => $invoice_id]); 
+                        }
+                    } else {
+                        $sales_database->deleteSalesInvoiceItembyInvoiceId($invoice_id);
+                        $sales_database->deleteSalesInvoicebyId($invoice_id);
+                        return_json(['generate_sales_invoice' => false]);
+                    }
+                } else {
+                    $sales_database->deleteSalesInvoiceItembyInvoiceId($invoice_id);
+                    $sales_database->deleteSalesInvoicebyId($invoice_id);
+                    return_json(['generate_sales_invoice' => false]);
+                }
+            } else {
+                return_json(['generate_sales_invoice' => false]); 
+            }
+        }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }

@@ -437,7 +437,7 @@ DROP TABLE IF EXISTS `pawsome`.`sales_invoices`;
 CREATE TABLE `pawsome`.`sales_invoices` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique key of this table',
   `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
-  `invoice_amount` decimal(10,2) NOT NULL,
+  `invoice_amount` decimal(10,2) DEFAULT NULL COMMENT 'Invoice amount',
   `updated_date` datetime NOT NULL COMMENT 'Update date of record',
   `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record',
   `archived` int(1) DEFAULT NULL COMMENT 'Indicates id record is active or not',
@@ -456,38 +456,10 @@ CREATE TABLE `pawsome`.`sales_invoice_items` (
   `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
   `total_amount` decimal(10,2) NOT NULL COMMENT 'Total amount times quantity',
   KEY `fk_sales_inv_si_idx` (`sales_invoice_id`),
-  KEY `fk_sales_inv_ic_idx` (`item_category_id`),
   KEY `fk_sales_inv_i_idx` (`item_id`),
   CONSTRAINT `fk_sales_inv_items_i` FOREIGN KEY (`item_id`) REFERENCES `inventory_items` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_sales_inv_items_ic` FOREIGN KEY (`item_category_id`) REFERENCES `item_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_sales_inv_items_si` FOREIGN KEY (`sales_invoice_id`) REFERENCES `sales_invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ;
-
-DROP TABLE IF EXISTS `pawsome`.`service_categories`;
-CREATE TABLE `pawsome`.`service_categories` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
-  `category_name` varchar(50) DEFAULT NULL COMMENT 'Category name or description',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
-  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-);
-
-DROP TABLE IF EXISTS `pawsome`.`service_categories_items`;
-CREATE TABLE `pawsome`.`service_categories_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier',
-  `service_category_id` int(10) NOT NULL COMMENT 'Category of service item',
-  `item_description` varchar(50) NOT NULL COMMENT 'Description of item',
-  `item_amount` decimal(10,2) NOT NULL COMMENT 'Amount charged for single item',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
-  `archived` int(1) DEFAULT NULL COMMENT 'Archived indicator',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_sci_sc_idx` (`service_category_id`),
-  CONSTRAINT `fk_sci_sc` FOREIGN KEY (`service_category_id`) REFERENCES `service_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
 
 DROP TABLE IF EXISTS `pawsome`.`subscribers`;
 CREATE TABLE `pawsome`.`subscribers` (
