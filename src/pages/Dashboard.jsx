@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {Link, useNavigate} from "react-router-dom";
-import {Box, IconButton, Button, Paper, Divider, Container, Typography, Stack, Grid, Zoom, Slide} from '@mui/material';
+import React, {useContext} from 'react';
+import {Box, IconButton, Paper, Divider, Typography, Stack, Slide} from '@mui/material';
 import ProgramContext from '../contexts/ProgramContext';
 import Footer from '../components/Footer';
 import Aside from '../components/aside/Aside';
@@ -19,14 +18,8 @@ export default function Dashboard() {
     const {user} = useContext(ProgramContext);
     const {petList, sidebarContent, changeSidebarContent, selectedAppointment} = useContext(PetsContext);
 
-    const navigate = useNavigate();
-    const handleClick = (navigation) => {
-        navigate(navigation);
-    }
 
-    const handleBooking = (booking) => {
-        console.log("This is booking", booking)
-    }
+
 
 
     return (
@@ -49,7 +42,7 @@ export default function Dashboard() {
                 {user.role === 'admin' && (
                     <>
 
-                        <Stack direction="column" justifyContent="space-between">
+                        <Stack direction="column" justifyContent="space-between" spacing={3}>
                             <Stack direction="column" spacing={3}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                     <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
@@ -58,7 +51,7 @@ export default function Dashboard() {
                                 </Stack>
 
                                 <Paper sx={{borderRadius: 6}} elevation={0}>
-                                    <Appointments timeframe="today" count={10} itemsPerPage={5} doctor filter/>
+                                    {/*<Appointments timeframe="today" count={10} itemsPerPage={5} doctor/>*/}
                                 </Paper>
 
 
@@ -75,18 +68,18 @@ export default function Dashboard() {
                                     </Box>
                                 </Stack>
 
-                                {/*<Stack direction="row" spacing={2}>*/}
-                                {/*    <Box flex={1}>*/}
-                                {/*        <Stack direction="row" justifyContent="space-between" width="100%"*/}
-                                {/*               alignItems="baseline" sx={{mb: 2}}>*/}
-                                {/*            <Typography fontWeight="bold">List of all Pending Appointments:</Typography>*/}
+                                <Stack direction="row" spacing={2}>
+                                    <Box flex={1}>
+                                        <Stack direction="row" justifyContent="space-between" width="100%"
+                                               alignItems="baseline" sx={{mb: 2}}>
+                                            <Typography fontWeight="bold">List of all Pending Appointments:</Typography>
 
-                                {/*        </Stack>*/}
-                                {/*        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>*/}
-                                {/*            <PetsList petsList={petList}/>*/}
-                                {/*        </Paper>*/}
-                                {/*    </Box>*/}
-                                {/*</Stack>*/}
+                                        </Stack>
+                                        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
+                                            <PetsList petsList={petList}/>
+                                        </Paper>
+                                    </Box>
+                                </Stack>
 
                             </Stack>
 

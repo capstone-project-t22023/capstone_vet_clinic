@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {ProgramContext} from "./ProgramContext";
-import app from "../App";
+
 
 export const PetsContext = createContext();
 
@@ -15,7 +15,35 @@ export const PetsProvider = ({children}) => {
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
     const [refreshAppointments, setRefreshAppoinmtents] = useState(false);
     const [appointmentList, setAppointmentList] = useState([]);
+    const [allDoctors, setAllDoctors] = useState([]);
 
+    const fetchDoctors = () => {
+
+            const url = 'http://localhost/capstone_vet_clinic/api.php/get_all_doctors';
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setAllDoctors(data.doctors)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            return true
+    }
+
+    useEffect(() => {
+        fetchDoctors()
+    },[]);
+
+    const getDoctor = (id) => {
+        return allDoctors.find(doctor => doctor.id === id);
+    }
 
     const changeSidebarContent = (value) => {
         setSidebarContent(value);
@@ -53,7 +81,6 @@ export const PetsProvider = ({children}) => {
     };
 
     const handlerReloadPetList = (Boolean) => {
-        console.log("I am going to get a new data - PetsProvider/updatePetList (trying to refresh data after adding new pet..)")
         setReloadPetList(Boolean);
     }
 
@@ -76,7 +103,6 @@ export const PetsProvider = ({children}) => {
                     } else if (user.role === 'doctor' || user.role === 'admin') {
                         setPetList(data.pets)
                     }
-                    ;
                 }
             })
             .catch(error => {
@@ -102,7 +128,8 @@ export const PetsProvider = ({children}) => {
                 refreshAppointments,
                 changeSidebarContent,
                 sidebarContent,
-                appointmentList, setAppointmentList
+                appointmentList, setAppointmentList,
+                getDoctor, allDoctors
             }}>
             {children}
         </PetsContext.Provider>
