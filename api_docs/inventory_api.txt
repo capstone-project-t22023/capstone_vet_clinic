@@ -4,6 +4,11 @@ INVENTORY ENDPOINTS
 
 endpoint: /get_inventory_all
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -49,6 +54,11 @@ response_body:
 
 endpoint: /get_inventory_by_category/<category_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -85,7 +95,113 @@ response_body:
         }
     }
 
+endpoint: /add_inventory_category
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "item_category": "Test Category"
+    }
+response_body:
+    {
+        "add_inventory_category": <category_id>
+    }
 
+endpoint: /update_inventory_category/<category_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "item_category": "Test Category UPD"
+    }
+response_body:
+    {
+        "update_inventory_category": true
+    }
+
+endpoint: /delete_inventory_category/<category_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "delete_inventory_category": true
+    }
+
+endpoint: /add_inventory_item
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "inventory_item_category_id": 9,
+        "item_name": "Test item",
+        "in_use_qty": 5,
+        "in_stock_qty": 10,
+        "threshold_qty": 15,
+        "weight_volume": 4.5,
+        "item_unit": "grams",
+        "production_date": "30-09-2024",
+        "expiration_date": "30-10-2024",
+        "unit_price": 13.5
+    }
+response_body:
+    {
+        "add_inventory_item": <item_id>
+    }
+
+endpoint: /update_inventory_item/<item_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "inventory_item_category_id": 9,
+        "item_name": "Test item",
+        "in_use_qty": 5,
+        "in_stock_qty": 10,
+        "threshold_qty": 15,
+        "weight_volume": 4.5,
+        "item_unit": "grams",
+        "production_date": "30-09-2024",
+        "expiration_date": "30-10-2024",
+        "unit_price": 13.5
+    }
+response_body:
+    {
+        "update_inventory_item": true
+    }
+
+endpoint: /delete_inventory_item/<item_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "delete_inventory_item": true
+    }
 
 endpoint: /
 method:

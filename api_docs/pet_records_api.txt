@@ -4,6 +4,11 @@ IMMUNISATION ENDPOINTS
 
 endpoint: /get_all_vaccines
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -24,8 +29,14 @@ response_body:
         ]
     }
 
+
 endpoint: /add_immun_record
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -39,16 +50,28 @@ response_body:
         "add_immun_record": true
     }
 
+
 endpoint: /delete_immun_record/<record_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_immun_record": true
     }
 
+
 endpoint: /update_immun_record/<record_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -62,8 +85,14 @@ response_body:
         "update_immun_record": true
     }
 
+
 endpoint: /get_immun_record/<pet_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -89,8 +118,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_diet_record/<prescription_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -118,8 +153,14 @@ response_body:
         }
     }
 
+
 endpoint: /get_all_diet_record_by_pet/<pet_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -193,8 +234,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_rehab_record/<referral_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -240,8 +287,14 @@ response_body:
         }
     }
 
+
 endpoint: /get_all_rehab_record_by_pet/<pet_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -289,8 +342,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_all_surgery_record_by_pet/<pet_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -309,8 +368,14 @@ response_body:
         ]
     }
 
+
 endpoint: /add_prescription
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -322,8 +387,14 @@ response_body:
         "add_prescription": <prescription_id>
     }
 
+
 endpoint: /update_prescription/<prescription_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -335,16 +406,28 @@ response_body:
         "update_prescription": true
     }
 
+
 endpoint: /delete_prescription/<prescription_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_prescription": true
     }
 
+
 endpoint: /add_diet_record
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "prescription_id" : 2,
@@ -359,8 +442,14 @@ response_body:
         "add_diet_record": true
     }
 
+
 endpoint: /update_diet_record/<diet_record_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "prescription_id" : 1,
@@ -375,16 +464,28 @@ response_body:
         "update_diet_record": true
     }
 
+
 endpoint: /delete_diet_record/<diet_record_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_diet_record": true
     }
 
+
 endpoint: /add_referral
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -397,8 +498,14 @@ response_body:
         "add_referral": <referral_id>
     }
 
+
 endpoint: /update_referral<referral_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -411,16 +518,28 @@ response_body:
         "update_referral": true
     }
 
+
 endpoint: /delete_referral/<referral_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_referral": true
     }
 
+
 endpoint: /add_rehab_record
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "referral_id" : 1,
@@ -433,8 +552,14 @@ response_body:
         "add_rehab_record": true
     }
 
+
 endpoint: /update_rehab_record/<rehab_record_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "treatment_date": "11-11-2023",
@@ -446,16 +571,28 @@ response_body:
         "update_rehab_record": true
     }
 
+
 endpoint: /delete_rehab_record/<rehab_record_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_rehab_record": true
     }
 
+
 endpoint: /add_surgery
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_id": 6,
@@ -470,8 +607,14 @@ response_body:
         "add_surgery": true
     }
 
+
 endpoint: /update_surgery/<surgery_record_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "doctor_id": 1,
@@ -485,13 +628,20 @@ response_body:
         "update_surgery": true
     }
 
+
 endpoint: /delete_surgery/<surgery_record_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_surgery": true
     }
+
 
 endpoint: /upload_file
 method: POST
@@ -508,7 +658,18 @@ request_body: NO BODY
 response_body:
     <see Trial form>>
         
-      
+endpoint: /delete_file/<file_id>
+method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "delete_file": true
+    }      
 
 endpoint: /
 method:

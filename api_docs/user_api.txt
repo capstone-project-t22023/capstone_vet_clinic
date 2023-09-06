@@ -77,8 +77,14 @@ response_body:
         ]
     }
 
+
 endpoint: /delete_doctor/<doctor_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "username":"pawsome_admin"
@@ -88,8 +94,14 @@ response_body:
         "delete_doctor": true
     }
 
+
 endpoint: /delete_pet_owner/<pet_owner_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "username":"pawsome_admin"
@@ -110,8 +122,14 @@ response_body:
         "delete_admin": true
     }
 
+
 endpoint: /add_user
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "role":"admin",
@@ -131,8 +149,14 @@ response_body:
         "add_user": <user_id>
     }
 
+
 endpoint: /update_user/<user_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "role":"doctor",

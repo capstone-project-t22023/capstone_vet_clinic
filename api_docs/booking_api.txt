@@ -4,6 +4,11 @@ BOOKING ENDPOINTS
 
 endpoint: /cancel_booking/<booking_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "prev_booking_status": "PENDING"
@@ -15,6 +20,11 @@ response_body:
 
 endpoint: /finish_booking/<booking_id>
 METHOD: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -23,6 +33,11 @@ response_body:
 
 endpoint: /confirm_booking/<booking_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_id": 10000000,
@@ -50,6 +65,11 @@ response_body:
 
 endpoint: /add_booking
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_type": "STANDARD CONSULTATION",
@@ -77,6 +97,11 @@ response_body:
 
 endpoint: /update_booking_by_pet_owner/<booking_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_type": "Standard Consultation",
@@ -132,6 +157,11 @@ response_body:
 
 endpoint: /update_booking_by_admin/<booking_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_type": "Standard Consultation",
@@ -187,6 +217,11 @@ response_body:
 
 endpoint: /get_taken_slots_by_date?selected_date=07-09-2023
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -203,6 +238,11 @@ response_body:
 
 endpoint: /get_taken_slots_all
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -222,6 +262,11 @@ response_body:
 
 endpoint: /get_booking_types
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -240,6 +285,11 @@ response_body:
 
 endpoint: /search_booking?filter=pet_id&filter_value=1
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -266,6 +316,11 @@ response_body:
 
 endpoint: /search_booking?filter=pet_name&filter_value=Ma
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -292,6 +347,11 @@ response_body:
 
 endpoint: /search_booking?filter=username&filter_value=a
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -318,6 +378,11 @@ response_body:
 
 endpoint: /search_booking?filter=booking_type&filter_value=Consultation
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -344,6 +409,11 @@ response_body:
 
 endpoint: /search_booking?filter=booking_status&filter_value=Pending
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -370,6 +440,11 @@ response_body:
 
 endpoint: /search_booking?filter=booking_date&filter_value=16-09-2023
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -396,6 +471,11 @@ response_body:
 
 endpoint: /search_booking?filter=booking_id&filter_value=32
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -421,6 +501,11 @@ response_body:
 
 endpoint: /search_booking?filter=doctor_id&filter_value=1
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -446,6 +531,11 @@ response_body:
 
 endpoint: /search_booking?filter=pet_owner_id&filter_value=1010
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -477,6 +567,11 @@ response_body:
 
 endpoint: /get_booking/<booking_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
