@@ -28,7 +28,7 @@ export default function Dashboard() {
         console.log("This is booking", booking)
     }
 
-
+    console.log('user', user);
     return (
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>

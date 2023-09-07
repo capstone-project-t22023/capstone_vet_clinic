@@ -46,21 +46,9 @@ function App() {
 
     useEffect(() => {
         Promise.all([
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_admins", {
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                },
-            }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors", {
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                },
-            }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pet_owners", {
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                },
-            })
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_admins"),
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors"),
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pet_owners")
         ])
             .then((responses) => {
                 return Promise.all(responses.map(function (response) {
@@ -117,7 +105,9 @@ function App() {
                                 }
                                 />
                                 <Route index element={
-                                    <Home/>
+                                    <Protected isLoggedIn={authenticated}>
+                                        <Home/>
+                                    </Protected>
                                 }/>
                                 <Route path="/dashboard" element={
                                     <Protected isLoggedIn={authenticated}>
