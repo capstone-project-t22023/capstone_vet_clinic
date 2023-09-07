@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Stack, Box, Grid, Button, Paper, TextField, MenuItem } from '@mui/material';
+import { Box, Button, TextField, MenuItem } from '@mui/material';
 import TimeSlots from "./TimeSlots";
 import ProgramContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -11,12 +11,10 @@ import {PetsContext} from "../../contexts/PetsProvider";
 
 export default function BookingOptionsUpdate(props) {
     const { selectedBooking, onSave, onCancel, editMode } = props;
-    const {user, authenticated} = useContext(ProgramContext);
+    const {user} = useContext(ProgramContext);
     const [date, setDate] = useState(dayjs(new Date()));
     const [selectedSlots, setSelectedSlots] = useState([]);
-    const {selectedOwner,selectedPet,handlerRefreshAppointments} = useContext(PetsContext);
-    // const [selectedOwner, setSelectedOwner] = useState('');
-    // const [selectedPet, setSelectedPet] = useState('');
+    const {selectedOwner,selectedPet,handlerRefreshAppointments,updateSelectedAppointment} = useContext(PetsContext);
     const [selectedBookingType, setSelectedBookingType] = useState('');
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [doctors, setDoctors] = useState([]);
@@ -40,7 +38,8 @@ export default function BookingOptionsUpdate(props) {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_taken_slots_all", {
+            fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(selectedBooking.booking_date).format('DD-MM-YYYY')}`, {
+                method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 },
@@ -58,7 +57,7 @@ export default function BookingOptionsUpdate(props) {
             })
             .then(data => {
                 setPets(data[1].pets);
-                setTakenSlots(data[2].taken_slots_all);
+                setTakenSlots(data[2].taken_slots_by_date);
 
                 let tmp_d = data[0].doctors.map( x => {
                     let tmp = {};
@@ -147,6 +146,7 @@ export default function BookingOptionsUpdate(props) {
                 console.error(error);
             });
     }, []);
+
 
     const changeDateHandler = (newDate) => {
         setDate(dayjs(newDate))
@@ -259,12 +259,12 @@ export default function BookingOptionsUpdate(props) {
 
         let req_body = {
             booking_type : selectedBookingType,
-            prev_booking_status: selectedBooking.booking_status,
             pet_owner_id : selectedOwner.pet_owner_id,
             pet_id: selectedPet,
-            doctor_id: selectedDoctor,
-            username: user.username,
             booking_slots: tmp_slots
+        }
+        if (user.role === 'admin') {
+            req_body.doctor_id = selectedDoctor;
         }
 
         console.log("Update Booking: " + JSON.stringify(req_body));
@@ -288,7 +288,8 @@ export default function BookingOptionsUpdate(props) {
             })
             .then(data => {
 
-                fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+data.update_booking, {
+                fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+selectedBooking.booking_id, {
+                    method: 'GET',
                     headers: {
                         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                     }
@@ -299,6 +300,8 @@ export default function BookingOptionsUpdate(props) {
                     .then(data => {
                         // sendSelectedBooking(data.booking_record);
                         handlerRefreshAppointments(true)
+                        updateSelectedAppointment(data.booking_record[0])
+                        console.log("Update booking", data.booking_record[0])
                         onSave(true)
                     });
 

@@ -521,7 +521,7 @@ class PetDatabase
             WHERE id = ?'
         );
         $sql->bind_param(
-            'si', 
+            'si',
             $pet_record['username'],
             $pet_record['pet_id']
         );

@@ -27,7 +27,6 @@ import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
 
-
 /**
  *
  * Main file that renders all pages of the website
@@ -42,7 +41,6 @@ function App() {
     const helmetContext = {};
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
-
 
     useEffect(() => {
         Promise.all([
