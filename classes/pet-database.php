@@ -2064,6 +2064,35 @@ class PetDatabase
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Delete file
+     */
+    public function deleteFile($id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pet_doc_uploads`
+            WHERE id = ?'
+        );
+        $sql->bind_param(
+            'i', $id
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
 }
 
 ?>

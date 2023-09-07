@@ -4,6 +4,11 @@ PET ENDPOINTS
 
 endpoint: /get_all_pets
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -32,8 +37,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_all_pets_by_filter?filter=firstname&filter_value=Lu
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -58,8 +69,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_all_pets_by_filter?filter=pet_owner_id&filter_value=1001
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -84,8 +101,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_all_pets_by_filter?filter=lastname&filter_value=Oliver
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -110,8 +133,14 @@ response_body:
         ]
     }
 
+
 endpoint: /get_all_pets_by_filter?filter=petname&filter_value=Sni
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -136,16 +165,28 @@ response_body:
         ]
     }
 
+
 endpoint: /delete_pet/<pet_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
         "delete_pet": true
     }
 
+
 endpoint: /add_pet
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_owner_id":1013,
@@ -165,8 +206,14 @@ response_body:
         "add_pet": <pet_id>
     }
 
+
 endpoint: /update_pet/<pet_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "pet_owner_id":1013,
