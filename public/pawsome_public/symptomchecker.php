@@ -39,7 +39,7 @@
         <ul>
           <li><a class="nav-link scrollto" href="index.html">OUR SERVICES</a></li>
           <li><a class="nav-link scrollto" href="aboutus.html">ABOUT US</a></li>
-          <li class="dropdown"><a href="petarticles"><span>PET ARTICLES</span> <i class="bi bi-chevron-down"></i></a>
+          <li class="dropdown"><a href="#"><span>PET ARTICLES</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
             <li><a href="petforms.html">Pet Forms</a></li>
             <li><a href="puppyandkittencheck.html">Puppy &amp; Kitten Check</a></li>
@@ -90,7 +90,22 @@
         // Simulated symptom assessments for demonstration
         $symptomsAssessment = array(
             "Lethargy or Weakness" => "Various underlying causes, including infections, pain, or systemic issues.",
-            // ... other symptom assessments ...
+			"Vomiting or Diarrhea" => "Colic, poisoning",
+			"Loss of Appetite" => "Infection",
+			"Excessive Thirst or Urination" => "Rabies",
+			"Coughing or Sneezing" => "Tuberculosis",
+			"Difficulty Breathing" => "Damaged trachea",
+			"Itchy Skin or Rash" => "Dermatitis, poison ivy",
+			"Limping or Difficulty Walking" => "Missing feet",
+			"Swollen or Tender Abdomen" => "Overeating, poisoning",
+			"Unexplained Weight Loss or Gain" => "Eating too little or too much",
+			"Excessive Drooling" => "Poisoning",
+			"Changes in Behavior or Personality" => "Dementia",
+			"Watery or Red Eyes" => "Eye infection",
+			"Bleeding or Wounds" => "In fight with another dog",
+			"Hair Loss or Unusual Shedding" => "Lice",
+			"Difficulty Chewing or Swallowing" => "Parkinsons disease"
+
         );
 
         echo "<h2>Assessment for $selectedSpecies:</h2>";
@@ -126,7 +141,7 @@
         <input type="checkbox" name="symptoms[]" value="Changes in Behavior or Personality"> Changes in Behavior or Personality<br>
         <input type="checkbox" name="symptoms[]" value="Watery or Red Eyes"> Watery or Red Eyes<br>
         <input type="checkbox" name="symptoms[]" value="Bleeding or Wounds"> Bleeding or Wounds<br>
-        <input type="checkbox" name="symptoms[]" value="Hair Loss or Unusual Sheddin"> Hair Loss or Unusual Shedding<br>
+        <input type="checkbox" name="symptoms[]" value="Hair Loss or Unusual Shedding"> Hair Loss or Unusual Shedding<br>
         <input type="checkbox" name="symptoms[]" value="Difficulty Chewing or Swallowing"> Difficulty Chewing or Swallowing<br>
         <!-- ... other symptom checkboxes ... -->
         <br><br>
@@ -146,79 +161,72 @@
   </div>
 
 </body>
-    <!--FOOTER -->
-    <footer id="footer" class="footer">
-        <div class="footer-top">
-          <div class="container">
-            <div class="row gy-4">
-              <div class="col-lg-5 col-md-12 footer-info">
-                <a href="index.html" class="logo d-flex align-items-center">
-                  <img src="assets/img/Logo.jpg" alt="">
-                  <span>Poison Guide</span>
-                </a>
-                <br>
-                <br>
-                <p><b>Where all paws are treated<br>with care.</b></p>
-                <br>
-                <br>
-                <br>            
-                <div class="social-links mt-3">
-                  <a href="#" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                  <a href="#" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                  <a href="#" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                  <a href="#" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                </div>
-              </div>
-    
-              <div class="col-lg-2 col-6 footer-links">
-                <h4>Our Services</h4>
-                <ul>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="generalcheckup.html"><b>General Check-Up</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="healthconcerns.html"><b>Health Concerns Consultations</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="dentistry.html"><b>Dentistry</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="surgery.html"><b>Surgery</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="emergencyservices.html"><b>Emergency Services</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="nutritionprograms.html"><b>Nutrition Programs</b></a></li>
-                </ul>
-              </div>
-    
-              <div class="col-lg-2 col-6 footer-links">
-                <h4>Pet Info</h4>
-                <ul>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="petforms.html"><b>Pet Forms</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
-                  <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="symptomchecker.php"><b> Symptom Checker</b></a></li>
-                </ul>
-              </div>
-    
-              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-                <h4>Contact Us</h4>
-                <p>
-                  1 New Street <br>
-                  Sydney 2000 NSW <br>
-                  Australia <br><br>
-                  <strong>Phone:</strong>+ (02) 9519 4111 / +(02)95194112<br>
-                  <strong>Email:</strong> info@pawsomevet.com.au<br>inquiry@pawsomevet.com.au
-                </p>
-    
-              </div>
-    
+<!--FOOTER -->
+<footer id="footer" class="footer">
+         <div class="footer-top">
+            <div class="container">
+               <div class="row gy-4">
+                  <div class="col-lg-5 col-md-12 footer-info">
+                     <a href="index.html" class="logo d-flex align-items-center">
+                     <img src="assets/img/Logo.jpg" alt="">
+                     <span>PawsomeVet</span>
+                     </a>
+                     <br>
+                     <br>
+                     <p><b>Where all paws are treated<br>with care.</b></p>
+                     <br>
+                     <br>
+                     <br>            
+                     <div class="social-links mt-3">
+                        <a href="#" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                     </div>
+                  </div>
+                  <div class="col-lg-2 col-6 footer-links">
+                     <h4>Our Services</h4>
+                     <ul>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="generalcheckup.html"><b>General Check-Up</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="healthconcerns.html"><b>Health Concerns Consultations</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="dentistry.html"><b>Dentistry</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="surgery.html"><b>Surgery</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="emergencyservices.html"><b>Emergency Services</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="nutritionprograms.html"><b>Nutrition Programs</b></a></li>
+                     </ul>
+                  </div>
+                  <div class="col-lg-2 col-6 footer-links">
+                     <h4>Pet Info</h4>
+                     <ul>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="petforms.html"><b>Pet Forms</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="symptomchecker.php"><b> Symptom Checker</b></a></li>
+                     </ul>
+                  </div>
+                  <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                     <h4>Contact Us</h4>
+                     <p>
+                        1 New Street <br>
+                        Sydney 2000 NSW <br>
+                        Australia <br><br>
+                        <strong>Phone:</strong>+ (02) 9519 4111 / +(02)95194112<br>
+                        <strong>Email:</strong><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a>
+                     </p>
+                  </div>
+               </div>
             </div>
-          </div>
-        </div>
-    
-        <div class="container">
-          <div class="copyright">
-            &copy; Copyright 2023 <strong><span>PawsomeVet</span></strong>. <a href="privacypolicy.html">Privacy Policy</a>| <a href="termsandconditions.html">Terms & Conditions</a>
-          </div>
-        </div>
-      </footer><!-- End Footer -->
-    
+         </div>
+         <div class="container">
+            <div class="copyright">
+               &copy; Copyright 2023 <strong><span>PawsomeVet</span></strong>. <a href="privacypolicy.html">Privacy Policy</a>| <a href="termsandconditions.html">Terms & Conditions</a>
+            </div>
+         </div>
+      </footer>
+      <!-- End Footer -->
       <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="fa-solid fa-arrow-up fa-beat fa-2xl" style="color: #ffffff;"></i></a>
-    
       <!-- VENDOR JS FILES-->
       <script src="assets/vendors/aos/aos.js"></script>
       <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -226,7 +234,8 @@
       <script src="assets/vendors/glightbox/js/glightbox.min.js"></script>
       <script src="assets/vendors/swiper/swiper-bundle.min.js"></script>
       <script src="assets/vendors/php-email-form/validate.js"></script>
-    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <!-- MAIN JS FILE -->
       <script src="assets/js/main.js"></script>
+   </body>
 </html>
