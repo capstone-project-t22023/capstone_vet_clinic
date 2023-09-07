@@ -30,7 +30,15 @@ h5,
 h6 {
   font-family: "Nunito", sans-serif;
 }
-
+#myVideo {
+  object-fit: cover;
+  position: absolute;
+  opacity: 0.2;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index:-1;
+}
 /*--------------------------------------------------------------
 # SECTIONS
 --------------------------------------------------------------*/
@@ -584,8 +592,9 @@ section {
 .aboutus .img-fluid {
   position:relative;
   left: 20px;
-  width: 65%;
-  height: 65%;
+  width: 75%;
+  height: 75%;
+  background-size:contain;
 	 box-shadow: 0px 10px 10px rgba(1, 41, 112, 0.08);
 	 border: none;
 	 border-radius: 185px 120px 110px 200px;
@@ -641,6 +650,11 @@ section {
   border-radius: 75px;
   padding: 100px;
   box-shadow:0px 7px 7px 7px rgba(1, 41, 112, 0.08);
+}
+iframe{
+  width:max-content; 
+  height: 3000px;;
+  
 }
 /*--------------------------------------------------------------
 # SERVICES
@@ -1679,7 +1693,8 @@ section {
 }
 .form-control {
   display: block;
-  width: 100%;
+  position:relative;
+  width: 50%;
   padding: .575rem .75rem;
   font-size: 1rem;
   font-weight: 400;
@@ -1689,7 +1704,7 @@ section {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  margin-right: 20px;
+  margin: auto;
   border-radius: 52px;
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08); 
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
@@ -1722,7 +1737,6 @@ section {
   box-shadow:0 4px 16px rgba(0, 0, 0, 0.1) ;
 }
 
-
 .border-rad:hover{
  
   background-color: #edc1f1;
@@ -1731,9 +1745,72 @@ section {
 
 }
 /*--------------------------------------------------------------
-# SYMPTOM CHECKER
+# FEES - SERVICE BOX
 --------------------------------------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
+.container .heading{
+    text-align: center;
+    padding-bottom: 15px;
+    color:#fff;
+    text-shadow: 0 5px 10px rgba(0,0,0,.2);
+    font-size: 50px;
+}
+
+.container .box-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap:15px;
+}
+
+.container .box-container .box{
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    border-radius: 5px;
+    background: #fff;
+    text-align: center;
+    padding:30px 20px;
+}
+
+.container .box-container .box img{
+    height: 80px;
+}
+
+.container .box-container .box h3{
+    color:#444;
+    font-size: 22px;
+    padding:10px 0;
+}
+
+.container .box-container .box p{
+    color:#777;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.container .box-container .box .btn{
+    margin-top: 10px;
+    display: inline-block;
+    background:#b7547c;
+    color:#fff;
+    font-size: 17px;
+    border-radius: 5px;
+    padding: 8px 25px;
+}
+
+.container .box-container .box .btn:hover{
+    letter-spacing: 1px;
+}
+
+.container .box-container .box:hover{
+    box-shadow: 0 10px 15px rgba(0,0,0,.3);
+    transform: scale(1.03);
+}
+
+@media (max-width:768px){
+    .container{
+        padding:20px;
+    }
+}
 /*--------------------------------------------------------------
 # FOOTER
 --------------------------------------------------------------*/
