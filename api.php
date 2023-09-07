@@ -596,7 +596,7 @@ elseif ($action === 'get_doctor') {
         if ($doctor = $database->getDoctor($req_username)) {
             return_json(['user' => $doctor]);
         }  else {
-            return_json(['user' => "NOT FOUND"]); 
+            return_json(['user' => false]); 
         }
    }  else {
         return_json(['ERROR:' => "UNAUTHORIZED"]);  
@@ -611,7 +611,7 @@ elseif ($action === 'get_admin') {
         if ($admin = $database->getAdmin($req_username)) {
             return_json(['user' => $admin]);
         }  else {
-            return_json(['user' => "NOT FOUND"]); 
+            return_json(['user' => false]); 
         }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
@@ -626,7 +626,7 @@ elseif ($action === 'get_pet_owner') {
         if ($pet_owner = $database->getPetOwner($req_username)) {
              return_json(['user' => $pet_owner]);
         }  else {
-            return_json(['user' => "NOT FOUND"]); 
+            return_json(['user' => false]); 
         }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 

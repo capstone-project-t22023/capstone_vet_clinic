@@ -1,4 +1,6 @@
 import React, {useContext} from 'react';
+import { Helmet } from 'react-helmet-async';
+
 import {Box, IconButton, Paper, Divider, Typography, Stack, Slide} from '@mui/material';
 import ProgramContext from '../contexts/ProgramContext';
 import Footer from '../components/Footer';
@@ -18,11 +20,11 @@ export default function Dashboard() {
     const {user} = useContext(ProgramContext);
     const {petList, sidebarContent, changeSidebarContent, selectedAppointment} = useContext(PetsContext);
 
-
-
-
-    console.log('user', user);
     return (
+        <div>
+        <Helmet>
+                    <title>PawsomeVet | Dashboard</title>
+                </Helmet>
         <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
             <Aside/>
 
@@ -193,5 +195,6 @@ export default function Dashboard() {
                 </Stack>
             </Slide>
         </Stack>
+        </div>
     );
 }
