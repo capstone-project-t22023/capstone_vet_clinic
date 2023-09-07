@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Button, Box, Tooltip, Dialog, IconButton, Zoom} from "@mui/material";
+import {Button, Tooltip, Dialog, IconButton, Zoom, Typography} from "@mui/material";
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -30,8 +30,9 @@ export default function AddNewPetButton() {
                 if (data.add_pet && data.add_pet !== 'error') {
                     // Pet added successfully, you can update UI or take any other actions
                     handlerReloadPetList(true);
-                    console.log("Please update the data - from addNewPetButton / data !== 'error'")
+                    console.log("Success", data.add_pet)
                 } else {
+                    console.error("Error", data.add_pet)
                     // Handle error case
                 }
             })
@@ -72,10 +73,9 @@ export default function AddNewPetButton() {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
             >
-                <Box>
+                <Typography component="h3" variant="h5">
                     Add a new pet to this
-                    owner: {selectedOwner ? `${selectedOwner.firstname} and id ${selectedOwner.pet_owner_id}` : ''}
-                </Box>
+                </Typography>
                 <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet}/>
                 <Button onClick={() => updatePetList(true)}>Update Data List</Button>
             </Dialog>
