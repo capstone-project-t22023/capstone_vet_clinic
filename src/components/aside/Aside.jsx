@@ -12,7 +12,8 @@ import {
     DashboardRounded,
     SettingsRounded,
     CalendarMonthRounded,
-    LocationCityRounded
+    LocationCityRounded,
+    WarehouseRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -92,6 +93,9 @@ export default function Aside() {
                 </ListItemButton>
                 <ListItemButton disabled>
                     <LocationCityRounded />
+                </ListItemButton>
+                <ListItemButton disabled={user.role === 'admin' ? false : true}>
+                    <WarehouseRounded />
                 </ListItemButton>
                 <Tooltip title="Update Profile" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton selected={isActive('/profile')} onClick={() => handleClick('/profile')}>
