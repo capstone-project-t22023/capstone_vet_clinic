@@ -277,7 +277,7 @@ export default function LoginForm() {
 
     return (
         <div>{toHome ?
-            <Navigate to="/" replace={true}/> :
+            <Navigate to="/dashboard" replace={true}/> :
 
             <Box
                 sx={{

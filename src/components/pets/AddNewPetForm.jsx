@@ -1,21 +1,16 @@
-import React, {useContext, useState} from "react";
+import React, { useState} from "react";
 import dayjs from "dayjs";
 import {
     Box,
     Button,
-    Grid,
     TextField,
     Stack,
-    Checkbox, Paper,
 } from "@mui/material";
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
-import {AccountCircle, AddRounded} from "@mui/icons-material";
-import ProgramContext from "../../contexts/ProgramContext";
 
 
 export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUpdate, onCancel}) {
-    const {user} = useContext(ProgramContext);
 
     const initialFormData = {
         pet_owner_id: ownerId,
@@ -184,6 +179,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             label="Microchip Number"
                             name="microchip_no"
                             value={formData.microchip_no}
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             onChange={handleChange}
                             fullWidth
                             required

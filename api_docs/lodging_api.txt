@@ -1,0 +1,61 @@
+***************************************
+LODGING ENDPOINTS
+***************************************
+
+
+endpoint: /add_lodging
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "cage_status":"AVAILABLE",
+        "pet_id":6,
+        "assigned_doctor":1,
+        "confinement_date":"09-10-2023",
+        "discharge_date":"15-10-2023",
+        "comments":null
+    }
+response_body:
+    {
+        "add_lodging": <lodging_id>
+    }
+
+
+endpoint: /update_lodging/<lodging_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "cage_status":"MAINTENANCE",
+        "pet_id":null,
+        "assigned_doctor":null,
+        "confinement_date":null,
+        "discharge_date":null,
+        "comments":"FOR REPAIRS"
+    }
+response_body:
+    {
+        "update_lodging": true
+    }
+
+
+endpoint: /delete_lodging/<lodging_id>
+method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "delete_lodging": true
+    }

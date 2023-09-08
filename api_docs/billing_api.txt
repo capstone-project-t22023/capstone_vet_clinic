@@ -3,6 +3,11 @@ BILLING ENDPOINTS
 ***************************************
 endpoint: /generate_invoice
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_id": 10000001,
@@ -28,6 +33,11 @@ response_body:
 
 endpoint: /update_invoice/<invoice_id>
 method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: 
     {
         "booking_id": 10000001,
@@ -53,6 +63,11 @@ response_body:
 
 endpoint: /get_invoice/300001
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -96,6 +111,11 @@ response_body:
 
 endpoint: /delete_invoice/<invoice_id>
 method: DELETE
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {
@@ -118,6 +138,11 @@ response_body:
 
 endpoint: /get_receipt/<receipt_id>
 method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
 request_body: NO BODY
 response_body:
     {

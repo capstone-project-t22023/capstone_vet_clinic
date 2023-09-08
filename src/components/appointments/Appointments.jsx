@@ -61,7 +61,10 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
 
     useEffect(() => {
-        if (doctor) {fetchAppointments('pet_id', user.id)}
+        if (doctor) {
+            // console.log('doctor_id', user.id)
+            fetchAppointments('doctor_id', user.id)
+        }
         else if (Object.keys(selectedOwner).length > 0) {
             fetchAppointments('username', selectedOwner.username);
         }
@@ -151,11 +154,11 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
                 {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
                     <Typography fontWeight="bold"
-                                color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments today.` : "No Records."}</Typography>
+                                color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments.` : "No Records."}</Typography>
                 ) : (
                     displayedAppointments.map((appointment, index) => (
                         <AppointmentsItem appointment={appointment} key={index}
-                                          isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id ? true : false}
+                                          isSelected={selectedAppointment && selectedAppointment.booking_id === appointment.booking_id}
                                           onClick={() => handleAppointmentClick(appointment)}/>
                     ))
                 )}

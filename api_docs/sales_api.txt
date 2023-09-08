@@ -1,0 +1,34 @@
+***************************************
+SALES ENDPOINTS
+***************************************
+
+
+endpoint: /generate_sales_invoice
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+    }
+request_body: 
+    {
+        "payment_by": <pet_owner_id>,
+        "sales_items": [
+            {
+                "item_id": 54,
+                "quantity": 2
+            },
+            {
+                "item_id": 164,
+                "quantity": 3
+            },
+            {
+                "item_id": 217,
+                "quantity": 5
+            }
+        ]
+    }
+response_body:
+    {
+        "generate_sales_invoice": 100004
+    }

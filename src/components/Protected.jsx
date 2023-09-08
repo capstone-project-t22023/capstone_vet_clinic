@@ -11,7 +11,7 @@ import { Navigate } from "react-router-dom";
 //Prevents unauthenticated users from accessing pages, redirected to login page
 const Protected = ({ isLoggedIn, children }) => {
      if ((!isLoggedIn) && (!sessionStorage.getItem('token'))) {
-            return <Navigate to="/login" replace />;
+            return <Navigate to="/home" replace />;
      }
     return children;
 };
