@@ -16,29 +16,31 @@ export const PetsProvider = ({children}) => {
     const [refreshAppointments, setRefreshAppoinmtents] = useState(false);
     const [appointmentList, setAppointmentList] = useState([]);
     const [allDoctors, setAllDoctors] = useState([]);
+    const [allBookingTypes, setAllBookingTypes] = useState([]);
 
     const fetchDoctors = () => {
 
-            const url = 'http://localhost/capstone_vet_clinic/api.php/get_all_doctors';
+        const url = 'http://localhost/capstone_vet_clinic/api.php/get_all_doctors';
 
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-                },
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                setAllDoctors(data.doctors)
             })
-                .then(response => response.json())
-                .then(data => {
-                    setAllDoctors(data.doctors)
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            return true
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        return true
     }
 
     useEffect(() => {
-        fetchDoctors()
+        fetchDoctors();
+        fetchBookingTypes();
     },[]);
 
     const getDoctor = (id) => {
@@ -53,10 +55,10 @@ export const PetsProvider = ({children}) => {
         setRefreshAppoinmtents(value)
     }
 
+
     const updateSelectedOwner = (owner) => {
         if (user.role !== 'pet_owner') {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
-            console.log("owner", owner)
             setSelectedPet({});
             changeSidebarContent('');
         }
@@ -112,6 +114,68 @@ export const PetsProvider = ({children}) => {
     }, [user, reloadPetList]);
 
 
+
+    const updateAppointmentStatus = (appointment, toStatus) => {
+
+        const url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
+
+        console.log("Change Appointment Status: ", appointment, url);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json(); // Parse response body as JSON
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                if (data && data !== 'error') {
+                    // Appointment finished successfully, you can update UI or take any other actions
+                    handlerRefreshAppointments(true);
+                } else {
+                    // Handle error case
+                    console.error('Error finishing appointment:', data.error_message);
+                }
+            })
+            .catch(error => {
+                console.error('Error finishing appointment:', error);
+            });
+    };
+
+
+
+    const fetchBookingTypes = () => {
+        const url = `http://localhost/capstone_vet_clinic/api.php/get_booking_types`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                setAllBookingTypes(data.booking_types)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        return true
+    }
+
+    const getBookingTypeById = (id) => {
+        return allBookingTypes.find( bType => bType.booking_id === id)
+    }
+
+
+
+
     return (
         <PetsContext.Provider
             value={{
@@ -124,12 +188,14 @@ export const PetsProvider = ({children}) => {
                 selectedAppointment,
                 setSelectedAppointment,
                 updateSelectedAppointment,
+                updateAppointmentStatus,
                 handlerRefreshAppointments,
                 refreshAppointments,
                 changeSidebarContent,
                 sidebarContent,
                 appointmentList, setAppointmentList,
-                getDoctor, allDoctors
+                getDoctor, allDoctors,
+                allBookingTypes
             }}>
             {children}
         </PetsContext.Provider>

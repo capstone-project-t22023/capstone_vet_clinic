@@ -1,8 +1,8 @@
 import React from "react";
 import {AccessTimeFilledRounded, ForwardRounded} from "@mui/icons-material";
-import {FavoriteRounded, FavoriteBorderRounded} from "@mui/icons-material";
-import {Stack, Avatar, Tooltip, IconButton, Divider, Typography} from "@mui/material";
+import {Stack, Tooltip, IconButton, Divider, Typography} from "@mui/material";
 import dayjs from "dayjs";
+import Doctor from "./Doctor";
 
 
 export default function AppointmentsItem({appointment, onClick, isSelected}) {
@@ -83,8 +83,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
                 </Stack>
                 <Divider orientation="vertical" flexItem/>
                 <Stack direction="column" flex={1} alignItems="flex-start">
-                    <Typography
-                        component="p">{appointment.doctor_id ? appointment.doctor_id : "No-Doctor"} - {appointment.booking_type}</Typography>
+                    <Doctor id={appointment.doctor_id} simple />
                     <Stack direction="row" spacing={2}>
                         {appointment && appointment.booking_time.length > 1 ? (
                             appointment.booking_time.map((timeSlot, index) => (

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Box,
     Button,
@@ -15,27 +15,30 @@ import {
 } from "@mui/material";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
+import dayjs from "dayjs";
 
-export default function Doctor({id = -1}) {
+export default function Doctor({id = -1, simple = false}) {
 
     const {user} = useContext(ProgramContext);
     const {getDoctor, allDoctors, selectedAppointment} = useContext(PetsContext);
     const [editMode, setEditMode] = useState(false)
-    const [selectedDoctor, setSelectedDoctor] = useState('');
+    const [selectedDoctor, setSelectedDoctor] = useState(id?id:'');
     const [openDoctorDetails, setOpenDoctorDetails] = useState(false)
-
 
     const doctor = getDoctor(id)
 
 
-    // admin to change doctor for selected appointment
+    useEffect(() => {
+            setSelectedDoctor(id?id:'');
+    }, [id]);
+
 
     const updateDoctorInAppointment = () => {
         const {booking_date, booking_time} = selectedAppointment;
 
 // Convert booking_date and booking_time into the desired format
         const booking_slots = booking_time.map((time) => ({
-            booking_date,
+            booking_date: dayjs(booking_date).format("DD-MM-YYYY"),
             booking_time: time,
         }));
 
@@ -48,6 +51,7 @@ export default function Doctor({id = -1}) {
             booking_slots,
         };
         const apiUrl = "/update_booking_by_admin/" + selectedAppointment.booking_id; // Replace with your actual API endpoint URL
+        console.log(JSON.stringify(requestBody))
 
         fetch(apiUrl, {
             method: "POST",
@@ -60,8 +64,8 @@ export default function Doctor({id = -1}) {
             .then((data) => {
                 console.log("Response from API:", data);
             })
-            .catch((error) => {
-                console.error("Error:", error);
+            .catch((data) => {
+                console.error("Error:", data);
             });
     }
 
@@ -69,7 +73,7 @@ export default function Doctor({id = -1}) {
     const handleChangeDoctor = () => {
         updateDoctorInAppointment();
         setEditMode(false);
-        setSelectedDoctor('');
+        setSelectedDoctor(id?id:'');
     }
 
     const handleChange = (event) => {
@@ -81,83 +85,89 @@ export default function Doctor({id = -1}) {
         setOpenDoctorDetails(false);
     }
 
-
     return (
-        <Box sx={{my: 2}}>
-            {user.role === "admin" &&
-                <Stack direction="column">
-                    {editMode ? (
-                        <Paper elevation={20}>
-                            <Stack direction="column" spacing={2}
-                                   sx={{border: "1px solid", borderColor: "primary.50", p: 1}}>
-                                <Select
-                                    value={selectedDoctor}
-                                    onChange={handleChange}
-                                    displayEmpty
-                                    variant="outlined"
-                                    size="small"
-                                    fullWidth
-                                >
-                                    <MenuItem value="" disabled>
-                                        Select Dr.
-                                    </MenuItem>
-                                    {allDoctors.map((dr) => (
-                                        <MenuItem key={dr.id} value={dr.id}>
-                                            {dr.firstname} {dr.lastname}
+        !simple ? (
+            <Box sx={{my: 2}}>
+                {user.role === "admin" ? (
+                    <Stack direction="column">
+                        {editMode ? (
+                            <Paper elevation={20} sx={{borderRadius: 4}}>
+                                <Stack direction="column" spacing={2}
+                                       sx={{border: "0px solid", borderColor: "primary.50", p: 1}}>
+                                    <Select
+                                        value={selectedDoctor}
+                                        onChange={handleChange}
+                                        displayEmpty
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth
+                                    >
+                                        <MenuItem value="" disabled>
+                                            Select Dr.
                                         </MenuItem>
-                                    ))}
-                                </Select>
-                                <Stack direction="row" spacing={3} justifyContent="center">
-                                    <Button onClick={() => setEditMode(!editMode)} variant="outlined"
-                                            color="primary">Cancel</Button>
-                                    <Button onClick={handleChangeDoctor} variant="contained"
-                                            color="primary">Save</Button>
+                                        {allDoctors.map((dr) => (
+                                            <MenuItem key={dr.id} value={dr.id}>
+                                                {dr.firstname} {dr.lastname}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Stack direction="row" spacing={3} justifyContent="center">
+                                        <Button onClick={() => setEditMode(!editMode)} variant="outlined"
+                                                color="primary">Cancel</Button>
+                                        <Button onClick={handleChangeDoctor} variant="contained"
+                                                color="primary">Save</Button>
+                                    </Stack>
                                 </Stack>
+                            </Paper>
+                        ) : (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography><strong>Doctor:</strong></Typography>
+                                <Button
+                                    onClick={() => setEditMode(!editMode)}>{doctor ? doctor.firstname + " " + doctor.lastname : "Select Doctor"}</Button>
                             </Stack>
-                        </Paper>
-                    ) : (
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography><strong>Doctor:</strong></Typography>
-                            <Button
-                                onClick={() => setEditMode(!editMode)}>{doctor ? doctor.firstname + " " + doctor.lastname : "Select Doctor"}</Button>
-                        </Stack>
-                    )
+                        )
+                        }
+                    </Stack>
+
+                ) : (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Tooltip title={doctor ? (
+                            <>
+                                Phone: {doctor.phone}
+                                <br/>
+                                Email: {doctor.email}
+                            </>
+                        ) : null} TransitionComponent={Zoom}
+                                 placement="bottom" arrow>
+                            <Typography
+                                onClick={doctor ? () => setOpenDoctorDetails(true) : null}><strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
+                            </Typography>
+                        </Tooltip>
+                    </Stack>
+                )}
+                <Dialog open={openDoctorDetails} onClose={handleCloseDoctorDetails} sx={{borderRadius: 4}}>
+                    <DialogTitle
+                        sx={{mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold'}}>
+                        Doctor's details:
+                    </DialogTitle>
+                    {doctor &&
+                        <Card>
+                            <CardContent>
+                                <Typography>First Name: {doctor.firstname}</Typography>
+                                <Typography>Last Name: {doctor.lastname}</Typography>
+                                <Typography>Email: {doctor.email}</Typography>
+                                <Typography>Phone: {doctor.phone}</Typography>
+                                {/* Add more fields as needed */}
+                            </CardContent>
+                        </Card>
                     }
-                </Stack>
 
-            }
-            <Stack direction="row" spacing={1} alignItems="center">
-                <Tooltip title={doctor ? (
-                    <>
-                        Phone: {doctor.phone}
-                        <br/>
-                        Email: {doctor.email}
-                    </>
-                ) : null} TransitionComponent={Zoom}
-                         placement="bottom" arrow>
-                    <Typography
-                        onClick={doctor ? () => setOpenDoctorDetails(true) : null}><strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
-                    </Typography>
-                </Tooltip>
-            </Stack>
-            <Dialog open={openDoctorDetails} onClose={handleCloseDoctorDetails} maxWidth={"md"}>
-                <DialogTitle
-                    sx={{mt: 3, p: 2, textAlign: 'center', fontWeight: 'bold'}}>
-                    Doctor's details:
-                </DialogTitle>
-                {doctor &&
-                    <Card>
-                        <CardContent>
-                            <Typography>First Name: {doctor.firstname}</Typography>
-                            <Typography>Last Name: {doctor.lastname}</Typography>
-                            <Typography>Email: {doctor.email}</Typography>
-                            <Typography>Phone: {doctor.phone}</Typography>
-                            {/* Add more fields as needed */}
-                        </CardContent>
-                    </Card>
-                }
-
-            </Dialog>
-        </Box>
+                </Dialog>
+            </Box>
+        ) : (
+            <Typography component="p">
+                <strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
+            </Typography>
+        )
     )
 }

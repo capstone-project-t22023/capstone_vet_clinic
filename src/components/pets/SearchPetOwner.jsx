@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Box, InputAdornment, IconButton, Chip, Typography, TextField, List, Stack, ListItemButton, ListItemText} from "@mui/material";
+import { InputAdornment, IconButton, Chip, Typography, TextField, Stack} from "@mui/material";
 import {Clear} from "@mui/icons-material";
 import {PetsContext} from "../../contexts/PetsProvider";
 
@@ -7,7 +7,7 @@ import {PetsContext} from "../../contexts/PetsProvider";
 export default function SearchPetOwner() {
 
 
-    const {updateSelectedOwner, petList} = useContext(PetsContext);
+    const {updateSelectedOwner, selectedOwner, petList} = useContext(PetsContext);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredOwners, setFilteredOwners] = useState(petList);
@@ -25,6 +25,10 @@ export default function SearchPetOwner() {
 
         setFilteredOwners(filtered);
     };
+
+    useEffect(() => {
+        selectedOwner ? setOwnerIsSelected(selectedOwner.pet_owner_id) : selectedOwner(false);
+    }, [selectedOwner]);
 
     useEffect(() => {
         // when created new pet the list has to be updated

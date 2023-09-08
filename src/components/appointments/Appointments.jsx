@@ -7,7 +7,7 @@ import ProgramContext from "../../contexts/ProgramContext";
 import dayjs from "dayjs";
 
 
-export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = false}) {
+export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = '', status = ''}) {
 
 
     // APPOINTMENTS LIST
@@ -25,6 +25,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
     const {user} = useContext(ProgramContext);
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [newCount, setNewCount] = useState(count)
 
     const fetchAppointments = (filterType, filterValue) => {
         const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
@@ -37,20 +38,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         })
             .then(response => response.json())
             .then(data => {
-
-                // const merged = {};
-                // if (Array.isArray(data.bookings)) {
-                //     data.bookings.forEach(appointment => {
-                //         const bookingId = appointment.booking_id;
-                //         if (!merged[bookingId]) {
-                //             merged[bookingId] = {...appointment, booking_time: [appointment.booking_time]};
-                //         } else {
-                //             merged[bookingId].booking_time.push(appointment.booking_time);
-                //             // Sort the booking_time array in ascending order
-                //             merged[bookingId].booking_time.sort((a, b) => a.localeCompare(b));
-                //         }
-                //     });
-                // }
                 setAppointmentList(data.bookings)
             })
             .catch(error => {
@@ -64,17 +51,11 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         if (doctor) {
             // console.log('doctor_id', user.id)
             fetchAppointments('doctor_id', user.id)
-        }
-        else if (Object.keys(selectedOwner).length > 0) {
+        } else if (Object.keys(selectedOwner).length > 0) {
             fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
     }, [selectedOwner, refreshAppointments]);
-
-
-
-
-
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);
@@ -102,7 +83,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
     });
 
     // filter for number of total appointments to show
-    const slicedByCountAppointments = count === -1 ? filteredAppointments : filteredAppointments.slice(0, count);
+    const slicedByCountAppointments = newCount === -1 ? filteredAppointments : filteredAppointments.slice(0, newCount);
 
 
     const totalPages = Math.ceil(slicedByCountAppointments.length / itemsPerPage);
@@ -112,15 +93,13 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
     const displayedAppointments = itemsPerPage === -1 ? slicedByCountAppointments : slicedByCountAppointments.slice(startIndex, endIndex);
 
-    count = slicedByCountAppointments.length;
+    const finalCount = slicedByCountAppointments.length;
 
 
     const handleAppointmentClick = (appointment) => {
         changeSidebarContent("appointment");
         updateSelectedAppointment(appointment);
     }
-
-
 
 
     return (
@@ -131,24 +110,27 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
                     {timeframe === 'future'
-                        ? (count !== 0
-                            ? `Upcoming ${count}`
+                        ? (finalCount !== 0
+                            ? `Upcoming ${finalCount}`
                             : 'No upcoming')
                         : timeframe === 'today'
-                            ? (count !== 0
-                                ? `Today's ${count}`
+                            ? (finalCount !== 0
+                                ? `Today's ${finalCount}`
                                 : 'No today\'s')
                             : timeframe === 'historic'
-                                ? (count !== 0
-                                    ? `Historical ${count}`
+                                ? (finalCount !== 0
+                                    ? `Historical ${finalCount}`
                                     : 'No historical')
-                                : (count !== 0
-                                    ? `${count} All`
+                                : (finalCount !== 0
+                                    ? `${finalCount} All`
                                     : 'No')} appointments
                 </Typography>
-                <Button variant="text" size="small" color="secondary" onClick={() => count = -1}>List all
-                    ({filteredAppointments.length + "/" + count})<ChevronRightRounded
-                        fontSize="inherit"/></Button>
+                {newCount !== -1 && finalCount !== 0 && finalCount !== filteredAppointments.length &&
+                    <Button variant="text" size="small" color="secondary" onClick={() => setNewCount(-1)}>Show all
+                        ({filteredAppointments.length})
+                        <ChevronRightRounded fontSize="inherit"/>
+                    </Button>
+                }
             </Stack>
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
