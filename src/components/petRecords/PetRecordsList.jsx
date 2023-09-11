@@ -1,7 +1,30 @@
 import React, {useContext, useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {PetsContext} from "../../contexts/PetsProvider";
-import {TableCell, Table, TableRow, Paper, TableBody, TableContainer, TableHead, Typography, Stack} from "@mui/material";
+import { styled } from '@mui/material/styles';
+import {Table, TableRow, Paper, TableBody, TableContainer, TableHead, Typography, Stack} from "@mui/material";
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.primary[50],
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
+
 
 export default function PetRecordsList() {
 
@@ -56,26 +79,26 @@ export default function PetRecordsList() {
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
-                    <TableRow>
-                        <TableCell>Pet ID</TableCell>
-                        <TableCell>Doctor ID</TableCell>
-                        <TableCell>Veterinarian</TableCell>
-                        <TableCell>Referral Date</TableCell>
-                        <TableCell>Diagnosis</TableCell>
-                        <TableCell>Archived</TableCell>
-                    </TableRow>
+                    <StyledTableRow>
+                        <StyledTableCell>Pet ID</StyledTableCell>
+                        <StyledTableCell>Doctor ID</StyledTableCell>
+                        <StyledTableCell>Veterinarian</StyledTableCell>
+                        <StyledTableCell>Referral Date</StyledTableCell>
+                        <StyledTableCell>Diagnosis</StyledTableCell>
+                        <StyledTableCell>Archived</StyledTableCell>
+                    </StyledTableRow>
                 </TableHead>
                 {petRecordsList &&
                 <TableBody>
                     {petRecordsList.map((item, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{item.pet_id}</TableCell>
-                            <TableCell>{item.doctor_id}</TableCell>
-                            <TableCell>{item.veterinarian}</TableCell>
-                            <TableCell>{item.referral_date}</TableCell>
-                            <TableCell>{item.diagnosis}</TableCell>
-                            <TableCell>{item.archived}</TableCell>
-                        </TableRow>
+                        <StyledTableRow key={index}>
+                            <StyledTableCell>{item.pet_id}</StyledTableCell>
+                            <StyledTableCell>{item.doctor_id}</StyledTableCell>
+                            <StyledTableCell>{item.veterinarian}</StyledTableCell>
+                            <StyledTableCell>{dayjs(item.referral_date).format("DD MMM YYYY")}</StyledTableCell>
+                            <StyledTableCell>{item.diagnosis}</StyledTableCell>
+                            <StyledTableCell>{item.archived}</StyledTableCell>
+                        </StyledTableRow>
                     ))}
                 </TableBody>
                 }
