@@ -157,7 +157,6 @@ export default function Doctor({id = -1, simple = false}) {
                                 <Typography>Last Name: {doctor.lastname}</Typography>
                                 <Typography>Email: {doctor.email}</Typography>
                                 <Typography>Phone: {doctor.phone}</Typography>
-                                {/* Add more fields as needed */}
                             </CardContent>
                         </Card>
                     }
@@ -165,8 +164,8 @@ export default function Doctor({id = -1, simple = false}) {
                 </Dialog>
             </Box>
         ) : (
-            <Typography component="p">
-                <strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
+            <Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>
+                <strong>Dr.:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
             </Typography>
         )
     )
