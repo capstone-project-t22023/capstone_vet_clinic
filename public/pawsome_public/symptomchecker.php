@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Symptom Checker</title>
+  <title>PawsomeVet | Symptom Checker</title>
   <meta content="Symptom Checker" name="description">
   <meta content="pet clinic, pet, pet treatment" name="keywords">
 
