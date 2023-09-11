@@ -15,9 +15,16 @@ import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
 import Appointments from "../appointments/Appointments";
+import PetRecordsList from "../petRecords/PetRecordsList";
 
-export default function PetsList() {
-    const {selectedOwner, updateSelectedOwner, selectedPet, changeSidebarContent, updateSelectedPet} = useContext(PetsContext);
+export default function PetsList({petRecords = false}) {
+    const {
+        selectedOwner,
+        updateSelectedOwner,
+        selectedPet,
+        changeSidebarContent,
+        updateSelectedPet
+    } = useContext(PetsContext);
 
     const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
@@ -49,10 +56,10 @@ export default function PetsList() {
             <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start">
 
                 {selectedOwner && !Object.keys(selectedOwner).length > 0 && (
-                <Box>
-                    <Typography component="h5" variant="h6">Select the owner first</Typography>
-                </Box>
-                    )}
+                    <Box>
+                        <Typography component="h5" variant="h6">Select the owner first</Typography>
+                    </Box>
+                )}
 
                 <SearchPetOwner/>
 
@@ -61,9 +68,9 @@ export default function PetsList() {
                     <Stack sx={{position: "relative"}}>
                         <Box sx={{position: "absolute", top: 0, right: 0}}>
                             <Tooltip placement="left" title="Close Selected Customer" arrow>
-                            <IconButton color="primary" onClick={() => updateSelectedOwner({})}>
-                                <CloseRoundedIcon/>
-                            </IconButton>
+                                <IconButton color="primary" onClick={() => updateSelectedOwner({})}>
+                                    <CloseRoundedIcon/>
+                                </IconButton>
                             </Tooltip>
                         </Box>
                         <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
@@ -116,14 +123,21 @@ export default function PetsList() {
                             }
                         </Paper>
 
+                        { !petRecords && selectedOwner.pets.length > 0 &&
+                                    <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
+                                        <Appointments timeframe="today" count={3}/>
+                                        <Appointments timeframe="historic"/>
+                                        <Appointments timeframe="future" count={3}/>
+                                        {/*<Appointments itemsPerPage={3}/>*/}
+                                    </Stack>
 
-                        {selectedOwner.pets.length > 0 &&
-                            <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
-                                <Appointments timeframe="today" count={3}/>
-                                <Appointments timeframe="historic"/>
-                                <Appointments timeframe="future" count={3}/>
-                                {/*<Appointments itemsPerPage={3}/>*/}
-                            </Stack>
+                        }
+                        { petRecords &&
+                                    <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
+
+                                        <PetRecordsList />
+                                    </Stack>
+
                         }
 
                     </Stack>

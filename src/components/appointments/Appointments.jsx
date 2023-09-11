@@ -26,7 +26,10 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
     const [currentPage, setCurrentPage] = useState(1);
     const [newCount, setNewCount] = useState(count)
-    const [isDoctor, setIsDoctor] = useState(doctor);
+
+    const [isDoc, setIsDoc] = useState(doctor);
+
+
 
     const fetchAppointments = (filterType, filterValue) => {
         const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
@@ -49,15 +52,15 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
 
     useEffect(() => {
-        if (isDoctor) {
+        if (isDoc) {
             console.log('doctor_id', user.id)
             fetchAppointments('doctor_id', user.id)
         } else if (Object.keys(selectedOwner).length > 0) {
-            console.log('not doctor')
+            console.log("NENI DOCTOREK");
             fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
-    }, [selectedOwner, refreshAppointments]);
+    }, [selectedOwner,refreshAppointments]);
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);
@@ -69,6 +72,8 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         );
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);
+
+
 
 
     const filteredAppointments = mergedAppointments.filter(appointment => {
@@ -83,6 +88,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         }
         return true;
     });
+
 
     // filter for number of total appointments to show
     const slicedByCountAppointments = newCount === -1 ? filteredAppointments : filteredAppointments.slice(0, newCount);
@@ -107,7 +113,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
     return (
         <Stack direction="column" flex={1}
                sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2}}>
-
 
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
@@ -137,8 +142,9 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             <Stack direction="column" spacing={1} flex={1} alignItems="center">
 
                 {(!Array.isArray(displayedAppointments) || displayedAppointments.length === 0) ? (
-                    <Typography fontWeight="bold"
-                                color="primary.300">{doctor ? `Dr. ${user.firstname}, you have NO appointments.` : "No Records."}</Typography>
+                    <Typography fontWeight="bold" color="primary.300">
+                        {doctor ? `Dr. ${user.firstname}, you have NO appointments.` : "No Records."}
+                    </Typography>
                 ) : (
                     displayedAppointments.map((appointment, index) => (
                         <AppointmentsItem appointment={appointment} key={index}
