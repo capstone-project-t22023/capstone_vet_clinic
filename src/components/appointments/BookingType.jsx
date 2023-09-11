@@ -29,6 +29,8 @@ export default function BookingType({text = true, icon = true, type}) {
         }
     }, [allBookingTypes, type]);
 
+    // TODO the icons by type and also filters if TEXT only or ICON only
+
     const handleChange = (event) => {
         setSelectedType(event.target.value);
         console.log("Type", event.target.value)
