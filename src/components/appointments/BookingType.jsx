@@ -2,13 +2,13 @@ import React, {useContext, useEffect, useState} from "react";
 import {
     Box,
     Button,
+    FormControl,
+    InputLabel,
     MenuItem,
     Paper,
     Select,
     Stack,
     Typography,
-    ListItemIcon,
-    ListItemText,
 } from "@mui/material";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
@@ -77,30 +77,35 @@ export default function BookingType({text = false, icon = false, title = false, 
             {user.role === "admin" && !simple ? (
                 <Stack direction="column">
                     {editMode ? (
-                        <Paper elevation={20} sx={{borderRadius: 4}}>
-                            <Stack direction="column" spacing={2}
-                                   sx={{border: "0px solid", borderColor: "primary.50", p: 1}}>
+                        <Paper elevation={0} sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
+                            <Stack direction="column" spacing={2}>
+                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                    <InputLabel id="select-booking">Booking Type</InputLabel>
+
+
                                 <Select
                                     value={selectedType}
                                     onChange={handleChange}
-                                    // displayEmpty
+                                    displayEmpty
                                     variant="outlined"
                                     size="small"
+                                    label="Booking Type"
                                     fullWidth
                                 >
 
                                     {allBookingTypes.map((type) => (
                                         <MenuItem key={type.id} value={type.id}>
-                                            <ListItemText>{type.booking_type}</ListItemText>
+                                            {type.booking_type}
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                <Stack direction="row" spacing={3} justifyContent="center">
-                                    <Button onClick={() => setEditMode(!editMode)} variant="outlined"
+                                <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
+                                    <Button onClick={() => setEditMode(!editMode)} variant="outlined" size="small"
                                             color="primary">Cancel</Button>
-                                    <Button onClick={handleChangeBookingType} variant="contained"
+                                    <Button onClick={handleChangeBookingType} variant="contained" size="small"
                                             color="primary">Save</Button>
                                 </Stack>
+                                </FormControl>
                             </Stack>
                         </Paper>
                     ) : (

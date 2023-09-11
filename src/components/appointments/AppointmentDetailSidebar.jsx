@@ -85,14 +85,14 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                         <IconButton color="primary" disabled onClick={handleOpenOwner}>
                             <FaceRounded/>
                         </IconButton>
-                        <Typography fontSize="0.75rem"><strong>Pet Owner:</strong></Typography>
+                        <Typography fontSize="0.75rem"><strong>Owner:</strong></Typography>
                         <Typography>{appointment.pet_owner}</Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <IconButton color="primary" onClick={handleOpenPet}>
                             <PetsRounded/>
                         </IconButton>
-                        <Typography fontSize="0.75rem"><strong>Pet Name:</strong></Typography>
+                        <Typography fontSize="0.75rem"><strong>Pet:</strong></Typography>
                         <Typography>{appointment.petname}</Typography>
                     </Stack>
                 </Stack>

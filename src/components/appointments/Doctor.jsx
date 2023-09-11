@@ -6,6 +6,8 @@ import {
     CardContent,
     Dialog,
     DialogTitle,
+    FormControl,
+    InputLabel,
     MenuItem,
     Paper,
     Select,
@@ -71,9 +73,9 @@ export default function Doctor({id = -1, simple = false}) {
 
 
     const handleChangeDoctor = () => {
-        updateDoctorInAppointment();
-        setEditMode(false);
         setSelectedDoctor(id?id:'');
+        setEditMode(false);
+        updateDoctorInAppointment();
     }
 
     const handleChange = (event) => {
@@ -84,39 +86,42 @@ export default function Doctor({id = -1, simple = false}) {
     const handleCloseDoctorDetails = () => {
         setOpenDoctorDetails(false);
     }
-
     return (
         !simple ? (
             <Box sx={{my: 2}}>
                 {user.role === "admin" ? (
                     <Stack direction="column">
                         {editMode ? (
-                            <Paper elevation={20} sx={{borderRadius: 4}}>
-                                <Stack direction="column" spacing={2}
-                                       sx={{border: "0px solid", borderColor: "primary.50", p: 1}}>
+                            <Paper elevation={0} sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
+                                <Stack direction="column" spacing={2}>
+
+                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                        <InputLabel id="select-doctor">Doctor</InputLabel>
+
+
+
                                     <Select
                                         value={selectedDoctor}
                                         onChange={handleChange}
                                         displayEmpty
                                         variant="outlined"
                                         size="small"
+                                        label="Doctor"
                                         fullWidth
                                     >
-                                        <MenuItem value="" disabled>
-                                            Select Dr.
-                                        </MenuItem>
                                         {allDoctors.map((dr) => (
                                             <MenuItem key={dr.id} value={dr.id}>
                                                 {dr.firstname} {dr.lastname}
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    <Stack direction="row" spacing={3} justifyContent="center">
-                                        <Button onClick={() => setEditMode(!editMode)} variant="outlined"
+                                    <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
+                                        <Button onClick={() => setEditMode(!editMode)} variant="outlined" size="small"
                                                 color="primary">Cancel</Button>
-                                        <Button onClick={handleChangeDoctor} variant="contained"
+                                        <Button onClick={handleChangeDoctor} variant="contained" size="small"
                                                 color="primary">Save</Button>
                                     </Stack>
+                                    </FormControl>
                                 </Stack>
                             </Paper>
                         ) : (
