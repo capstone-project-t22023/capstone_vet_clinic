@@ -55,13 +55,19 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     </Tooltip>
                     <Status appointment={appointment}/>
                     <Divider/>
-                    <Typography><strong>Date:</strong> {dayjs(appointment.booking_date).format("DD MMMM YYYY")}
-                    </Typography>
-                    <Typography><strong>Time:</strong> {appointment.booking_time.join(', ')}</Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography fontSize="0.75rem"><strong>Date:</strong></Typography>
+                        <Typography>{dayjs(appointment.booking_date).format("DD MMMM YYYY")}</Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography fontSize="0.75rem"><strong>Time:</strong></Typography>
+                        <Typography>{appointment.booking_time.join(', ')}</Typography>
+                    </Stack>
                     {user.role !== "doctor" &&
                         <>
-                        <BookingButton/>
-                        <Button onClick={handleStatusCancel} variant="contained" size="small" color="error" endIcon={<AutoDeleteRounded />}>Delete Booking</Button>
+                            <BookingButton/>
+                            <Button onClick={handleStatusCancel} variant="contained" size="small" color="error"
+                                    endIcon={<AutoDeleteRounded/>}>Delete Booking</Button>
                         </>
                     }
                     <Divider/>
@@ -77,16 +83,16 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     {/*<Typography><strong>Pet ID:</strong> {appointment.pet_id}</Typography>*/}
                     <Stack direction="row" spacing={1} alignItems="center">
                         <IconButton color="primary" disabled onClick={handleOpenOwner}>
-                            <FaceRounded />
+                            <FaceRounded/>
                         </IconButton>
-                        <Typography><strong>Pet Owner:</strong></Typography>
+                        <Typography fontSize="0.75rem"><strong>Pet Owner:</strong></Typography>
                         <Typography>{appointment.pet_owner}</Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <IconButton color="primary" onClick={handleOpenPet}>
                             <PetsRounded/>
                         </IconButton>
-                        <Typography><strong>Pet Name:</strong></Typography>
+                        <Typography fontSize="0.75rem"><strong>Pet Name:</strong></Typography>
                         <Typography>{appointment.petname}</Typography>
                     </Stack>
                 </Stack>
@@ -94,7 +100,6 @@ export default function AppointmentDetailSidebar({appointmentId}) {
             <Stack direction="column" spacing={2}>
                 {user.role !== "pet_owner" &&
                     <>
-
 
 
                         <Button disabled variant="outlined" color="error">Update Pet Records??</Button>

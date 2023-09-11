@@ -83,7 +83,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
                 <Divider orientation="vertical" flexItem/>
                 <Stack direction="column" flex={1} alignItems="flex-start">
                     <Stack direction="row" spacing={1} justifyContent="space-between">
-                        <BookingType type={appointment.booking_type} icon/>
+                        <BookingType type={appointment.booking_type} icon simple/>
                         <Doctor id={appointment.doctor_id} simple/>
                     </Stack>
                     <Stack direction="row" spacing={2}>

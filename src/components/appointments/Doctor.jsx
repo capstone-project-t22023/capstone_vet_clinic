@@ -121,7 +121,7 @@ export default function Doctor({id = -1, simple = false}) {
                             </Paper>
                         ) : (
                             <Stack direction="row" spacing={1} alignItems="center">
-                                <Typography><strong>Doctor:</strong></Typography>
+                                <Typography fontSize="0.75rem"><strong>Doctor:</strong></Typography>
                                 <Button
                                     onClick={() => setEditMode(!editMode)}>{doctor ? doctor.firstname + " " + doctor.lastname : "Select Doctor"}</Button>
                             </Stack>
@@ -139,7 +139,7 @@ export default function Doctor({id = -1, simple = false}) {
                             </>
                         ) : null} TransitionComponent={Zoom}
                                  placement="bottom" arrow>
-                            <Typography
+                            <Typography fontSize="0.75rem"
                                 onClick={doctor ? () => setOpenDoctorDetails(true) : null}><strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
                             </Typography>
                         </Tooltip>
@@ -165,7 +165,7 @@ export default function Doctor({id = -1, simple = false}) {
             </Box>
         ) : (
             <Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>
-                <strong>Dr.:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
+                <strong>Dr.</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
             </Typography>
         )
     )

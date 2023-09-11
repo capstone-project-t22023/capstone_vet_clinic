@@ -6,7 +6,9 @@ import {
     Paper,
     Select,
     Stack,
-    Typography
+    Typography,
+    ListItemIcon,
+    ListItemText,
 } from "@mui/material";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
@@ -18,7 +20,7 @@ import {
     VaccinesRounded
 } from "@mui/icons-material";
 
-export default function BookingType({text = false, icon = false, title = false, type}) {
+export default function BookingType({text = false, icon = false, title = false, simple = false, type}) {
 
     const {user} = useContext(ProgramContext);
     const {selectedAppointment, allBookingTypes} = useContext(PetsContext);
@@ -72,7 +74,7 @@ export default function BookingType({text = false, icon = false, title = false, 
 
     return (
         <Box sx={{my: 2}}>
-            {user.role === "admin" ? (
+            {user.role === "admin" && !simple ? (
                 <Stack direction="column">
                     {editMode ? (
                         <Paper elevation={20} sx={{borderRadius: 4}}>
@@ -89,7 +91,7 @@ export default function BookingType({text = false, icon = false, title = false, 
 
                                     {allBookingTypes.map((type) => (
                                         <MenuItem key={type.id} value={type.id}>
-                                            {type.booking_type} ${type.booking_fee}
+                                            <ListItemText>{type.booking_type}</ListItemText>
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -103,7 +105,7 @@ export default function BookingType({text = false, icon = false, title = false, 
                         </Paper>
                     ) : (
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography><strong>Booking Type:</strong></Typography>
+                            <Typography fontSize="0.75rem"><strong>Booking Type:</strong></Typography>
                             <Button
                                 onClick={() => setEditMode(!editMode)}>{type ? type : "Select Type"}</Button>
                         </Stack>
@@ -113,10 +115,10 @@ export default function BookingType({text = false, icon = false, title = false, 
 
             ) : (
                 <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-start">
+                    {title && <Typography fontSize="0.75rem"><strong>Type:</strong></Typography>}
                     {icon && <Typography
                         sx={{"& .MuiSvgIcon-root": {fontSize: "1rem"}}}
                     >{showIcon(selectedType)}</Typography>}
-                    {title && <Typography><strong>Type:</strong></Typography>}
                     {text && <Typography>{type ? type : "No Type"}</Typography>}
                 </Stack>
             )}
