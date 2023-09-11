@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 export default function Doctor({id = -1, simple = false}) {
 
     const {user} = useContext(ProgramContext);
-    const {getDoctor, allDoctors, selectedAppointment} = useContext(PetsContext);
+    const {getDoctor, allDoctors, selectedAppointment,handlerRefreshAppointments} = useContext(PetsContext);
     const [editMode, setEditMode] = useState(false)
     const [selectedDoctor, setSelectedDoctor] = useState(id?id:'');
     const [openDoctorDetails, setOpenDoctorDetails] = useState(false)
@@ -52,12 +52,13 @@ export default function Doctor({id = -1, simple = false}) {
             doctor_id: selectedDoctor, // Use the updated doctor_id here
             booking_slots,
         };
-        const apiUrl = "/update_booking_by_admin/" + selectedAppointment.booking_id; // Replace with your actual API endpoint URL
+        const apiUrl = "http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/" + selectedAppointment.booking_id;
         console.log(JSON.stringify(requestBody))
 
         fetch(apiUrl, {
             method: "POST",
             headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(requestBody),
@@ -76,6 +77,7 @@ export default function Doctor({id = -1, simple = false}) {
         setSelectedDoctor(id?id:'');
         setEditMode(false);
         updateDoctorInAppointment();
+        handlerRefreshAppointments(true)
     }
 
     const handleChange = (event) => {

@@ -61,7 +61,7 @@ export default function Status({appointment}) {
                     <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusConfirmed : null} variant="contained" color="error"
                             size="small">{isPending() ? "Confirm >>" : isConfirmed() ? "<< Remove Confirm" : ""}</Button>
                 }
-                {user.role === "doctor" && isConfirmed() &&
+                {user.role === "doctor" && isConfirmed() && appointment.doctor_id === user.id  &&
                     <Button onClick={handleStatusFinished} variant="contained" color="primary"
                             size="small">Finish</Button>
                 }

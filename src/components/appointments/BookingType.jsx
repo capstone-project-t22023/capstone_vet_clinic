@@ -19,11 +19,12 @@ import {
     RestaurantRounded,
     VaccinesRounded
 } from "@mui/icons-material";
+import dayjs from "dayjs";
 
 export default function BookingType({text = false, icon = false, title = false, simple = false, type}) {
 
     const {user} = useContext(ProgramContext);
-    const {selectedAppointment, allBookingTypes} = useContext(PetsContext);
+    const {selectedAppointment, allBookingTypes,handlerRefreshAppointments} = useContext(PetsContext);
     const [bookingType, setBookingType] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [openBookingType, setOpenBookingType] = useState(false)
@@ -60,12 +61,59 @@ export default function BookingType({text = false, icon = false, title = false, 
         }
     };
 
+
+    const updateBookingTypeInAppointment = () => {
+        const {booking_date, booking_time} = selectedAppointment;
+
+// Convert booking_date and booking_time into the desired format
+        const booking_slots = booking_time.map((time) => ({
+            booking_date: dayjs(booking_date).format("DD-MM-YYYY"),
+            booking_time: time,
+        }));
+
+// Update the requestBody with the new booking_slots array
+        const requestBody = {
+            booking_type: allBookingTypes.find(bType => bType.id === selectedType).booking_type,
+            pet_owner_id: selectedAppointment.pet_owner_id,
+            pet_id: selectedAppointment.pet_id,
+            doctor_id: selectedAppointment.doctor_id,
+            booking_slots,
+        };
+        const apiUrl = "http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/" + selectedAppointment.booking_id;
+        console.log(JSON.stringify(requestBody))
+
+        fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Response from API:", data);
+            })
+            .catch((data) => {
+                console.error("Error:", data);
+            });
+    }
+
+
     const handleChange = (event) => {
         setSelectedType(event.target.value);
         console.log("Type", event.target.value)
     };
     const handleChangeBookingType = () => {
+        // console.log(allBookingTypes);
+        console.log("TOTO",allBookingTypes.find(bType => bType.booking_type === type).booking_type);
+        setSelectedType(type?type:'');
+        setEditMode(false);
+        updateBookingTypeInAppointment();
+        handlerRefreshAppointments(true)
+
         console.log("Save Booking Type")
+    //     TODO Save booking type - update booking
     };
 
     const handleCloseBookingType = () => {

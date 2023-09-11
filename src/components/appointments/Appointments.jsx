@@ -7,7 +7,7 @@ import ProgramContext from "../../contexts/ProgramContext";
 import dayjs from "dayjs";
 
 
-export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = '', status = ''}) {
+export default function Appointments({timeframe = 'all', count = -1, itemsPerPage = 5, doctor = false, status = ''}) {
 
 
     // APPOINTMENTS LIST
@@ -26,6 +26,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
     const [currentPage, setCurrentPage] = useState(1);
     const [newCount, setNewCount] = useState(count)
+    const [isDoctor, setIsDoctor] = useState(doctor);
 
     const fetchAppointments = (filterType, filterValue) => {
         const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
@@ -48,10 +49,11 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
 
     useEffect(() => {
-        if (doctor) {
-            // console.log('doctor_id', user.id)
+        if (isDoctor) {
+            console.log('doctor_id', user.id)
             fetchAppointments('doctor_id', user.id)
         } else if (Object.keys(selectedOwner).length > 0) {
+            console.log('not doctor')
             fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
