@@ -57,9 +57,9 @@ export default function Status({appointment}) {
             </Alert>
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
 
-                {user.role === "admin" && !isFinished &&
-                    <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusConfirmed : null} variant="contained" color="error"
-                            size="small">{isPending() ? "Confirm >>" : isConfirmed() ? "<< Remove Confirm" : ""}</Button>
+                {user.role === "admin" && !isFinished() &&
+                    <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusConfirmed : null} variant="contained" color="success"
+                            size="small">{isPending() ? "Confirm" : isConfirmed() ? "Remove Confirm" : ""}</Button>
                 }
                 {user.role === "doctor" && isConfirmed() && appointment.doctor_id === user.id  &&
                     <Button onClick={handleStatusFinished} variant="contained" color="primary"

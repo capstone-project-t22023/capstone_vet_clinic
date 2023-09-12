@@ -119,7 +119,7 @@ export const PetsProvider = ({children}) => {
 
         const url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
 
-        console.log("Change Appointment Status: ", appointment, url);
+        console.log("Change Appointment Status: ", url);
 
         fetch(url, {
             method: 'POST',
@@ -138,6 +138,7 @@ export const PetsProvider = ({children}) => {
                 if (data && data !== 'error') {
                     // Appointment finished successfully, you can update UI or take any other actions
                     handlerRefreshAppointments(true);
+                    console.log(data)
                 } else {
                     // Handle error case
                     console.error('Error finishing appointment:', data.error_message);

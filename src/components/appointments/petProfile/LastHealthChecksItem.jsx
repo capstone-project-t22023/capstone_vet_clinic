@@ -2,16 +2,18 @@ import React from "react";
 import {Stack, Box, Avatar, Tooltip, Divider, Typography} from "@mui/material";
 import {FavoriteRounded, FavoriteBorderRounded} from "@mui/icons-material";
 import dayjs from "dayjs";
+import BookingType from "../BookingType";
 
 
 export default function LastHealthChecksItem({appointment, onClick}) {
     return (
-        <Tooltip title={`${appointment.booking_id} - ${appointment.booking_status}`} placement="left">
+        <Tooltip title={`${appointment.booking_status} - ${appointment.booking_type}`} placement="left" arrow>
             <Stack direction="row" spacing={2} onClick={onClick}>
                 <Stack direction="column" flex={0} alignItems="center">
                     <Avatar>
                         {/*<FavoriteBorderRounded fontSize="small"/>*/}
-                        <FavoriteRounded fontSize="small" color={appointment.booking_status ==='PENDING'? "disabled" : "secondary"}/>
+                        {/*<FavoriteRounded fontSize="small" color={appointment.booking_status ==='PENDING'? "disabled" : "secondary"}/>*/}
+                        <BookingType type={appointment.booking_type} icon simple />
                     </Avatar>
                 </Stack>
                 <Stack direction="column" flex={1} flexWrap="wrap" alignItems="flex-start">

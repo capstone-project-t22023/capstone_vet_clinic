@@ -251,7 +251,10 @@ export default function PetProfile({onDelete}) {
                 </Stack>
             </Stack>
 
-            <LastHealthChecks appointmentList={appointmentList} loading={loading} />
+            <Stack direction="column" spacing={2}>
+            <LastHealthChecks appointmentList={appointmentList} filterMode='today' />
+            <LastHealthChecks appointmentList={appointmentList} filterMode='future' />
+            </Stack>
 
             <BookingButton booking={handleBooking}/>
 
