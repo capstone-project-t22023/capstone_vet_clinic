@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Stack, Typography, Button, IconButton, Divider, Tooltip} from "@mui/material";
-import {AutoDeleteRounded, FaceRounded, PetsRounded} from "@mui/icons-material";
+import {AutoDeleteRounded, FaceRounded, PaidRounded, PetsRounded} from "@mui/icons-material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
@@ -45,7 +45,6 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         changeSidebarContent("pet");
     }
 
-
     return (
         <Stack direction="column" p={6} spacing={5}>
             {appointment && Object.keys(appointment).length !== 0 && (
@@ -54,6 +53,10 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                         <Typography variant="h6">Appointment Details</Typography>
                     </Tooltip>
                     <Status appointment={appointment}/>
+                    { user.role !== "pet_owner" && appointment.booking_status === "FINISHED" && !appointment.invoice_id &&
+                            <Button onClick={handleStatusCancel} variant="contained" size="small" color="primary"
+                                    startIcon={<PaidRounded/>}>Generate Invoice</Button>
+                    }
                     <Divider/>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Typography fontSize="0.75rem"><strong>Date:</strong></Typography>
@@ -63,7 +66,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                         <Typography fontSize="0.75rem"><strong>Time:</strong></Typography>
                         <Typography>{appointment.booking_time.join(', ')}</Typography>
                     </Stack>
-                    {user.role !== "doctor" &&
+                    {user.role !== "doctor" && appointment.booking_status !== "FINISHED" &&
                         <>
                             <BookingButton/>
                             <Button onClick={handleStatusCancel} variant="contained" size="small" color="error"

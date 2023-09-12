@@ -140,7 +140,7 @@ export default function PetsList({petRecords = false}) {
 
                         }
                         { petRecords &&
-                                    <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
+                                    <Stack direction="row" spacing={2} my={5} flexWrap="wrap">
 
                                         <PetRecordsList />
                                     </Stack>
