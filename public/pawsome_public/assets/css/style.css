@@ -1814,7 +1814,15 @@ iframe{
 /*--------------------------------------------------------------
 # VET CHATBOX
 --------------------------------------------------------------*/
-
+#vetchatbot .container{
+  position: relative;
+  background-color: hsl(193, 82%, 83%);
+  font-weight: 500;
+  padding: 50px;
+  float: inline-end;
+  border-radius:30px 30px 30px 30px;
+  color:#184b8f;
+}
 .card-group{
   position:relative;
   width: 100%;
