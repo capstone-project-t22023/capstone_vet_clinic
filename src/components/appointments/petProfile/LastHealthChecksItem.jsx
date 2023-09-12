@@ -3,6 +3,7 @@ import {Stack, Box, Avatar, Tooltip, Divider, Typography} from "@mui/material";
 import {FavoriteRounded, FavoriteBorderRounded} from "@mui/icons-material";
 import dayjs from "dayjs";
 import BookingType from "../BookingType";
+import Doctor from "../Doctor";
 
 
 export default function LastHealthChecksItem({appointment, onClick}) {
@@ -17,7 +18,7 @@ export default function LastHealthChecksItem({appointment, onClick}) {
                     </Avatar>
                 </Stack>
                 <Stack direction="column" flex={1} flexWrap="wrap" alignItems="flex-start">
-                    <Typography component="h5">{appointment.doctor_id ? appointment.doctor_id : "No-Doctor"} - {appointment.booking_type}</Typography>
+                    <Typography component="h5"><Doctor id={appointment.doctor_id} simple /></Typography>
                     {appointment && appointment.booking_time.length > 1 ? (
                         <Stack direction="row" spacing={1}>
                             {appointment.booking_time.map((timeSlot, index) => (

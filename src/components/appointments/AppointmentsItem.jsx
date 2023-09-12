@@ -84,12 +84,14 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
                 <Stack direction="column" flex={1} alignItems="flex-start">
                     <Stack direction="row" spacing={1} justifyContent="space-between">
                         <BookingType type={appointment.booking_type} icon simple/>
-                        <Doctor id={appointment.doctor_id} simple/>
+                        <Typography component="p" sx={{"& strong": {color: "grey.700", fontSize: "0.675rem"}}}>
+                            <Doctor id={appointment.doctor_id} simple/>
+                        </Typography>
                     </Stack>
                     <Stack direction="row" spacing={2}>
                         {appointment && appointment.booking_time.length > 0 && (
                             appointment.booking_time.map((timeSlot, index) => (
-                                <Stack direction="row"spacing={1} key={index}>
+                                <Stack direction="row" spacing={1} key={index}>
                                     <Typography component="span" variant="timeSlots">
                                         <AccessTimeFilledRounded fontSize="inherit"/>
                                     </Typography>

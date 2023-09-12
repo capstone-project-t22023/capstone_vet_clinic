@@ -16,6 +16,7 @@ import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
 import Appointments from "../appointments/Appointments";
 import PetRecordsList from "../petRecords/PetRecordsList";
+import {ArrowCircleRightRounded} from "@mui/icons-material";
 
 export default function PetsList({petRecords = false}) {
     const {
@@ -86,8 +87,14 @@ export default function PetsList({petRecords = false}) {
                                                borderColor: "secondary.main"
                                            }
                                        }}>
-                                    <Typography component="h5" variant="h6"
-                                                color="primary">{selectedOwner.firstname} has these pets:</Typography>
+                                    <Stack direction="row" spacing={1}>
+                                    <Typography component="h5" variant="h6" color="primary.500">
+                                        <strong>{selectedOwner.firstname} {selectedOwner.lastname}</strong>
+                                    </Typography>
+                                    <Typography component="h5" variant="h6" color="grey.300">
+                                        :
+                                    </Typography>
+                                    </Stack>
                                     {selectedOwner.pets.map((pet) => (
                                         <Stack
                                             key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id

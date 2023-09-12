@@ -53,14 +53,14 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
     useEffect(() => {
         if (isDoc) {
-            console.log('doctor_id', user.id)
             fetchAppointments('doctor_id', user.id)
         } else if (Object.keys(selectedOwner).length > 0) {
-            console.log("NENI DOCTOREK");
             fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
     }, [selectedOwner,refreshAppointments]);
+
+    // TODO sanity the doctor appointments and all doctor appointments only if doctor = true
 
 
     const [mergedAppointments, setMergedAppointments] = useState([]);

@@ -171,9 +171,11 @@ export default function Doctor({id = -1, simple = false}) {
                 </Dialog>
             </Box>
         ) : (
-            <Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>
+            <>
+            {/*<Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>*/}
                 <strong>Dr.</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
-            </Typography>
+            {/*</Typography>*/}
+            </>
         )
     )
 }
