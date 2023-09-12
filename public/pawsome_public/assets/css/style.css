@@ -1815,53 +1815,30 @@ iframe{
 # VET CHATBOX
 --------------------------------------------------------------*/
 
-#header-container {
-  position: relative;
-  top: 0;
+.card-group{
+  position:relative;
   width: 100%;
-  z-index: 1000; 
+  margin:10px;
+  padding: 20px;
+  border-radius: 10px;
+  gap: 20px;px;
+  box-shadow: 10px;
+  
 }
-@media (min-width: 1099px)
-#header-container.dashboard-header .container {
-    padding-right: 35px;
-    padding-left: 0;
+.card{
+  margin: 5px;
+  padding: 20px;
+  box-shadow:10px;
+
 }
-#header .container {
-    position: relative;
-    margin:20px;
-}
-#header .container, #header .right-side, #header .left-side {
-    height: 100%;
-}
-header.fullwidth .container {
-    max-width: 100%;
-    margin: 0;
-    padding: 0 35px;
-}
-#header .right-side {
-  float: right;
-  text-align: right;
-  width: auto;
-  display: inline-block;
-  position: absolute;
-  right: 25px;
-  background-color: #fff;
-  flex: 1;
-}
-@media (max-width: 1099px)
-.fullwidth .header-widget:last-of-type, .header-widget:last-of-type {
-    float: left;
-}
-.fullwidth .header-widget:last-of-type {
-    padding-right: 0;
-    margin-right: 0;
-}
-.fullwidth .header-widget:last-of-type {
-  border-right: none;
-}
-@media (max-width: 1099px)
-.header-widget {
-    padding: 0 25px;
+.card-img {
+  position:relative;
+  width: fit-content;
+  height:fit-content;
+  padding: 20px;
+  margin: 5px;
+  border-radius: 10 px;
+  
 }
 
 
