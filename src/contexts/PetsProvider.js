@@ -10,7 +10,7 @@ export const PetsProvider = ({children}) => {
     const [petList, setPetList] = useState([]);
     const [reloadPetList, setReloadPetList] = useState(false)
     const [selectedOwner, setSelectedOwner] = useState({});
-    const [selectedPet, setSelectedPet] = useState({});
+    const [selectedPet, setSelectedPet] = useState(-1);
     const [selectedAppointment, setSelectedAppointment] = useState({});
     const [sidebarContent, setSidebarContent] = useState(""); //appointment, pet
     const [refreshAppointments, setRefreshAppoinmtents] = useState(false);
@@ -59,7 +59,7 @@ export const PetsProvider = ({children}) => {
     const updateSelectedOwner = (owner) => {
         if (user.role !== 'pet_owner') {
             setSelectedOwner(owner); // If user is not a pet owner, use the passed owner
-            setSelectedPet({});
+            setSelectedPet(-1);
             changeSidebarContent('');
         }
     }

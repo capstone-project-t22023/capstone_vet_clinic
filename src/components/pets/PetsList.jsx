@@ -52,6 +52,7 @@ export default function PetsList({petRecords = false}) {
         changeSidebarContent('pet');
     }
 
+
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
             <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start">
@@ -139,7 +140,7 @@ export default function PetsList({petRecords = false}) {
                                     </Stack>
 
                         }
-                        { petRecords &&
+                        { petRecords && selectedPet !== -1 &&
                                     <Stack direction="row" spacing={2} my={5} flexWrap="wrap">
 
                                         <PetRecordsList />
