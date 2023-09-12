@@ -92,7 +92,7 @@ export default function Aside() {
                     <CalendarMonthRounded/>
                 </ListItemButton>
                 <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
-                    <ListItemButton disabled={user.role !== 'admin'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
+                    <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
                         <LocationCityRounded/>
                     </ListItemButton>
                 </Tooltip>

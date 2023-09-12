@@ -42,7 +42,7 @@ export default function PetRecords() {
                         p: 6
                     }}>
 
-                    {user.role === 'admin' && (
+                    {user.role !== 'pet_owner' && (
                         <>
 
                             <Stack direction="column" justifyContent="space-between" spacing={3}>
