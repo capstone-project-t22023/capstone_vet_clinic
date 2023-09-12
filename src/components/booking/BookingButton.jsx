@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
-import {Box, Button, Dialog, DialogTitle} from "@mui/material";
+import { Button, Dialog, DialogTitle, Stack} from "@mui/material";
 import ProgramContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingOptionsUpdate from "./BookingOptionsUpdate";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 import dayjs from "dayjs";
+import { EventRepeatRounded} from "@mui/icons-material";
 
 
 export default function BookingButton() {
-    const {user} = useContext(ProgramContext);
     const { selectedAppointment } = useContext(PetsContext)
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -33,42 +33,17 @@ export default function BookingButton() {
 
     const isSelectedAppointmentEmpty = Object.keys(selectedAppointment).length === 0;
 
-    const handleRemoveBooking = () => {
-        fetch("http://localhost/capstone_vet_clinic/api.php/cancel_booking/"+selectedAppointment.booking_id, {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
-            },
-            body: JSON.stringify({
-                prev_booking_status: selectedAppointment.booking_status,
-                username: user.username
-            })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then(data => {
-                console.log(data.cancel_booking);
-                // setSelectedBooking(null);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
 
 
 
     return (
         <>
             {!isSelectedAppointmentEmpty ? (
-                <Box>
-                    <Button variant="outlined" onClick={handleRemoveBooking} sx={{ m: 1}}>
-                        Remove Booking
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained" onClick={handleChangeBooking} fullWidth size="small" endIcon={<EventRepeatRounded />}>
+                        Change Booking
                     </Button>
-                    <Button variant="contained" onClick={handleChangeBooking} sx={{ m: 1}}>
-                        Change booking
-                    </Button>
-                </Box>
+                </Stack>
             ) : (
                 <Button variant="contained" onClick={handleClickOpen}>
                     Make a new booking

@@ -26,6 +26,7 @@ import Protected from './components/Protected';
 import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
+import PetRecords from "./pages/PetRecords";
 
 /**
  *
@@ -121,9 +122,17 @@ function App() {
                                 }/>
                                 <Route path="/dashboard" element={
                                     <Protected isLoggedIn={authenticated}>
-                                            <PetsProvider>
-                                                <Dashboard/>
-                                            </PetsProvider>
+                                        <PetsProvider>
+                                            <Dashboard/>
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+                                <Route path="/pet-records" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <PetRecords />
+                                        </PetsProvider>
                                     </Protected>
                                 }
                                 />

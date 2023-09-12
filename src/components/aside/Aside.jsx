@@ -32,6 +32,7 @@ export default function Aside() {
     const handleClick = (navigation) => {
         navigate(navigation);
     }
+
     function handleLogout() {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
@@ -40,7 +41,6 @@ export default function Aside() {
         console.log("Bye Bye! Logging out now");
         window.location.replace("http://localhost:3000/pawsome_public/index.html");
     }
-
 
     return (
         <Stack direction="column" justifyContent="space-between" alignItems="center" spacing={8}
@@ -68,7 +68,7 @@ export default function Aside() {
                 '& .MuiSvgIcon-root': {
                     mx: "auto",
                 },
-                '& .Mui-selected':{
+                '& .Mui-selected': {
                     background: 0,
                     '&::before': {
                         content: '""',
@@ -85,29 +85,31 @@ export default function Aside() {
             }}>
                 <Tooltip title="Dashboard" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton selected={isActive('/dashboard')} onClick={() => handleClick('/dashboard')}>
-                        <DashboardRounded />
+                        <DashboardRounded/>
                     </ListItemButton>
                 </Tooltip>
                 <ListItemButton disabled>
-                    <CalendarMonthRounded />
+                    <CalendarMonthRounded/>
                 </ListItemButton>
-                <ListItemButton disabled>
-                    <LocationCityRounded />
-                </ListItemButton>
+                <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
+                        <LocationCityRounded/>
+                    </ListItemButton>
+                </Tooltip>
                 <ListItemButton disabled={user.role === 'admin' ? false : true}>
-                    <WarehouseRounded />
+                    <WarehouseRounded/>
                 </ListItemButton>
                 <Tooltip title="Update Profile" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton selected={isActive('/profile')} onClick={() => handleClick('/profile')}>
-                        <SettingsRounded />
+                        <SettingsRounded/>
                     </ListItemButton>
                 </Tooltip>
             </Stack>
             <Stack direction="column">
                 <Tooltip title="Logout & Exit" TransitionComponent={Zoom} placement="top">
-                <IconButton aria-label="logout" onClick={handleLogout}>
-                    <ExitIcon/>
-                </IconButton>
+                    <IconButton aria-label="logout" onClick={handleLogout}>
+                        <ExitIcon/>
+                    </IconButton>
                 </Tooltip>
             </Stack>
         </Stack>

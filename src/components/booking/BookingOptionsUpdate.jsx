@@ -284,6 +284,7 @@ export default function BookingOptionsUpdate(props) {
             body: JSON.stringify(req_body)
         })
             .then((response) => {
+                console.log(response);
                 return response.json();
             })
             .then(data => {
@@ -295,6 +296,7 @@ export default function BookingOptionsUpdate(props) {
                     }
                 })
                     .then((response) => {
+                        console.log(response);
                         return response.json();
                     })
                     .then(data => {

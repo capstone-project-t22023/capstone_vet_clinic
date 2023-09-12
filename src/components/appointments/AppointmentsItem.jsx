@@ -1,8 +1,9 @@
 import React from "react";
 import {AccessTimeFilledRounded, ForwardRounded} from "@mui/icons-material";
-import {FavoriteRounded, FavoriteBorderRounded} from "@mui/icons-material";
-import {Stack, Avatar, Tooltip, IconButton, Divider, Typography} from "@mui/material";
+import {Stack, Tooltip, IconButton, Divider, Typography} from "@mui/material";
 import dayjs from "dayjs";
+import Doctor from "./Doctor";
+import BookingType from "./BookingType";
 
 
 export default function AppointmentsItem({appointment, onClick, isSelected}) {
@@ -31,8 +32,8 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
         width: "100%",
         borderRadius: 4,
         border: "1px solid white",
-        backgroundColor: isSelected ? "secondary.50":"white",
-        borderColor: isSelected ? "secondary.light":"none",
+        backgroundColor: isSelected ? "secondary.50" : "white",
+        borderColor: isSelected ? "secondary.light" : "none",
         transition: '0.6s ease-in-out',
         position: "relative",
         // appointment.booking_status ==='PENDING'? "disabled" : "secondary",
@@ -46,7 +47,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
                 fontSize: 14,
             },
             "& .MuiTypography-timeSlots": {
-                color: isSelected ? "primary.main": "text.secondary",
+                color: isSelected ? "primary.main" : "text.secondary",
             },
             "& p": {
                 color: "text.primary",
@@ -71,41 +72,35 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
     }
 
 
-
-
-
     return (
-        <Tooltip title={`${appointment.booking_id} - ${appointment.booking_status} - ${appointment.petname}`} placement="top">
-            <Stack direction="row" spacing={0} sx={SxUpcomingAppointment} onClick={() => onClick(!isSelected)}>
+        <Tooltip title={`${appointment.booking_type} - ${appointment.booking_status} - ${appointment.petname}`}
+                 placement="top">
+            <Stack direction="row" spacing={0} flex={0} sx={SxUpcomingAppointment} onClick={() => onClick(!isSelected)}>
                 <Stack direction="column" flex={0} alignItems="center">
                     <Typography component="span">{dayjs(appointment.booking_date).format('MMMM')}</Typography>
                     <Typography component="p">{dayjs(appointment.booking_date).format('D ddd')}</Typography>
                 </Stack>
                 <Divider orientation="vertical" flexItem/>
                 <Stack direction="column" flex={1} alignItems="flex-start">
-                    <Typography
-                        component="p">{appointment.doctor_id ? appointment.doctor_id : "No-Doctor"} - {appointment.booking_type}</Typography>
+                    <Stack direction="row" spacing={1} justifyContent="space-between">
+                        <BookingType type={appointment.booking_type} icon simple/>
+                        <Typography component="p" sx={{"& strong": {color: "grey.700", fontSize: "0.675rem"}}}>
+                            <Doctor id={appointment.doctor_id} simple/>
+                        </Typography>
+                    </Stack>
                     <Stack direction="row" spacing={2}>
-                        {appointment && appointment.booking_time.length > 1 ? (
+                        {appointment && appointment.booking_time.length > 0 && (
                             appointment.booking_time.map((timeSlot, index) => (
                                 <Stack direction="row" spacing={1} key={index}>
                                     <Typography component="span" variant="timeSlots">
                                         <AccessTimeFilledRounded fontSize="inherit"/>
                                     </Typography>
+
                                     <Typography component="span" variant="timeSlots">
                                         {timeSlot}
                                     </Typography>
                                 </Stack>
                             ))
-                        ) : (
-                            <Stack direction="row" spacing={1}>
-                                <Typography component="span" variant="timeSlots">
-                                    <AccessTimeFilledRounded fontSize="inherit"/>
-                                </Typography>
-                                <Typography component="span" variant="timeSlots">
-                                    {appointment.booking_time[0]}
-                                </Typography>
-                            </Stack>
                         )}
                     </Stack>
                 </Stack>
