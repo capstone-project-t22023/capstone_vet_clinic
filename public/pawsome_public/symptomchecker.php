@@ -47,6 +47,7 @@
             <li><a href="groomingservices.html">Grooming Services</a></li>
             <li><a href="fees.html">Fees &amp; Insurance</a></li>
             <li><a href="symptomchecker.php">Symptom Checker</a></li>
+            <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" width="170px" height="40px" id=logo alt="Vet Chatbot Logo Image"></a></li>
           </ul>
           <li><a class="nav-link scrollto" href="index.html">F.A.Q.</a></li>
           <li><a class="nav-link scrollto" href="index.html">TEAM</a></li>
@@ -145,7 +146,7 @@
         <input type="checkbox" name="symptoms[]" value="Difficulty Chewing or Swallowing"> Difficulty Chewing or Swallowing<br>
         <!-- ... other symptom checkboxes ... -->
         <br><br>
-        <input type="submit" class= "btn btn-primary" value="Get Assessment">
+        <input type="submit" class="btn btn-primary" value="Get Assessment">
     </form>
 
     <?php
