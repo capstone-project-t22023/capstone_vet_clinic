@@ -536,6 +536,36 @@ class PetDatabase
     }
 
     /**
+     * Delete pet
+     */
+    public function deletePet($pet_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pets`
+            WHERE id = ?'
+        );
+        $sql->bind_param(
+            'i',
+            $pet_record['pet_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Get pet information
      */
     public function getPet($id)
@@ -584,6 +614,7 @@ class PetDatabase
             'INSERT INTO `pawsome`.`pet_immun_records`
             (`pet_id`,
             `doctor_id`,
+            `booking_id`,
             `vaccine_date`,
             `vaccine`,
             `comments`,
@@ -594,6 +625,7 @@ class PetDatabase
             (
             (SELECT id FROM pets WHERE id = ?),
             (SELECT id FROM doctors WHERE id = ?),
+            (SELECT id FROM bookings WHERE id = ?),
             STR_TO_DATE(?, "%d-%m-%Y"),
             ?,
             ?,
@@ -615,9 +647,10 @@ class PetDatabase
             0)'
         ); 
         $sql->bind_param(
-            'iissss', 
+            'iiissss', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['vaccine_date'],
             $record['vaccine'],
             $record['comments'],
@@ -650,6 +683,7 @@ class PetDatabase
             SET
             `pet_id`=(SELECT id FROM pets WHERE id = ?),
             `doctor_id`=(SELECT id FROM doctors WHERE id = ?),
+            `booking_id`=(SELECT id FROM bookings WHERE id = ?),
             `vaccine_date`=STR_TO_DATE(?, "%d-%m-%Y"),
             `vaccine`=?,
             `comments`=?,
@@ -671,9 +705,10 @@ class PetDatabase
             WHERE id = ?'
         ); 
         $sql->bind_param(
-            'iissssi', 
+            'iiissssi', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['vaccine_date'],
             $record['vaccine'],
             $record['comments'],
@@ -691,9 +726,9 @@ class PetDatabase
     }
 
     /**
-     * Delete pet immunisation
+     * Archive pet immunisation
      */
-    public function deletePetVaccine($record)
+    public function archivePetVaccine($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -739,6 +774,36 @@ class PetDatabase
     }
 
     /**
+     * Delete pet immunisation
+     */
+    public function deletePetVaccine($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pet_immun_records`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves all immunisation by pet
      */
     public function getPetVaccineByPetId($id)
@@ -754,6 +819,7 @@ class PetDatabase
             'SELECT pir.`id` record_id,
                 pir.`pet_id`,
                 pir.`doctor_id`,
+                pir.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 pir.`vaccine_date`,
                 pir.`vaccine`,
@@ -761,9 +827,11 @@ class PetDatabase
             FROM 
             `pawsome`.`pet_immun_records` pir,
             `pawsome`.`doctors` d,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE pir.`pet_id` = ?
             AND pir.doctor_id = d.id
+            AND pir.booking_id = b.id
             AND pir.pet_id = p.id
             AND pir.archived = 0
             ORDER BY pir.`id`'
@@ -803,6 +871,7 @@ class PetDatabase
             'INSERT INTO `pawsome`.`prescriptions`
                 (`pet_id`,
                 `doctor_id`,
+                `booking_id`,
                 `prescription_date`,
                 `updated_date`,
                 `updated_by`,
@@ -811,6 +880,7 @@ class PetDatabase
                 (
                 (SELECT id FROM pets WHERE id = ?),
                 (SELECT id FROM doctors WHERE id = ?),
+                (SELECT id FROM bookings WHERE id = ?),
                 STR_TO_DATE(?, "%d-%m-%Y"),
                 SYSDATE(),
                 (
@@ -830,9 +900,10 @@ class PetDatabase
                 0)'
         ); 
         $sql->bind_param(
-            'iiss', 
+            'iiiss', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['prescription_date'],
             $record['username']
         );
@@ -864,6 +935,7 @@ class PetDatabase
             SET
             `pet_id` = (SELECT id FROM pets WHERE id = ?),
             `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `booking_id` = (SELECT id FROM bookings WHERE id = ?),
             `prescription_date` = STR_TO_DATE(?, "%d-%m-%Y"),
             `updated_date` = SYSDATE(),
             `updated_by` = (
@@ -883,9 +955,10 @@ class PetDatabase
             WHERE `id` = ?'
         ); 
         $sql->bind_param(
-            'iissi', 
+            'iiissi', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['prescription_date'],
             $record['username'],
             $record['id']
@@ -901,9 +974,9 @@ class PetDatabase
     }
 
     /**
-     * Delete prescription
+     * Archive prescription
      */
-    public function deletePrescription($record)
+    public function archivePrescription($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -936,6 +1009,36 @@ class PetDatabase
         $sql->bind_param(
             'si', 
             $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete prescription
+     */
+    public function deletePrescription($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`prescriptions`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
             $record['id']
         );
         if ($sql->execute()) {
@@ -1070,9 +1173,9 @@ class PetDatabase
     }
 
     /**
-     * Delete diet record
+     * Archive diet record
      */
-    public function deleteDietRecord($record)
+    public function archiveDietRecord($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -1105,6 +1208,36 @@ class PetDatabase
         $sql->bind_param(
             'si', 
             $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete diet record
+     */
+    public function deleteDietRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pet_diet_records`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
             $record['id']
         );
         if ($sql->execute()) {
@@ -1211,15 +1344,18 @@ class PetDatabase
         $sql = $this->connection->prepare(
             'SELECT pr.`pet_id`,
                 pr.`doctor_id`,
+                pr.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 pr.`prescription_date`
             FROM 
             `pawsome`.`prescriptions` pr,
             `pawsome`.`doctors` d,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE
             pr.id = ?
             AND pr.doctor_id = d.id
+            AND pr.booking_id = b.id
             AND pr.pet_id = p.id'
         );
         $sql->bind_param(
@@ -1254,15 +1390,18 @@ class PetDatabase
             'SELECT pr.`id`,
                 pr.`pet_id`,
                 pr.`doctor_id`,
+                pr.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 pr.`prescription_date`,
                 pr.archived
             FROM 
             `pawsome`.`prescriptions` pr,
             `pawsome`.`doctors` d,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE
             pr.pet_id = ?
+            AND pr.booking_id = b.id
             AND pr.doctor_id = d.id
             AND pr.pet_id = p.id
             ORDER BY pr.`prescription_date` DESC'
@@ -1302,6 +1441,7 @@ class PetDatabase
             'INSERT INTO `pawsome`.`referrals`
                 (`pet_id`,
                 `doctor_id`,
+                `booking_id`,
                 `referral_date`,
                 `diagnosis`,
                 `updated_date`,
@@ -1311,6 +1451,7 @@ class PetDatabase
                 (
                 (SELECT id FROM pets WHERE id = ?),
                 (SELECT id FROM doctors WHERE id = ?),
+                (SELECT id FROM bookings WHERE id = ?),
                 STR_TO_DATE(?, "%d-%m-%Y"), ?,
                 SYSDATE(),
                 (
@@ -1330,9 +1471,10 @@ class PetDatabase
                 0)'
         ); 
         $sql->bind_param(
-            'iisss', 
+            'iiisss', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['referral_date'],
             $record['diagnosis'],
             $record['username']
@@ -1365,6 +1507,7 @@ class PetDatabase
             SET
             `pet_id` = (SELECT id FROM pets WHERE id = ?),
             `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `booking_id` = (SELECT id FROM bookings WHERE id = ?),
             `referral_date` = STR_TO_DATE(?, "%d-%m-%Y"),
             `diagnosis` = ?,
             `updated_date` = SYSDATE(),
@@ -1385,9 +1528,10 @@ class PetDatabase
             WHERE `id` = ?'
         ); 
         $sql->bind_param(
-            'iisssi', 
+            'iiisssi', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['referral_date'],
             $record['diagnosis'],
             $record['username'],
@@ -1495,6 +1639,7 @@ class PetDatabase
         $sql = $this->connection->prepare(
             'SELECT r.`pet_id`,
                 r.`doctor_id`,
+                r.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 r.`referral_date`,
                 r.`diagnosis`,
@@ -1502,10 +1647,12 @@ class PetDatabase
             FROM 
             `pawsome`.`referrals` r,
             `pawsome`.`doctors` d,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE
             r.id = ?
             AND r.doctor_id = d.id
+            AND r.booking_id = b.id
             AND r.pet_id = p.id'
         );
         $sql->bind_param(
@@ -1540,6 +1687,7 @@ class PetDatabase
             'SELECT r.`id`,
                 r.`pet_id`,
                 r.`doctor_id`,
+                r.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 r.`referral_date`,
                 r.`diagnosis`,
@@ -1547,10 +1695,12 @@ class PetDatabase
             FROM 
             `pawsome`.`referrals` r,
             `pawsome`.`doctors` d,
+            `pawsome`.`booking` b,
             `pawsome`.`pets` p
             WHERE
             r.pet_id = ?
             AND r.doctor_id = d.id
+            AND r.booking_id = b.id
             AND r.pet_id = p.id
             ORDER BY r.`referral_date` DESC'
         );
@@ -1574,9 +1724,9 @@ class PetDatabase
     }
 
     /**
-     * Delete referral
+     * Archive referral
      */
-    public function deleteReferral($record)
+    public function archiveReferral($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -1609,6 +1759,36 @@ class PetDatabase
         $sql->bind_param(
             'si', 
             $record['username'],
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Delete referral
+     */
+    public function deleteReferral($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`referrals`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
             $record['id']
         );
         if ($sql->execute()) {
@@ -1735,9 +1915,9 @@ class PetDatabase
     }
 
     /**
-     * Delete rehab record
+     * Archive rehab record
      */
-    public function deleteRehabRecord($record)
+    public function archiveRehabRecord($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -1783,6 +1963,36 @@ class PetDatabase
     }
 
     /**
+     * Delete rehab record
+     */
+    public function deleteRehabRecord($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pet_rehab_records`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Add surgery
      */
     public function addSurgery($record)
@@ -1798,6 +2008,7 @@ class PetDatabase
             'INSERT INTO `pawsome`.`pet_surgery_records`
                 (`pet_id`,
                 `doctor_id`,
+                `booking_id`,
                 `surgery`,
                 `surgery_date`,
                 `discharge_date`,
@@ -1809,6 +2020,7 @@ class PetDatabase
                 (
                 (SELECT id FROM pets WHERE id = ?),
                 (SELECT id FROM doctors WHERE id = ?),
+                (SELECT id FROM bookings WHERE id = ?),
                 ?,
                 STR_TO_DATE(?, "%d-%m-%Y"),
                 STR_TO_DATE(?, "%d-%m-%Y"),
@@ -1831,9 +2043,10 @@ class PetDatabase
                 0)'
         ); 
         $sql->bind_param(
-            'iisssss', 
+            'iiisssss', 
             $record['pet_id'],
             $record['doctor_id'],
+            $record['booking_id'],
             $record['surgery'],
             $record['surgery_date'],
             $record['discharge_date'],
@@ -1866,6 +2079,7 @@ class PetDatabase
             'UPDATE `pawsome`.`pet_surgery_records`
             SET
             `doctor_id` = (SELECT id FROM doctors WHERE id = ?),
+            `booking_id` = (SELECT id FROM bookings WHERE id = ?),
             `surgery` = ?,
             `surgery_date` = STR_TO_DATE(?, "%d-%m-%Y"),
             `discharge_date` = STR_TO_DATE(?, "%d-%m-%Y"),
@@ -1888,8 +2102,9 @@ class PetDatabase
             WHERE `id` = ?'
         ); 
         $sql->bind_param(
-            'isssssi', 
+            'iisssssi', 
             $record['doctor_id'],
+            $record['booking_id'],
             $record['surgery'],
             $record['surgery_date'],
             $record['discharge_date'],
@@ -1908,9 +2123,9 @@ class PetDatabase
     }
 
     /**
-     * Delete surgery
+     * Archive surgery
      */
-    public function deleteSurgery($record)
+    public function archiveSurgery($record)
     {
         $this->connection = new mysqli(
             $this->server,
@@ -1956,6 +2171,36 @@ class PetDatabase
     }
 
     /**
+     * Delete surgery
+     */
+    public function deleteSurgery($record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`pet_surgery_records`
+            WHERE id = ?'
+        ); 
+        $sql->bind_param(
+            'i', 
+            $record['id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves all surgery records by pet id
      */
     public function getAllSurgeriesByPetId($pet_id)
@@ -1971,6 +2216,7 @@ class PetDatabase
             'SELECT psr.`id`,
                 psr.`pet_id`,
                 psr.`doctor_id`,
+                psr.`booking_id`,
                 CONCAT(d.firstname, " ", d.lastname) veterinarian,
                 psr.`surgery`,
                 psr.`surgery_date`,
@@ -1980,10 +2226,12 @@ class PetDatabase
             FROM 
             `pawsome`.`pet_surgery_records` psr,
             `pawsome`.`doctors` d,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE
             psr.pet_id = ?
             AND psr.doctor_id = d.id
+            AND psr.booking_id = b.id
             AND psr.pet_id = p.id
             ORDER BY psr.`surgery_date` DESC'
         );

@@ -362,6 +362,8 @@ class BillingDatabase
         return false;
     }
 
+    
+
     /**
      * Retrieves invoice item records by ID
      */
@@ -418,12 +420,10 @@ class BillingDatabase
         $sql = $this->connection->prepare(
             'SELECT `invoices`.`id`,
             `invoices`.`booking_id`,
-            `invoices`.`invoice_amount`,
-            `receipts`.`id` as receipt_id
-            FROM `pawsome`.`invoices`, `pawsome`.`receipts`
+            `invoices`.`invoice_amount`
+            FROM `pawsome`.`invoices`
             WHERE 
-            `invoices`.id = ?
-            AND `invoices`.id = `receipts`.invoice_id'
+            `invoices`.id = ?'
         );
         $sql->bind_param(
             'i', $invoice_id
@@ -521,9 +521,10 @@ class BillingDatabase
             $receipt_record['username']
         );
         if ($sql->execute()) {
+            $id = $this->connection->insert_id;
             $sql->close();
             $this->connection->close();
-            return true;
+            return $id;
         }
         $sql->close();
         $this->connection->close();
