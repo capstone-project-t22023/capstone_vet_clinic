@@ -16,7 +16,7 @@ $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css">
 	
 	</head>
-	<body>
+	<body style="background-image: url('assets/img/background.png');">
 
 		<form class="send-newsletter-form" method="post" action="">
 

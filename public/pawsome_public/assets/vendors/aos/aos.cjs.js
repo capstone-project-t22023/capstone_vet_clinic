@@ -525,7 +525,7 @@ var isDisabled = function isDisabled(optionDisable) {
 /**
  * Initializing AOS
  * - Create options merging defaults with user defined options
- * - Set attributes on <body> as global setting - css relies on it
+ * - Set attributes on <body style="background-image: url('assets/img/background.png');"> as global setting - css relies on it
  * - Attach preparing elements to options.startEvent,
  *   window resize and orientation change
  * - Attach function that handle scroll and everything connected to it
