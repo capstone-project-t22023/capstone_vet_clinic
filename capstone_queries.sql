@@ -8922,8 +8922,8 @@ VALUES
 
 INSERT INTO `pawsome`.`referrals`
 (`id`,
-`doctor_id`,
 `booking_id`,
+`doctor_id`,
 `pet_id`,
 `referral_date`,
 `diagnosis`,
@@ -9418,9 +9418,9 @@ VALUES
 
 INSERT INTO `pawsome`.`prescriptions`
 (`id`,
+`booking_id`,
 `pet_id`,
 `doctor_id`,
-`booking_id`,
 `prescription_date`,
 `updated_date`,
 `updated_by`,
@@ -9688,9 +9688,9 @@ VALUES
 
 INSERT INTO `pawsome`.`pet_immun_records`
 (`id`,
+`booking_id`,
 `pet_id`,
 `doctor_id`,
-`booking_id`,
 `vaccine_date`,
 `vaccine`,
 `comments`,
@@ -10315,9 +10315,9 @@ VALUES
 
 INSERT INTO `pawsome`.`pet_surgery_records`
 (`id`,
+`booking_id`,
 `pet_id`,
 `doctor_id`,
-`booking_id`,
 `surgery`,
 `surgery_date`,
 `discharge_date`,

@@ -41,6 +41,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "vaccine_date": "30-09-2023",
         "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
         "comments": "No adverse reactions"
@@ -76,6 +77,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "vaccine_date": "30-10-2023",
         "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
         "comments": "Had adverse reactions"
@@ -101,6 +103,7 @@ response_body:
                 "record_id": 2,
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "vaccine_date": "2023-09-30",
                 "vaccine": "Feline immunodeficiency virus (FIV) vaccine",
@@ -110,6 +113,7 @@ response_body:
                 "record_id": 3,
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "vaccine_date": "2023-09-30",
                 "vaccine": "Feline calicivirus (FCV) vaccine",
@@ -132,6 +136,7 @@ response_body:
         "diet_record": {
             "pet_id": 6,
             "doctor_id": 1,
+            "booking_id": 10000038,
             "veterinarian": "Joe Mcguire",
             "prescription_date": "2023-10-30",
             "diet_records": [
@@ -168,6 +173,7 @@ response_body:
             {
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "prescription_date": "2023-12-30",
                 "diet_records": [
@@ -190,6 +196,7 @@ response_body:
             {
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "prescription_date": "2023-11-30",
                 "diet_records": [
@@ -212,6 +219,7 @@ response_body:
             {
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "prescription_date": "2023-10-30",
                 "diet_records": [
@@ -248,6 +256,7 @@ response_body:
         "rehab_record": {
             "pet_id": 6,
             "doctor_id": 1,
+            "booking_id": 10000038,
             "veterinarian": "Joe Mcguire",
             "referral_date": "2023-10-30",
             "diagnosis": "Comminuted Fracture",
@@ -302,6 +311,7 @@ response_body:
             {
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "referral_date": "2023-10-30",
                 "diagnosis": "Comminuted Fracture",
@@ -358,6 +368,7 @@ response_body:
                 "id": 1,
                 "pet_id": 6,
                 "doctor_id": 1,
+                "booking_id": 10000038,
                 "veterinarian": "Joe Mcguire",
                 "surgery": "Joint Replacement",
                 "surgery_date": "2023-09-26",
@@ -380,6 +391,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "prescription_date": "30-12-2023"
     }
 response_body:
@@ -399,6 +411,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "prescription_date": "30-11-2023"
     }
 response_body:
@@ -490,6 +503,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "referral_date": "30-09-2023",
         "diagnosis": "Comminuted Fracture"
     }
@@ -510,6 +524,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "referral_date": "30-10-2023",
         "diagnosis": "Comminuted Fracture"
     }
@@ -597,6 +612,7 @@ request_body:
     {
         "pet_id": 6,
         "doctor_id": 1,
+        "booking_id": 10000038,
         "surgery": "Joint Replacement",
         "surgery_date": "25-09-2023",
         "discharge_date": "30-09-2023",
@@ -618,6 +634,7 @@ headers:
 request_body: 
     {
         "doctor_id": 1,
+        "booking_id": 10000038,
         "surgery": "Joint Replacement",
         "surgery_date": "26-09-2023",
         "discharge_date": "30-09-2023",

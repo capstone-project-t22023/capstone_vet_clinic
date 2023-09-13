@@ -833,7 +833,6 @@ class PetDatabase
             AND pir.doctor_id = d.id
             AND pir.booking_id = b.id
             AND pir.pet_id = p.id
-            AND pir.archived = 0
             ORDER BY pir.`id`'
         );
         $sql->bind_param(
@@ -1265,8 +1264,7 @@ class PetDatabase
         $sql = $this->connection->prepare(
             'SELECT `pet_diet_records`.`id`
             FROM `pawsome`.`pet_diet_records`
-            WHERE `prescription_id` = ?
-            AND `archived` = 0'
+            WHERE `prescription_id` = ?'
         );
         $sql->bind_param(
             'i', $prescription_id
@@ -1307,8 +1305,7 @@ class PetDatabase
             `pet_diet_records`.`evening`,
             `pet_diet_records`.`comments`
             FROM `pawsome`.`pet_diet_records`
-            WHERE `prescription_id` = ?
-            AND `archived` = 0'
+            WHERE `prescription_id` = ?'
         );
         $sql->bind_param(
             'i', $prescription_id
@@ -1562,8 +1559,7 @@ class PetDatabase
         $sql = $this->connection->prepare(
             'SELECT `pet_rehab_records`.`id`
             FROM `pawsome`.`pet_rehab_records`
-            WHERE `referral_id` = ?
-            AND `archived` = 0'
+            WHERE `referral_id` = ?'
         );
         $sql->bind_param(
             'i', $referral_id
