@@ -38,26 +38,7 @@ headers:
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
     }
-request_body: 
-    {
-        "booking_id": 10000000,
-        "prev_booking_status": "PENDING",
-        "new_booking_status": "CONFIRMED",
-        "booking_type": "Vaccine",
-        "pet_owner_id": 1002,
-        "pet_id": 3,
-        "doctor_id": 1,
-        "booking_slots": [
-            {
-                "booking_date": "19-09-2023",
-                "booking_time": "09:30"
-            },
-            {
-                "booking_date": "19-09-2023",
-                "booking_time": "10:00"
-            }
-        ]
-    }
+request_body: NO BODY
 response_body:
     {
         "confirm_booking": true

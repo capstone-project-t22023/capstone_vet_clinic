@@ -493,6 +493,54 @@ class BookingDatabase
     }
 
     /**
+     * Confirm booking
+     */
+    public function confirmBooking($booking_record)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'UPDATE `bookings`
+            SET booking_status = ?,
+            updated_date = SYSDATE(),
+            updated_by = (
+                WITH
+                all_users AS 
+                (
+                    SELECT * FROM doctors
+                    UNION
+                    SELECT * FROM admins
+                    UNION 
+                    SELECT * FROM pet_owners
+                )
+                SELECT id from all_users 
+                WHERE UPPER(username) = UPPER(?)
+                AND archived = 0
+            )
+            WHERE id = ?'
+        );
+        $sql->bind_param(
+            'ssi', 
+            $booking_record['new_status'], 
+            $booking_record['username'],
+            $booking_record['booking_id']
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Finish booking
      */
     public function finishBooking($booking_record)
