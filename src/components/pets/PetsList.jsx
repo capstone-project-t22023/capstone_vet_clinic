@@ -15,9 +15,17 @@ import AddNewPetButton from './AddNewPetButton';
 import SearchPetOwner from "./SearchPetOwner";
 import {PetsContext} from "../../contexts/PetsProvider";
 import Appointments from "../appointments/Appointments";
+import PetRecordsList from "../petRecords/PetRecordsList";
+import {ArrowCircleRightRounded} from "@mui/icons-material";
 
-export default function PetsList() {
-    const {selectedOwner, updateSelectedOwner, selectedPet, changeSidebarContent, updateSelectedPet} = useContext(PetsContext);
+export default function PetsList({petRecords = false}) {
+    const {
+        selectedOwner,
+        updateSelectedOwner,
+        selectedPet,
+        changeSidebarContent,
+        updateSelectedPet
+    } = useContext(PetsContext);
 
     const isSelected = (petId) => selectedPet === petId ? "active" : "";
 
@@ -44,16 +52,28 @@ export default function PetsList() {
         changeSidebarContent('pet');
     }
 
+
     return (
         <Stack direction="column" flex={1} flexWrap="wrap" spacing={3}>
             <Stack direction={"column"} spacing={1} flexWrap="wrap" alignItems="top" justifyContent="flex-start">
 
-                {selectedOwner && Object.keys(selectedOwner).length > 0 ? (
+                {selectedOwner && !Object.keys(selectedOwner).length > 0 && (
+                    <Box>
+                        <Typography component="h5" variant="h6">Select the owner first</Typography>
+                    </Box>
+                )}
+
+                <SearchPetOwner/>
+
+
+                {selectedOwner && Object.keys(selectedOwner).length > 0 && (
                     <Stack sx={{position: "relative"}}>
                         <Box sx={{position: "absolute", top: 0, right: 0}}>
-                            <IconButton color="primary" onClick={() => updateSelectedOwner({})}>
-                                <CloseRoundedIcon/>
-                            </IconButton>
+                            <Tooltip placement="left" title="Close Selected Customer" arrow>
+                                <IconButton color="primary" onClick={() => updateSelectedOwner({})}>
+                                    <CloseRoundedIcon/>
+                                </IconButton>
+                            </Tooltip>
                         </Box>
                         <Paper elevation={0} sx={{p: 2, borderRadius: 6}}>
                             {selectedOwner.pets.length > 0 ? (
@@ -68,8 +88,14 @@ export default function PetsList() {
                                                borderColor: "secondary.main"
                                            }
                                        }}>
-                                    <Typography component="h5" variant="h6"
-                                                color="primary">{selectedOwner.firstname} has these pets:</Typography>
+                                    <Stack direction="row" spacing={1}>
+                                    <Typography component="h5" variant="h6" color="primary.500">
+                                        <strong>{selectedOwner.firstname} {selectedOwner.lastname}</strong>
+                                    </Typography>
+                                    <Typography component="h5" variant="h6" color="grey.300">
+                                        :
+                                    </Typography>
+                                    </Stack>
                                     {selectedOwner.pets.map((pet) => (
                                         <Stack
                                             key={pet.pet_id} // Assuming the unique identifier for a pet is pet_id
@@ -105,26 +131,26 @@ export default function PetsList() {
                             }
                         </Paper>
 
+                        { !petRecords && selectedOwner.pets.length > 0 &&
+                                    <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
+                                        <Appointments timeframe="today" count={3}/>
+                                        <Appointments timeframe="historic"/>
+                                        <Appointments timeframe="future" count={3}/>
+                                        {/*<Appointments itemsPerPage={3}/>*/}
+                                    </Stack>
 
-                        {selectedOwner.pets.length > 0 &&
-                            <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
-                                <Appointments timeframe="today" count={3}/>
-                                <Appointments timeframe="historic"/>
-                                <Appointments timeframe="future"/>
-                                <Appointments itemsPerPage={3}/>
+                        }
+                        { petRecords && selectedPet !== -1 &&
+                                    <Stack direction="row" spacing={2} my={5} flexWrap="wrap">
 
-                            </Stack>
+                                        <PetRecordsList />
+                                    </Stack>
+
                         }
 
                     </Stack>
 
-                ) : (
-                    <Box>
-                        <Typography component="h5" variant="h6">Select the owner first</Typography>
-                    </Box>
                 )}
-                {/*<Divider/>*/}
-                <SearchPetOwner/>
 
 
             </Stack>

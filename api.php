@@ -1567,18 +1567,18 @@ elseif ($action === 'update_booking_by_admin') {
                 $decision = 'no';
                 $disallowed = array_values(array_diff($diff_slot, $allowed_slot));
                     
-                if(count($diff_slot) === 0){
-                    return_json([
-                        'current_slots:' => $current_slots,
-                        'new_slots:' => $new_slots,
-                        'taken_slots' => $taken_slots,
-                        'diff_slot' => $diff_slot,
-                        'allowed_slot' => $allowed_slot,
-                        'decision' => $decision,
-                        'disallowed_slot' => $disallowed,
-                        'update_booking' => "Same time slots provided. No update."
-                    ]);
-                }
+//                if(count($diff_slot) === 0){
+//                    return_json([
+//                        'current_slots:' => $current_slots,
+//                        'new_slots:' => $new_slots,
+//                        'taken_slots' => $taken_slots,
+//                        'diff_slot' => $diff_slot,
+//                        'allowed_slot' => $allowed_slot,
+//                        'decision' => $decision,
+//                        'disallowed_slot' => $disallowed,
+//                        'update_booking' => "Same time slots provided. No update."
+//                    ]);
+//                }
 
                 if(count($disallowed) === 0){
                     $decision = 'yes';

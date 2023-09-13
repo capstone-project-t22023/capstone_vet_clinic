@@ -14,7 +14,7 @@ import AppointmentDetailSidebar from "../components/appointments/AppointmentDeta
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 
-export default function Dashboard() {
+export default function PetRecords() {
 
 
     const {user} = useContext(ProgramContext);
@@ -23,7 +23,7 @@ export default function Dashboard() {
     return (
         <div>
             <Helmet>
-                <title>PawsomeVet | Dashboard</title>
+                <title>PawsomeVet | PetRecords</title>
             </Helmet>
             <Stack direction="row" sx={{height: '100vh', maxHeight: '100%', overflowY: 'hidden'}}>
                 <Aside/>
@@ -42,14 +42,14 @@ export default function Dashboard() {
                         p: 6
                     }}>
 
-                    {user.role === 'admin' && (
+                    {user.role !== 'pet_owner' && (
                         <>
 
                             <Stack direction="column" justifyContent="space-between" spacing={3}>
                                 <Stack direction="column" spacing={3}>
                                     <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                         <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
-                                            Welcome Back Admin - {user.firstname}!
+                                            Pet Records
                                         </Typography>
                                     </Stack>
 
@@ -66,49 +66,24 @@ export default function Dashboard() {
 
                                             </Stack>
                                             <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                                <PetsList />
+                                                <PetsList petRecords/>
                                             </Paper>
                                         </Box>
                                     </Stack>
 
-                                </Stack>
+                                    {/*<Stack direction="row" spacing={2}>*/}
+                                    {/*    <Box flex={1}>*/}
+                                    {/*        <Stack direction="row" justifyContent="space-between" width="100%"*/}
+                                    {/*               alignItems="baseline" sx={{mb: 2}}>*/}
+                                    {/*            <Typography fontWeight="bold">List of all Pending*/}
+                                    {/*                Appointments:</Typography>*/}
 
-
-                            </Stack>
-                        </>
-                    )}
-
-                    {user.role === 'doctor' && (
-                        <>
-
-                            <Stack direction="column" justifyContent="space-between">
-                                <Stack direction="column" spacing={3}>
-                                    <Stack direction="row" justifyContent="space-between" alignItems="baseline">
-                                        <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
-                                            Welcome Back, Dr. {user.firstname}!
-                                        </Typography>
-                                    </Stack>
-
-                                    <Paper sx={{borderRadius: 6}} elevation={0}>
-                                        <Appointments timeframe="today" count={10} itemsPerPage={5} doctor />
-                                    </Paper>
-                                    <Paper sx={{borderRadius: 6}} elevation={0}>
-                                        <Appointments timeframe="future" count={10} itemsPerPage={5} doctor />
-                                    </Paper>
-
-
-                                    <Stack direction="row" spacing={2}>
-                                        <Box flex={1}>
-                                            <Stack direction="row" justifyContent="space-between" width="100%"
-                                                   alignItems="baseline" sx={{mb: 2}}>
-                                                <Typography fontWeight="bold">Search in Pet Owners List</Typography>
-
-                                            </Stack>
-                                            <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>
-                                                <PetsList />
-                                            </Paper>
-                                        </Box>
-                                    </Stack>
+                                    {/*        </Stack>*/}
+                                    {/*        <Paper sx={{p: 3, borderRadius: 4}} elevation={0}>*/}
+                                    {/*            <PetsList petsList={petList}/>*/}
+                                    {/*        </Paper>*/}
+                                    {/*    </Box>*/}
+                                    {/*</Stack>*/}
 
                                 </Stack>
 
@@ -117,28 +92,6 @@ export default function Dashboard() {
                         </>
                     )}
 
-                    {user.role === 'pet_owner' && (
-                        <>
-                            <Stack direction="column" justifyContent="space-between">
-                                <Stack direction="column" spacing={3}>
-                                    <Stack direction="row" justifyContent="space-between" alignItems="baseline">
-                                        <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
-                                            Welcome Back, {user.firstname}!
-                                        </Typography>
-                                        <PetsListAvatars petList={petList}/>
-                                    </Stack>
-
-                                    <Stack direction="row" spacing={2} flexWrap="wrap">
-                                        <Appointments timeframe="future" count={5} itemsPerPage={4}/>
-                                        <Appointments timeframe="historic" count={4} itemsPerPage={3}/>
-                                        <Appointments itemsPerPage={4}/>
-
-                                    </Stack>
-
-                                </Stack>
-                            </Stack>
-                        </>
-                    )}
 
                     <Footer/>
 

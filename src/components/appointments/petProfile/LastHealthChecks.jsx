@@ -1,13 +1,14 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Box, Typography, Button, Stack, Divider} from "@mui/material";
+import React, {useContext, useState} from "react";
+import {Box, Typography, Button, Stack, Divider, Pagination} from "@mui/material";
 import {ChevronRightRounded} from "@mui/icons-material";
 import LastHealthChecksItem from "./LastHealthChecksItem";
 import dayjs from "dayjs";
 import {PetsContext} from "../../../contexts/PetsProvider";
 
-export default function LastHealthChecks({appointmentList, loading, count = -1}) {
-    const [filterMode, setFilterMode] = useState('historic'); // 'all', 'historic', 'future'
+export default function LastHealthChecks({filterMode = 'all', count = -1, itemsPerPage = 5, doctor = false, status = '', appointmentList}) {
     const { changeSidebarContent, updateSelectedAppointment } = useContext(PetsContext)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [newCount, setNewCount] = useState(count)
 
 
     const filteredAppointments = appointmentList ? appointmentList.filter(appointment => {
@@ -23,28 +24,56 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
         return true;
     }) : [];
 
-    // Apply the "count" filter on filteredAppointments
-    const displayedAppointments = count === -1 ? filteredAppointments : filteredAppointments.slice(0, count);
 
+    // filter for number of total appointments to show
+    const slicedByCountAppointments = newCount === -1 ? filteredAppointments : filteredAppointments.slice(0, newCount);
 
     if (!filteredAppointments || filteredAppointments.length === 0) {
         return <Typography fontWeight="bold" color="secondary.300">No previous appointments.</Typography>;
     }
 
+
+    const totalPages = Math.ceil(slicedByCountAppointments.length / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const displayedAppointments = itemsPerPage === -1 ? slicedByCountAppointments : slicedByCountAppointments.slice(startIndex, endIndex);
+
+    const finalCount = slicedByCountAppointments.length;
+
     const handleAppointmentClick = (appointment) => {
-        changeSidebarContent("appointment");
         updateSelectedAppointment(appointment);
+        changeSidebarContent("appointment");
     }
 
-    console.log(filteredAppointments)
-
-    return (// updatedAppointmentsByDay && updatedAppointmentsByDay.length > 0 && (
+    return (
         <Box flex={1} sx={{width:"100%"}}>
 
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 3}}>
-                <Typography fontWeight="bold">Last health checks ({filteredAppointments.length})</Typography>
-                <Button variant="text" size="small" color="secondary">View all <ChevronRightRounded
-                    fontSize="inherit"/></Button>
+                <Typography fontWeight="bold" color="secondary.500">
+                    {filterMode === 'future'
+                        ? (finalCount !== 0
+                            ? `Upcoming ${finalCount}`
+                            : 'No upcoming')
+                        : filterMode === 'today'
+                            ? (finalCount !== 0
+                                ? `Today's ${finalCount}`
+                                : 'No today\'s')
+                            : filterMode === 'historic'
+                                ? (finalCount !== 0
+                                    ? `Historical ${finalCount}`
+                                    : 'No historical')
+                                : (finalCount !== 0
+                                    ? `${finalCount} All`
+                                    : 'No')} appointments
+                </Typography>
+                {newCount !== -1 && finalCount !== 0 && finalCount !== filteredAppointments.length &&
+                    <Button variant="text" size="small" color="secondary" onClick={() => setNewCount(-1)}>Show all
+                        ({filteredAppointments.length})
+                        <ChevronRightRounded fontSize="inherit"/>
+                    </Button>
+                }
             </Stack>
             <Stack direction="column" spacing={3}
                    sx={{
@@ -66,8 +95,16 @@ export default function LastHealthChecks({appointmentList, loading, count = -1})
                     <LastHealthChecksItem appointment={appointment} key={index} onClick={() => handleAppointmentClick(appointment)}/>
                 ))}
                 <Divider flexItem/>
+                {totalPages > 1 &&
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={(event, page) => setCurrentPage(page)}
+                        color="primary"
+                    />
+                }
             </Stack>
         </Box>
-        // )
     )
 }
+
