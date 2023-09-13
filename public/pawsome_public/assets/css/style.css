@@ -582,71 +582,207 @@ section {
 /*--------------------------------------------------------------
 # ABOUT US PAGE
 --------------------------------------------------------------*/
-.aboutus .img-fluid {
-  position:relative;
-  left: 20px;
-  width: 75%;
-  height: 75%;
-  background-size:contain;
-	 box-shadow: 0px 10px 10px rgba(1, 41, 112, 0.08);
-	 border: none;
-	 border-radius: 185px 120px 110px 200px;
-}
-.aboutus h2{
-  padding: 30px;
-  font-weight: 700;
-  color:#841E46;
-}
-
-.aboutus h3{
-  padding: 30px;
-  font-weight: 500;
-  color:#389DA3;
-}
-
 .aboutus .container {
-  background-color: none;
-  border-radius: 75px 75px 10px 10px;
-  padding-left: 100px;
-  padding-top:100px;
-  padding-bottom: 100px;
-  box-shadow:0px 7px 7px 7px rgba(1, 41, 112, 0.08);
+  position:relative;
+}
+
+.aboutus .lc-block{
+  background-color: #ffe9fe;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.aboutus h5 {
+ color:#6e326b;
+}
+
+.aboutus p {
+  color:#373737;
+  font-weight:500;
+ }
+
+ .mypath {
+  width: 1000px; 
+   --mypath-radius: 31px; 
+   --mypath-border: 2px dashed;
+}
+
+.mypath > div {
+
+  border-top: var(--mypath-border);
+  border-color: #6e326b !important;
+  margin:0; 
+  padding: var(--mypath-radius);
+}
+
+.mypath > div:nth-child(even) {
+  border-left: var(--mypath-border);
+  border-top-left-radius: var(--mypath-radius);
+  border-bottom-left-radius: var(--mypath-radius);
+  margin-right: var(--mypath-radius); 
+  padding-right: 20px;
+}
+
+.mypath > div:nth-child(odd) {
+  border-right: var(--mypath-border);
+  border-top-right-radius: var(--mypath-radius);
+  border-bottom-right-radius: var(--mypath-radius);
+  margin-left: var(--mypath-radius); 
+  padding-left: 20px;
+}
+
+.mypath > div:first-child {
+  border-radius: 15px;
+}
+
+.mypath > div:last-child {
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
 }
 /*--------------------------------------------------------------
-# PET FORMS
+# GENERAL CHECKUP
 --------------------------------------------------------------*/
-.petforms .img-fluid {
+.generalcheckup .container {
   position:relative;
-  left: 20px;
-  width: 65%;
-  height: 65%;
-  object-fit:contain;
-	 border: none;
-	 border-radius: 185px 120px 150px 200px;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
 }
 
-.petforms h2 {
-  padding: 30px;
-  font-weight: 700;
-  color:#841E46;
+.generalcheckup .lc-block {
+  background-color: #dcfcf4;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.generalcheckup h1 {
+  color:#58caae;
+}
+/*--------------------------------------------------------------
+# HEALTH CONCERNS
+--------------------------------------------------------------*/
+.healthconcerns .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
 }
 
-.petforms h3 {
-  padding: 30px;
-  font-weight: 500;
-  color:#389DA3;
+.healthconcerns .lc-block {
+  background-color: #fff1e1;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
 }
-.petforms .container {
-  position:unset;
-  background-color: none;
-  border-radius: 75px;
-  padding: 100px;
+.healthconcerns h1 {
+  color:#f68c09;
+ }
+
+ /*--------------------------------------------------------------
+# DENTISTRY
+--------------------------------------------------------------*/
+.dentistry .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
 }
-iframe{
-  width:min-content; 
-  height: 2500px;;
-  
+
+.dentistry .lc-block {
+  background-color: #c9f1fe;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
 }
+.dentistry h1 {
+  color:#1C718D;
+ }
+ /*--------------------------------------------------------------
+# SURGERY
+--------------------------------------------------------------*/
+.surgery .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
+}
+
+.surgery .lc-block {
+  background-color: #fcbbbe;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.surgery h1 {
+  color:#e9222c;
+ }
+
+  /*--------------------------------------------------------------
+# EMERGENCY SERVICES
+--------------------------------------------------------------*/
+.emergencyservices .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
+}
+
+.emergencyservices .lc-block {
+  background-color: #fddde2;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.emergencyservices h1 {
+  color:#c26676;
+ }
+  /*--------------------------------------------------------------
+# NUTRITION PROGRAMS SERVICES
+--------------------------------------------------------------*/
+.nutritionprograms .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
+}
+
+.nutritionprograms .lc-block {
+  background-color: #d4fce2;
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.nutritionprograms h1 {
+  color:#046928;
+ }
+
+   /*--------------------------------------------------------------
+# NUTRITION PROGRAMS SERVICES
+--------------------------------------------------------------*/
+.puppyandkittencheck .container {
+  position:relative;
+  padding-left:10px;
+  margin-left: 10px;
+  padding-right:10px;
+  margin-right: 10px;
+}
+
+.puppyandkittencheck .lc-block {
+  background-color:#ffed88; 
+  padding: 20px;
+  margin: 20px;
+  border-radius:  15px;
+}
+.puppyandkittencheck h1 {
+  color:#baa00b;
+ }
+
 /*--------------------------------------------------------------
 # SERVICES
 --------------------------------------------------------------*/
