@@ -63,6 +63,26 @@ export default function TrialForm(props) {
         });
     }
 
+    function handleTest(){
+      let req_body = {"booking_type":"Rehab","pet_owner_id":1007,"pet_id":11,"doctor_id":3,"booking_slots":[{"booking_date":"14-09-2023","booking_time":"12:30"},{"booking_date":"14-09-2023","booking_time":"13:00"},{"booking_date":"14-09-2023","booking_time":"13:30"}]};
+
+
+      fetch("/update_booking_by_admin/10000097", {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        },
+        body: JSON.stringify(req_body)
+      })
+      .then(resp => resp.json)
+      .then(data => {
+        console.log("data", data);
+      })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
   return (
     <div>
       <TextField type="file" onChange={handleFileChange}/>
@@ -71,6 +91,9 @@ export default function TrialForm(props) {
         </Button>
         <Button onClick={handleDownload}>
           Download File
+        </Button>
+        <Button onClick={handleTest}>
+          Handle Test
         </Button>
     </div>
   )

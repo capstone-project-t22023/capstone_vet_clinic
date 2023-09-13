@@ -205,11 +205,13 @@ DROP TABLE IF EXISTS `pawsome`.`invoice_items`;
 CREATE TABLE `pawsome`.`invoice_items` (
   `invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
   `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
-  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
+  `item_id` int(10) DEFAULT NULL COMMENT 'Item identifier',
   `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
   `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
   `total_amount` decimal(10,2) NOT NULL COMMENT 'Total amount times quantity',
   KEY `fk_invoice_items_i_idx` (`invoice_id`),
+  KEY `fk_invoice_items_idx` (`item_id`),
+  CONSTRAINT `fk_invoice_items` FOREIGN KEY (`item_id`) REFERENCES `inventory_items` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `fk_invoice_items_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
