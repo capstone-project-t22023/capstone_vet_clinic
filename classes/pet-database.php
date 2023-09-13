@@ -1691,7 +1691,7 @@ class PetDatabase
             FROM 
             `pawsome`.`referrals` r,
             `pawsome`.`doctors` d,
-            `pawsome`.`booking` b,
+            `pawsome`.`bookings` b,
             `pawsome`.`pets` p
             WHERE
             r.pet_id = ?

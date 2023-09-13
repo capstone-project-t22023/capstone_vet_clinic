@@ -2443,6 +2443,7 @@ elseif ($action === 'get_diet_record') {
                 $prescription_diet=[
                     "pet_id" => $prescriptions['pet_id'],
                     "doctor_id" => $prescriptions['doctor_id'],
+                    "booking_id" => $prescriptions['booking_id'],
                     "veterinarian" => $prescriptions['veterinarian'],
                     "prescription_date" => $prescriptions['prescription_date'],
                     "diet_records" => $diet_records
@@ -2469,6 +2470,7 @@ elseif ($action === 'get_all_diet_record_by_pet') {
                     $prescription_diet=[
                         "pet_id" => $p['pet_id'],
                         "doctor_id" => $p['doctor_id'],
+                        "booking_id" => $p['booking_id'],
                         "veterinarian" => $p['veterinarian'],
                         "prescription_date" => $p['prescription_date'],
                         "diet_records" => $diet_records
@@ -2691,6 +2693,7 @@ elseif ($action === 'get_rehab_record') {
                 $referral_rehab=[
                     "pet_id" => $referrals['pet_id'],
                     "doctor_id" => $referrals['doctor_id'],
+                    "booking_id" => $referrals['booking_id'],
                     "veterinarian" => $referrals['veterinarian'],
                     "referral_date" => $referrals['referral_date'],
                     "diagnosis" => $referrals['diagnosis'],
@@ -2729,6 +2732,7 @@ elseif ($action === 'get_all_rehab_record_by_pet') {
                     $referral_rehab=[
                         "pet_id" => $r['pet_id'],
                         "doctor_id" => $r['doctor_id'],
+                        "booking_id" => $r['booking_id'],
                         "veterinarian" => $r['veterinarian'],
                         "referral_date" => $r['referral_date'],
                         "diagnosis" => $r['diagnosis'],
