@@ -380,7 +380,7 @@ elseif ($action === 'register_pet_owner') {
         'created_date' => date('Y-m-d H:i:s'),
         'updated_date' => date('Y-m-d H:i:s'),
     ];
-
+    
     if($check){
         if ($pet_owner_id = $database->addPetOwner($pet_owner)) {
             $pet_owner['id'] = $pet_owner_id;
@@ -1099,7 +1099,7 @@ elseif ($action === 'get_all_pets') {
 
             return_json(['pets' => $pet_info]);
         } else {
-            return_json(['pets' => "No pets found"]);
+            return_json(['pets' => []]);
         }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
@@ -1115,25 +1115,25 @@ elseif ($action === 'get_all_pets_by_filter') {
             if ($pets = $pet_database->getAllPetsByPetname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
-                return_json(['pets' => "No pets found"]);
+                return_json(['pets' => []]);
             }
         } elseif ($_GET['filter'] == 'firstname'){
             if ($pets = $pet_database->getAllPetsByFname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
-                return_json(['pets' => "No pets found"]);
+                return_json(['pets' => []]);
             }
         } elseif ($_GET['filter'] == 'lastname'){
             if ($pets = $pet_database->getAllPetsByLname($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
-                return_json(['pets' => "No pets found"]);
+                return_json(['pets' => []]);
             }
         } elseif ($_GET['filter'] == 'pet_owner_id'){
             if ($pets = $pet_database->getAllPetsByPetOwnerId($_GET['filter_value'])) {
                 return_json(['pets' => $pets]);
             }  else {
-                return_json(['pets' => "No pets found"]);
+                return_json(['pets' => []]);
             }
         }
     } else {
@@ -2042,67 +2042,67 @@ elseif ($action === 'search_booking') {
             if ($bookings = $booking_database->getBookingsByBookingId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         } elseif ($_GET['filter'] == 'booking_date'){
             if ($bookings = $booking_database->getBookingsByBookingDate($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         } elseif ($_GET['filter'] == 'booking_status'){
             if ($bookings = $booking_database->getBookingsByBookingStatus($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }  elseif ($_GET['filter'] == 'booking_type'){
             if ($bookings = $booking_database->getBookingsByBookingType($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }  elseif ($_GET['filter'] == 'username'){
             if ($bookings = $booking_database->getBookingsByUsername($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }  elseif ($_GET['filter'] == 'pet_name'){
             if ($bookings = $booking_database->getBookingsByPetName($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }  elseif ($_GET['filter'] == 'pet_id'){
             if ($bookings = $booking_database->getBookingsByPetId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }  elseif ($_GET['filter'] == 'doctor_id'){
             if ($bookings = $booking_database->getBookingsByDoctorId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }   elseif ($_GET['filter'] == 'pet_owner_id'){
             if ($bookings = $booking_database->getBookingsByPetOwnerId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }    elseif ($_GET['filter'] == 'invoice_id'){
             if ($bookings = $booking_database->getBookingsByInvoiceId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }    elseif ($_GET['filter'] == 'receipt_id'){
             if ($bookings = $booking_database->getBookingsByReceiptId($_GET['filter_value'])) {
                 return_json(['bookings' => $bookings]);
             } else {
-                return_json(['bookings' => "No bookings found"]);
+                return_json(['bookings' => []]);
             } 
         }
     } else {

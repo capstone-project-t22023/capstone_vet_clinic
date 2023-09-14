@@ -113,7 +113,7 @@ class Database
             VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE(),SYSDATE())'
         );
         $sql->bind_param(
-            'sssssssiiiss',
+            'sssssssiii',
             $pet_owner['firstname'],
             $pet_owner['lastname'],
             $pet_owner['username'],
