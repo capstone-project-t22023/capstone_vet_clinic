@@ -3868,6 +3868,23 @@ elseif ($action === 'generate_sales_invoice') {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
+/**
+ * API endpoint when adding sales item
+ */ 
+elseif ($action === 'subscribe') {
+
+    if(validateEmail($_POST['email_addr'])
+        && validateLength($_POST['email_addr'], 100)){
+            if($database->subscribe($_POST['email_addr'])){
+                return_json(["status" => "success", "msg" => "Thank you for subscribing!"]); 
+            } else {
+                return_json(["status" => "failed", "msg" => "You're already a subscriber!"]); 
+            }
+    } else {
+        return_json(["status" => "failed", "msg" => "Please provide a valid email address!"]);  
+    }
+    
+}
 
 return_json(['status' => 0]);
 

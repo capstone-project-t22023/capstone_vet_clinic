@@ -1342,6 +1342,63 @@ class Database
         return false;
     }
 
+    /**
+     * Subscribe to newsletter
+     */
+    public function subscribe($email)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO subscribers (email,date_subbed) VALUES (?,SYSDATE())'
+        );
+        $sql->bind_param(
+            's', $email
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Check existing subscriber
+     */
+    public function checkSubscriber($email)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT * FROM subscribers WHERE email = ?'
+        );
+        $sql->bind_param(
+            's', $email
+        );
+        if ($sql->execute()) {
+            $subscriber = $result->fetch_assoc();
+            $sql->close();
+            $this->connection->close();
+            return $subscriber;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
     
 
 }
