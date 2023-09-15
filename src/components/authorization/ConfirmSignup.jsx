@@ -13,18 +13,18 @@ export default function ConfirmSignup() {
     useEffect(() => {
         let link = "";
 
-        if (sessionStorage.getItem('tmp_privilege') === 'doctor') {
+        if (localStorage.getItem('tmp_privilege') === 'doctor') {
             link = "http://localhost/capstone_vet_clinic/api.php/get_token_doctor";
-        } else if (sessionStorage.getItem('tmp_privilege') === 'admin') {
+        } else if (localStorage.getItem('tmp_privilege') === 'admin') {
             link = "http://localhost/capstone_vet_clinic/api.php/get_token_admin";
-        } else if (sessionStorage.getItem('tmp_privilege') === 'pet_owner') {
+        } else if (localStorage.getItem('tmp_privilege') === 'pet_owner') {
             link = "http://localhost/capstone_vet_clinic/api.php/get_token_pet_owner";
         }
         fetch(link, {
             mode: "cors",
             credentials: "same-origin",
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('tmp_token'),
+                Authorization: 'Bearer ' + localStorage.getItem('tmp_token'),
             },
         })
             .then((response) => {
@@ -46,11 +46,11 @@ export default function ConfirmSignup() {
 
         let link = "";
 
-        if (sessionStorage.getItem('tmp_privilege') === 'doctor') {
+        if (localStorage.getItem('tmp_privilege') === 'doctor') {
             link = "http://localhost/capstone_vet_clinic/api.php/confirm_doctor";
-        } else if (sessionStorage.getItem('tmp_privilege') === 'admin') {
+        } else if (localStorage.getItem('tmp_privilege') === 'admin') {
             link = "http://localhost/capstone_vet_clinic/api.php/confirm_admin";
-        } else if (sessionStorage.getItem('tmp_privilege') === 'pet_owner') {
+        } else if (localStorage.getItem('tmp_privilege') === 'pet_owner') {
             link = "http://localhost/capstone_vet_clinic/api.php/confirm_pet_owner";
         }
 
@@ -61,7 +61,7 @@ export default function ConfirmSignup() {
                     code: enteredToken,
                 }),
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('tmp_token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('tmp_token'),
                 },
             })
                 .then(res => res.json())

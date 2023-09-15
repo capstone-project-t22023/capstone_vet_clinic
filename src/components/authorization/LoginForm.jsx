@@ -102,11 +102,11 @@ export default function LoginForm() {
                 .then(res => res.json())
                 .then((data) => {
                     if (data.login) {
-                        sessionStorage.setItem('token', data.login);
-                        sessionStorage.setItem('authenticated', true);
+                        localStorage.setItem('token', data.login);
+                        localStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
                             headers: {
-                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                                Authorization: 'Bearer ' + localStorage.getItem('token'),
                             },
                         })
                             .then((response) => {
@@ -118,7 +118,7 @@ export default function LoginForm() {
                                     tmp.role = 'admin';
                                     setUser(tmp);
                                     setAuthenticated(true);
-                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                    localStorage.setItem('user', JSON.stringify(tmp));
                                 }
                             })
                             .catch(error => {
@@ -171,11 +171,11 @@ export default function LoginForm() {
                 .then(res => res.json())
                 .then((data) => {
                     if (data.login) {
-                        sessionStorage.setItem('token', data.login);
-                        sessionStorage.setItem('authenticated', true);
+                        localStorage.setItem('token', data.login);
+                        localStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
                             headers: {
-                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                                Authorization: 'Bearer ' + localStorage.getItem('token'),
                             },
                         })
                             .then((response) => {
@@ -187,7 +187,7 @@ export default function LoginForm() {
                                     tmp.role = 'doctor';
                                     setUser(tmp);
                                     setAuthenticated(true);
-                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                    localStorage.setItem('user', JSON.stringify(tmp));
                                 }
                             })
                             .catch(error => {
@@ -240,11 +240,11 @@ export default function LoginForm() {
                 .then(res => res.json())
                 .then((data) => {
                     if (data.login) {
-                        sessionStorage.setItem('token', data.login);
-                        sessionStorage.setItem('authenticated', true);
+                        localStorage.setItem('token', data.login);
+                        localStorage.setItem('authenticated', true);
                         fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
                             headers: {
-                                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                                Authorization: 'Bearer ' + localStorage.getItem('token'),
                             },
                         })
                             .then((response) => {
@@ -256,7 +256,7 @@ export default function LoginForm() {
                                     tmp.role = 'pet_owner';
                                     setUser(tmp);
                                     setAuthenticated(true);
-                                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                                    localStorage.setItem('user', JSON.stringify(tmp));
                                 }
                             })
                             .catch(error => {

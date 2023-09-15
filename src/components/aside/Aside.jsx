@@ -34,9 +34,9 @@ export default function Aside() {
     }
 
     function handleLogout() {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('authenticated');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('authenticated');
         setAuthenticated(false)
         console.log("Bye Bye! Logging out now");
         window.location.replace("http://localhost:3000/pawsome_public/index.html");
@@ -96,9 +96,15 @@ export default function Aside() {
                         <LocationCityRounded/>
                     </ListItemButton>
                 </Tooltip>
-                <ListItemButton disabled={user.role === 'admin' ? false : true}>
-                    <WarehouseRounded/>
-                </ListItemButton>
+                {user.role === 'admin' ? 
+                <Tooltip title="Go to Inventory" TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton 
+                        selected={isActive('/inventory')} 
+                        onClick={() => handleClick('/inventory')}>
+                        <WarehouseRounded/>
+                    </ListItemButton>
+                </Tooltip> : "" }
+
                 <Tooltip title="Update Profile" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton selected={isActive('/profile')} onClick={() => handleClick('/profile')}>
                         <SettingsRounded/>

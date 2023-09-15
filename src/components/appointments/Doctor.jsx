@@ -58,7 +58,7 @@ export default function Doctor({id = -1, simple = false}) {
         fetch(apiUrl, {
             method: "POST",
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(requestBody),

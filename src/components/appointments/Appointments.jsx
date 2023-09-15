@@ -37,7 +37,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         fetch(url, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then(response => response.json())

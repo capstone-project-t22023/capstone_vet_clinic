@@ -76,7 +76,7 @@ export default function PetProfile({onDelete}) {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -111,7 +111,7 @@ export default function PetProfile({onDelete}) {
         fetch(url, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then(response => response.json())

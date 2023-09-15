@@ -30,23 +30,23 @@ export default function BookingOptionsUpdate(props) {
         Promise.all([
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pets", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
             fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(selectedBooking.booking_date).format('DD-MM-YYYY')}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_booking_types", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             })
         ])
@@ -154,7 +154,7 @@ export default function BookingOptionsUpdate(props) {
         fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(newDate).format('DD-MM-YYYY')}`, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -218,7 +218,7 @@ export default function BookingOptionsUpdate(props) {
         fetch("http://localhost/capstone_vet_clinic/api.php/add_booking", {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
                 'Content-Type': 'application/json', // Set the content type
             },
             body: JSON.stringify(req_body),
@@ -232,7 +232,7 @@ export default function BookingOptionsUpdate(props) {
                 // Now, you can fetch the booking details using the booking_id from the response
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/" + data.add_booking, {
                     headers: {
-                        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
                     },
                 })
                     .then((response) => {
@@ -279,7 +279,7 @@ export default function BookingOptionsUpdate(props) {
         fetch( endpoint, {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
             body: JSON.stringify(req_body)
         })
@@ -292,7 +292,7 @@ export default function BookingOptionsUpdate(props) {
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_booking/"+selectedBooking.booking_id, {
                     method: 'GET',
                     headers: {
-                        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
                     }
                 })
                     .then((response) => {

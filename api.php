@@ -55,7 +55,7 @@ $id = $req[4];
 /**
  * fetch("http://localhost/capstone_vet_clinic/api.php/user", {
  *      headers: {
- *          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+ *          Authorization: 'Bearer ' + localStorage.getItem('token'),
  *      },
  *      })
  * 

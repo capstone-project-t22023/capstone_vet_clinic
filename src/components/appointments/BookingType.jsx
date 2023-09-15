@@ -85,7 +85,7 @@ export default function BookingType({text = false, icon = false, title = false, 
         fetch(apiUrl, {
             method: "POST",
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(requestBody),
