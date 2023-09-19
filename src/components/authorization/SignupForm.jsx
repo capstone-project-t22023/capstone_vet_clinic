@@ -330,8 +330,8 @@ export default function SignupForm() {
               .then(response => response.json())
               .then(data => {
                 if (data.register_user) {
-                    sessionStorage.setItem('tmp_token', data.register_user);
-                    sessionStorage.setItem('tmp_privilege', selectedPrivilege);
+                    localStorage.setItem('tmp_token', data.register_user);
+                    localStorage.setItem('tmp_privilege', selectedPrivilege);
                     setToConfirm(true);
                 }
               })

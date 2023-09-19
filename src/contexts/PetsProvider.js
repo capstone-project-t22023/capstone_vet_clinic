@@ -25,7 +25,7 @@ export const PetsProvider = ({children}) => {
         fetch(url, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then(response => response.json())
@@ -90,7 +90,7 @@ export const PetsProvider = ({children}) => {
     useEffect(() => {
         fetch("http://localhost/capstone_vet_clinic/api.php/get_all_pets", {
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -124,7 +124,7 @@ export const PetsProvider = ({children}) => {
         fetch(url, {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -157,7 +157,7 @@ export const PetsProvider = ({children}) => {
         fetch(url, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then(response => response.json())

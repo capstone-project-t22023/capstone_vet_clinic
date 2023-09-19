@@ -15,7 +15,7 @@ export default function AddNewPetButton() {
         fetch("http://localhost/capstone_vet_clinic/api.php/add_pet", {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
             body: JSON.stringify(petInfo)
         })

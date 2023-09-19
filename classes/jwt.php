@@ -79,8 +79,8 @@ function base64UrlDecode(string $base64Url): string
  *              .then(res => res.json())
  *              .then((data) => {
  *                  if (data.status) {
- *                      sessionStorage.setItem('token', data.status);
- *                      sessionStorage.setItem('authenticated', true);
+ *                      localStorage.setItem('token', data.status);
+ *                      localStorage.setItem('authenticated', true);
  *                      this.setState({to_home :true});
  *                  } ...snipped...
  * 
@@ -88,7 +88,7 @@ function base64UrlDecode(string $base64Url): string
  * 
  * fetch("http://localhost/capstone_vet_clinic/api.php/user", {
  *      headers: {
- *          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+ *          Authorization: 'Bearer ' + localStorage.getItem('token'),
  *      },
  *      })
  * 
@@ -161,7 +161,7 @@ function get_authorization_header()
  * 
  * fetch("http://localhost/capstone_vet_clinic/api.php/user", {
  *      headers: {
- *          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+ *          Authorization: 'Bearer ' + localStorage.getItem('token'),
  *      },
  *      })
  * 

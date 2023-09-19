@@ -7,7 +7,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -35,7 +35,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -57,7 +57,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -71,7 +71,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -93,7 +93,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -128,7 +128,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -164,7 +164,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -248,7 +248,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -302,7 +302,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -358,7 +358,7 @@ method: GET
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -385,7 +385,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -405,7 +405,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -425,7 +425,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -439,7 +439,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -461,7 +461,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -483,7 +483,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -497,7 +497,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -518,7 +518,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -539,7 +539,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -553,7 +553,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -573,7 +573,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -592,7 +592,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -606,7 +606,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -629,7 +629,7 @@ method: POST
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: 
     {
@@ -651,7 +651,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:
@@ -680,7 +680,7 @@ method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
 request_body: NO BODY
 response_body:

@@ -28,9 +28,9 @@ export default function Header() {
     const [openDrawer, setOpenDrawer] = useState(false)
 
     function handleLogout() {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('authenticated');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('authenticated');
         setToLogout(true);
         window.location.reload();
     }

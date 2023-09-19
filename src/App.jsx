@@ -27,6 +27,7 @@ import Logout from './components/authorization/Logout';
 import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
 import PetRecords from "./pages/PetRecords";
+import Inventory from './pages/Inventory';
 
 /**
  *
@@ -47,17 +48,17 @@ function App() {
         Promise.all([
             fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
             fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
                 headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             })
         ])
@@ -74,7 +75,7 @@ function App() {
                     }
                     setUser(tmp);
                     setAuthenticated(true);
-                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                    localStorage.setItem('user', JSON.stringify(tmp));
                 } else if (data[1].user) {
                     let tmp = data[1].user;
                     if(tmp.role){
@@ -82,7 +83,7 @@ function App() {
                     }
                     setUser(tmp);
                     setAuthenticated(true);
-                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                    localStorage.setItem('user', JSON.stringify(tmp));
                 } else if (data[2].user) {
                     let tmp = data[2].user;
                     if(tmp.role){
@@ -90,7 +91,7 @@ function App() {
                     }
                     setUser(tmp);
                     setAuthenticated(true);
-                    sessionStorage.setItem('user', JSON.stringify(tmp));
+                    localStorage.setItem('user', JSON.stringify(tmp));
                 }
             })
             .catch(error => {
@@ -151,6 +152,13 @@ function App() {
                                 <Route path="/trialform" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <TrialForm/>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/inventory" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <Inventory />
                                     </Protected>
                                 }
                                 />
