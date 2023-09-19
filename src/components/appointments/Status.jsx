@@ -30,8 +30,8 @@ export default function Status({appointment}) {
         updateAppointmentStatus(appointment, "confirm")
     }
     const handleStatusRemoveConfirmed = () => {
-        // TODO figure out the endpoint and update the status
-        // updateAppointmentStatus(appointment, "pending")
+        // TODO figure out the endpoint and update the status this is not working
+        updateAppointmentStatus(appointment, "removeConfirm")
     }
     const isFinished = () => {
         return appointment && appointment.booking_status === 'FINISHED'

@@ -116,8 +116,9 @@ export const PetsProvider = ({children}) => {
 
 
     const updateAppointmentStatus = (appointment, toStatus) => {
+        let url = "";
 
-        const url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
+        toStatus === "removeConfirm" ? url = `http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/${appointment.booking_id}` : url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
 
         console.log("Change Appointment Status: ", url);
 
