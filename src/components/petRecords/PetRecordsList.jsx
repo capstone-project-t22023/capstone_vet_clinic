@@ -17,6 +17,7 @@ import {
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import {TabPanel} from "@mui/lab";
 import Loading from "../Loading";
+import PropTypes from "prop-types";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,6 +52,7 @@ export default function PetRecordsList() {
     const [selectedTab, setSelectedTab] = useState(0);
     const [loading, setLoading] = useState(false);
 
+    console.log("list", petRehabList);
     const fetchPetRecordsById = (petId, tab) => {
         let apiUrl = '';
         switch (tab) {
@@ -119,6 +121,7 @@ export default function PetRecordsList() {
 
     const handleChangeTab = (event, newValue) => {
         setSelectedTab(newValue);
+        setSelectedTabVertical(0);
     };
 
     // TODO all other pet records
@@ -140,6 +143,11 @@ export default function PetRecordsList() {
         );
     }
 
+    const [selectedTabVertical, setSelectedTabVertical] = useState(0);
+
+    const handleChangeTabVertical = (event, newValue) => {
+        setSelectedTabVertical(newValue);
+    };
 
     return (
         <Stack direction="column" sx={{width: "100%"}}>
@@ -158,157 +166,183 @@ export default function PetRecordsList() {
             <TabPanel value={selectedTab} index={0}>
                 {petRehabList && !loading ? (
                     <Paper elevation={3}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Referral Date</TableCell>
-                                    <TableCell>Diagnosis</TableCell>
-                                    <TableCell>Rehab Records</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
+                        <Box
+                            sx={{flexGrow: 1, bgcolor: 'background.paper', display: 'flex'}}
+                        >
+
+                            <Tabs
+                                orientation="vertical"
+                                variant="scrollable"
+                                value={selectedTabVertical}
+                                onChange={handleChangeTabVertical}
+                                aria-label="Vertical tabs example"
+                                sx={{borderRight: 1, borderColor: 'divider'}}
+                            >
                                 {petRehabList.map((record, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{record.referral_date}</TableCell>
-                                        <TableCell>{record.diagnosis}</TableCell>
-                                        <TableCell>
-                                            <Table>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell>Treatment Date</TableCell>
-                                                        <TableCell>Attended</TableCell>
-                                                        <TableCell>Comments</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {record.rehab_records.map((rehabRecord, idx) => (
-                                                        <TableRow key={idx}>
-                                                            <TableCell>{rehabRecord.treatment_date}</TableCell>
-                                                            <TableCell>{rehabRecord.attended}</TableCell>
-                                                            <TableCell>{rehabRecord.comments}</TableCell>
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableCell>
-                                    </TableRow>
+                                    <Tab key={index}
+                                         label={dayjs(record.referral_date).format("DD MMM YYYY")}/>
                                 ))}
-                            </TableBody>
-                        </Table>
+                            </Tabs>
+                            {petRehabList.map((record, index) => (
+                                <TabPanel role="tabpanel"
+                                          key={index}
+                                          hidden={selectedTabVertical !== index}
+                                          id={`vertical-tabpanel-${index}`}
+                                          aria-labelledby={`vertical-tab-${index}`}>
+                                    <Box sx={{p: 3}}>
+                                        <Typography fontWeight="bold" component="h3" variant="h6">{record.diagnosis}</Typography>
+                                        <Table>
+                                            <TableHead>
+                                                <StyledTableRow>
+                                                    <StyledTableCell>Treatment Date</StyledTableCell>
+                                                    <StyledTableCell>Attended</StyledTableCell>
+                                                    <StyledTableCell>Comments</StyledTableCell>
+                                                </StyledTableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {record.rehab_records.map((rehabRecord, idx) => (
+                                                    <StyledTableRow key={idx}>
+                                                        <StyledTableCell>{rehabRecord.treatment_date}</StyledTableCell>
+                                                        <StyledTableCell>{rehabRecord.attended}</StyledTableCell>
+                                                        <StyledTableCell>{rehabRecord.comments}</StyledTableCell>
+                                                    </StyledTableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </Box>
+                                </TabPanel>
+                            ))}
+
+
+                        </Box>
                     </Paper>
                 ) : (
-                    <Loading open={loading} />
+                    <Loading open={loading}/>
                 )}
             </TabPanel>
             <TabPanel value={selectedTab} index={1}>
                 {petDietList && !loading ? (
-                    <Paper elevation={3}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Prescription Date</TableCell>
-                                    <TableCell>Veterinarian</TableCell>
-                                    <TableCell>Diet Records</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
+
+                        <Paper elevation={3}>
+                            <Box
+                                sx={{flexGrow: 1, bgcolor: 'background.paper', display: 'flex'}}
+                            >
+
+                                <Tabs
+                                    orientation="vertical"
+                                    variant="scrollable"
+                                    value={selectedTabVertical}
+                                    onChange={handleChangeTabVertical}
+                                    aria-label="Vertical tabs example"
+                                    sx={{borderRight: 1, borderColor: 'divider'}}
+                                >
+                                    {petDietList.map((record, index) => (
+                                        <Tab key={index}
+                                             label={dayjs(record.prescription_date).format("DD MMM YYYY")} />
+                                    ))}
+                                </Tabs>
                                 {petDietList.map((record, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{record.prescription_date}</TableCell>
-                                        <TableCell>{record.veterinarian}</TableCell>
-                                        <TableCell>
+                                    <TabPanel role="tabpanel"
+                                              key={index}
+                                              hidden={selectedTabVertical !== index}
+                                              id={`vertical-tabpanel-${index}`}
+                                              aria-labelledby={`vertical-tab-${index}`}>
+                                        <Box sx={{p: 3}}>
+                                            <Typography fontWeight="bold" component="h3" variant="h6">{record.veterinarian}</Typography>
                                             <Table>
                                                 <TableHead>
-                                                    <TableRow>
-                                                        <TableCell>Product</TableCell>
-                                                        <TableCell>Serving Portion</TableCell>
-                                                        <TableCell>Morning</TableCell>
-                                                        <TableCell>Evening</TableCell>
-                                                        <TableCell>Comments</TableCell>
-                                                    </TableRow>
+                                                    <StyledTableRow>
+                                                        <StyledTableCell>Product</StyledTableCell>
+                                                        <StyledTableCell>Serving Portion</StyledTableCell>
+                                                        <StyledTableCell>Morning</StyledTableCell>
+                                                        <StyledTableCell>Evening</StyledTableCell>
+                                                        <StyledTableCell>Comments</StyledTableCell>
+                                                    </StyledTableRow>
                                                 </TableHead>
                                                 <TableBody>
                                                     {record.diet_records.map((dietRecord, idx) => (
-                                                        <TableRow key={idx}>
-                                                            <TableCell>{dietRecord.product}</TableCell>
-                                                            <TableCell>{dietRecord.serving_portion}</TableCell>
-                                                            <TableCell>{dietRecord.morning}</TableCell>
-                                                            <TableCell>{dietRecord.evening}</TableCell>
-                                                            <TableCell>{dietRecord.comments || 'N/A'}</TableCell>
-                                                        </TableRow>
+                                                        <StyledTableRow key={idx}>
+                                                            <StyledTableCell>{dietRecord.product}</StyledTableCell>
+                                                            <StyledTableCell>{dietRecord.serving_portion}</StyledTableCell>
+                                                            <StyledTableCell>{dietRecord.morning}</StyledTableCell>
+                                                            <StyledTableCell>{dietRecord.evening}</StyledTableCell>
+                                                            <StyledTableCell>{dietRecord.comments || 'N/A'}</StyledTableCell>
+                                                        </StyledTableRow>
                                                     ))}
                                                 </TableBody>
                                             </Table>
-                                        </TableCell>
-                                    </TableRow>
+                                        </Box>
+                                    </TabPanel>
                                 ))}
-                            </TableBody>
-                        </Table>
+
+
+                            </Box>
+
                     </Paper>
                 ) : (
-                    <Loading open={loading} />
+                    <Loading open={loading}/>
                 )}
             </TabPanel>
             <TabPanel value={selectedTab} index={2}>
                 {petSurgeryList && !loading ? (
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <StyledTableRow>
-                                        <StyledTableCell>Surgery Date</StyledTableCell>
-                                        <StyledTableCell>Veterinarian</StyledTableCell>
-                                        <StyledTableCell>Surgery Type</StyledTableCell>
-                                        <StyledTableCell>Discharge Date</StyledTableCell>
-                                        <StyledTableCell>Comments</StyledTableCell>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <StyledTableRow>
+                                    <StyledTableCell>Surgery Date</StyledTableCell>
+                                    <StyledTableCell>Veterinarian</StyledTableCell>
+                                    <StyledTableCell>Surgery Type</StyledTableCell>
+                                    <StyledTableCell>Discharge Date</StyledTableCell>
+                                    <StyledTableCell>Comments</StyledTableCell>
+                                </StyledTableRow>
+                            </TableHead>
+                            <TableBody>
+                                {petSurgeryList.map((record, index) => (
+                                    <StyledTableRow key={index}>
+                                        <StyledTableCell>{record.surgery_date}</StyledTableCell>
+                                        <StyledTableCell>{record.veterinarian}</StyledTableCell>
+                                        <StyledTableCell>{record.surgery}</StyledTableCell>
+                                        <StyledTableCell>{record.discharge_date}</StyledTableCell>
+                                        <StyledTableCell>{record.comments || 'N/A'}</StyledTableCell>
                                     </StyledTableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {petSurgeryList.map((record, index) => (
-                                        <StyledTableRow key={index}>
-                                            <StyledTableCell>{record.surgery_date}</StyledTableCell>
-                                            <StyledTableCell>{record.veterinarian}</StyledTableCell>
-                                            <StyledTableCell>{record.surgery}</StyledTableCell>
-                                            <StyledTableCell>{record.discharge_date}</StyledTableCell>
-                                            <StyledTableCell>{record.comments || 'N/A'}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    ):(
-                    <Loading open={loading} />
-                    )}
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                ) : (
+                    <Loading open={loading}/>
+                )}
             </TabPanel>
             <TabPanel value={selectedTab} index={3}>
                 {petImmunList && !loading ? (
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <StyledTableRow>
-                                        <StyledTableCell>Vaccine Date</StyledTableCell>
-                                        <StyledTableCell>Vaccine</StyledTableCell>
-                                        <StyledTableCell>Comments</StyledTableCell>
-                                        <StyledTableCell>Record ID</StyledTableCell>
-                                        <StyledTableCell>Doctor ID</StyledTableCell>
-                                        <StyledTableCell>Veterinarian</StyledTableCell>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <StyledTableRow>
+                                    <StyledTableCell>Vaccine Date</StyledTableCell>
+                                    <StyledTableCell>Vaccine</StyledTableCell>
+                                    <StyledTableCell>Comments</StyledTableCell>
+                                    <StyledTableCell>Record ID</StyledTableCell>
+                                    <StyledTableCell>Doctor ID</StyledTableCell>
+                                    <StyledTableCell>Veterinarian</StyledTableCell>
+                                </StyledTableRow>
+                            </TableHead>
+                            <TableBody>
+                                {petImmunList.map((item, index) => (
+                                    <StyledTableRow key={index}>
+                                        <StyledTableCell>{dayjs(item.vaccine_date).format("DD MMM YYYY")}</StyledTableCell>
+                                        <StyledTableCell>{item.vaccine}</StyledTableCell>
+                                        <StyledTableCell>{item.comments}</StyledTableCell>
+                                        <StyledTableCell>{item.record_id}</StyledTableCell>
+                                        <StyledTableCell>{item.doctor_id}</StyledTableCell>
+                                        <StyledTableCell>{item.veterinarian}</StyledTableCell>
                                     </StyledTableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {petImmunList.map((item, index) => (
-                                        <StyledTableRow key={index}>
-                                            <StyledTableCell>{dayjs(item.vaccine_date).format("DD MMM YYYY")}</StyledTableCell>
-                                            <StyledTableCell>{item.vaccine}</StyledTableCell>
-                                            <StyledTableCell>{item.comments}</StyledTableCell>
-                                            <StyledTableCell>{item.record_id}</StyledTableCell>
-                                            <StyledTableCell>{item.doctor_id}</StyledTableCell>
-                                            <StyledTableCell>{item.veterinarian}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 ) : (
-                    <Loading open={loading} />
+                    <Loading open={loading}/>
                 )}
             </TabPanel>
 

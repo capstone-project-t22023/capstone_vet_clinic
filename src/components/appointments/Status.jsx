@@ -29,6 +29,10 @@ export default function Status({appointment}) {
     const handleStatusConfirmed = () => {
         updateAppointmentStatus(appointment, "confirm")
     }
+    const handleStatusRemoveConfirmed = () => {
+        // TODO figure out the endpoint and update the status
+        // updateAppointmentStatus(appointment, "pending")
+    }
     const isFinished = () => {
         return appointment && appointment.booking_status === 'FINISHED'
     }
@@ -58,7 +62,7 @@ export default function Status({appointment}) {
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
 
                 {user.role === "admin" && !isFinished() &&
-                    <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusConfirmed : null} variant="contained" color="success"
+                    <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusRemoveConfirmed : null} variant="contained" color="success"
                             size="small">{isPending() ? "Confirm" : isConfirmed() ? "Remove Confirm" : ""}</Button>
                 }
                 {user.role === "doctor" && isConfirmed() && appointment.doctor_id === user.id  &&
