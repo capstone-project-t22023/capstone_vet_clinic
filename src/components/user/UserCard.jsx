@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Card, CardContent, Dialog, Stack, Typography} from '@mui/material';
+import {Box, Button, Dialog, Stack, Typography} from '@mui/material';
 import EditUserForm from "./EditUserForm";
 
 export default function UserCard({user}) {

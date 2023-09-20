@@ -114,10 +114,6 @@ export default function BookingType({text = false, icon = false, title = false, 
     //     TODO Save booking type - update booking
     };
 
-    const handleCloseBookingType = () => {
-        setOpenBookingType(false);
-    }
-
     return (
         <Box sx={{my: 2}}>
             {user.role === "admin" && !simple ? (

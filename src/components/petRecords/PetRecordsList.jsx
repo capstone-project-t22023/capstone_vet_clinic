@@ -17,7 +17,6 @@ import {
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import {TabPanel} from "@mui/lab";
 import Loading from "../Loading";
-import PropTypes from "prop-types";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
