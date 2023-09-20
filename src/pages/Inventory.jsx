@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import { Stack, Typography, Box, Paper, Tabs, Tab } from '@mui/material';
+import { Stack, Typography, Box, Paper } from '@mui/material';
 import Aside from '../components/aside/Aside';
 import Footer from '../components/Footer';
 import InventoryPage from '../components/inventory/InventoryPage';
@@ -34,7 +34,7 @@ export default function Inventory() {
 
             })
             .catch(error => {
-                console.error('Error adding pet:', error);
+                console.error('Error getting in inventory:', error);
             });
     }, [refreshInventory])
 
