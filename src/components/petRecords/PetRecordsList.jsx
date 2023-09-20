@@ -52,7 +52,6 @@ export default function PetRecordsList() {
     const [selectedTab, setSelectedTab] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    console.log("list", petRehabList);
     const fetchPetRecordsById = (petId, tab) => {
         let apiUrl = '';
         switch (tab) {

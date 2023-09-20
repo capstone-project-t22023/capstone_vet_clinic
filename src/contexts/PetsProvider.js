@@ -132,12 +132,9 @@ export const PetsProvider = ({children}) => {
                     "booking_time": time
                 }))
             }
-            console.log("to remove confirm reqBody",reqBody)
-            console.log("appointment",appointment)
         }
 
 
-        console.log("Change Appointment Status: ", url);
 
         fetch(url, {
             method: 'POST',
@@ -157,7 +154,7 @@ export const PetsProvider = ({children}) => {
                 if (data && data !== 'error') {
                     // Appointment finished successfully, you can update UI or take any other actions
                     handlerRefreshAppointments(true);
-                    console.log(data)
+                    console.log("Status has been updated")
                 } else {
                     // Handle error case
                     console.error('Error finishing appointment:', data);

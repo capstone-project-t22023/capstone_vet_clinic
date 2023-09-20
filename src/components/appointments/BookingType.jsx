@@ -80,7 +80,6 @@ export default function BookingType({text = false, icon = false, title = false, 
             booking_slots,
         };
         const apiUrl = "http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/" + selectedAppointment.booking_id;
-        console.log(JSON.stringify(requestBody))
 
         fetch(apiUrl, {
             method: "POST",
@@ -106,7 +105,6 @@ export default function BookingType({text = false, icon = false, title = false, 
     };
     const handleChangeBookingType = () => {
         // console.log(allBookingTypes);
-        console.log("TOTO",allBookingTypes.find(bType => bType.booking_type === type).booking_type);
         setSelectedType(type?type:'');
         setEditMode(false);
         updateBookingTypeInAppointment();
