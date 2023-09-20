@@ -3801,6 +3801,70 @@ elseif ($action === 'delete_lodging') {
 }
 
 /**
+ * API endpoint when getting lodging
+ */ 
+elseif ($action === 'get_all_lodging') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            if($cages=$lodging_database->getAllLodging()){
+                return_json(['lodging' => $cages]);
+            } else {
+                return_json(['lodging' => false]);
+            }
+        } else {
+            return_json(['lodging' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
+    }
+}
+
+/**
+ * API endpoint when getting lodging by pet ID
+ */ 
+elseif ($action === 'get_lodging_by_pet') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            if($cages=$lodging_database->getLodgingByPetId($id)){
+                return_json(['lodging' => $cages]);
+            } else {
+                return_json(['lodging' => []]);
+            }
+        } else {
+            return_json(['lodging' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
+    }
+}
+
+/**
+ * API endpoint when getting lodging by pet ID
+ */ 
+elseif ($action === 'discharge') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+        if($role['role'] === 'admin'){
+            $record = [
+                'username' => $req_username,
+                'id' => $id
+            ];
+            if($lodging_database->dischargePet($record)){
+                return_json(['discharge' => true]);
+            } else {
+                return_json(['discharge' => false]);
+            }
+        } else {
+            return_json(['discharge' => "You don't have the privilege to perform this action. Only admins can adjust configurations."]);
+        }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
+    }
+}
+
+/**
  * Sales Management
  */
 /**

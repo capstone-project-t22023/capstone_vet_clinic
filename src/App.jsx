@@ -28,6 +28,7 @@ import TrialForm from './components/forms/TrialForm';
 import ConfirmSignup from './components/authorization/ConfirmSignup';
 import PetRecords from "./pages/PetRecords";
 import Inventory from './pages/Inventory';
+import Lodging from './pages/Lodging';
 
 /**
  *
@@ -159,6 +160,15 @@ function App() {
                                 <Route path="/inventory" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <Inventory />
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/lodging" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <Lodging />
+                                        </PetsProvider>
                                     </Protected>
                                 }
                                 />

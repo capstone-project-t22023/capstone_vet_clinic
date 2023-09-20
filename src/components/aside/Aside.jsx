@@ -13,7 +13,8 @@ import {
     SettingsRounded,
     CalendarMonthRounded,
     LocationCityRounded,
-    WarehouseRounded
+    WarehouseRounded,
+    LocalHotelRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -97,13 +98,23 @@ export default function Aside() {
                     </ListItemButton>
                 </Tooltip>
                 {user.role === 'admin' ? 
-                <Tooltip title="Go to Inventory" TransitionComponent={Zoom} placement="right" arrow>
-                    <ListItemButton 
-                        selected={isActive('/inventory')} 
-                        onClick={() => handleClick('/inventory')}>
-                        <WarehouseRounded/>
-                    </ListItemButton>
-                </Tooltip> : "" }
+                <>
+                    <Tooltip title="Go to Inventory" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton 
+                            selected={isActive('/inventory')} 
+                            onClick={() => handleClick('/inventory')}>
+                            <WarehouseRounded/>
+                        </ListItemButton>
+                    </Tooltip> 
+                    <Tooltip title="Go to Lodging" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton 
+                            selected={isActive('/loding')} 
+                            onClick={() => handleClick('/lodging')}>
+                            <LocalHotelRounded/>
+                        </ListItemButton>
+                    </Tooltip> 
+                </>
+                : "" }
 
                 <Tooltip title="Update Profile" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton selected={isActive('/profile')} onClick={() => handleClick('/profile')}>

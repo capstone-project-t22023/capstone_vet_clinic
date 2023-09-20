@@ -59,3 +59,78 @@ response_body:
     {
         "delete_lodging": true
     }
+
+endpoint: /get_all_lodging
+method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+	"lodging": [
+		{
+			"cage_id": 1,
+            "cage_status" : "AVAILABLE"
+			"pet_id": null,
+			"petname": null,
+			"pet_owner_id": null,
+			"pet_owner_name": null,
+			"phone": null,
+			"doctor_id": null,
+			"doctor_name": null,
+			"confinement_date": null,
+			"discharge_date": null,
+			"comments": null,
+			"updated_date": "2023-09-20",
+			"admin_id": 501,
+			"admin_name": "Pawsome Admin"
+		}
+    ]
+    }
+
+endpoint: /get_lodging_by_pet/<pet_id>
+method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "lodging": [
+            {
+                "cage_id": 1,
+                "cage_status" : "OCCUPIED"
+                "pet_id": 1,
+                "petname": "Paws",
+                "pet_owner_id": 1001,
+                "pet_owner_name": "Gilbert Lynch",
+                "phone": 515335785,
+                "doctor_id": 1,
+                "doctor_name": "Joe Mcguire",
+                "confinement_date": null,
+                "discharge_date": null,
+                "comments": "fractured",
+                "updated_date": "2023-09-20",
+                "admin_id": 501,
+                "admin_name": "Pawsome Admin"
+            }
+        ]
+    }
+
+endpoint: /discharge/<lodging_id>
+method: POST
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+    {
+        "discharge": true
+    }
