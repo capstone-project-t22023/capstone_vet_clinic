@@ -20,7 +20,6 @@
       <link href="assets/css/style.css" rel="stylesheet">
    </head>
    <body style="background-image: url('assets/img/background.png');">
-   
       <!--HEADER -->
       <header id="header" class="header fixed-top">
          <div class="container-fluid container-xl d-flex align-items-start justify-content-between">
@@ -36,18 +35,19 @@
                   <li class="dropdown active">
                      <a href=""><span>PET ARTICLES</span> <i class="bi bi-chevron-down"></i></a>
                      <ul>
-                        <li class="dropdown"><a href="#"><span>Pet Forms</span><i class="bi bi-chevron-right"></i></a>
-                          <ul>
-                           <li><a href="https://forms.gle/QAn3qKECoKKWUHD68">New Client Form</a></li>
-                           <li><a href="https://forms.gle/W6rFrG1ouqS7kPMJA">Foster Drop-OFF Form</a></li>
-                          </ul>
+                        <li class="dropdown">
+                           <a href="#"><span>Pet Forms</span><i class="bi bi-chevron-right"></i></a>
+                           <ul>
+                              <li><a href="https://forms.gle/QAn3qKECoKKWUHD68">New Client Form</a></li>
+                              <li><a href="https://forms.gle/W6rFrG1ouqS7kPMJA">Foster Drop-OFF Form</a></li>
+                           </ul>
                         </li>
                         <li><a href="puppyandkittencheck.html">Puppy &amp; Kitten Check</a></li>
                         <li><a href="poisonguide.html">Poison Guide</a></li>
                         <li><a href="groomingservices.html">Grooming Services</a></li>
                         <li><a href="fees.html">Fees &amp; Insurance</a></li>
                         <li><a href="symptomchecker.php">Symptom Checker</a></li>
-                        <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" width="170px" height="40px" id=logo alt="Vet Chatbot Logo Image"></a></li>
+                        <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                      </ul>
                   <li><a class="nav-link scrollto" href="#faq">F.A.Q.</a></li>
                   <li><a class="nav-link scrollto" href="#team">TEAM</a></li>
@@ -72,8 +72,8 @@
                   <div data-aos="fade-up" data-aos-delay="600">
                      <div class="text-center text-lg-start">
                         <a href="http://localhost:3000/login" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
-                           <span>Book an appointment</span>
-                           <i class="fa-solid fa-arrow-right fa-beat fa-lg" style="color: #ffffff;"></i>
+                        <span>Book an appointment</span>
+                        <i class="fa-solid fa-arrow-right fa-beat fa-lg" style="color: #ffffff;"></i>
                         </a>
                      </div>
                   </div>
@@ -473,96 +473,78 @@
             </div>
          </section>
          <!-- End Recent Blog Posts Section -->
-       <!-- CONTACT US SECTION -->
-       <section id="contact" class="contact">
-
-         <div class="container" data-aos="fade-up">
-   
-           <header class="section-header">
-             <h2>Contact</h2>
-             <p>Contact Us</p>
-           </header>
-   
-           <div class="row gy-5">
-   
-             <div class="col-lg-6">
-   
-               <div class="row gy-4">
-                 <div class="col-md-6">
-                   <div class="info-box rounded-3">
-                     <i class="fa-solid fa-map-location-dot fa-beat fa-2xl" style="color: #c26676;"></i>
-                     <h3>Address</h3>
-                     <p>1 New Street<br>Sydney 2000 NSW</p>
-                   </div>
-                 </div>
-                 <div class="col-md-6">
-                   <div class="info-box rounded-3">
-                     <i class="fa-solid fa-phone-volume fa-beat fa-2xl" style="color: #c26676;"></i>
-                     <h3>Call Us</h3>
-                     <p><a href="tel:0295194111">+(02)95194111<br></a><a href="tel:0295194112">+(02)95194112</a></p>
-                   </div>
-                 </div>
-                 <div class="col-md-6">
-                   <div class="info-box rounded-3">
-                     <i class="fa-solid fa-envelope-open-text fa-beat fa-2xl" style="color: #c26676;"></i>
-                     <h3>Email Us</h3>
-                     <p><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a></p>
-                   </div>
-                 </div>
-                 <div class="col-md-6">
-                   <div class="info-box rounded-3">
-                     <i class="fa-solid fa-clock fa-beat fa-2xl" style="color: #c26676;"></i>
-                     <h3>Open Hours</h3>
-                     <p><b>Monday - Friday</b><br>6:00AM - 09:00PM</p>
-                   </div>
-                 </div>
-               </div>
-   
-             </div>
-   
-             <div class="col-lg-6">
-               <form action="forms/contact.php" method="post" class="php-email-form rounded-3">
-                 <div class="row gy-4">
-   
-                   <div class="col-md-12">
-                     <input type="text" name="name" class="form-control rounded-3" placeholder="Your Name" required>
-                   </div>
-   
-                   <div class="col-md-12">
-                     <input type="email" class="form-control rounded-3" name="email" placeholder="Your Email" required>
-                   </div>
-   
-                   <div class="col-md-12">
-                     <input type="text" class="form-control rounded-3" name="subject" placeholder="Subject" required>
-                   </div>
-   
-                   <div class="col-md-12">
-                     <textarea class="form-control rounded-3" name="message" rows="6" placeholder="Message" required></textarea>
-                   </div>
-                   
-                   <div class="form-group d-none">
-                     <input type="text" class="form-control" name="first_name">
-                     <div class="validate"></div>
+         <!-- CONTACT US SECTION -->
+         <section id="contact" class="contact">
+            <div class="container" data-aos="fade-up">
+               <header class="section-header">
+                  <h2>Contact</h2>
+                  <p>Contact Us</p>
+               </header>
+               <div class="row gy-5">
+                  <div class="col-lg-6">
+                     <div class="row gy-4">
+                        <div class="col-md-6">
+                           <div class="info-box rounded-3">
+                              <i class="fa-solid fa-map-location-dot fa-beat fa-2xl" style="color: #c26676;"></i>
+                              <h3>Address</h3>
+                              <p>1 New Street<br>Sydney 2000 NSW</p>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="info-box rounded-3">
+                              <i class="fa-solid fa-phone-volume fa-beat fa-2xl" style="color: #c26676;"></i>
+                              <h3>Call Us</h3>
+                              <p><a href="tel:0295194111">+(02)95194111<br></a><a href="tel:0295194112">+(02)95194112</a></p>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="info-box rounded-3">
+                              <i class="fa-solid fa-envelope-open-text fa-beat fa-2xl" style="color: #c26676;"></i>
+                              <h3>Email Us</h3>
+                              <p><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a></p>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="info-box rounded-3">
+                              <i class="fa-solid fa-clock fa-beat fa-2xl" style="color: #c26676;"></i>
+                              <h3>Open Hours</h3>
+                              <p><b>Monday - Friday</b><br>6:00AM - 09:00PM</p>
+                           </div>
+                        </div>
                      </div>
-   
-                   <div class="col-md-12 text-center">
-                     <div class="loading">Loading</div>
-                     <div class="error-message"></div>
-                     <div class="sent-message">Your message has been sent. Thank you!</div>
-   
-                     <button type="submit">Send Message</button>
-                   </div>
-   
-                 </div>
-               </form>
-   
-             </div>
-   
-           </div>
-   
-         </div>
-   
-       </section><!-- End Contact Section -->
+                  </div>
+                  <div class="col-lg-6">
+                     <form action="forms/contact.php" method="post" class="php-email-form rounded-3">
+                        <div class="row gy-4">
+                           <div class="col-md-12">
+                              <input type="text" name="name" class="form-control rounded-3" placeholder="Your Name" required>
+                           </div>
+                           <div class="col-md-12">
+                              <input type="email" class="form-control rounded-3" name="email" placeholder="Your Email" required>
+                           </div>
+                           <div class="col-md-12">
+                              <input type="text" class="form-control rounded-3" name="subject" placeholder="Subject" required>
+                           </div>
+                           <div class="col-md-12">
+                              <textarea class="form-control rounded-3" name="message" rows="6" placeholder="Message" required></textarea>
+                           </div>
+                           <div class="form-group d-none">
+                              <input type="text" class="form-control" name="first_name">
+                              <div class="validate"></div>
+                           </div>
+                           <div class="col-md-12 text-center">
+                              <div class="loading">Loading</div>
+                              <div class="error-message"></div>
+                              <div class="sent-message">Your message has been sent. Thank you!</div>
+                              <button type="submit">Send Message</button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- End Contact Section -->
       </main>
       <!-- End #main -->
       <!--NEWSLETTER-->
@@ -575,8 +557,8 @@
             <div class="card">
                <div class="mx-5">
                   <div class="input-group mb-5 mt-4 ">
-                  <input type="email" class="form-control rounded-3" id="email_addr" placeholder="Your Email" required>
-                  <input type="submit" onclick="subscribe()" value="Subscribe" class="btn btn-primary border-rad rounded-3 align-items-end">
+                     <input type="email" class="form-control rounded-3" id="email_addr" placeholder="Your Email" required>
+                     <input type="submit" onclick="subscribe()" value="Subscribe" class="btn btn-primary border-rad rounded-3 align-items-end">
                   </div>
                </div>
             </div>
@@ -627,6 +609,7 @@
                         <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
                         <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
                         <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="symptomchecker.php"><b> Symptom Checker</b></a></li>
+                        <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                      </ul>
                   </div>
                   <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
@@ -684,6 +667,5 @@
          	});
          }
       </script>
- 
    </body>
 </html>

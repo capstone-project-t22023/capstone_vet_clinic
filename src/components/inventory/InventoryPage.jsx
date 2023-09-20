@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Typography, Box, Tabs, Tab, Button, TextField, Chip,
-    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    Typography, Box, Tabs, Tab, TextField, Chip, Stack, Alert, IconButton,
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+} from '@mui/material';
 import InventoryTable from './InventoryTable';
-import { AddCircleRounded } from '@mui/icons-material';
+import { AddCircleRounded, EditRounded, DeleteForeverRounded, Close  } from '@mui/icons-material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -19,7 +21,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'span'}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -39,11 +41,16 @@ function a11yProps(index) {
     };
 }
 
-export default function Inventory(props) {
+export default function InventoryPage(props) {
 
-    const [value, setValue] = React.useState(0);
-    const [openCategory, setOpenCategory] = React.useState(false);
-    const [category, setCategory] = React.useState('');
+    const [value, setValue] = useState(0);
+    const [openCategory, setOpenCategory] = useState(false);
+    const [category, setCategory] = useState('');
+    const [categoryRecord, setCategoryRecord] = useState({});
+    const [alertDelete, setAlertDelete] = useState(false);
+    const [alertUpdate, setAlertUpdate] = useState(false);
+    const [alertAdd, setAlertAdd] = useState(false);
+    const [mode, setMode] = useState("");
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -51,6 +58,16 @@ export default function Inventory(props) {
 
     const handleOpenAddCategory = () => {
         setOpenCategory(true);
+        setMode("add");
+    };
+
+    const handleOpenEditCategory = (category_id) => (event) =>  {
+        event.preventDefault();
+        let cat = props.inventoryItems.filter( x => x.category_id === category_id)[0];
+        setCategory(cat.category);
+        setCategoryRecord(cat);
+        setOpenCategory(true);
+        setMode("edit");
     };
 
     const handleCloseAddCategory = () => {
@@ -70,25 +87,137 @@ export default function Inventory(props) {
             body: JSON.stringify({
                 "item_category": category
             })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if(data.add_inventory_category){
-                props.setRefreshInventory(true);
-                setOpenCategory(false);
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });  
-        
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.add_inventory_category) {
+                    props.setRefreshInventory(true);
+                    setOpenCategory(false);
+                    setAlertAdd(true);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+    };
+
+    const handleUpdateCategory = (event) => {
+        event.preventDefault();
+        fetch("http://localhost/capstone_vet_clinic/api.php/update_inventory_category/"+categoryRecord.category_id, {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                },
+                body: JSON.stringify({
+                    "item_category": category
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.update_inventory_category) {
+                        props.setRefreshInventory(true);
+                        setOpenCategory(false);
+                        setAlertUpdate(true);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    };
+
+    const handleDeleteCategory = (category_id) => (event) => {
+        event.preventDefault();
+        fetch("http://localhost/capstone_vet_clinic/api.php/delete_inventory_category/"+category_id, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                }
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                if(data.delete_inventory_category){
+                    props.setRefreshInventory(true);
+                    setValue(0);
+                    setAlertDelete(true);
+                }
+
+            })
+            .catch(error => {
+                console.error('Error deleting item:', error);
+            });
     };
 
     return (
         <div>
-
+        { alertDelete ? 
+                <Alert 
+                    variant="filled" 
+                    severity="success"
+                    action={
+                        <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                            setAlertDelete(false);
+                        }}
+                        >
+                        <Close fontSize="inherit" />
+                        </IconButton>
+                    }
+                    >
+                    Category has has been deleted successfully!
+                </Alert>
+            : ""}
+            { alertUpdate ? 
+                    <Alert 
+                        variant="filled" 
+                        severity="success"
+                        action={
+                            <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setAlertUpdate(false);
+                            }}
+                            >
+                            <Close fontSize="inherit" />
+                            </IconButton>
+                        }
+                        >
+                        Category has has been updated successfully!
+                    </Alert>
+                : ""}
+                { alertAdd ? 
+                    <Alert 
+                        variant="filled" 
+                        severity="success"
+                        action={
+                            <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setAlertAdd(false);
+                            }}
+                            >
+                            <Close fontSize="inherit" />
+                            </IconButton>
+                        }
+                        >
+                        Category has has been added successfully!
+                    </Alert>
+                : ""}
             <Box
-                sx={{ borderBottom: 1, borderColor: 'divider', height: 1000 }}
+                sx={{ borderBottom: 1, borderColor: 'divider', height: 1100 }}
             >
                 <Tabs
                     variant="scrollable"
@@ -98,22 +227,45 @@ export default function Inventory(props) {
                 >
                     {
                         props.inventoryItems.map((categories, idx) => {
-                            return <Tab key={"category_" + idx} label={categories.category} {...a11yProps(idx)} />
+                            return <Tab key={"tab_category_" + idx} label={categories.category} {...a11yProps(idx)} />
                         })
                     }
-                    <Chip
-                        label="Add Category"
-                        color="primary"
-                        icon={<AddCircleRounded sx={{ fontSize: '25px' }} />}
-                        onClick={handleOpenAddCategory}
-                    />
+
                 </Tabs>
                 {
                     props.inventoryItems.map((items, idx) => {
                         return (
-                            <TabPanel key={"inv_panel_" + idx} value={value} index={idx}>
-                                <InventoryTable inventoryItems={items.inventory_items} />
+                            <div key={"div_inv_panel_" + idx}>
+                            <TabPanel  value={value} index={idx}>
+                                <Stack  direction="row" spacing={2}>
+                                    <Chip
+                                        label="Add Category"
+                                        color="primary"
+                                        icon={<AddCircleRounded sx={{ fontSize: '25px' }} />}
+                                        onClick={handleOpenAddCategory}
+                                    />
+                                    <Chip
+                                        label="Update Category"
+                                        color="warning"
+                                        icon={<EditRounded sx={{ fontSize: '25px' }} />}
+                                        onClick={handleOpenEditCategory(items.category_id)}
+                                    />
+                                    <Chip
+                                        label="Delete Category"
+                                        color="error"
+                                        icon={<DeleteForeverRounded sx={{ fontSize: '25px' }} />}
+                                        onClick={handleDeleteCategory(items.category_id)}
+                                    />
+                                </Stack>
+                                <br />
+                                <InventoryTable
+                                    inventoryItems={items.inventory_items}
+                                    catName={items.category}
+                                    catId={items.category_id}
+                                    setRefreshInventory={props.setRefreshInventory}
+                                />
                             </TabPanel>
+                            </div>
                         )
                     })
                 }
@@ -125,31 +277,47 @@ export default function Inventory(props) {
                 aria-describedby="add-category-dialog-description"
             >
                 <DialogTitle id="add-category-dialog-title">
-                    Add Inventory Category
+                    { mode === 'add' ? "Add Inventory Category" : "Update Inventory Category"}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="add-category-dialog-description">
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="add_category"
-                            fullWidth
-                            variant="standard"
-                            onChange={handleChangeCategory}
-                        />
+                    <DialogContentText component={'span'}  id="add-category-dialog-description">
+                        { mode === 'add' ? 
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="add_category"
+                                variant="standard"
+                                onChange={handleChangeCategory}
+                            /> :
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="add_category"
+                                variant="standard"
+                                value={category}
+                                onChange={handleChangeCategory}
+                            />
+                        }
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                <Chip
+                    <Chip
                         label="CANCEL"
                         color="secondary"
                         onClick={handleCloseAddCategory}
-                />
-                <Chip
-                        label="ADD CATEGORY"
-                        color="primary"
-                        onClick={handleAddCategory}
-                />
+                    />
+                    { mode === 'add' ?
+                        <Chip
+                            label="ADD CATEGORY"
+                            color="primary"
+                            onClick={handleAddCategory}
+                        /> :
+                        <Chip
+                            label="UPDATE CATEGORY"
+                            color="primary"
+                            onClick={handleUpdateCategory}
+                        />
+                    }
                 </DialogActions>
             </Dialog>
 
