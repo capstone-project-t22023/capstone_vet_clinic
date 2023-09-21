@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container, Stack} from '@mui/material';
 import LoginForm from '../components/authorization/LoginForm'
+import { Helmet } from 'react-helmet-async';
 
 export default function Login() {
 
@@ -10,6 +11,9 @@ export default function Login() {
     return (
         <div>
             {/*<Header/>*/}
+            <Helmet>
+                <title>PawsomeVet | Login</title>
+            </Helmet>
             <Container maxWidth="md" sx={{mt: 5, mb: 5, pt:3, pb:10, border: "5px solid #f5effb", borderColor: "grey.100"}}>
                     <LoginForm/>
             <Stack direction="column" spacing={2} sx={{my: 3, mx: "auto"}}>
