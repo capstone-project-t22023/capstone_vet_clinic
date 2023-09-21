@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {ProgramContext} from "./ProgramContext";
+import dayjs from "dayjs";
 
 
 export const PetsContext = createContext();
@@ -116,16 +117,31 @@ export const PetsProvider = ({children}) => {
 
 
     const updateAppointmentStatus = (appointment, toStatus) => {
+        let url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
+        let reqBody ='';
 
-        const url = `http://localhost/capstone_vet_clinic/api.php/${toStatus}_booking/${appointment.booking_id}`;
+        if (toStatus === "removeConfirm") {
+            url = `http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/${appointment.booking_id}`
+            reqBody ={
+                "booking_type": appointment.booking_type,
+                "pet_owner_id": appointment.pet_owner_id,
+                "pet_id": appointment.pet_id,
+                "doctor_id": appointment.doctor_id,
+                "booking_slots": appointment.booking_time.map((time) => ({
+                    "booking_date": dayjs(appointment.booking_date).format("DD-MM-YYYY"),
+                    "booking_time": time
+                }))
+            }
+        }
 
-        console.log("Change Appointment Status: ", url);
+
 
         fetch(url, {
             method: 'POST',
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
+            body: JSON.stringify(toStatus === "removeConfirm" ? reqBody : null), // Use reqBody conditionally
         })
             .then((response) => {
                 if (response.ok) {
@@ -138,10 +154,10 @@ export const PetsProvider = ({children}) => {
                 if (data && data !== 'error') {
                     // Appointment finished successfully, you can update UI or take any other actions
                     handlerRefreshAppointments(true);
-                    console.log(data)
+                    console.log("Status has been updated")
                 } else {
                     // Handle error case
-                    console.error('Error finishing appointment:', data.error_message);
+                    console.error('Error finishing appointment:', data);
                 }
             })
             .catch(error => {

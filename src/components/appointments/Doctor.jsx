@@ -53,7 +53,6 @@ export default function Doctor({id = -1, simple = false}) {
             booking_slots,
         };
         const apiUrl = "http://localhost/capstone_vet_clinic/api.php/update_booking_by_admin/" + selectedAppointment.booking_id;
-        console.log(JSON.stringify(requestBody))
 
         fetch(apiUrl, {
             method: "POST",
@@ -82,7 +81,6 @@ export default function Doctor({id = -1, simple = false}) {
 
     const handleChange = (event) => {
         setSelectedDoctor(event.target.value);
-        console.log("DR", event.target.value)
     };
 
     const handleCloseDoctorDetails = () => {
