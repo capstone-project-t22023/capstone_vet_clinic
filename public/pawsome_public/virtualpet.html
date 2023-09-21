@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Pet Game</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Virtual Pet</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h2 class="card-title">Your Virtual Dog</h2>
+                        <img id="dog-image" src="assets/img/virtualpet/doganimated.gif" alt="Dog animated">
+                        <p>Hunger: <span id="hunger">50</span></p>
+                        <p>Training: <span id="training">50</span></p>
+                        <p>Energy: <span id="energy">50</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="feed()">Feed</button>
+                    <button class="btn btn-success" onclick="train()">Train</button>
+                    <button class="btn btn-info" onclick="walk()">Walk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let hunger = 50;
+        let training = 50;
+        let energy = 50;
+
+        function updateStats() {
+            document.getElementById("hunger").textContent = hunger;
+            document.getElementById("training").textContent = training;
+            document.getElementById("energy").textContent = energy;
+        }
+
+        function feed() {
+            if (hunger < 100) {
+                hunger += 10;
+                energy -= 5;
+                updateStats();
+            }
+        }
+
+        function train() {
+            if (training < 100) {
+                training += 10;
+                hunger -= 5;
+                energy -= 5;
+                updateStats();
+            }
+        }
+
+        function walk() {
+            if (energy > 0) {
+                energy -= 10;
+                training += 5;
+                hunger += 5;
+                updateStats();
+            }
+        }
+
+        // Update the pet's stats every few seconds (simulating time passing)
+        setInterval(() => {
+            if (hunger > 0) hunger--;
+            if (training > 0) training--;
+            if (energy < 100) energy++;
+            updateStats();
+        }, 3000); // Update every 3 seconds
+    </script>
+
+    <!-- Bootstrap JS and Popper.js CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
