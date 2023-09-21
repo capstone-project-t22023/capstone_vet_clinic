@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Section</title>
+    <!-- Add Bootstrap 5 CSS link here -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Comment Section</h1>
+    
+    <!-- Comment Form -->
+    <form id="commentForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="comment" class="form-label">Comment:</label>
+            <textarea class="form-control" id="comment" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+    </form>
+
+    <!-- Comment List -->
+    <div id="commentList" class="mt-4">
+        <!-- Comments will be displayed here -->
+    </div>
+</div>
+
+<!-- Add Bootstrap 5 and jQuery (required for Bootstrap JavaScript) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+    // Handle comment submission
+    $("#commentForm").submit(function (event) {
+        event.preventDefault();
+
+        // Get user input
+        var name = $("#name").val();
+        var comment = $("#comment").val();
+
+        // Create a new comment element
+        var newComment = `<div class="alert alert-primary" role="alert">
+            <strong>${name}:</strong> ${comment}
+        </div>`;
+
+        // Append the new comment to the comment list
+        $("#commentList").append(newComment);
+
+        // Clear the form fields
+        $("#name").val("");
+        $("#comment").val("");
+    });
+</script>
+
+</body>
+</html>

@@ -1187,9 +1187,10 @@ section {
 /*--------------------------------------------------------------
 # BLOG
 --------------------------------------------------------------*/
+
 .recent-blog-posts .post-box {
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.08);
-  background: #fff;
+  background-color: #fff;
   transition: 0.3s;
   height: 100%;
   overflow: hidden;
@@ -1214,6 +1215,7 @@ section {
 .recent-blog-posts .post-box .post-date {
   font-size: 16px;
   font-weight: bold;
+  background-color: #fff;
   color: #D7A8DC;
   display: block;
   margin-bottom: 10px;
@@ -1221,6 +1223,7 @@ section {
 
 .recent-blog-posts .post-box .post-title {
   font-size: 24px;
+  background-color: #fff;
   color: #f2782f;
   font-weight: bold;
   margin-bottom: 18px;
@@ -1233,6 +1236,7 @@ section {
   align-items: center;
   font-weight: 600;
   line-height: 1;
+  background-color: #fff;
   color: #389DA3;
   transition: 0.3s;
 }
@@ -1249,6 +1253,68 @@ section {
 
 .recent-blog-posts .post-box:hover .post-img img {
   transform: rotate(6deg) scale(1.2);
+}
+
+.sidebar {
+  background-color: #fff;
+}
+
+input[type=text]:invalid {
+  border: rgb(164, 79, 109) solid 1px;
+}
+
+.entry-content{
+  background-color: #fff; 
+}
+.blog-author {
+  background-color: #fff; 
+}
+
+.comments {
+  position:relative;
+  width: 66%;
+  display:flex;
+  flex-direction: column;
+  margin-left: 20px;
+  box-shadow: 10px;
+}
+
+#comment{
+  position:relative;
+  width: 66%;
+  padding: 13px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 10px;
+}
+#addComments {
+  position:relative;
+  width: 66%;
+  padding: 13px;
+  margin: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color:  rgb(164, 79, 109);
+  color:#fff;
+  box-shadow: 10px;
+}
+#allComments {
+  position:relative;
+  width: 66%;
+  margin:5px;
+  padding: 7px;
+  background-color: #fff;
+  color:#000;   
+}
+
+.wrapper > button {
+  margin-right: 5px;
+  background-color: lightseagreen;
+  padding: 7px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  gap: 3px;
 }
 
 /*--------------------------------------------------------------
@@ -1958,7 +2024,7 @@ section {
   margin:10px;
   padding: 20px;
   border-radius: 10px;
-  gap: 20px;px;
+  gap: 20px;
   box-shadow: 10px;
   
 }
