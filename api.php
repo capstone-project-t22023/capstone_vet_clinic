@@ -681,7 +681,7 @@ elseif ($action === 'delete_doctor') {
         ];
 
         if($role['role'] === 'admin'){
-            if($affected_bookings=$database->getBookingsByDoctorId($id)){
+            if($affected_bookings=$booking_database->getBookingsByDoctorId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'PENDING';
@@ -765,7 +765,7 @@ elseif ($action === 'delete_pet_owner') {
 
         if($role['role'] === 'admin'){
 
-            if($affected_bookings=$database->getBookingsByPetOwnerId($id)){
+            if($affected_bookings=$booking_database->getBookingsByPetOwnerId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'ARCHIVED';
