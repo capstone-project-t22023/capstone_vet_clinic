@@ -13,8 +13,6 @@ import theme from "./theme";
 
 //Pages import
 import DefaultPage from './pages/DefaultPage';
-import Home from './pages/Home';
-import Bookings from './pages/Bookings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard";
@@ -29,6 +27,7 @@ import ConfirmSignup from './components/authorization/ConfirmSignup';
 import PetRecords from "./pages/PetRecords";
 import Inventory from './pages/Inventory';
 import Lodging from './pages/Lodging';
+import UserManagement from "./pages/UserManagement";
 
 /**
  *
@@ -119,11 +118,6 @@ function App() {
                                 />
                                 <Route index element={
                                     <Protected isLoggedIn={authenticated}>
-                                        <Home/>
-                                    </Protected>
-                                }/>
-                                <Route path="/dashboard" element={
-                                    <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <Dashboard/>
                                         </PetsProvider>
@@ -139,11 +133,6 @@ function App() {
                                 }
                                 />
                                 {/*USER PET OWNER LINKS*/}
-                                <Route path="/bookings" element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <Bookings/>
-                                    </Protected>
-                                }/>
                                 <Route path="/profile" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <Profile/>
@@ -169,6 +158,15 @@ function App() {
                                         <PetsProvider>
                                             <Lodging />
                                         </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/user-management" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <UserManagement>
+                                            <Lodging />
+                                        </UserManagement>
                                     </Protected>
                                 }
                                 />

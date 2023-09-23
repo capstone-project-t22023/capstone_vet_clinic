@@ -14,7 +14,7 @@ import {
     CalendarMonthRounded,
     LocationCityRounded,
     WarehouseRounded,
-    LocalHotelRounded
+    LocalHotelRounded, PeopleRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -85,34 +85,38 @@ export default function Aside() {
                 },
             }}>
                 <Tooltip title="Dashboard" TransitionComponent={Zoom} placement="right" arrow>
-                    <ListItemButton selected={isActive('/dashboard')} onClick={() => handleClick('/dashboard')}>
+                    <ListItemButton selected={isActive('/')} onClick={() => handleClick('/')}>
                         <DashboardRounded/>
                     </ListItemButton>
                 </Tooltip>
-                <ListItemButton disabled>
-                    <CalendarMonthRounded/>
-                </ListItemButton>
                 <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
                         <LocationCityRounded/>
                     </ListItemButton>
                 </Tooltip>
-                {user.role === 'admin' ? 
+                {user.role === 'admin' ?
                 <>
                     <Tooltip title="Go to Inventory" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/inventory')} 
+                        <ListItemButton
+                            selected={isActive('/inventory')}
                             onClick={() => handleClick('/inventory')}>
                             <WarehouseRounded/>
                         </ListItemButton>
-                    </Tooltip> 
+                    </Tooltip>
                     <Tooltip title="Go to Lodging" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/loding')} 
+                        <ListItemButton
+                            selected={isActive('/loding')}
                             onClick={() => handleClick('/lodging')}>
                             <LocalHotelRounded/>
                         </ListItemButton>
-                    </Tooltip> 
+                    </Tooltip>
+                    <Tooltip title='User Management' TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton
+                        selected={isActive('/user-management')}
+                        onClick={() => handleClick('/user-management')}>
+                        <PeopleRounded/>
+                    </ListItemButton>
+                    </Tooltip>
                 </>
                 : "" }
 

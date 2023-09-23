@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Button, Dialog, DialogTitle, Stack} from "@mui/material";
-import ProgramContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
-import BookingOptionsUpdate from "./BookingOptionsUpdate";
+import BookingOptions from "./BookingOptions";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 import dayjs from "dayjs";
 import { EventRepeatRounded} from "@mui/icons-material";
@@ -56,7 +55,7 @@ export default function BookingButton() {
                     {!isSelectedAppointmentEmpty ? "Already selected:" : "Choose the Date of appointment"}
                 </DialogTitle>
                 {!isSelectedAppointmentEmpty ? <p className={"text-center text-primary"}>{dayjs(selectedAppointment.booking_date).format("DD MMM YYYY") } <AlarmOnIcon fontSize="small" color="secondary" /> { selectedAppointment.booking_time +"" }</p> : null}
-                <BookingOptionsUpdate onCancel={handleCancel} onSave={handleClose} selectedBooking={selectedAppointment} editMode={editMode} />
+                <BookingOptions onCancel={handleCancel} onSave={handleClose} selectedBooking={selectedAppointment} editMode={editMode} />
             </Dialog>
         </>
     );
