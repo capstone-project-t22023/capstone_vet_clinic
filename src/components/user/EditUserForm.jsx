@@ -45,7 +45,7 @@ function EditUserForm({ user, onUpdateUser, userRole= "" }) {
     console.log(user)
 
     const updateUserDB = (user) => {
-            const url = `http://localhost/capstone_vet_clinic/api.php/update_user/${user.id}}`;
+            const url = `http://localhost/capstone_vet_clinic/api.php/update_user/${user.id}`;
             const req_body = {
                 "role": userRole ? userRole : loggedUser.role,
                 "firstname":user.firstname,
