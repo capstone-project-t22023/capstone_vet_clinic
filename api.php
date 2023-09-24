@@ -681,7 +681,7 @@ elseif ($action === 'delete_doctor') {
         ];
 
         if($role['role'] === 'admin'){
-            if($affected_bookings=$database->getBookingsByDoctorId($id)){
+            if($affected_bookings=$booking_database->getBookingsByDoctorId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'PENDING';
@@ -765,7 +765,7 @@ elseif ($action === 'delete_pet_owner') {
 
         if($role['role'] === 'admin'){
 
-            if($affected_bookings=$database->getBookingsByPetOwnerId($id)){
+            if($affected_bookings=$booking_database->getBookingsByPetOwnerId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'ARCHIVED';
@@ -955,14 +955,14 @@ elseif ($action === 'update_user') {
         }
 
         if(validateUsername($_POST['username'])
-            && validateLength($_POST['username'], 20)){
+            && validateLength($_POST['username'], 50)){
             $check = true;
         } else {
             return_json(['update_user' =>  "Error: Username must be up to 20 characters only."]);  
         }
 
         if(validatePassword($_POST['password'])
-            && validateLength($_POST['password'], 20)){
+            && validateLength($_POST['password'], 50)){
             $check = true;
         } else {
             return_json(['update_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
