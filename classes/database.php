@@ -584,9 +584,23 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT d.*, "doctor" role 
-            FROM `pawsome`.`doctors` d 
-            WHERE username=?'
+            'SELECT `doctors`.`id`,
+                `doctors`.`firstname`,
+                `doctors`.`lastname`,
+                `doctors`.`username`,
+                null as password,
+                `doctors`.`address`,
+                `doctors`.`state`,
+                `doctors`.`email`,
+                `doctors`.`phone`,
+                `doctors`.`postcode`,
+                `doctors`.`archived`,
+                `doctors`.`created_date`,
+                `doctors`.`updated_date`,
+                `doctors`.`updated_by`,
+                "doctor" role 
+            FROM `pawsome`.`doctors` 
+            WHERE `doctors`.`username`=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -615,9 +629,23 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT a.*, "admin" role
-            FROM `pawsome`.`admins` a
-            WHERE username=?'
+            'SELECT `admins`.`id`,
+                `admins`.`firstname`,
+                `admins`.`lastname`,
+                `admins`.`username`,
+                null as password,
+                `admins`.`address`,
+                `admins`.`state`,
+                `admins`.`email`,
+                `admins`.`phone`,
+                `admins`.`postcode`,
+                `admins`.`archived`,
+                `admins`.`created_date`,
+                `admins`.`updated_date`,
+                `admins`.`updated_by`,
+                "admin" role
+            FROM `pawsome`.`admins`
+            WHERE `admins`.`username`=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -646,9 +674,23 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT po.*, "pet_owner" role 
-            FROM `pawsome`.`pet_owners` po 
-            WHERE username=?'
+            'SELECT `pet_owners`.`id`,
+                `pet_owners`.`firstname`,
+                `pet_owners`.`lastname`,
+                `pet_owners`.`username`,
+                null as password,
+                `pet_owners`.`address`,
+                `pet_owners`.`state`,
+                `pet_owners`.`email`,
+                `pet_owners`.`phone`,
+                `pet_owners`.`postcode`,
+                `pet_owners`.`archived`,
+                `pet_owners`.`created_date`,
+                `pet_owners`.`updated_date`,
+                `pet_owners`.`updated_by`,
+                "pet_owner" role 
+            FROM `pawsome`.`pet_owners`
+            WHERE `pet_owners`.`username`=?'
         );
         $sql->bind_param('s', $username);
         $sql->execute();
@@ -677,7 +719,23 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `doctors` WHERE archived=0 ORDER BY id'
+            'SELECT `doctors`.`id`,
+                `doctors`.`firstname`,
+                `doctors`.`lastname`,
+                `doctors`.`username`,
+                null as password,
+                `doctors`.`address`,
+                `doctors`.`state`,
+                `doctors`.`email`,
+                `doctors`.`phone`,
+                `doctors`.`postcode`,
+                `doctors`.`archived`,
+                `doctors`.`created_date`,
+                `doctors`.`updated_date`,
+                `doctors`.`updated_by`
+            FROM `pawsome`.`doctors`
+            WHERE `doctors`.`archived`=0 
+            ORDER BY `doctors`.`id`'
         );
         $sql->execute();
         $result = $sql->get_result();
@@ -708,7 +766,24 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `admins` WHERE archived=0 ORDER BY id'
+            'SELECT 
+                `admins`.`id`,
+                `admins`.`firstname`,
+                `admins`.`lastname`,
+                `admins`.`username`,
+                null as password,
+                `admins`.`address`,
+                `admins`.`state`,
+                `admins`.`email`,
+                `admins`.`phone`,
+                `admins`.`postcode`,
+                `admins`.`archived`,
+                `admins`.`created_date`,
+                `admins`.`updated_date`,
+                `admins`.`updated_by`
+            FROM `pawsome`.`admins` 
+            WHERE `admins`.`archived`=0 
+            ORDER BY `admins`.`id`'
         );
         $sql->execute();
         $result = $sql->get_result();
@@ -1279,7 +1354,23 @@ class Database
         );
         $this->connection->set_charset('utf8');
         $sql = $this->connection->prepare(
-            'SELECT DISTINCT * FROM `pet_owners` WHERE archived=0 ORDER BY id'
+            'SELECT `pet_owners`.`id`,
+                `pet_owners`.`firstname`,
+                `pet_owners`.`lastname`,
+                `pet_owners`.`username`,
+                null as password,
+                `pet_owners`.`address`,
+                `pet_owners`.`state`,
+                `pet_owners`.`email`,
+                `pet_owners`.`phone`,
+                `pet_owners`.`postcode`,
+                `pet_owners`.`archived`,
+                `pet_owners`.`created_date`,
+                `pet_owners`.`updated_date`,
+                `pet_owners`.`updated_by`
+            FROM `pawsome`.`pet_owners`
+            WHERE `pet_owners`.`archived`=0 
+            ORDER BY `pet_owners`.`id`'
         );
         $sql->execute();
         $result = $sql->get_result();
