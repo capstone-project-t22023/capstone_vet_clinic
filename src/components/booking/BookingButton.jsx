@@ -30,10 +30,7 @@ export default function BookingButton() {
         setOpen(value);
     }
 
-    const isSelectedAppointmentEmpty = Object.keys(selectedAppointment).length === 0;
-
-
-
+    const isSelectedAppointmentEmpty =  selectedAppointment ? Object.keys(selectedAppointment).length === 0 : true;
 
     return (
         <>

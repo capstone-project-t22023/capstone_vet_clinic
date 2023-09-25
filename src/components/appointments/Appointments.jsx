@@ -42,7 +42,10 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             .then(response => response.json())
             .then(data => {
                 setAppointmentList(data.bookings);
-                updateSelectedAppointment(data.bookings.find(x => x.id = selectedAppointment.booking_id));
+                if (selectedAppointment) {
+                    console.log("Selected appointment",typeof selectedAppointment)
+                    updateSelectedAppointment(data.bookings.find(x => x.id = selectedAppointment.booking_id));
+                }
 
             })
             .catch(error => {
