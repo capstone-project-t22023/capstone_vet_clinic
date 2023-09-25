@@ -502,6 +502,35 @@ class InventoryDatabase
     }
 
     /**
+     * Delete inventory item by name --- for lodgings
+     */
+    public function deleteInventoryItemByName($inv_item_name)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'DELETE FROM `pawsome`.`inventory_items`
+            WHERE item_name = ?'
+        ); 
+        $sql->bind_param(
+            's', $inv_item_name
+        );
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return true;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Delete inventory item by category
      */
     public function deleteInventoryItemByCategory($id)

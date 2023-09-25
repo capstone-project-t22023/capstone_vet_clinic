@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Stack, Typography, Button, IconButton, Divider, Tooltip} from "@mui/material";
 import {AutoDeleteRounded, FaceRounded, PaidRounded, PetsRounded} from "@mui/icons-material";
+import {Link} from "react-router-dom";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
@@ -54,8 +55,9 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     </Tooltip>
                     <Status appointment={appointment}/>
                     { user.role !== "pet_owner" && appointment.booking_status === "FINISHED" && !appointment.invoice_id &&
-                            <Button onClick={handleStatusCancel} variant="contained" size="small" color="primary"
-                                    startIcon={<PaidRounded/>}>Generate Invoice</Button>
+                            <Link to="/generate_invoice"  state= {{ appointment: {appointment} }}>
+                                <Button variant="contained" color="primary" size="small" startIcon={<PaidRounded/>}>Generate Invoice</Button>
+                            </Link>
                     }
                     <Divider/>
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -101,14 +103,11 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                 </Stack>
             )}
             <Stack direction="column" spacing={2}>
-                {user.role !== "pet_owner" &&
+                {user.role !== "pet_owner" ?
                     <>
-
-
                         <Button disabled variant="outlined" color="error">Update Pet Records??</Button>
-                        <Button disabled variant="outlined" color="error">Update Inventory??</Button>
-                        <Button disabled variant="outlined" color="error">Generate Invoice??</Button>
                     </>
+                    : ""
                 }
             </Stack>
         </Stack>

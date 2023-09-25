@@ -29,6 +29,7 @@ import ConfirmSignup from './components/authorization/ConfirmSignup';
 import PetRecords from "./pages/PetRecords";
 import Inventory from './pages/Inventory';
 import Lodging from './pages/Lodging';
+import GenerateInvoice from './components/billing/GenerateInvoice';
 
 /**
  *
@@ -119,7 +120,9 @@ function App() {
                                 />
                                 <Route index element={
                                     <Protected isLoggedIn={authenticated}>
-                                        <Home/>
+                                        <PetsProvider>
+                                            <Dashboard/>
+                                        </PetsProvider>
                                     </Protected>
                                 }/>
                                 <Route path="/dashboard" element={
@@ -168,6 +171,15 @@ function App() {
                                     <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <Lodging />
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/generate_invoice" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <GenerateInvoice />
                                         </PetsProvider>
                                     </Protected>
                                 }
