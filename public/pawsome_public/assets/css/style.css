@@ -2006,6 +2006,44 @@ input[type=text]:invalid {
         padding:20px;
     }
 }
+
+/*--------------------------------------------------------------
+# POISON GUIDE
+--------------------------------------------------------------*/
+.col-lg-12 {
+  position: relative;
+  border-radius:30px;
+}
+.image {
+  border-radius: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th {
+    background-color: #f2f2f2;
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
 /*--------------------------------------------------------------
 # VET CHATBOX
 --------------------------------------------------------------*/
