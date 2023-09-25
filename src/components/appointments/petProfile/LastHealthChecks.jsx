@@ -29,7 +29,7 @@ export default function LastHealthChecks({filterMode = 'all', count = -1, itemsP
     const slicedByCountAppointments = newCount === -1 ? filteredAppointments : filteredAppointments.slice(0, newCount);
 
     if (!filteredAppointments || filteredAppointments.length === 0) {
-        return <Typography fontWeight="bold" color="grey.300">No {filterMode==='future'? 'upcoming' : 'previous'} appointments.</Typography>;
+        return <Typography fontWeight="bold" color="grey.300">No {filterMode==='future'? 'upcoming' : filterMode==='historic' ? 'previous' : 'today'} appointments.</Typography>;
     }
 
 

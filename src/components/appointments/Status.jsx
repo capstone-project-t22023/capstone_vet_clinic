@@ -19,7 +19,7 @@ export default function Status({appointment}) {
         message = "Confirmed";
     }
 
-    const {handlerRefreshAppointments, updateAppointmentStatus} = useContext(PetsContext);
+    const {updateAppointmentStatus} = useContext(PetsContext);
     const {user} = useContext(programContext)
 
 
