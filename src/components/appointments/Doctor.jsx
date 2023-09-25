@@ -22,16 +22,16 @@ import dayjs from "dayjs";
 export default function Doctor({id = -1, simple = false}) {
 
     const {user} = useContext(ProgramContext);
-    const {getDoctor, allDoctors, selectedAppointment,handlerRefreshAppointments} = useContext(PetsContext);
+    const {getDoctor, allDoctors, selectedAppointment, handlerRefreshAppointments} = useContext(PetsContext);
     const [editMode, setEditMode] = useState(false)
-    const [selectedDoctor, setSelectedDoctor] = useState(id?id:'');
+    const [selectedDoctor, setSelectedDoctor] = useState(id ? id : '');
     const [openDoctorDetails, setOpenDoctorDetails] = useState(false)
 
     const doctor = getDoctor(id)
 
 
     useEffect(() => {
-            setSelectedDoctor(id?id:'');
+        setSelectedDoctor(id ? id : '');
     }, [id]);
 
 
@@ -73,7 +73,7 @@ export default function Doctor({id = -1, simple = false}) {
 
 
     const handleChangeDoctor = () => {
-        setSelectedDoctor(id?id:'');
+        setSelectedDoctor(id ? id : '');
         setEditMode(false);
         updateDoctorInAppointment();
         handlerRefreshAppointments(true)
@@ -92,35 +92,36 @@ export default function Doctor({id = -1, simple = false}) {
                 {user.role === "admin" ? (
                     <Stack direction="column">
                         {editMode ? (
-                            <Paper elevation={0} sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
+                            <Paper elevation={0}
+                                   sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
                                 <Stack direction="column" spacing={2}>
 
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                    <FormControl sx={{m: 1, minWidth: 120}} size="small">
                                         <InputLabel id="select-doctor">Doctor</InputLabel>
 
 
-
-                                    <Select
-                                        value={selectedDoctor}
-                                        onChange={handleChange}
-                                        displayEmpty
-                                        variant="outlined"
-                                        size="small"
-                                        label="Doctor"
-                                        fullWidth
-                                    >
-                                        {allDoctors.map((dr) => (
-                                            <MenuItem key={dr.id} value={dr.id}>
-                                                {dr.firstname} {dr.lastname}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
-                                        <Button onClick={() => setEditMode(!editMode)} variant="outlined" size="small"
-                                                color="primary">Cancel</Button>
-                                        <Button onClick={handleChangeDoctor} variant="contained" size="small"
-                                                color="primary">Save</Button>
-                                    </Stack>
+                                        <Select
+                                            value={selectedDoctor}
+                                            onChange={handleChange}
+                                            displayEmpty
+                                            variant="outlined"
+                                            size="small"
+                                            label="Doctor"
+                                            fullWidth
+                                        >
+                                            {allDoctors.map((dr) => (
+                                                <MenuItem key={dr.id} value={dr.id}>
+                                                    {dr.firstname} {dr.lastname}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                        <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
+                                            <Button onClick={() => setEditMode(!editMode)} variant="outlined"
+                                                    size="small"
+                                                    color="primary">Cancel</Button>
+                                            <Button onClick={handleChangeDoctor} variant="contained" size="small"
+                                                    color="primary">Save</Button>
+                                        </Stack>
                                     </FormControl>
                                 </Stack>
                             </Paper>
@@ -128,7 +129,9 @@ export default function Doctor({id = -1, simple = false}) {
                             <Stack direction="row" spacing={1} alignItems="center">
                                 <Typography fontSize="0.75rem"><strong>Doctor:</strong></Typography>
                                 <Button
-                                    onClick={() => setEditMode(!editMode)}>{doctor ? doctor.firstname + " " + doctor.lastname : "Select Doctor"}</Button>
+                                    onClick={() => setEditMode(!editMode)}
+                                    disabled={selectedAppointment.booking_status === "FINISHED"}
+                                >{doctor ? doctor.firstname + " " + doctor.lastname : "Select Doctor"}</Button>
                             </Stack>
                         )
                         }
@@ -145,7 +148,7 @@ export default function Doctor({id = -1, simple = false}) {
                         ) : null} TransitionComponent={Zoom}
                                  placement="bottom" arrow>
                             <Typography fontSize="0.75rem"
-                                onClick={doctor ? () => setOpenDoctorDetails(true) : null}><strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
+                                        onClick={doctor ? () => setOpenDoctorDetails(true) : null}><strong>Doctor:</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
                             </Typography>
                         </Tooltip>
                     </Stack>
@@ -170,9 +173,9 @@ export default function Doctor({id = -1, simple = false}) {
             </Box>
         ) : (
             <>
-            {/*<Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>*/}
+                {/*<Typography component="p" sx={{"& strong":{color: "grey.700", fontSize: "0.675rem"}}}>*/}
                 <strong>Dr.</strong> {doctor ? doctor.firstname + " " + doctor.lastname : "No Doctor Yet"}
-            {/*</Typography>*/}
+                {/*</Typography>*/}
             </>
         )
     )

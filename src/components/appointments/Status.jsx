@@ -23,6 +23,7 @@ export default function Status({appointment}) {
     const {user} = useContext(programContext)
 
 
+
     const handleStatusFinished = () => {
         updateAppointmentStatus(appointment, "finish")
     }
@@ -63,7 +64,7 @@ export default function Status({appointment}) {
 
                 {user.role === "admin" && !isFinished() &&
                     <Button onClick={isPending() ? handleStatusConfirmed : isConfirmed() ? handleStatusRemoveConfirmed : null} variant="contained" color="success"
-                            size="small">{isPending() ? "Confirm" : isConfirmed() ? "Remove Confirm" : ""}</Button>
+                            size="small" disabled={appointment.doctor_id===null}>{isPending() ? "Confirm" : isConfirmed() ? "Remove Confirm" : ""}</Button>
                 }
                 {user.role === "doctor" && isConfirmed() && appointment.doctor_id === user.id  &&
                     <Button onClick={handleStatusFinished} variant="contained" color="primary"

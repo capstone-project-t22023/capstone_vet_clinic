@@ -267,7 +267,7 @@ export default function BookingOptions(props) {
             req_body.doctor_id = selectedDoctor;
         }
 
-        console.log("Update Booking: " + JSON.stringify(req_body));
+        // console.log("Update Booking: " + JSON.stringify(req_body));
 
         let endpoint = "";
         if(user.role === 'admin'){
@@ -284,7 +284,6 @@ export default function BookingOptions(props) {
             body: JSON.stringify(req_body)
         })
             .then((response) => {
-                console.log(response);
                 return response.json();
             })
             .then(data => {
@@ -296,14 +295,13 @@ export default function BookingOptions(props) {
                     }
                 })
                     .then((response) => {
-                        console.log(response);
                         return response.json();
                     })
                     .then(data => {
                         // sendSelectedBooking(data.booking_record);
                         handlerRefreshAppointments(true)
                         updateSelectedAppointment(data.booking_record[0])
-                        console.log("Update booking", data.booking_record[0])
+                        console.log("Updated booking", data.booking_record[0])
                         onSave(true)
                     });
 

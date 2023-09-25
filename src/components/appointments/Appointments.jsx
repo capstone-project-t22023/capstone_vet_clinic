@@ -30,7 +30,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
     const [isDoc, setIsDoc] = useState(doctor);
 
 
-
     const fetchAppointments = (filterType, filterValue) => {
         const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
 
@@ -42,7 +41,9 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         })
             .then(response => response.json())
             .then(data => {
-                setAppointmentList(data.bookings)
+                setAppointmentList(data.bookings);
+                updateSelectedAppointment(data.bookings.find(x => x.id = selectedAppointment.booking_id));
+
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -58,7 +59,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             fetchAppointments('username', selectedOwner.username);
         }
         handlerRefreshAppointments(false);
-    }, [selectedOwner,refreshAppointments]);
+    }, [selectedOwner, refreshAppointments]);
 
     // TODO sanity the doctor appointments and all doctor appointments only if doctor = true
 
@@ -72,8 +73,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         );
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);
-
-
 
 
     const filteredAppointments = mergedAppointments.filter(appointment => {
