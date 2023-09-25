@@ -45,6 +45,11 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         changeSidebarContent("pet");
     }
 
+    const handleGenerateInvoice = () => {
+      console.log("Generate Invoce is TODO")
+    //     TODO Generate invoice
+    }
+
     return (
         <Stack direction="column" p={6} spacing={5}>
             {appointment && Object.keys(appointment).length !== 0 && (
@@ -54,7 +59,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     </Tooltip>
                     <Status appointment={appointment}/>
                     { user.role !== "pet_owner" && appointment.booking_status === "FINISHED" && !appointment.invoice_id &&
-                            <Button onClick={handleStatusCancel} variant="contained" size="small" color="primary"
+                            <Button onClick={handleGenerateInvoice} variant="contained" size="small" color="primary"
                                     startIcon={<PaidRounded/>}>Generate Invoice</Button>
                     }
                     <Divider/>
