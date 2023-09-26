@@ -53,6 +53,54 @@ class InventoryDatabase
     }
 
     /**
+     * Retrieves all mapped inventory categories and items
+     */
+    public function getAllMappedInventory()
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'SELECT 
+                `inventory_items`.`inventory_item_category_id` item_category_id,
+                `inventory_item_categories`.`item_category`,
+                `inventory_items`.`id` item_id,
+                `inventory_items`.`item_name`,
+                `inventory_items`.`in_use_qty`,
+                `inventory_items`.`in_stock_qty`,
+                `inventory_items`.`threshold_qty`,
+                `inventory_items`.`weight_volume`,
+                `inventory_items`.`item_unit`,
+                `inventory_items`.`production_date`,
+                `inventory_items`.`expiration_date`,
+                `inventory_items`.`unit_price`
+            FROM 
+            `pawsome`.`inventory_items`,
+            `pawsome`.`inventory_item_categories`
+            WHERE
+            `inventory_items`.inventory_item_category_id = `inventory_item_categories`.id'
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Retrieves all inventory categories records
      */
     public function getInventoryCategoriesById($category_id)

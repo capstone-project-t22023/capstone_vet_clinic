@@ -1173,6 +1173,173 @@ class BillingDatabase
         $this->connection->close();
         return false;
     }
+
+    /**
+     * Retrieves all billing info
+     */
+    public function getAllBillingInfo()
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'WITH
+            booking AS (
+                SELECT DISTINCT
+                b.id booking_id, 
+                b.booking_type_id,
+                bs.booking_date,
+                bt.booking_type,
+                b.booking_status,
+                b.doctor_id,
+                b.pet_owner_id,
+                b.pet_id,
+                b.updated_date
+                FROM 
+                `pawsome`.`bookings` b,
+                `pawsome`.`booking_slots` bs,
+                `pawsome`.`booking_types` bt
+                WHERE
+                b.booking_type_id = bt.id
+                AND bs.booking_id = b.id
+            )
+            SELECT 
+                po.id pet_owner_id,
+                CONCAT(po.firstname, " ", po.lastname) pet_owner,
+                po.username,
+                pets.id pet_id,
+                pets.petname,
+                b.booking_id,
+                b.booking_date,
+                b.booking_type_id,
+                b.booking_type,
+                b.booking_status,
+                b.doctor_id,
+                CONCAT(d.firstname, " ", d.lastname) doctor,
+                IF(i.id IS NULL, "NA", i.id) invoice_id,
+                IF(r.id IS NULL, "NA", r.id) receipt_id,
+                IF(i.invoice_amount IS NULL, 0.00, i.invoice_amount) invoice_amount,
+                p.payment_paid,
+                IF(p.payment_status = "PAID", "PAID", "NOT PAID") payment_status,
+                p.payment_date,
+                p.updated_by payment_received_by,
+                CONCAT(a.firstname, " ", a.lastname) admin_name
+            FROM 
+                booking b
+                LEFT JOIN `pawsome`.`doctors` d ON d.id = b.doctor_id
+                LEFT JOIN `pawsome`.`receipts` r ON r.booking_id = b.booking_id
+                LEFT JOIN `pawsome`.`invoices` i ON r.invoice_id = i.id
+                LEFT JOIN `pawsome`.`payments` p ON r.payment_id = p.id
+                LEFT JOIN `pawsome`.`pet_owners` po ON po.id = b.pet_owner_id
+                LEFT JOIN `pawsome`.`pets` pets ON pets.id = b.pet_id
+                LEFT JOIN `pawsome`.`admins` a ON a.id = p.updated_by
+            ORDER BY b.updated_date DESC'
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $billing_items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($billing_items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $billing_items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Retrieves billing info by doctor
+     */
+    public function getBillingByDoctor($doctor_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'WITH
+            booking AS (
+                SELECT DISTINCT
+                b.id booking_id, 
+                b.booking_type_id,
+                bs.booking_date,
+                bt.booking_type,
+                b.booking_status,
+                b.doctor_id,
+                b.pet_owner_id,
+                b.pet_id,
+                b.updated_date
+                FROM 
+                `pawsome`.`bookings` b,
+                `pawsome`.`booking_slots` bs,
+                `pawsome`.`booking_types` bt
+                WHERE
+                b.booking_type_id = bt.id
+                AND bs.booking_id = b.id
+            )
+            SELECT 
+                po.id pet_owner_id,
+                CONCAT(po.firstname, " ", po.lastname) pet_owner,
+                po.username,
+                pets.id pet_id,
+                pets.petname,
+                b.booking_id,
+                b.booking_date,
+                b.booking_type_id,
+                b.booking_type,
+                b.booking_status,
+                b.doctor_id,
+                CONCAT(d.firstname, " ", d.lastname) doctor,
+                IF(i.id IS NULL, "NA", i.id) invoice_id,
+                IF(r.id IS NULL, "NA", r.id) receipt_id,
+                IF(i.invoice_amount IS NULL, 0.00, i.invoice_amount) invoice_amount,
+                p.payment_paid,
+                IF(p.payment_status = "PAID", "PAID", "NOT PAID") payment_status,
+                p.payment_date,
+                p.updated_by payment_received_by,
+                CONCAT(a.firstname, " ", a.lastname) admin_name
+            FROM 
+                booking b
+                LEFT JOIN `pawsome`.`doctors` d ON d.id = b.doctor_id
+                LEFT JOIN `pawsome`.`receipts` r ON r.booking_id = b.booking_id
+                LEFT JOIN `pawsome`.`invoices` i ON r.invoice_id = i.id
+                LEFT JOIN `pawsome`.`payments` p ON r.payment_id = p.id
+                LEFT JOIN `pawsome`.`pet_owners` po ON po.id = b.pet_owner_id
+                LEFT JOIN `pawsome`.`pets` pets ON pets.id = b.pet_id
+                LEFT JOIN `pawsome`.`admins` a ON a.id = p.updated_by
+            WHERE
+                b.doctor_id =?
+            ORDER BY b.updated_date DESC'
+        );
+        $sql->bind_param(
+            'i', $doctor_id
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $billing_items = array();
+            while($row=$result->fetch_assoc()){
+                array_push($billing_items, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $billing_items;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
     
 }
 

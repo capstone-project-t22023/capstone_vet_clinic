@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom'
-
+import ProgramContext from "../../contexts/ProgramContext";
 import {
     Stack, Typography, Box, Paper, Grid, Select, IconButton, MenuItem, FormControl, Button, Tooltip, Zoom,
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Alert
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Alert, Divider
 } from '@mui/material';
 import Aside from '../../components/aside/Aside';
 import Footer from '../Footer';
@@ -23,10 +23,11 @@ const letterhead =
         <Typography component="span" variant="caption">ABN: 865987656786</Typography>
     </>;
 
-export default function GenerateInvoice() {
+export default function InvoiceForm() {
 
     const location = useLocation();
     const { appointment } = location.state;
+    const {user} = useContext(ProgramContext);
     const [invoiceId, setInvoiceId] = useState(0);
     const [bookingInfo, setBookingInfo] = useState([]);
     const [inventoryItems, setInventoryItems] = useState([{ label: "Select One", value: 0 }]);
@@ -53,7 +54,12 @@ export default function GenerateInvoice() {
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_inventory_by_category/1", {
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_mapped_inventory", {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                },
+            }),
+            fetch("http://localhost/capstone_vet_clinic/api.php/get_invoice/" + appointment.appointment.invoice_id, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
@@ -65,6 +71,7 @@ export default function GenerateInvoice() {
                 }));
             })
             .then(data => {
+                
                 if (data[0].inventory_categories) {
                     let tmp_1 = data[0].inventory_categories.map(cat => {
                         let x = {};
@@ -74,30 +81,34 @@ export default function GenerateInvoice() {
                     })
                     tmp_1.push({ label: "Select One", value: 0 });
                     setInventoryCategories(tmp_1);
-                }
 
-                if (data[1].inventory_records) {
-                    let tmp_inventory_items = data[1].inventory_records[0].inventory_items;
-                    let item_desc = tmp_inventory_items.filter(x => x.item_name === appointment.appointment.booking_type);
+                    if(data[1].inventory){
+                        if(data[2].get_invoice){
+                            let invoice = data[2].get_invoice;
+                            let inventory = data[1].inventory;
 
-                    if (item_desc[0]) {
-                        let tmp_invoice_items = {};
-                        tmp_invoice_items.item_category = 1;
-                        tmp_invoice_items.item_category_label = "Booking";
-                        tmp_invoice_items.item_description = item_desc[0].item_id;
-                        tmp_invoice_items.item_description_label = item_desc[0].item_name;
-                        tmp_invoice_items.item_id = item_desc[0].item_id;
-                        tmp_invoice_items.quantity = 1;
-                        tmp_invoice_items.unit_amount = parseFloat(item_desc[0].unit_price).toFixed(2);
-                        tmp_invoice_items.total_amount = parseFloat(item_desc[0].unit_price).toFixed(2);
+                            let tmp_invoice_items = invoice.invoice_items.map( x => {
+                                let tmp = {};
+                                tmp.item_category = x.item_category_id;
+                                tmp.item_category_label = tmp_1.filter(cat => cat.value === x.item_category_id)[0].label;
+                                tmp.item_description = x.item_id;
+                                tmp.item_description_label = inventory.filter(item => x.item_id === item.item_id)[0].item_name;
+                                tmp.item_id = x.item_id;
+                                tmp.quantity = x.quantity;
+                                tmp.unit_amount = x.unit_amount;
+                                tmp.total_amount = x.total_amount;
 
-                        let tmp_arr = [];
-                        tmp_arr.push(tmp_invoice_items);
-
-                        setInvoiceItemRows(tmp_arr);
-                        setTotalAmount(item_desc[0].unit_price);
+                                return tmp;
+                            });
+                            
+                            setInvoiceId(invoice.invoice_id)
+                            setInvoiceItemRows(tmp_invoice_items);
+                            setTotalAmount(parseFloat(invoice.invoice_amount).toFixed(2));
+                        }
                     }
                 }
+
+                
 
             })
             .catch(error => {
@@ -304,6 +315,7 @@ export default function GenerateInvoice() {
             });
     }
 
+
     return (
         <div>
             <Helmet>
@@ -328,7 +340,7 @@ export default function GenerateInvoice() {
                         <Stack direction="column" spacing={3}>
                             <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                 <Typography component="h1" variant="h4" sx={{ fontWeight: 600 }}>
-                                    Generate Invoice
+                                    Manage Invoice
                                 </Typography>
                             </Stack>
 
@@ -351,8 +363,9 @@ export default function GenerateInvoice() {
                                         >
                                             <Paper elevation={4} >
                                                 {letterhead}
+                                                
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                                    sx={{ paddingTop: 3, paddingBottom: 3 }}
+                                                    sx={{ paddingTop: 1, paddingBottom: 3 }}
                                                 >
                                                     <Grid item xs={12} ><hr/></Grid>
                                                     <Grid item xs={12}>
@@ -365,7 +378,6 @@ export default function GenerateInvoice() {
                                                         <Typography variant="body2"><b>Booking Status: </b>{bookingInfo.booking_status}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}></Grid>
-                                                    <Grid item xs={12} ><hr/></Grid>
                                                     <Grid item xs={4}>
                                                         <Typography variant="body2"><b>Booking Date: </b>{bookingInfo.booking_date}</Typography>
                                                     </Grid>
@@ -381,6 +393,14 @@ export default function GenerateInvoice() {
                                                         <Typography variant="body2"><b>Pet: </b>{bookingInfo.petname}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}></Grid>
+                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12}>
+                                                        <Typography variant="body2"><b>Veterinarian: </b>Dr. {bookingInfo.doctor}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Typography variant="body2"><b>Prepared by: </b>Dr. {bookingInfo.doctor}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} ><hr/></Grid>
                                                 </Grid>
                                                 {alertDelete ?
                                                     <Alert
@@ -426,12 +446,12 @@ export default function GenerateInvoice() {
                                                     <Table sx={{ minWidth: 650 }} aria-label="invoice table">
                                                         <TableHead>
                                                             <TableRow>
-                                                                <TableCell align="center">Actions</TableCell>
-                                                                <TableCell align="center">Item Category</TableCell>
-                                                                <TableCell align="center">Item Description</TableCell>
-                                                                <TableCell align="center">Qty</TableCell>
-                                                                <TableCell align="center">Unit Amount</TableCell>
-                                                                <TableCell align="center">Total Amount</TableCell>
+                                                                { bookingInfo.payment_status === "PAID" || user.role == "admin" ? "" : <TableCell align="center"><b>Actions</b></TableCell>}
+                                                                <TableCell align="center"><b>Item Category</b></TableCell>
+                                                                <TableCell align="center"><b>Item Description</b></TableCell>
+                                                                <TableCell align="center"><b>Qty</b></TableCell>
+                                                                <TableCell align="center"><b>Unit Amount</b></TableCell>
+                                                                <TableCell align="center"><b>Total Amount</b></TableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -501,10 +521,11 @@ export default function GenerateInvoice() {
                                                                             <Typography component="span" variant="subtitle2">{selectedTotalAmount}</Typography>
                                                                         </TableCell>
                                                                     </>
-                                                                    :
+                                                                    : ( bookingInfo.payment_status === "PAID" || user.role == "admin" ? <></> : 
                                                                     <>
+                                                                        
                                                                         <TableCell align="center">
-                                                                            <IconButton color="primary" onClick={enableAdd}>
+                                                                            <IconButton color="primary" onClick={enableAdd} >
                                                                                 <AddCircleRounded />
                                                                             </IconButton>
                                                                         </TableCell>
@@ -512,22 +533,23 @@ export default function GenerateInvoice() {
                                                                         <TableCell align="right"></TableCell>
                                                                         <TableCell align="right"></TableCell>
                                                                         <TableCell align="right"></TableCell>
-                                                                        <TableCell align="right"></TableCell>
-                                                                    </>
+                                                                        <TableCell align="right"></TableCell> 
+                                                                    </>)
                                                                 }
                                                             </TableRow>
                                                             {invoiceItemRows.map((row, idx) => (
                                                                 <TableRow
                                                                     key={"item-" + idx}
                                                                 >
+                                                                    { bookingInfo.payment_status === "PAID" || user.role == "admin" ? "" :
                                                                     <TableCell align="center">
-                                                                        <IconButton color="primary" onClick={handleEdit(idx)} disabled={row.item_category_label === 'Booking' ? true : false}>
+                                                                        <IconButton color="primary" onClick={handleEdit(idx)} disabled={ row.item_category_label === 'Booking' ? true : false}>
                                                                             <EditRounded />
                                                                         </IconButton>
-                                                                        <IconButton color="error" onClick={handleDelete(idx)} disabled={row.item_category_label === 'Booking' ? true : false}>
+                                                                        <IconButton color="error" onClick={handleDelete(idx)} disabled={ row.item_category_label === 'Booking' ? true : false}>
                                                                             <DeleteForeverRounded />
                                                                         </IconButton>
-                                                                    </TableCell>
+                                                                    </TableCell>}
                                                                     <TableCell align="center">{row.item_category_label}</TableCell>
                                                                     <TableCell align="center">{row.item_description_label}</TableCell>
                                                                     <TableCell align="center">{row.quantity}</TableCell>
@@ -536,10 +558,15 @@ export default function GenerateInvoice() {
                                                                 </TableRow>
                                                             ))}
                                                             <TableRow>
-                                                                <TableCell align="right" colSpan={5}>
+                                                                { bookingInfo.payment_status === "PAID" || user.role == "admin" ? 
+                                                                <TableCell align="right" colSpan={4}>
                                                                     Total Invoice Amount
                                                                 </TableCell>
-                                                                <TableCell align="right">$A {totalAmount}</TableCell>
+                                                             :
+                                                                <TableCell align="right" colSpan={5}>
+                                                                    Total Invoice Amount
+                                                                </TableCell>}
+                                                                <TableCell align="right" sx={{ color: 'red', fontWeight: 'bold' }}>$A {totalAmount}</TableCell>
                                                             </TableRow>
                                                         </TableBody>
                                                     </Table>
@@ -550,6 +577,8 @@ export default function GenerateInvoice() {
                                                 >
                                                     <Grid item xs={12}>
                                                         { invoiceId ?
+                                                            ( bookingInfo.payment_status === "PAID" || user.role == "admin" ? ""
+                                                            :
                                                             <Tooltip title="Update invoice" placement="right" TransitionComponent={Zoom} arrow>
                                                                 <Button
                                                                     color="primary"
@@ -559,7 +588,7 @@ export default function GenerateInvoice() {
                                                                 >
                                                                     Update Invoice
                                                                 </Button>
-                                                            </Tooltip>
+                                                            </Tooltip>)    
                                                             :
                                                             <Tooltip title="Generate invoice" placement="right" TransitionComponent={Zoom} arrow>
                                                                 <Button
@@ -614,7 +643,6 @@ export default function GenerateInvoice() {
                                                         : ""}
                                                     </Grid>
                                                 </Grid>
-
                                             </Paper>
                                         </Box>
                                     </Paper>

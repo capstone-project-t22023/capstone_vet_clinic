@@ -3402,10 +3402,61 @@ elseif ($action === 'get_receipt') {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
+/**
+ * API endpoint when getting all billing info
+ */ 
+elseif ($action === 'get_all_billing_info') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] !== 'pet_owner'){
+            if($billing_info = $billing_database->getAllBillingInfo()){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
+/**
+ * API endpoint when getting billing info by doctor
+ */ 
+elseif ($action === 'get_billing_by_doctor') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] === 'doctor'){
+            if($billing_info = $billing_database->getBillingByDoctor($id)){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
 
 /**
  * Inventory System Management
  */
+/**
+ * API endpoint when getting inventory categories and item mapping
+ */ 
+elseif ($action === 'get_mapped_inventory') {
+    if ($valid_jwt_token) {
+        if ($inventory = $inventory_database->getAllMappedInventory()) {
+            return_json(['inventory' => $inventory]);
+        } else {
+            return_json(['inventory' => []]); 
+        }
+    }
+}
+
 /**
  * API endpoint when getting all inventory records
  */ 

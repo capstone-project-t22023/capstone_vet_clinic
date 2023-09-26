@@ -30,6 +30,10 @@ import PetRecords from "./pages/PetRecords";
 import Inventory from './pages/Inventory';
 import Lodging from './pages/Lodging';
 import GenerateInvoice from './components/billing/GenerateInvoice';
+import InvoicePage from './components/billing/InvoicePage';
+import InvoiceForm from './components/billing/InvoiceForm';
+import ReceiptForm from './components/billing/ReceiptForm';
+import PaymentPage from './components/billing/PaymentPage';
 
 /**
  *
@@ -160,6 +164,8 @@ function App() {
                                 }
                                 />
 
+                                { user.role === "admin" ?
+                                <>
                                 <Route path="/inventory" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <Inventory />
@@ -175,12 +181,47 @@ function App() {
                                     </Protected>
                                 }
                                 />
+                                <Route path="/process_payments" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PaymentPage />
+                                    </Protected>
+                                }
+                                />
+                                </> : 
+                                <Route path="/lodging" element={
+                                    <DefaultPage />
+                                }
+                                />
+                                }
 
                                 <Route path="/generate_invoice" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <GenerateInvoice />
                                         </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/view_invoices" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <InvoicePage />
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/manage_invoice" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <InvoiceForm />
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/view_receipt" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <ReceiptForm />
                                     </Protected>
                                 }
                                 />
