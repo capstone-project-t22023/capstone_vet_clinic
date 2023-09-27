@@ -14,7 +14,8 @@ import {
     CalendarMonthRounded,
     LocationCityRounded,
     WarehouseRounded,
-    LocalHotelRounded
+    LocalHotelRounded,
+    PaidRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -97,18 +98,50 @@ export default function Aside() {
                         <LocationCityRounded/>
                     </ListItemButton>
                 </Tooltip>
+
+                {user.role === 'pet_owner' ? 
+                <>
+                    <Tooltip title="Payment History" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton 
+                            selected={isActive('/payment_history')} 
+                            onClick={() => handleClick('/payment_history')}>
+                            <PaidRounded/>
+                        </ListItemButton>
+                    </Tooltip>
+                </>
+                : "" }
+
+                {user.role === 'doctor' ? 
+                <>
+                    <Tooltip title="Invoices" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton 
+                            selected={isActive('/view_invoices')} 
+                            onClick={() => handleClick('/view_invoices')}>
+                            <PaidRounded/>
+                        </ListItemButton>
+                    </Tooltip>
+                </>
+                : "" }
+
                 {user.role === 'admin' ? 
                 <>
-                    <Tooltip title="Go to Inventory" TransitionComponent={Zoom} placement="right" arrow>
+                    <Tooltip title="Payments" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton 
+                            selected={isActive('/process_payments')} 
+                            onClick={() => handleClick('/process_payments')}>
+                            <PaidRounded/>
+                        </ListItemButton>
+                    </Tooltip>
+                    <Tooltip title="Inventory" TransitionComponent={Zoom} placement="right" arrow>
                         <ListItemButton 
                             selected={isActive('/inventory')} 
                             onClick={() => handleClick('/inventory')}>
                             <WarehouseRounded/>
                         </ListItemButton>
                     </Tooltip> 
-                    <Tooltip title="Go to Lodging" TransitionComponent={Zoom} placement="right" arrow>
+                    <Tooltip title="Lodging" TransitionComponent={Zoom} placement="right" arrow>
                         <ListItemButton 
-                            selected={isActive('/loding')} 
+                            selected={isActive('/lodging')} 
                             onClick={() => handleClick('/lodging')}>
                             <LocalHotelRounded/>
                         </ListItemButton>

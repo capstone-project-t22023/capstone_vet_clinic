@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
     Typography, Box, Tabs, Tab, TextField, Chip, Stack, Alert, IconButton,
-    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button
 } from '@mui/material';
 import InventoryTable from './InventoryTable';
 import { AddCircleRounded, EditRounded, DeleteForeverRounded, Close  } from '@mui/icons-material';
@@ -238,24 +238,30 @@ export default function InventoryPage(props) {
                             <div key={"div_inv_panel_" + idx}>
                             <TabPanel  value={value} index={idx}>
                                 <Stack  direction="row" spacing={2}>
-                                    <Chip
-                                        label="Add Category"
+                                    <Button
                                         color="primary"
-                                        icon={<AddCircleRounded sx={{ fontSize: '25px' }} />}
+                                        variant="contained"
+                                        startIcon={<AddCircleRounded />}
                                         onClick={handleOpenAddCategory}
-                                    />
-                                    <Chip
-                                        label="Update Category"
+                                    >
+                                        Add Category
+                                    </Button>
+                                    <Button
                                         color="warning"
-                                        icon={<EditRounded sx={{ fontSize: '25px' }} />}
+                                        variant="contained"
+                                        startIcon={<EditRounded />}
                                         onClick={handleOpenEditCategory(items.category_id)}
-                                    />
-                                    <Chip
-                                        label="Delete Category"
+                                    >
+                                        Update Category
+                                    </Button>
+                                    <Button
                                         color="error"
-                                        icon={<DeleteForeverRounded sx={{ fontSize: '25px' }} />}
+                                        variant="contained"
+                                        startIcon={<DeleteForeverRounded />}
                                         onClick={handleDeleteCategory(items.category_id)}
-                                    />
+                                    >
+                                        Delete Category
+                                    </Button>
                                 </Stack>
                                 <br />
                                 <InventoryTable

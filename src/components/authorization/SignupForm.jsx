@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Box, Grid, Card, CardActions, CardContent, Button, InputAdornment, TextField, IconButton, MenuItem, Radio, Avatar, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import { Alert, Box, CardContent, Button, InputAdornment, 
+    TextField, IconButton, MenuItem, Radio, 
+    Typography, FormControlLabel } from '@mui/material';
 import { Navigate, Link } from "react-router-dom";
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import EmailIcon from '@mui/icons-material/Email';
-import PasswordIcon from '@mui/icons-material/Password';
-import BadgeIcon from '@mui/icons-material/Badge';
-import PhoneIcon from '@mui/icons-material/Phone';
-import HomeIcon from '@mui/icons-material/Home';
-import PlaceIcon from '@mui/icons-material/Place';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { VisibilityOff, Visibility, Place,
+    Home, Phone, Badge, Password,
+    Email, AccountCircle } from '@mui/icons-material';
+import Logo from "../header/Logo";
 
 const ausState = [
     { value: '', label: ''},
@@ -353,15 +349,13 @@ export default function SignupForm() {
             :
 
             <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
-                    <LockOutlinedIcon/>
-                </Avatar>
+                <Logo/>
                 <Typography component="h1" variant="h5">
                     Join Us!
                 </Typography>
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <FormControlLabel value="doctor" label="DOCTOR" control={
+                    <FormControlLabel value="doctor" label="Doctor" control={
                         <Radio
                             checked={selectedPrivilege === 'doctor'}
                             onChange={handleSelectedPrivilege}
@@ -401,7 +395,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <BadgeIcon />
+                                    <Badge />
                                 </InputAdornment>
                             ),
                         }}
@@ -420,7 +414,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <BadgeIcon />
+                                    <Badge />
                                 </InputAdornment>
                             ),
                         }}
@@ -438,7 +432,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PhoneIcon />
+                                    <Phone />
                                 </InputAdornment>
                             ),
                         }}
@@ -456,7 +450,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <EmailIcon />
+                                    <Email />
                                 </InputAdornment>
                             ),
                         }}
@@ -475,7 +469,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <HomeIcon />
+                                    <Home />
                                 </InputAdornment>
                             ),
                         }}
@@ -495,7 +489,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PlaceIcon />
+                                    <Place />
                                 </InputAdornment>
                             ),
                         }}
@@ -519,7 +513,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PlaceIcon />
+                                    <Place />
                                 </InputAdornment>
                             ),
                         }}
@@ -557,7 +551,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PasswordIcon />
+                                    <Password />
                                 </InputAdornment>
                             ),
                             endAdornment:(
@@ -587,7 +581,7 @@ export default function SignupForm() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <PasswordIcon />
+                                    <Password />
                                 </InputAdornment>
                             ),
                             endAdornment:(

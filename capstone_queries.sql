@@ -488,262 +488,6 @@ CREATE TABLE `pawsome`.`subscribers` (
 );
 
 /** 
-HISTORICAL DATA TABLES
-*/
-
-CREATE TABLE `pawsome`.`archived_admins` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `firstname` varchar(50) NOT NULL COMMENT 'First name of admin',
-  `lastname` varchar(50) DEFAULT NULL COMMENT 'Last name of admin',
-  `username` varchar(20) NOT NULL COMMENT 'Username to be used for login',
-  `password` varchar(255) NOT NULL COMMENT 'Password to be used for login',
-  `address` varchar(100) NOT NULL COMMENT 'Address of user',
-  `state` varchar(100) NOT NULL COMMENT 'State where address is found',
-  `email` varchar(100) NOT NULL COMMENT 'Email of user',
-  `phone` int(11) NOT NULL COMMENT 'Phone of user',
-  `postcode` int(4) NOT NULL COMMENT 'Postcode of address entered by user',
-  `created_date` datetime NOT NULL COMMENT 'Creation date of user account',
-  `updated_date` datetime NOT NULL COMMENT 'Timestamp of update',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'User ID who updated the record'
-);
-
-CREATE TABLE `pawsome`.`archived_doctors` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `firstname` varchar(50) NOT NULL COMMENT 'First name of doctor',
-  `lastname` varchar(50) DEFAULT NULL COMMENT 'Last name of doctor',
-  `username` varchar(20) NOT NULL COMMENT 'Username to be used for login',
-  `password` varchar(255) NOT NULL COMMENT 'Password to be used for login',
-  `address` varchar(100) NOT NULL COMMENT 'Address of user',
-  `state` varchar(100) NOT NULL COMMENT 'State where address is found',
-  `email` varchar(100) NOT NULL COMMENT 'Email of user',
-  `phone` int(11) NOT NULL COMMENT 'Phone of user',
-  `postcode` int(4) NOT NULL COMMENT 'Postcode of address entered by user',
-  `created_date` datetime NOT NULL COMMENT 'Creation date of user account',
-  `updated_date` datetime NOT NULL COMMENT 'Timestamp of update',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'User ID who updated the record'
-);
-
-CREATE TABLE `pawsome`.`archived_pet_owners` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `firstname` varchar(50) NOT NULL COMMENT 'First name of pet owner',
-  `lastname` varchar(50) DEFAULT NULL COMMENT 'Last name of pet owner',
-  `username` varchar(20) NOT NULL COMMENT 'Username to be used for login',
-  `password` varchar(255) NOT NULL COMMENT 'Password to be used for login',
-  `address` varchar(100) NOT NULL COMMENT 'Address of user',
-  `state` varchar(100) NOT NULL COMMENT 'State where address is found',
-  `email` varchar(100) NOT NULL COMMENT 'Email of user',
-  `phone` int(11) NOT NULL COMMENT 'Phone of user',
-  `postcode` int(4) NOT NULL COMMENT 'Postcode of address entered by user',
-  `created_date` datetime NOT NULL COMMENT 'Creation date of user account',
-  `updated_date` datetime NOT NULL COMMENT 'Timestamp of update',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'User ID who updated the record'
-);
-
-CREATE TABLE `pawsome`.`archived_bookings` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `booking_status` varchar(15) NOT NULL COMMENT 'Status of booking',
-  `booking_type_id` int(10) NOT NULL COMMENT 'Referenced booking type',
-  `pet_owner_id` int(10) NOT NULL COMMENT 'Referenced pet owner',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet',
-  `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor',
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record'
-);
-
-CREATE TABLE `pawsome`.`archived_booking_slots` (
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ',
-  `booking_date` date NOT NULL COMMENT 'Date of booking',
-  `booking_time` varchar(45) NOT NULL COMMENT 'Time slot of booking'
-);
-
-CREATE TABLE `pawsome`.`archived_booking_history` (
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ',
-  `prev_status` varchar(15) DEFAULT NULL COMMENT 'Previous booking state',
-  `new_status` varchar(15) DEFAULT NULL COMMENT 'New booking state',
-  `updated_date` datetime NOT NULL COMMENT 'Booking update date',
-  `updated_by` int(10) NOT NULL COMMENT 'Booking updated by user ID'
-);
-
-CREATE TABLE `pawsome`.`archived_inventory_item_categories` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `item_category` varchar(50) NOT NULL COMMENT 'Category name of item',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date'
-);
-
-CREATE TABLE `pawsome`.`archived_inventory_items` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `inventory_item_category_id` int(10) NOT NULL COMMENT 'Referenced category ID',
-  `item_name` varchar(100) NOT NULL COMMENT 'Name of item',
-  `in_use_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Out of storage quantity',
-  `in_stock_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Stored inventory',
-  `threshold_qty` int(11) NOT NULL DEFAULT 0 COMMENT 'Ordering level of inventory',
-  `weight_volume` decimal(10,2) NOT NULL COMMENT 'Weight or volume of item',
-  `item_unit` varchar(20) NOT NULL COMMENT 'Unit (grams, pieces, tablets, etc.)',
-  `production_date` date DEFAULT NULL COMMENT 'Production date',
-  `expiration_date` date DEFAULT NULL COMMENT 'Expiration date',
-  `unit_price` decimal(10,2) NOT NULL COMMENT 'Price per item',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date'
-);
-
-CREATE TABLE `pawsome`.`archived_invoice_items` (
-  `invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
-  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
-  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
-  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
-  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
-  `total_amount` decimal(10,2) NOT NULL COMMENT 'Total amount times quantity'
-);
-
-CREATE TABLE `pawsome`.`archived_invoices` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `invoice_amount` decimal(10,2) DEFAULT NULL,
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record');
-
-CREATE TABLE `pawsome`.`archived_lodgings` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `cage_status` varchar(20) NOT NULL DEFAULT 'AVAILABLE' COMMENT 'Status of cage/lodging',
-  `pet_id` int(10) DEFAULT NULL COMMENT 'Referenced pet ID',
-  `assigned_doctor` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
-  `confinement_date` datetime DEFAULT NULL COMMENT 'Start of confinement date',
-  `discharge_date` datetime DEFAULT NULL COMMENT 'Start of discharge date',
-  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
-  `updated_date` date DEFAULT NULL COMMENT 'Date of update',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user');
-
-CREATE TABLE `pawsome`.`archived_payment_history` (
-  `payment_id` int(10) NOT NULL COMMENT 'Referenced payment ID',
-  `prev_payment_status` varchar(15) DEFAULT NULL COMMENT 'Previous payment status',
-  `new_payment_status` varchar(15) DEFAULT NULL COMMENT 'New payment status',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'User ID who updated the record');
-
-CREATE TABLE `pawsome`.`archived_payments` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `payment_by` int(10) DEFAULT NULL COMMENT 'Payment made by user ID',
-  `payment_date` datetime DEFAULT NULL COMMENT 'Date of payment',
-  `payment_method` varchar(50) DEFAULT NULL COMMENT 'Method of payment',
-  `payment_status` varchar(50) NOT NULL COMMENT 'Status of payment',
-  `payment_balance` decimal(10,2) NOT NULL COMMENT 'Remaining balance',
-  `payment_paid` decimal(10,2) NOT NULL COMMENT 'Amount received from customer',
-  `payment_change` decimal(10,2) DEFAULT NULL COMMENT 'Change returned from payment made',
-  `updated_by` int(10) NOT NULL COMMENT 'Updated by user',
-  `updated_date` datetime NOT NULL COMMENT 'Updated date');
-
-CREATE TABLE `pawsome`.`archived_pet_diet_records` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `prescription_id` int(10) NOT NULL COMMENT 'Referenced prescription ID',
-  `product` varchar(100) NOT NULL COMMENT 'Product to be consumed',
-  `serving_portion` varchar(100) NOT NULL COMMENT 'Weight or volume of serving',
-  `morning` varchar(1) DEFAULT NULL COMMENT 'Meal should be given in the morning',
-  `evening` varchar(1) DEFAULT NULL COMMENT 'Meal should be given in the evening',
-  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
-  `updated_date` date DEFAULT NULL COMMENT 'Updated date',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID');
-
-CREATE TABLE `pawsome`.`archived_pet_doc_uploads` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
-  `file_type` varchar(100) NOT NULL COMMENT 'Document type (referral, lab, invoice, other)',
-  `file_name` varchar(100) NOT NULL COMMENT 'Name of file',
-  `upload_date` date NOT NULL COMMENT 'Upload date',
-  `uploaded_by` int(10) NOT NULL COMMENT 'Uploaded by user');
-
-CREATE TABLE `pawsome`.`archived_pet_immun_records` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
-  `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `vaccine_date` date NOT NULL COMMENT 'Vaccination date',
-  `vaccine` varchar(100) NOT NULL COMMENT 'Vaccine name/description',
-  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Update date',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID');
-
-CREATE TABLE `pawsome`.`archived_pet_rehab_records` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `referral_id` int(10) NOT NULL COMMENT 'Referenced referral',
-  `treatment_date` date NOT NULL COMMENT 'Date of treatments',
-  `attended` varchar(1) DEFAULT NULL COMMENT 'Pet attended session',
-  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user');
-
-CREATE TABLE `pawsome`.`archived_pets` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `pet_owner_id` int(10) NOT NULL COMMENT 'Referenced pet owner',
-  `petname` varchar(50) NOT NULL COMMENT 'Name of pet',
-  `species` varchar(50) NOT NULL COMMENT 'Species of pet',
-  `breed` varchar(50) NOT NULL COMMENT 'Breed of pet',
-  `birthdate` date NOT NULL COMMENT 'Birthdate of pet',
-  `weight` decimal(10,2) NOT NULL COMMENT 'Weight of pet',
-  `sex` varchar(10) NOT NULL COMMENT 'Sex of pet',
-  `microchip_no` varchar(15) DEFAULT NULL COMMENT 'Microchip identifier of pet',
-  `insurance_membership` varchar(10) DEFAULT NULL COMMENT 'Insurance owned under pet’s name',
-  `insurance_expiry` date DEFAULT NULL COMMENT 'Expiration date of insurance under pet’s name',
-  `comments` varchar(1000) DEFAULT NULL COMMENT 'Other comments for pet information like colour, behaviour, allergies',
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record');
-
-CREATE TABLE `pawsome`.`archived_pet_surgery_records` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
-  `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `surgery` varchar(100) NOT NULL COMMENT 'Surgery name',
-  `surgery_date` date NOT NULL COMMENT 'Date of surgery',
-  `discharge_date` date DEFAULT NULL COMMENT 'Date discharged',
-  `comments` varchar(500) DEFAULT NULL COMMENT 'Additional comments',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Date updated',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user');
-
-CREATE TABLE `pawsome`.`archived_prescriptions` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
-  `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `prescription_date` date NOT NULL COMMENT 'Date of prescription',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user ID');
-
-CREATE TABLE `pawsome`.`archived_receipts` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `invoice_id` int(10) NOT NULL COMMENT 'Referenced invoice ID',
-  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record');
-
-CREATE TABLE `pawsome`.`archived_referrals` (
-  `id` int(10) NOT NULL COMMENT 'Unique identifier',
-  `doctor_id` int(10) DEFAULT NULL COMMENT 'Referenced doctor ID',
-  `booking_id` int(10) NOT NULL COMMENT 'Referenced booking ID',
-  `pet_id` int(10) NOT NULL COMMENT 'Referenced pet ID',
-  `referral_date` date NOT NULL COMMENT 'Date of referral',
-  `diagnosis` varchar(100) NOT NULL COMMENT 'Diagnosis indicated in referral',
-  `updated_by` int(10) DEFAULT NULL COMMENT 'Updated by user',
-  `updated_date` datetime DEFAULT NULL COMMENT 'Updated date');
-
-CREATE TABLE `pawsome`.`archived_sales_invoice_items` (
-  `sales_invoice_id` int(10) NOT NULL COMMENT 'Reference invoice ID',
-  `item_category_id` int(10) NOT NULL COMMENT 'Reference item category ID',
-  `item_id` int(10) NOT NULL COMMENT 'Item identifier',
-  `quantity` int(11) NOT NULL COMMENT 'Quantity of items',
-  `unit_amount` decimal(10,2) NOT NULL COMMENT 'Amount per unit',
-  `total_amount` decimal(10,2) NOT NULL COMMENT 'Total amount times quantity');
-
-CREATE TABLE `pawsome`.`archived_sales_invoices` (
-  `id` int(10) NOT NULL COMMENT 'Unique key of this table',
-  `payment_id` int(10) DEFAULT NULL COMMENT 'Referenced payment ID',
-  `invoice_amount` decimal(10,2) DEFAULT NULL COMMENT 'Invoice amount',
-  `updated_date` datetime NOT NULL COMMENT 'Update date of record',
-  `updated_by` int(10) NOT NULL COMMENT 'User ID who updated the record');
-
-
-/** 
 DATA SET UP
 */
 
@@ -890,11 +634,11 @@ INSERT INTO `pawsome`.`inventory_items`
 `updated_date`,
 `archived`)
 VALUES
-(1,'Standard Consultation',0,0,0,0,'',null,null,89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Diet Consultation',0,0,0,0,'',null,null,86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Rehab',0,0,0,0,'',null,null,90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Vaccine',0,0,0,0,'',null,null,80,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(1,'Surgery',0,0,0,0,'',null,null,120,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Standard Consultation',100000,0,0,0,'',null,null,89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Diet Consultation',100000,0,0,0,'',null,null,86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Rehab',100000,0,0,0,'',null,null,90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Vaccine',100000,0,0,0,'',null,null,80,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(1,'Surgery',100000,0,0,0,'',null,null,120,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine distemper virus (CDV) vaccine',10,20,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),DATE_ADD(SYSDATE(), INTERVAL -3 DAY),89,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine adenovirus (CAV) vaccine',10,17,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),DATE_ADD(SYSDATE(), INTERVAL -3 DAY),86,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (2,'Canine parvovirus (CPV-2) vaccine',10,10,15,10,'millilitres',STR_TO_DATE("30-09-2022", "%d-%m-%Y"),STR_TO_DATE("30-09-2025", "%d-%m-%Y"),90,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
@@ -1160,36 +904,36 @@ VALUES
 (7,'Single Door Dog Carrier Cream White Small',2,0,0,1,'piece',STR_TO_DATE("07-09-2023", "%d-%m-%Y"),STR_TO_DATE("07-09-2030", "%d-%m-%Y"),44.81,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (7,'Single Door Dog Carrier Cream White Medium',2,0,0,1,'piece',STR_TO_DATE("07-09-2023", "%d-%m-%Y"),STR_TO_DATE("07-09-2030", "%d-%m-%Y"),54.77,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
 (7,'Single Door Dog Carrier Cream White Large',2,0,0,1,'piece',STR_TO_DATE("07-09-2023", "%d-%m-%Y"),STR_TO_DATE("07-09-2030", "%d-%m-%Y"),89.99,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 1',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 2',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 3',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 4',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 5',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 6',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 7',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 8',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 9',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 10',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 11',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 12',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 13',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 14',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 15',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 16',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 17',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 18',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 19',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 20',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 21',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 22',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 23',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 24',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 25',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 26',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 27',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 28',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 29',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
-(8,'Cage 30',0,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
+(8,'Cage 1',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 2',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 3',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 4',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 5',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 6',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 7',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 8',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 9',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 10',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 11',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 12',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 13',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 14',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 15',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 16',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 17',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 18',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 19',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 20',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 21',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 22',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 23',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 24',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 25',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 26',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 27',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 28',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 29',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0),
+(8,'Cage 30',100000,0,0,0,' ',null,null,100,(SELECT id FROM `pawsome`.`admins` WHERE username = 'pawsome_admin'),SYSDATE(),0);
 commit;
 
 INSERT INTO `pawsome`.`lodgings`

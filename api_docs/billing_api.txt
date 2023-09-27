@@ -192,3 +192,75 @@ response_body:
             ]
         }
     }
+
+endpoint: /get_billing_by_doctor
+method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+{
+	"billing_info": [
+		{
+			"pet_owner_id": 1008,
+			"pet_owner": "Man Leonard",
+			"username": "laboredcandy",
+			"pet_id": 12,
+			"petname": "Oreo",
+			"booking_id": 10000423,
+			"booking_date": "2023-09-28",
+			"booking_type_id": 2,
+			"booking_type": "Diet Consultation",
+			"booking_status": "FINISHED",
+			"doctor_id": 2,
+			"doctor": "Rafael Johnston",
+			"invoice_id": "300377",
+			"receipt_id": "500377",
+			"invoice_amount": "723.06",
+			"payment_paid": "723.06",
+			"payment_status": "PAID",
+			"payment_date": "2023-09-19 13:39:53",
+			"payment_received_by": 501,
+			"admin_name": "Pawsome Admin"
+		}
+    ]
+}
+
+endpoint: /get_all_billing_info
+method: GET
+headers: 
+    {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    }
+request_body: NO BODY
+response_body:
+{
+	"billing_info": [
+		{
+			"pet_owner_id": 1006,
+			"pet_owner": "Alexis Tucker",
+			"username": "earnestpork",
+			"pet_id": 10,
+			"petname": "Sniffles",
+			"booking_id": 10000360,
+			"booking_date": "2023-09-27",
+			"booking_type_id": 5,
+			"booking_type": "Surgery",
+			"booking_status": "FINISHED",
+			"doctor_id": 5,
+			"doctor": "Sherman Bray",
+			"invoice_id": "NA",
+			"receipt_id": "NA",
+			"invoice_amount": "0.00",
+			"payment_paid": null,
+			"payment_status": "NOT PAID",
+			"payment_date": null,
+			"payment_received_by": null,
+			"admin_name": null
+		}
+    ]
+}

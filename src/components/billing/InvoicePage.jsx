@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { Stack, Typography, Box, Paper } from '@mui/material';
-import Aside from '../components/aside/Aside';
-import Footer from '../components/Footer';
-import InventoryPage from '../components/inventory/InventoryPage';
+import Aside from '../aside/Aside';
+import Footer from '../Footer';
+import ProgramContext from "../../contexts/ProgramContext";
+import InvoiceTable from './InvoiceTable';
 
-export default function Inventory() {
+export default function InvoicePage() {
 
-    const [inventoryItems, setInventoryItems] = useState([]);
-    const [refreshInventory, setRefreshInventory] = useState(false);
-
+    const [billingItems, setBillingItems] = useState([]);
+    const {user} = useContext(ProgramContext);
 
     useEffect(() => {
-        setRefreshInventory(false);
-        fetch("http://localhost/capstone_vet_clinic/api.php/get_inventory_all", {
+        fetch("http://localhost/capstone_vet_clinic/api.php/get_billing_by_doctor/"+user.id, {
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
@@ -27,21 +26,20 @@ export default function Inventory() {
                 }
             })
             .then(data => {
-                if (data.inventory_records) {
-                    let tmp = data.inventory_records;
-                    setInventoryItems(tmp.filter(x => x.category_id !== 1 && x.category_id !== 8))
+                if (data.billing_info) {
+                    let filtered = data.billing_info.filter( x => x.booking_status === "FINISHED");
+                    setBillingItems(filtered);
                 }
-
             })
             .catch(error => {
-                console.error('Error getting all inventory:', error);
+                console.error('Error getting billing info by doctor:', error);
             });
-    }, [refreshInventory])
+    }, [user])
 
     return (
         <div>
             <Helmet>
-                <title>PawsomeVet | Inventory Management</title>
+                <title>PawsomeVet | Invoices</title>
             </Helmet>
             <Stack direction="row" sx={{ height: '100vh', maxHeight: '100%', overflowY: 'hidden' }}>
                 <Aside />
@@ -62,14 +60,14 @@ export default function Inventory() {
                         <Stack direction="column" spacing={3}>
                             <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                                 <Typography component="h1" variant="h4" sx={{ fontWeight: 600 }}>
-                                    Inventory Management
+                                    Invoices & Receipts
                                 </Typography>
                             </Stack>
 
                             <Stack direction="row" spacing={2}>
                                 <Box flex={1}>
                                     <Paper sx={{ p: 3, borderRadius: 4 }} elevation={0}>
-                                        <InventoryPage inventoryItems={inventoryItems} setRefreshInventory={setRefreshInventory}/>
+                                        <InvoiceTable billingItems={billingItems} />
                                     </Paper>
                                 </Box>
                             </Stack>

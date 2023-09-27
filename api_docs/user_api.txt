@@ -13,7 +13,7 @@ response_body:
                 "firstname": "Pawsome",
                 "lastname": "Admin",
                 "username": "pawsome_admin",
-                "password": "59c1a715843c02b63f6862dbb596be97",
+                "password": null,
                 "address": "40 Romawi Road",
                 "state": "NSW",
                 "email": "pawsome_admin@pawsome.com.au",
@@ -38,7 +38,7 @@ response_body:
                 "firstname": "Joe",
                 "lastname": "Mcguire",
                 "username": "sneeringbovril",
-                "password": "5fdbec3120f1fde6bdd6106d5b2c7aca",
+                "password": null,
                 "address": "33 Arthur Street",
                 "state": "NSW",
                 "email": "sneeringbovril@pawsome.com.au",
@@ -63,7 +63,7 @@ response_body:
                 "firstname": "Gilbert",
                 "lastname": "Lynch",
                 "username": "ritzydonut",
-                "password": "8a01bb6762f3526d584c4e293af69263",
+                "password": null,
                 "address": "4 Taylor Street",
                 "state": "NSW",
                 "email": "ritzydonut@pawsome.com.au",
@@ -79,16 +79,13 @@ response_body:
 
 
 endpoint: /delete_doctor/<doctor_id>
-method: POST
+method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
-request_body: 
-    {
-        "username":"pawsome_admin"
-    }
+request_body: NO BODY
 response_body:
     {
         "delete_doctor": true
@@ -96,16 +93,13 @@ response_body:
 
 
 endpoint: /delete_pet_owner/<pet_owner_id>
-method: POST
+method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
-request_body: 
-    {
-        "username":"pawsome_admin"
-    }
+request_body: NO BODY
 response_body:
     {
         "delete_pet_owner": true

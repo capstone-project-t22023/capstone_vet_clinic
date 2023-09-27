@@ -671,15 +671,12 @@ elseif ($action === 'get_all_pet_owners') {
  */ 
 elseif ($action === 'delete_doctor') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
         $role = $database->checkRoleByUsername($req_username);
         $record = [
             'id' => $id,
             'username' => $req_username
         ];
-
+        
         if($role['role'] === 'admin'){
             if($affected_bookings=$booking_database->getBookingsByDoctorId($id)){
                 foreach($affected_bookings as $ab):
@@ -2980,15 +2977,6 @@ elseif ($action === 'generate_invoice') {
             if($current_booking_status['booking_status'] === 'FINISHED'){
                 if($invoice_count['invoice_count'] === 0){
                     if($invoice_id=$billing_database->createNewInvoice($invoice_info)){ 
-                        $booking_invoice_record = [
-                            'invoice_id' => $invoice_id,
-                            'item_category_id' => 1,
-                            'item_id' => $_POST['booking_id'],
-                            'quantity' => 1,
-                            'booking_fee' => $booking_fee
-                        ]; 
-                        
-                        if($billing_database->insertNewInvoiceBookingItem($booking_invoice_record)){
                             foreach($invoice_items as $item):
                                 $invoice_record = [
                                     'invoice_id' => $invoice_id,
@@ -3064,10 +3052,6 @@ elseif ($action === 'generate_invoice') {
                             } else {
                                 return_json(['generate_invoice' => "Invoice amount not calculated. Error encountered."]);
                             }
-
-                        } else {
-                            return_json(['generate_invoice' => "Booking invoice item encountered an error."]);
-                        }
                     }
                 }  else {
                     return_json(['generate_invoice' => "An existing invoice is already created for this booking."]);
@@ -3107,14 +3091,6 @@ elseif ($action === 'update_invoice') {
         {
             if($current_booking_status['booking_status'] === 'FINISHED'){
                     if($billing_database->deleteInvoiceItemByInvoiceId($id)){ 
-                        $booking_invoice_record = [
-                            'invoice_id' => $id,
-                            'item_category_id' => 1,
-                            'item_id' => $_POST['booking_id'],
-                            'quantity' => 1,
-                            'booking_fee' => $booking_fee
-                        ]; 
-                        if($billing_database->insertNewInvoiceBookingItem($booking_invoice_record)){
                             foreach($invoice_items as $item):
                                 $invoice_record = [
                                     'invoice_id' => $id,
@@ -3145,6 +3121,7 @@ elseif ($action === 'update_invoice') {
                                         'item_id' => $item['item_id'],
                                         'username' => $req_username
                                     ]; 
+
                                     if($new_qty >= 0){
                                         if($inventory_database->updateInUseQty($inventory_record)){
                                             true;
@@ -3204,17 +3181,13 @@ elseif ($action === 'update_invoice') {
                                             "username" => $req_username
                                         ];
                                         if($billing_database->addPaymentHistory($payment_history)){
-                                            return_json(['update_invoice' => $id]);
+                                            return_json(['update_invoice' => (int)$id]);
                                         }
                                     }
                                 }
                             } else {
                                 return_json(['update_invoice' => "Invoice amount not calculated. Error encountered."]);
                             }
-
-                        } else {
-                            return_json(['update_invoice' => "Booking invoice item encountered an error."]);
-                        }
                     }
             } else {
                 return_json(['update_invoice' => "Booking status must be in FINISHED status before invoice can be generated. Current status is: " . $current_booking_status['booking_status']]);
@@ -3426,10 +3399,80 @@ elseif ($action === 'get_receipt') {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
     }
 }
+/**
+ * API endpoint when getting all billing info
+ */ 
+elseif ($action === 'get_all_billing_info') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] !== 'pet_owner'){
+            if($billing_info = $billing_database->getAllBillingInfo()){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
+/**
+ * API endpoint when getting billing info by doctor
+ */ 
+elseif ($action === 'get_billing_by_doctor') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] === 'doctor'){
+            if($billing_info = $billing_database->getBillingByDoctor($id)){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
+/**
+ * API endpoint when getting billing info by pet owner
+ */ 
+elseif ($action === 'get_billing_by_pet_owner') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] === 'pet_owner'){
+            if($billing_info = $billing_database->getBillingByPetOwner($id)){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
 
 /**
  * Inventory System Management
  */
+/**
+ * API endpoint when getting inventory categories and item mapping
+ */ 
+elseif ($action === 'get_mapped_inventory') {
+    if ($valid_jwt_token) {
+        if ($inventory = $inventory_database->getAllMappedInventory()) {
+            return_json(['inventory' => $inventory]);
+        } else {
+            return_json(['inventory' => []]); 
+        }
+    }
+}
+
 /**
  * API endpoint when getting all inventory records
  */ 
@@ -3483,6 +3526,19 @@ elseif ($action === 'get_inventory_all') {
         }
     } else {
         return_json(['ERROR:' => "UNAUTHORIZED"]); 
+    }
+}
+
+/**
+ * API endpoint when getting inventory categories
+ */ 
+elseif ($action === 'get_inventory_categories') {
+    if ($valid_jwt_token) {
+        if ($inventory_categories = $inventory_database->getAllInventoryCategories()) {
+            return_json(['inventory_categories' => $inventory_categories]);
+        } else {
+            return_json(['inventory_categories' => []]); 
+        }
     }
 }
 
@@ -3735,7 +3791,23 @@ elseif ($action === 'add_lodging') {
                 'username' => $req_username
             ];
             if($lodging_id=$lodging_database->addLodging($record)){
-                return_json(['add_lodging' => $lodging_id]);
+                $cage_name = "Cage " . $lodging_id;
+                $inv_record = [
+                    'inventory_item_category_id' => 8,
+                    'item_name' => $cage_name,
+                    'in_use_qty' => 0,
+                    'in_stock_qty' => 0,
+                    'threshold_qty' => 0,
+                    'weight_volume' => 0,
+                    'item_unit' => ' ',
+                    'production_date' => null,
+                    'expiration_date' => null,
+                    'unit_price' => 100,
+                    'username' => $req_username
+                ];
+                if($inventory_database->addInventoryItem($inv_record)){
+                    return_json(['add_lodging' => $lodging_id]);
+                }
             } else {
                 return_json(['add_lodging' => false]);
             }
@@ -3784,11 +3856,18 @@ elseif ($action === 'update_lodging') {
  * API endpoint when deleting lodging
  */ 
 elseif ($action === 'delete_lodging') {
+    
+
     if ($valid_jwt_token) {
+        
         $role = $database->checkRoleByUsername($req_username);
+        $cage_name = "Cage " . $id;
+        
         if($role['role'] === 'admin'){
             if($lodging_database->deleteLodging($id)){
-                return_json(['delete_lodging' => true]);
+                if($inventory_database->deleteInventoryItemByName($cage_name)){
+                    return_json(['delete_lodging' => true]);
+                }
             } else {
                 return_json(['delete_lodging' => false]);
             }

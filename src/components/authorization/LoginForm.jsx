@@ -5,7 +5,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {Link, Navigate} from "react-router-dom";
 import ProgramContext from '../../contexts/ProgramContext';
-
+import Logo from "../header/Logo";
 
 export default function LoginForm() {
 
@@ -287,9 +287,7 @@ export default function LoginForm() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.dark'}}>
-                    <LockOutlinedIcon/>
-                </Avatar>
+                <Logo />
                 <Typography component="h1" variant="h5">
                     Log in
                 </Typography>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
     Tooltip, IconButton, Zoom, Paper, CircularProgress, Box, Typography, Badge,
     Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, 
-    Chip, Alert
+    Chip, Alert, Button
 } from '@mui/material';
 import { EditRounded, DeleteForeverRounded, PriorityHighRounded, ThumbUpAltRounded, Close, AddCircleRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
@@ -235,12 +235,14 @@ export default function InventoryTable(props) {
                     <TableBody>
                     <TableRow hover role="checkbox" tabIndex={-1} >
                         <TableCell align="center" colSpan={12} >
-                           <Chip
-                                label="Add Inventory Item"
+                           <Button
                                 color="primary"
-                                icon={<AddCircleRounded sx={{ fontSize: '25px' }} />}
+                                variant='contained'
+                                startIcon={<AddCircleRounded />}
                                 onClick={handleAddForm}
-                            /> 
+                            >
+                                Add Inventory Item
+                            </Button> 
                         </TableCell>
                         
                     </TableRow>

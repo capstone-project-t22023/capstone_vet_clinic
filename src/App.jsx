@@ -29,6 +29,14 @@ import ConfirmSignup from './components/authorization/ConfirmSignup';
 import PetRecords from "./pages/PetRecords";
 import Inventory from './pages/Inventory';
 import Lodging from './pages/Lodging';
+import GenerateInvoice from './components/billing/GenerateInvoice';
+import InvoicePage from './components/billing/InvoicePage';
+import InvoiceForm from './components/billing/InvoiceForm';
+import ReceiptForm from './components/billing/ReceiptForm';
+import PaymentPage from './components/billing/PaymentPage';
+import InvoicePdf from './pdf_export/InvoicePdf';
+import ReceiptPdf from './pdf_export/ReceiptPdf';
+import PaymentHistory from './components/billing/PaymentHistory';
 
 /**
  *
@@ -46,58 +54,60 @@ function App() {
     const [authenticated, setAuthenticated] = useState(false);
 
     useEffect(() => {
-        Promise.all([
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
-                },
-            }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
-                },
-            }),
-            fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
-                },
-            })
-        ])
-            .then((responses) => {
-                return Promise.all(responses.map(function (response) {
-                    return response.json();
-                }));
-            })
-            .then(data => {
-                if (data[0].user) {
-                    let tmp = data[0].user;
-                    if(tmp.role){
-                        tmp.role = 'admin';
+        if(localStorage.getItem('token')){
+            Promise.all([
+                fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }),
+                fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }),
+                fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    },
+                })
+            ])
+                .then((responses) => {
+                    return Promise.all(responses.map(function (response) {
+                        return response.json();
+                    }));
+                })
+                .then(data => {
+                    if (data[0].user) {
+                        let tmp = data[0].user;
+                        if(tmp.role){
+                            tmp.role = 'admin';
+                        }
+                        setUser(tmp);
+                        setAuthenticated(true);
+                        localStorage.setItem('user', JSON.stringify(tmp));
+                    } else if (data[1].user) {
+                        let tmp = data[1].user;
+                        if(tmp.role){
+                            tmp.role = 'doctor';
+                        }
+                        setUser(tmp);
+                        setAuthenticated(true);
+                        localStorage.setItem('user', JSON.stringify(tmp));
+                    } else if (data[2].user) {
+                        let tmp = data[2].user;
+                        if(tmp.role){
+                            tmp.role = 'pet_owner';
+                        }
+                        setUser(tmp);
+                        setAuthenticated(true);
+                        localStorage.setItem('user', JSON.stringify(tmp));
                     }
-                    setUser(tmp);
-                    setAuthenticated(true);
-                    localStorage.setItem('user', JSON.stringify(tmp));
-                } else if (data[1].user) {
-                    let tmp = data[1].user;
-                    if(tmp.role){
-                        tmp.role = 'doctor';
-                    }
-                    setUser(tmp);
-                    setAuthenticated(true);
-                    localStorage.setItem('user', JSON.stringify(tmp));
-                } else if (data[2].user) {
-                    let tmp = data[2].user;
-                    if(tmp.role){
-                        tmp.role = 'pet_owner';
-                    }
-                    setUser(tmp);
-                    setAuthenticated(true);
-                    localStorage.setItem('user', JSON.stringify(tmp));
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
     }, []);
 
     return (
@@ -117,9 +127,12 @@ function App() {
                                     <StaticLanding/>
                                 }
                                 />
+
                                 <Route index element={
                                     <Protected isLoggedIn={authenticated}>
-                                        <Home/>
+                                        <PetsProvider>
+                                            <Dashboard/>
+                                        </PetsProvider>
                                     </Protected>
                                 }/>
                                 <Route path="/dashboard" element={
@@ -157,6 +170,22 @@ function App() {
                                 }
                                 />
 
+                                <Route path="/print_invoice" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <InvoicePdf/>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/print_receipt" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <ReceiptPdf/>
+                                    </Protected>
+                                }
+                                />
+
+                                { user.role === "admin" ?
+                                <>
                                 <Route path="/inventory" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <Inventory />
@@ -168,6 +197,59 @@ function App() {
                                     <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <Lodging />
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+                                <Route path="/process_payments" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PaymentPage />
+                                    </Protected>
+                                }
+                                />
+                                </> : 
+                                <Route path="/lodging" element={
+                                    <DefaultPage />
+                                }
+                                />
+                                }
+
+                                <Route path="/generate_invoice" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <GenerateInvoice />
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/view_invoices" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <InvoicePage />
+                                        </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/manage_invoice" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <InvoiceForm />
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/view_receipt" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <ReceiptForm />
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/payment_history" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <PetsProvider>
+                                            <PaymentHistory />
                                         </PetsProvider>
                                     </Protected>
                                 }
