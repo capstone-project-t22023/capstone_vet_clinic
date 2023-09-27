@@ -4,3 +4,6 @@ public/.DS_Store
 src/.DS_Store
 src/components/forms/TrialForm.jsx
 e2e-report.html
+features/
+cucumber.js
+package-lock.json

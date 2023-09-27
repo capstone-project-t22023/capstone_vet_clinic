@@ -1,7 +1,7 @@
 const params = {
-    "cucumber_tests": "",
+    "features": "",
     "--publish-quiet": "",
-    "--format": "html:e2e-report.html",
+    "--format": "html:cucumber-testing-report.html",
     "--world-parameters": {
       appUrl: "http://localhost:3000/",
       headless: true,
@@ -23,4 +23,4 @@ const params = {
   
   module.exports = {
     default: constructParams(params),
-  };
+  };  
