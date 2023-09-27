@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom'
-
+import { Link } from "react-router-dom";
 import {
-    Stack, Typography, Box, Paper, Grid, 
+    Stack, Typography, Box, Paper, Grid,Tooltip, Zoom, Button,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@mui/material';
 import Aside from '../../components/aside/Aside';
 import Footer from '../Footer';
 import PawsomeVetLogo from '../../media/Logo.jpg';
+import { PrintRounded } from '@mui/icons-material';
 
 
 const letterhead =
@@ -56,7 +57,7 @@ export default function ReceiptForm() {
                 }));
             })
             .then(data => {
-                
+
                 if (data[0].inventory_categories) {
                     let tmp_1 = data[0].inventory_categories.map(cat => {
                         let x = {};
@@ -66,12 +67,12 @@ export default function ReceiptForm() {
                     })
                     tmp_1.push({ label: "Select One", value: 0 });
 
-                    if(data[1].inventory){
-                        if(data[2].get_invoice){
+                    if (data[1].inventory) {
+                        if (data[2].get_invoice) {
                             let invoice = data[2].get_invoice;
                             let inventory = data[1].inventory;
 
-                            let tmp_invoice_items = invoice.invoice_items.map( x => {
+                            let tmp_invoice_items = invoice.invoice_items.map(x => {
                                 let tmp = {};
                                 tmp.item_category = x.item_category_id;
                                 tmp.item_category_label = tmp_1.filter(cat => cat.value === x.item_category_id)[0].label;
@@ -84,7 +85,7 @@ export default function ReceiptForm() {
 
                                 return tmp;
                             });
-                            
+
                             setInvoiceItemRows(tmp_invoice_items);
                             setTotalAmount(parseFloat(invoice.invoice_amount).toFixed(2));
                         }
@@ -145,11 +146,11 @@ export default function ReceiptForm() {
                                         >
                                             <Paper elevation={4} >
                                                 {letterhead}
-                                                
+
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                                                     sx={{ paddingTop: 1, paddingBottom: 3 }}
                                                 >
-                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12} ><hr /></Grid>
                                                     <Grid item xs={4}>
                                                         <Typography variant="body2"><b>Invoice ID: </b>{bookingInfo.invoice_id}</Typography>
                                                     </Grid>
@@ -164,7 +165,7 @@ export default function ReceiptForm() {
                                                         <Typography variant="body2"><b>Payment Date: </b>{bookingInfo.payment_date}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}></Grid>
-                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12} ><hr /></Grid>
                                                     <Grid item xs={4}>
                                                         <Typography variant="body2"><b>Booking ID: </b>{bookingInfo.booking_id}</Typography>
                                                     </Grid>
@@ -179,7 +180,7 @@ export default function ReceiptForm() {
                                                         <Typography variant="body2"><b>Booking Type: </b>{bookingInfo.booking_type}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}></Grid>
-                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12} ><hr /></Grid>
                                                     <Grid item xs={4}>
                                                         <Typography variant="body2"><b>Pet Owner: </b>{bookingInfo.pet_owner}</Typography>
                                                     </Grid>
@@ -187,7 +188,7 @@ export default function ReceiptForm() {
                                                         <Typography variant="body2"><b>Pet: </b>{bookingInfo.petname}</Typography>
                                                     </Grid>
                                                     <Grid item xs={4}></Grid>
-                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12} ><hr /></Grid>
                                                     <Grid item xs={12}>
                                                         <Typography variant="body2"><b>Veterinarian: </b>Dr. {bookingInfo.doctor}</Typography>
                                                     </Grid>
@@ -197,7 +198,7 @@ export default function ReceiptForm() {
                                                     <Grid item xs={12}>
                                                         <Typography variant="body2"><b>Payment Received by: </b>{bookingInfo.admin_name}</Typography>
                                                     </Grid>
-                                                    <Grid item xs={12} ><hr/></Grid>
+                                                    <Grid item xs={12} ><hr /></Grid>
                                                 </Grid>
                                                 <TableContainer component={Paper} sx={{ paddingRight: 2, paddingLeft: 2 }}>
                                                     <Table sx={{ minWidth: 650 }} aria-label="invoice table">
@@ -231,6 +232,23 @@ export default function ReceiptForm() {
                                                         </TableBody>
                                                     </Table>
                                                 </TableContainer>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                                    sx={{ paddingTop: 3, paddingBottom: 1, textAlign: 'center' }}
+                                                >
+                                                    <Grid item xs={12}>
+                                                        <Tooltip title="Export to PDF" placement="right" TransitionComponent={Zoom} arrow>
+                                                            <Link to="/print_receipt" state={{ bookingInfo: bookingInfo, invoiceItemRows: invoiceItemRows }}>
+                                                                <Button
+                                                                    color="primary"
+                                                                    variant="contained"
+                                                                    startIcon={<PrintRounded />}
+                                                                >
+                                                                    Print
+                                                                </Button>
+                                                            </Link>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </Grid>
                                             </Paper>
                                         </Box>
                                     </Paper>

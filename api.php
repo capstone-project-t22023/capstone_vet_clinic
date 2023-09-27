@@ -671,17 +671,14 @@ elseif ($action === 'get_all_pet_owners') {
  */ 
 elseif ($action === 'delete_doctor') {
     if ($valid_jwt_token) {
-        $rest_json = file_get_contents('php://input');
-        $_POST = json_decode($rest_json, true);
-
         $role = $database->checkRoleByUsername($req_username);
         $record = [
             'id' => $id,
             'username' => $req_username
         ];
-
+        
         if($role['role'] === 'admin'){
-            if($affected_bookings=$database->getBookingsByDoctorId($id)){
+            if($affected_bookings=$booking_database->getBookingsByDoctorId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'PENDING';
@@ -765,7 +762,7 @@ elseif ($action === 'delete_pet_owner') {
 
         if($role['role'] === 'admin'){
 
-            if($affected_bookings=$database->getBookingsByPetOwnerId($id)){
+            if($affected_bookings=$booking_database->getBookingsByPetOwnerId($id)){
                 foreach($affected_bookings as $ab):
                     if($ab['booking_status'] === 'PENDING' || $ab['booking_status'] === 'CONFIRMED'){
                         $new_status = 'ARCHIVED';
@@ -3430,6 +3427,25 @@ elseif ($action === 'get_billing_by_doctor') {
 
         if($role['role'] === 'doctor'){
             if($billing_info = $billing_database->getBillingByDoctor($id)){
+                return_json(['billing_info' => $billing_info]); 
+            } else {
+                return_json(['billing_info' => []]); 
+            }
+        } else {
+            return_json(['ERROR:' => "UNAUTHORIZED"]); 
+        }
+
+    }
+}
+/**
+ * API endpoint when getting billing info by pet owner
+ */ 
+elseif ($action === 'get_billing_by_pet_owner') {
+    if ($valid_jwt_token) {
+        $role = $database->checkRoleByUsername($req_username);
+
+        if($role['role'] === 'pet_owner'){
+            if($billing_info = $billing_database->getBillingByPetOwner($id)){
                 return_json(['billing_info' => $billing_info]); 
             } else {
                 return_json(['billing_info' => []]); 

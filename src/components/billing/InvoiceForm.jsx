@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import ProgramContext from "../../contexts/ProgramContext";
 import {
     Stack, Typography, Box, Paper, Grid, Select, IconButton, MenuItem, FormControl, Button, Tooltip, Zoom,
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Alert, Divider
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Alert
 } from '@mui/material';
 import Aside from '../../components/aside/Aside';
 import Footer from '../Footer';
 import PawsomeVetLogo from '../../media/Logo.jpg';
-import { AddCircleRounded, EditRounded, DeleteForeverRounded, SaveRounded, Close, PaidRounded } from '@mui/icons-material';
+import { AddCircleRounded, EditRounded, 
+    DeleteForeverRounded, SaveRounded, 
+    Close, PaidRounded, PrintRounded } from '@mui/icons-material';
 
 
 const letterhead =
@@ -577,7 +580,18 @@ export default function InvoiceForm() {
                                                 >
                                                     <Grid item xs={12}>
                                                         { invoiceId ?
-                                                            ( bookingInfo.payment_status === "PAID" || user.role == "admin" ? ""
+                                                            ( bookingInfo.payment_status === "PAID" || user.role == "admin" ? 
+                                                            <Tooltip title="Export to PDF" placement="right" TransitionComponent={Zoom} arrow>
+                                                                <Link to="/print_invoice" state= {{ bookingInfo: bookingInfo, invoiceItemRows: invoiceItemRows }}>
+                                                                    <Button
+                                                                        color="primary"
+                                                                        variant="contained"
+                                                                        startIcon={<PrintRounded />}
+                                                                    >
+                                                                        Print
+                                                                    </Button>
+                                                                </Link>
+                                                            </Tooltip> 
                                                             :
                                                             <Tooltip title="Update invoice" placement="right" TransitionComponent={Zoom} arrow>
                                                                 <Button

@@ -79,16 +79,13 @@ response_body:
 
 
 endpoint: /delete_doctor/<doctor_id>
-method: POST
+method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
-request_body: 
-    {
-        "username":"pawsome_admin"
-    }
+request_body: NO BODY
 response_body:
     {
         "delete_doctor": true
@@ -96,16 +93,13 @@ response_body:
 
 
 endpoint: /delete_pet_owner/<pet_owner_id>
-method: POST
+method: DELETE
 headers: 
     {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + localStorage.getItem('token'),
     }
-request_body: 
-    {
-        "username":"pawsome_admin"
-    }
+request_body: NO BODY
 response_body:
     {
         "delete_pet_owner": true
