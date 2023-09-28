@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
     Tooltip, IconButton, Zoom, Paper, CircularProgress, Box, Typography, Badge,
-    Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
+    Table, TableBody, TableContainer, TableHead, TablePagination, TableRow,
     Chip, Alert, Dialog
 } from '@mui/material';
 import {
@@ -15,7 +15,30 @@ import {
 import EditUserForm from "../user/EditUserForm";
 import SignupForm from "../authorization/SignupForm";
 import ProgramContext from "../../contexts/ProgramContext";
+import {styled} from '@mui/material/styles';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        // borderBottom: "1px solid",
+        // borderColor:  theme.palette.primary[100],
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.primary[50],
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const columns = [
 
@@ -173,8 +196,6 @@ export default function UsersTable(props) {
             username: user.username,
         }));
 
-        // TODO : delete doesn't work, return ERRORs
-
         if (props.usersListType === 0 || props.usersListType === 1) {
 
             fetch(url, {
@@ -284,42 +305,42 @@ export default function UsersTable(props) {
                 <TableContainer sx={{maxHeight: 900}}>
                     <Table stickyHeader aria-label="inventory table">
                         <TableHead>
-                            <TableRow>
+                            <StyledTableRow>
                                 {columns.map((column, idx) => (
-                                    <TableCell
+                                    <StyledTableCell
                                         key={"inv_" + column.id + "_" + idx}
                                         align={column.align}
                                         style={{minWidth: column.minWidth}}
                                     >
                                         <b>{column.label}</b>
-                                    </TableCell>
+                                    </StyledTableCell>
                                 ))}
-                            </TableRow>
+                            </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow hover role="checkbox" tabIndex={-1}>
-                                <TableCell align="center" colSpan={12}>
+                            <StyledTableRow hover role="checkbox" tabIndex={-1}>
+                                <StyledTableCell align="center" colSpan={12}>
                                     <Chip
                                         label="New User"
                                         color="primary"
                                         icon={<AddCircleRounded sx={{fontSize: '25px'}}/>}
                                         onClick={handleAddForm}
                                     />
-                                </TableCell>
+                                </StyledTableCell>
 
-                            </TableRow>
+                            </StyledTableRow>
                             {usersList
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, idx) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1}
+                                        <StyledTableRow hover role="checkbox" tabIndex={-1}
                                                   key={"inv_items_" + row.id + "_" + idx}>
 
                                             {columns.map((column, index) => {
                                                 const value = row[column.id];
                                                 if (column.id === 'actions') {
                                                     return (
-                                                        <TableCell
+                                                        <StyledTableCell
                                                             key={"inv_items_cell" + column.id + "_" + idx + index}>
                                                             <Tooltip title="Update user" placement="right"
                                                                      TransitionComponent={Zoom} arrow>
@@ -335,20 +356,20 @@ export default function UsersTable(props) {
                                                                     <DeleteForeverRounded fontSize="small"/>
                                                                 </IconButton>
                                                             </Tooltip>
-                                                        </TableCell>
+                                                        </StyledTableCell>
                                                     );
                                                 } else {
                                                     return (
-                                                        <TableCell
+                                                        <StyledTableCell
                                                             key={"inv_items_cell" + column.id + "_" + idx + index}>
                                                             {column.format && typeof value === 'number'
                                                                 ? column.format(value)
                                                                 : value}
-                                                        </TableCell>
+                                                        </StyledTableCell>
                                                     );
                                                 }
                                             })}
-                                        </TableRow>
+                                        </StyledTableRow>
                                     );
                                 })}
                         </TableBody>

@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {PetsContext} from "../../contexts/PetsProvider";
-import {styled} from '@mui/material/styles';
 import {
     Table,
     TableRow,
@@ -14,6 +13,7 @@ import {
     Box,
     Tabs, Tab
 } from "@mui/material";
+import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import {TabPanel} from "@mui/lab";
 import Loading from "../Loading";

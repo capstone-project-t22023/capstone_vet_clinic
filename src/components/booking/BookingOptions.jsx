@@ -25,8 +25,12 @@ export default function BookingOptions(props) {
     const [takenSlots, setTakenSlots] = useState([]);
     const [bookingTypes, setBookingTypes] = useState([]);
 
+    console.log(selectedBooking)
+
     //mount data
     useEffect(() => {
+        let tempSelectedBookingDate = new Date();
+        if(selectedBooking){tempSelectedBookingDate = selectedBooking.booking_date}
         Promise.all([
             fetch("http://localhost/capstone_vet_clinic/api.php/get_all_doctors", {
                 headers: {
@@ -38,7 +42,7 @@ export default function BookingOptions(props) {
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
             }),
-            fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(selectedBooking.booking_date).format('DD-MM-YYYY')}`, {
+            fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(tempSelectedBookingDate).format('DD-MM-YYYY')}`, {
                 method: 'GET',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
