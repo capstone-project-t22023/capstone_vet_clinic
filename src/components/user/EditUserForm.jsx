@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import programContext from "../../contexts/ProgramContext";
 
-function EditUserForm({ user, onUpdateUser, userRole= "" }) {
+function EditUserForm({user, onUpdateUser, userRole = ""}) {
     const [firstname, setFirstname] = useState(user.firstname);
     const [lastname, setLastname] = useState(user.lastname);
     const [address, setAddress] = useState(user.address);
@@ -45,50 +45,49 @@ function EditUserForm({ user, onUpdateUser, userRole= "" }) {
     console.log(user)
 
     const updateUserDB = (user) => {
-            const url = `http://localhost/capstone_vet_clinic/api.php/update_user/${user.id}`;
-            const req_body = {
-                "role": userRole ? userRole : loggedUser.role,
-                "firstname":user.firstname,
-                "lastname":user.lastname,
-                "password":user.password,
-                "address":user.address,
-                "state":user.state,
-                "email":user.email,
-                "phone":user.phone,
-                "postcode":user.postcode,
-                "username":loggedUser.username
-            }
-
-            console.log(url, JSON.stringify(req_body));
-
-            // TODO : edit doesn't work, return ERRORs like "update_user: 'Error: Firstname must be up to 50 letters only.'"
+        const url = `http://localhost/capstone_vet_clinic/api.php/update_user/${user.id}`;
+        let req_body = {};
 
 
+        console.log(url, JSON.stringify(req_body));
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token'),
-                    },
-                    body: JSON.stringify({req_body}),
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
-                    .then(data => {
-                        console.log(data)
-                        if (data.update_user) {
-                            setSuccess(true);
-                        }
+        // TODO : edit doesn't work, return ERRORs like "update_user: 'Error: Firstname must be up to 50 letters only.'"
 
-                    })
-                    .catch(error => {
-                        console.error('Error deleting user:', error);
-                    });
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({
+                role: userRole ? userRole : loggedUser.role,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                address: user.address,
+                state: user.state,
+                email: user.email,
+                phone: user.phone,
+                postcode: user.postcode,
+                username: loggedUser.username
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                console.log(data)
+                if (data.update_user) {
+                    setSuccess(true);
+                }
+
+            })
+            .catch(error => {
+                console.error('Error deleting user:', error);
+            });
 
 
     }

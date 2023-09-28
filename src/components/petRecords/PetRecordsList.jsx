@@ -288,20 +288,20 @@ export default function PetRecordsList() {
                             <TableHead>
                                 <StyledTableRow>
                                     <StyledTableCell>Surgery Date</StyledTableCell>
-                                    <StyledTableCell>Veterinarian</StyledTableCell>
                                     <StyledTableCell>Surgery Type</StyledTableCell>
-                                    <StyledTableCell>Discharge Date</StyledTableCell>
+                                    <StyledTableCell>Veterinarian</StyledTableCell>
                                     <StyledTableCell>Comments</StyledTableCell>
+                                    <StyledTableCell>Discharge Date</StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
                                 {petSurgeryList.map((record, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell>{record.surgery_date}</StyledTableCell>
-                                        <StyledTableCell>{record.veterinarian}</StyledTableCell>
                                         <StyledTableCell>{record.surgery}</StyledTableCell>
-                                        <StyledTableCell>{record.discharge_date}</StyledTableCell>
+                                        <StyledTableCell>{record.veterinarian}</StyledTableCell>
                                         <StyledTableCell>{record.comments || 'N/A'}</StyledTableCell>
+                                        <StyledTableCell>{record.discharge_date}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
                             </TableBody>
@@ -318,10 +318,10 @@ export default function PetRecordsList() {
                             <TableHead>
                                 <StyledTableRow>
                                     <StyledTableCell>Vaccine Date</StyledTableCell>
+                                    <StyledTableCell>ID</StyledTableCell>
                                     <StyledTableCell>Vaccine</StyledTableCell>
                                     <StyledTableCell>Comments</StyledTableCell>
-                                    <StyledTableCell>Record ID</StyledTableCell>
-                                    <StyledTableCell>Doctor ID</StyledTableCell>
+                                    {/*<StyledTableCell>Doctor ID</StyledTableCell>*/}
                                     <StyledTableCell>Veterinarian</StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
@@ -329,10 +329,10 @@ export default function PetRecordsList() {
                                 {petImmunList.map((item, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell>{dayjs(item.vaccine_date).format("DD MMM YYYY")}</StyledTableCell>
+                                        <StyledTableCell>{item.record_id}</StyledTableCell>
                                         <StyledTableCell>{item.vaccine}</StyledTableCell>
                                         <StyledTableCell>{item.comments}</StyledTableCell>
-                                        <StyledTableCell>{item.record_id}</StyledTableCell>
-                                        <StyledTableCell>{item.doctor_id}</StyledTableCell>
+                                        {/*<StyledTableCell>{item.doctor_id}</StyledTableCell>*/}
                                         <StyledTableCell>{item.veterinarian}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
