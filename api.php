@@ -990,13 +990,6 @@ elseif ($action === 'update_user') {
             return_json(['update_user' =>  "Error: Username must be up to 20 characters only."]);  
         }
 
-        if(validatePassword($_POST['password'])
-            && validateLength($_POST['password'], 20)){
-            $check = true;
-        } else {
-            return_json(['update_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
-        }
-
         if(validateAlphaNumeric($_POST['address'])
             && validateLength($_POST['address'], 100)){
             $check = true;
@@ -1037,7 +1030,6 @@ elseif ($action === 'update_user') {
             'role' => $_POST['role'],
             'firstname' => $_POST['firstname'],
             'lastname' => $_POST['lastname'],
-            'password' => md5($_POST['password']),
             'address' => $_POST['address'],
             'state' => $_POST['state'],
             'email' => $_POST['email'],
