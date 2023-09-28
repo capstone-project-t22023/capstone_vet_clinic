@@ -13,8 +13,6 @@ import theme from "./theme";
 
 //Pages import
 import DefaultPage from './pages/DefaultPage';
-import Home from './pages/Home';
-import Bookings from './pages/Bookings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard";
@@ -128,12 +126,7 @@ function App() {
                                     <StaticLanding/>
                                 }
                                 />
-                                <Route index element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <Home/>
-                                    </Protected>
-                                }/>
-                                <Route path="/dashboard" element={
+                                <Route path="/" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <Dashboard/>
