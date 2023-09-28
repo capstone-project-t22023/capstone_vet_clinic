@@ -24,10 +24,8 @@ import dayjs from "dayjs";
 export default function BookingType({text = false, icon = false, title = false, simple = false, type}) {
 
     const {user} = useContext(ProgramContext);
-    const {selectedAppointment, allBookingTypes,handlerRefreshAppointments} = useContext(PetsContext);
-    const [bookingType, setBookingType] = useState([])
+    const {selectedAppointment, allBookingTypes, handlerRefreshAppointments} = useContext(PetsContext);
     const [editMode, setEditMode] = useState(false)
-    const [openBookingType, setOpenBookingType] = useState(false)
     const [selectedType, setSelectedType] = useState(-1)
 
     if (!text && !icon && !title) {
@@ -39,7 +37,6 @@ export default function BookingType({text = false, icon = false, title = false, 
     useEffect(() => {
         const foundBookingType = allBookingTypes.find(bType => bType.booking_type === type);
         if (foundBookingType) {
-            setBookingType(foundBookingType);
             setSelectedType(foundBookingType.id);
         }
     }, [allBookingTypes, type]);
@@ -92,6 +89,7 @@ export default function BookingType({text = false, icon = false, title = false, 
             .then((response) => response.json())
             .then((data) => {
                 console.log("Response from API:", data);
+                handlerRefreshAppointments(true)
             })
             .catch((data) => {
                 console.error("Error:", data);
@@ -101,17 +99,12 @@ export default function BookingType({text = false, icon = false, title = false, 
 
     const handleChange = (event) => {
         setSelectedType(event.target.value);
-        console.log("Type", event.target.value)
     };
     const handleChangeBookingType = () => {
         // console.log(allBookingTypes);
-        setSelectedType(type?type:'');
+        setSelectedType(type ? type : '');
         setEditMode(false);
         updateBookingTypeInAppointment();
-        handlerRefreshAppointments(true)
-
-        console.log("Save Booking Type")
-    //     TODO Save booking type - update booking
     };
 
     return (
@@ -119,34 +112,35 @@ export default function BookingType({text = false, icon = false, title = false, 
             {user.role === "admin" && !simple ? (
                 <Stack direction="column">
                     {editMode ? (
-                        <Paper elevation={0} sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
+                        <Paper elevation={0}
+                               sx={{borderRadius: 4, p: 2, border: "1px solid", borderColor: "primary.50"}}>
                             <Stack direction="column" spacing={2}>
-                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                <FormControl sx={{m: 1, minWidth: 120}} size="small">
                                     <InputLabel id="select-booking">Booking Type</InputLabel>
 
 
-                                <Select
-                                    value={selectedType}
-                                    onChange={handleChange}
-                                    displayEmpty
-                                    variant="outlined"
-                                    size="small"
-                                    label="Booking Type"
-                                    fullWidth
-                                >
+                                    <Select
+                                        value={selectedType}
+                                        onChange={handleChange}
+                                        displayEmpty
+                                        variant="outlined"
+                                        size="small"
+                                        label="Booking Type"
+                                        fullWidth
+                                    >
 
-                                    {allBookingTypes.map((type) => (
-                                        <MenuItem key={type.id} value={type.id}>
-                                            {type.booking_type}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
-                                    <Button onClick={() => setEditMode(!editMode)} variant="outlined" size="small"
-                                            color="primary">Cancel</Button>
-                                    <Button onClick={handleChangeBookingType} variant="contained" size="small"
-                                            color="primary">Save</Button>
-                                </Stack>
+                                        {allBookingTypes.map((type) => (
+                                            <MenuItem key={type.id} value={type.id}>
+                                                {type.booking_type}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Stack direction="row" spacing={2} sx={{mt: 1}} justifyContent="center">
+                                        <Button onClick={() => setEditMode(!editMode)} variant="outlined" size="small"
+                                                color="primary">Cancel</Button>
+                                        <Button onClick={handleChangeBookingType} variant="contained" size="small"
+                                                color="primary">Save</Button>
+                                    </Stack>
                                 </FormControl>
                             </Stack>
                         </Paper>
@@ -154,7 +148,11 @@ export default function BookingType({text = false, icon = false, title = false, 
                         <Stack direction="row" spacing={1} alignItems="center">
                             <Typography fontSize="0.75rem"><strong>Booking Type:</strong></Typography>
                             <Button
-                                onClick={() => setEditMode(!editMode)}>{type ? type : "Select Type"}</Button>
+                                onClick={() => setEditMode(!editMode)}
+                                disabled={selectedAppointment.booking_status==="FINISHED"}
+                            >
+                                {type ? type : "Select Type"}
+                            </Button>
                         </Stack>
                     )
                     }

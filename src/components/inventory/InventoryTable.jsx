@@ -1,12 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import {
     Tooltip, IconButton, Zoom, Paper, CircularProgress, Box, Typography, Badge,
-    Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, 
+    Table, TableBody, TableContainer, TableHead, TablePagination, TableRow,
     Chip, Alert, Button
 } from '@mui/material';
 import { EditRounded, DeleteForeverRounded, PriorityHighRounded, ThumbUpAltRounded, Close, AddCircleRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import InventoryForm from './InventoryForm';
+import {styled} from '@mui/material/styles';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        // borderBottom: "1px solid",
+        // borderColor:  theme.palette.primary[100],
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.primary[50],
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 
 const columns = [
@@ -220,21 +244,21 @@ export default function InventoryTable(props) {
             <TableContainer sx={{ maxHeight: 900 }}>
                 <Table stickyHeader aria-label="inventory table">
                     <TableHead>
-                        <TableRow>
+                        <StyledTableRow>
                             {columns.map((column, idx) => (
-                                <TableCell
+                                <StyledTableCell
                                     key={"inv_" + column.id + "_" + idx}
                                     align={column.align}
                                     style={{ minWidth: column.minWidth }}
                                 >
                                     <b>{column.label}</b>
-                                </TableCell>
+                                </StyledTableCell>
                             ))}
-                        </TableRow>
+                        </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                    <TableRow hover role="checkbox" tabIndex={-1} >
-                        <TableCell align="center" colSpan={12} >
+                    <StyledTableRow hover role="checkbox" tabIndex={-1} >
+                        <StyledTableCell align="center" colSpan={12} >
                            <Button
                                 color="primary"
                                 variant='contained'
@@ -243,20 +267,20 @@ export default function InventoryTable(props) {
                             >
                                 Add Inventory Item
                             </Button> 
-                        </TableCell>
+                        </StyledTableCell>
                         
-                    </TableRow>
+                    </StyledTableRow>
                         {inventoryItems
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, idx) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={"inv_items_" + row.item_id + "_" + idx}>
+                                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={"inv_items_" + row.item_id + "_" + idx}>
 
                                         {columns.map((column, index) => {
                                             const value = row[column.id];
                                             if (column.id === 'actions') {
                                                 return (
-                                                    <TableCell key={"inv_items_cell" + column.id + "_" + idx + index} >
+                                                    <StyledTableCell key={"inv_items_cell" + column.id + "_" + idx + index} >
                                                         <Tooltip title="Update item" placement="right" TransitionComponent={Zoom} arrow>
                                                             <IconButton variant="contained" color="primary" onClick={handleEditForm(row.item_id)}>
                                                                 <EditRounded fontSize="small" />
@@ -267,12 +291,12 @@ export default function InventoryTable(props) {
                                                                 <DeleteForeverRounded fontSize="small" />
                                                             </IconButton>
                                                         </Tooltip>
-                                                    </TableCell>
+                                                    </StyledTableCell>
                                                 );
                                             } else if (column.id === 'level') {
                                                 let stock_level = (row['in_stock_qty'] / row['threshold_qty']) * 100;
                                                 return (
-                                                    <TableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
+                                                    <StyledTableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
                                                         {stock_level >= 100 ?
                                                             <InventoryLevel color="success" value={100} />
                                                             :
@@ -285,35 +309,35 @@ export default function InventoryTable(props) {
                                                                 )
                                                             )
                                                         }
-                                                    </TableCell>
+                                                    </StyledTableCell>
                                                 );
                                             } else if (column.id === 'expiration_date') {
                                                 if(dayjs(value) <= dayjs()){
                                                     return (
-                                                        <TableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
+                                                        <StyledTableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
                                                             <Badge color="error" badgeContent=" " variant="dot">
                                                                 {value}
                                                             </Badge>
-                                                        </TableCell>
+                                                        </StyledTableCell>
                                                     );
                                                 } else {
                                                     return (
-                                                        <TableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
+                                                        <StyledTableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
                                                             {value}
-                                                        </TableCell>
+                                                        </StyledTableCell>
                                                     );
                                                 }
                                             } else {
                                                 return (
-                                                    <TableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
+                                                    <StyledTableCell key={"inv_items_cell" + column.id + "_" + idx  + index} >
                                                         {column.format && typeof value === 'number'
                                                             ? column.format(value)
                                                             : value}
-                                                    </TableCell>
+                                                    </StyledTableCell>
                                                 );
                                             }
                                         })}
-                                    </TableRow>
+                                    </StyledTableRow>
                                 );
                             })}
                     </TableBody>

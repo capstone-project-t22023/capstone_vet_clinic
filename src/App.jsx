@@ -13,8 +13,6 @@ import theme from "./theme";
 
 //Pages import
 import DefaultPage from './pages/DefaultPage';
-import Home from './pages/Home';
-import Bookings from './pages/Bookings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard";
@@ -37,6 +35,7 @@ import PaymentPage from './components/billing/PaymentPage';
 import InvoicePdf from './pdf_export/InvoicePdf';
 import ReceiptPdf from './pdf_export/ReceiptPdf';
 import PaymentHistory from './components/billing/PaymentHistory';
+import UserManagement from "./pages/UserManagement";
 
 /**
  *
@@ -127,15 +126,7 @@ function App() {
                                     <StaticLanding/>
                                 }
                                 />
-
-                                <Route index element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <PetsProvider>
-                                            <Dashboard/>
-                                        </PetsProvider>
-                                    </Protected>
-                                }/>
-                                <Route path="/dashboard" element={
+                                <Route path="/" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <PetsProvider>
                                             <Dashboard/>
@@ -152,11 +143,6 @@ function App() {
                                 }
                                 />
                                 {/*USER PET OWNER LINKS*/}
-                                <Route path="/bookings" element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <Bookings/>
-                                    </Protected>
-                                }/>
                                 <Route path="/profile" element={
                                     <Protected isLoggedIn={authenticated}>
                                         <Profile/>
@@ -207,7 +193,7 @@ function App() {
                                     </Protected>
                                 }
                                 />
-                                </> : 
+                                </> :
                                 <Route path="/lodging" element={
                                     <DefaultPage />
                                 }
@@ -251,6 +237,15 @@ function App() {
                                         <PetsProvider>
                                             <PaymentHistory />
                                         </PetsProvider>
+                                    </Protected>
+                                }
+                                />
+
+                                <Route path="/user-management" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <UserManagement>
+                                            <Lodging />
+                                        </UserManagement>
                                     </Protected>
                                 }
                                 />

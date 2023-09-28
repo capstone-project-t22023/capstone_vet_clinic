@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import programContext from "../../contexts/ProgramContext";
 
-function EditUserForm({ user, onUpdateUser }) {
+function EditUserForm({ user, onUpdateUser, userRole= "" }) {
     const [firstname, setFirstname] = useState(user.firstname);
     const [lastname, setLastname] = useState(user.lastname);
     const [address, setAddress] = useState(user.address);
@@ -14,6 +15,9 @@ function EditUserForm({ user, onUpdateUser }) {
     const [postcode, setPostcode] = useState(user.postcode);
     const [isDirty, setIsDirty] = useState(false); // Track if any field has changed
     const [errors, setErrors] = useState({});
+    const [success, setSuccess] = useState(false)
+
+    const {user: loggedUser} = useContext(programContext)
 
     useEffect(() => {
         // Check if any field value has changed
@@ -38,6 +42,57 @@ function EditUserForm({ user, onUpdateUser }) {
         return Object.keys(newErrors).length === 0;
     };
 
+    console.log(user)
+
+    const updateUserDB = (user) => {
+            const url = `http://localhost/capstone_vet_clinic/api.php/update_user/${user.id}`;
+            const req_body = {
+                "role": userRole ? userRole : loggedUser.role,
+                "firstname":user.firstname,
+                "lastname":user.lastname,
+                "password":user.password,
+                "address":user.address,
+                "state":user.state,
+                "email":user.email,
+                "phone":user.phone,
+                "postcode":user.postcode,
+                "username":loggedUser.username
+            }
+
+            console.log(url, JSON.stringify(req_body));
+
+            // TODO : edit doesn't work, return ERRORs like "update_user: 'Error: Firstname must be up to 50 letters only.'"
+
+
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    },
+                    body: JSON.stringify({req_body}),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data)
+                        if (data.update_user) {
+                            setSuccess(true);
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error('Error deleting user:', error);
+                    });
+
+
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -53,7 +108,8 @@ function EditUserForm({ user, onUpdateUser }) {
                 postcode,
             };
 
-            onUpdateUser(updatedUser);
+            updateUserDB(updatedUser)
+            onUpdateUser(success);
         }
     };
 

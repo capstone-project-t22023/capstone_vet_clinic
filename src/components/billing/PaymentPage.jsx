@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+    Table, TableBody, TableContainer, TableHead, TableRow, Paper,
     Typography, IconButton, Stack, Box, Tooltip, Zoom, Dialog, DialogActions,
     DialogContent, DialogTitle, Chip, Grid, OutlinedInput, InputAdornment, Alert, TablePagination
 } from '@mui/material';
@@ -17,6 +17,31 @@ import {
     VaccinesRounded, VisibilityRounded, PointOfSale,
     Close,
 } from "@mui/icons-material";
+
+import {styled} from '@mui/material/styles';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        // borderBottom: "1px solid",
+        // borderColor:  theme.palette.primary[100],
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.primary[50],
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const showIcon = (typeId) => {
     switch (typeId) {
@@ -186,27 +211,27 @@ export default function PaymentPage() {
                                         <TableContainer component={Paper}>
                                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                                 <TableHead>
-                                                    <TableRow>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}></Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking ID</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking Type</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking Status</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Pet</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Pet Owner</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Veterinarian</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Payment Status</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Amount Due</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Invoice</Typography></TableCell>
-                                                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Receipt</Typography></TableCell>
-                                                    </TableRow>
+                                                    <StyledTableRow>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}></Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking ID</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking Type</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Booking Status</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Pet</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Pet Owner</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Veterinarian</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Payment Status</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Amount Due</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Invoice</Typography></StyledTableCell>
+                                                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Receipt</Typography></StyledTableCell>
+                                                    </StyledTableRow>
                                                 </TableHead>
                                                 <TableBody>
                                                     {billingItems
                                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                     .map((appointment) => (
-                                                        <TableRow key={appointment.booking_id} >
+                                                        <StyledTableRow key={appointment.booking_id} >
                                                             {appointment.payment_status !== "PAID" && appointment.invoice_id !== "NA" ?
-                                                                <TableCell align="center">
+                                                                <StyledTableCell align="center">
                                                                     <Tooltip title="Accept payment" placement="right" TransitionComponent={Zoom} arrow>
                                                                         <IconButton
                                                                             aria-label="accept payment"
@@ -217,17 +242,17 @@ export default function PaymentPage() {
                                                                             <PointOfSale />
                                                                         </IconButton>
                                                                     </Tooltip>
-                                                                </TableCell> : <TableCell align="center"></TableCell>
+                                                                </StyledTableCell> : <StyledTableCell align="center"></StyledTableCell>
                                                             }
-                                                            <TableCell align="center">{appointment.booking_id}</TableCell>
-                                                            <TableCell align="left">{showIcon(appointment.booking_type_id)}{appointment.booking_type}</TableCell>
-                                                            <TableCell align="center">{appointment.booking_status}</TableCell>
-                                                            <TableCell align="center">{appointment.petname}</TableCell>
-                                                            <TableCell align="center">{appointment.pet_owner}</TableCell>
-                                                            <TableCell align="center">{appointment.doctor}</TableCell>
-                                                            <TableCell align="center">{appointment.payment_status}</TableCell>
-                                                            <TableCell align="center">$AUD {appointment.invoice_amount}</TableCell>
-                                                            <TableCell align="center">
+                                                            <StyledTableCell align="center">{appointment.booking_id}</StyledTableCell>
+                                                            <StyledTableCell align="left">{showIcon(appointment.booking_type_id)}{appointment.booking_type}</StyledTableCell>
+                                                            <StyledTableCell align="center">{appointment.booking_status}</StyledTableCell>
+                                                            <StyledTableCell align="center">{appointment.petname}</StyledTableCell>
+                                                            <StyledTableCell align="center">{appointment.pet_owner}</StyledTableCell>
+                                                            <StyledTableCell align="center">{appointment.doctor}</StyledTableCell>
+                                                            <StyledTableCell align="center">{appointment.payment_status}</StyledTableCell>
+                                                            <StyledTableCell align="center">$AUD {appointment.invoice_amount}</StyledTableCell>
+                                                            <StyledTableCell align="center">
                                                                 {appointment.invoice_id !== "NA" ?
                                                                     <Link to="/manage_invoice" state={{ appointment: { appointment } }}>
                                                                         <IconButton
@@ -239,8 +264,8 @@ export default function PaymentPage() {
                                                                         </IconButton>
                                                                     </Link> : ""
                                                                 }
-                                                            </TableCell>
-                                                            <TableCell align="center">
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align="center">
                                                             { appointment.invoice_id !== "NA" && appointment.payment_status === "PAID" ?
                                                                 <Link to="/view_receipt"  state= {{ appointment: {appointment} }}>
                                                                     <IconButton
@@ -252,8 +277,8 @@ export default function PaymentPage() {
                                                                     </IconButton>   
                                                                 </Link> : ""
                                                             }
-                                                            </TableCell>
-                                                        </TableRow>
+                                                            </StyledTableCell>
+                                                        </StyledTableRow>
                                                     ))}
                                                 </TableBody>
                                             </Table>

@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import { Navigate, Link } from "react-router-dom";
+import {Navigate, Link} from "react-router-dom";
 import {
     IconButton,
     Stack,
@@ -11,11 +11,11 @@ import {
     ExitToAppRounded as ExitIcon,
     DashboardRounded,
     SettingsRounded,
-    CalendarMonthRounded,
     LocationCityRounded,
     WarehouseRounded,
     LocalHotelRounded,
     PaidRounded,
+    PeopleRounded,
     HelpRounded,
     MenuBookRounded
 } from '@mui/icons-material';
@@ -91,24 +91,21 @@ export default function Aside() {
                 },
             }}>
                 <Tooltip title="Dashboard" TransitionComponent={Zoom} placement="right" arrow>
-                    <ListItemButton selected={isActive('/dashboard')} onClick={() => handleClick('/dashboard')}>
+                    <ListItemButton selected={isActive('/')} onClick={() => handleClick('/')}>
                         <DashboardRounded/>
                     </ListItemButton>
                 </Tooltip>
-                <ListItemButton disabled>
-                    <CalendarMonthRounded/>
-                </ListItemButton>
                 <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
                         <LocationCityRounded/>
                     </ListItemButton>
                 </Tooltip>
 
-                {user.role === 'pet_owner' ? 
+                {user.role === 'pet_owner' ?
                 <>
                     <Tooltip title="Payment History" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/payment_history')} 
+                        <ListItemButton
+                            selected={isActive('/payment_history')}
                             onClick={() => handleClick('/payment_history')}>
                             <PaidRounded/>
                         </ListItemButton>
@@ -116,11 +113,11 @@ export default function Aside() {
                 </>
                 : "" }
 
-                {user.role === 'doctor' ? 
+                {user.role === 'doctor' ?
                 <>
                     <Tooltip title="Invoices" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/view_invoices')} 
+                        <ListItemButton
+                            selected={isActive('/view_invoices')}
                             onClick={() => handleClick('/view_invoices')}>
                             <PaidRounded/>
                         </ListItemButton>
@@ -128,36 +125,43 @@ export default function Aside() {
                 </>
                 : "" }
 
-                {user.role === 'admin' ? 
+                {user.role === 'admin' ?
                 <>
                     <Tooltip title="Payments" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/process_payments')} 
+                        <ListItemButton
+                            selected={isActive('/process_payments')}
                             onClick={() => handleClick('/process_payments')}>
                             <PaidRounded/>
                         </ListItemButton>
                     </Tooltip>
                     <Tooltip title="Inventory" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/inventory')} 
+                        <ListItemButton
+                            selected={isActive('/inventory')}
                             onClick={() => handleClick('/inventory')}>
                             <WarehouseRounded/>
                         </ListItemButton>
-                    </Tooltip> 
+                    </Tooltip>
                     <Tooltip title="Lodging" TransitionComponent={Zoom} placement="right" arrow>
-                        <ListItemButton 
-                            selected={isActive('/lodging')} 
+                        <ListItemButton
+                            selected={isActive('/lodging')}
                             onClick={() => handleClick('/lodging')}>
                             <LocalHotelRounded/>
                         </ListItemButton>
-                    </Tooltip> 
+                    </Tooltip>
+                    <Tooltip title='User Management' TransitionComponent={Zoom} placement="right" arrow>
+                    <ListItemButton
+                        selected={isActive('/user-management')}
+                        onClick={() => handleClick('/user-management')}>
+                        <PeopleRounded/>
+                    </ListItemButton>
+                    </Tooltip>
                     <Tooltip title="Installation Manual" TransitionComponent={Zoom} placement="right" arrow>
-                        <Link to={InstallationManual} target = "_blank">
+                        <Link to={InstallationManual} target="_blank">
                             <ListItemButton>
                                 <MenuBookRounded/>
-                            </ListItemButton> 
+                            </ListItemButton>
                         </Link>
-                    </Tooltip> 
+                    </Tooltip>
                 </>
                 : "" }
 
@@ -170,11 +174,11 @@ export default function Aside() {
                     <Link to={UserManual} target = "_blank">
                         <ListItemButton>
                             <HelpRounded/>
-                        </ListItemButton> 
+                        </ListItemButton>
                     </Link>
-                </Tooltip> 
+                </Tooltip>
             </Stack>
-            
+
             <Stack direction="column">
                 <Tooltip title="Logout & Exit" TransitionComponent={Zoom} placement="top">
                     <IconButton aria-label="logout" onClick={handleLogout}>
