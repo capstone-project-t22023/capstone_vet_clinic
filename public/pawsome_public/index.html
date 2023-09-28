@@ -19,7 +19,70 @@
       <!-- MAIN CSS FILE -->
       <link href="assets/css/style.css" rel="stylesheet">
    </head>
-   <body style="background-image: url('assets/img/background.png');">
+   <body style="background-image: url('assets/img/background.png');" onload="checkLogin()">
+      <script type="text/javascript">
+         let user = "";
+
+         function checkLogin() {
+            console.log("sup" + localStorage.getItem('token'));
+            var sign_up_button = document.getElementById("signup-button");
+            var sign_in_button = document.getElementById("signin-button");
+            var user_name = document.getElementById("user-name");
+
+            if(localStorage.getItem('token')){
+               sign_in_button.style.display = "none";
+               sign_up_button.style.display = "none";
+               Promise.all([
+               fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
+                  headers: {
+                     Authorization: 'Bearer ' + localStorage.getItem('token'),
+                  },
+               }),
+               fetch("http://localhost/capstone_vet_clinic/api.php/get_doctor", {
+                  headers: {
+                     Authorization: 'Bearer ' + localStorage.getItem('token'),
+                  },
+               }),
+               fetch("http://localhost/capstone_vet_clinic/api.php/get_pet_owner", {
+                  headers: {
+                     Authorization: 'Bearer ' + localStorage.getItem('token'),
+                  },
+               })
+            ])
+               .then((responses) => {
+                  return Promise.all(responses.map(function (response) {
+                     return response.json();
+                  }));
+               })
+               .then(data => {
+                  if (data[0].user) {
+                     let tmp = data[0].user;
+                     if(tmp.role){
+                           tmp.role = 'admin';
+                     }
+                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                  } else if (data[1].user) {
+                     let tmp = data[1].user;
+                     if(tmp.role){
+                           tmp.role = 'doctor';
+                     }
+                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                  } else if (data[2].user) {
+                     let tmp = data[2].user;
+                     if(tmp.role){
+                           tmp.role = 'pet_owner';
+                     }
+                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                  }
+               })
+               .catch(error => {
+                  console.error(error);
+               });
+            } else {
+               user_name.style.display = "none";
+            }
+         }
+      </script>
       <!--HEADER -->
       <header id="header" class="header fixed-top">
          <div class="container-fluid container-xl d-flex align-items-start justify-content-between">
@@ -54,8 +117,9 @@
                   <li><a class="nav-link scrollto" href="#team">TEAM</a></li>
                   <li><a class="nav-link scrollto" href="#blog">BLOG</a></li>
                   <li><a class="nav-link scrollto me-md-2" href="#contact">CONTACT</a></li>
-                  <li><a class="btn btn-primary" href="http://localhost:3000/signup" role="button">SIGN UP</a></li>
-                  <li><a class="btn btn-success" href="http://localhost:3000/login" role="button">SIGN IN</a></li>
+                  <li id="signup-button"><a class="btn btn-primary" href="http://localhost:3000/signup" role="button">SIGN UP</a></li>
+                  <li id="signin-button"><a class="btn btn-success" href="http://localhost:3000/login" role="button">SIGN IN</a></li>
+                  <li id="user-name"><div id="username">Hi Username!</div></li>
                </ul>
                <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
@@ -72,7 +136,7 @@
                   <h2 data-aos="fade-up" data-aos-delay="400">Expert care and medical services for all furry patients in Sydney.</h2>
                   <div data-aos="fade-up" data-aos-delay="600">
                      <div class="text-center text-lg-start">
-                        <a href="http://localhost:3000/login" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                        <a href="http://localhost:3000/dashboard" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
                         <span>Book an appointment</span>
                         <i class="fa-solid fa-arrow-right fa-beat fa-lg" style="color: #ffffff;"></i>
                         </a>
