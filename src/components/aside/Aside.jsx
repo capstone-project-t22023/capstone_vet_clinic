@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Navigate} from "react-router-dom";
+import {Navigate, Link} from "react-router-dom";
 import {
     IconButton,
     Stack,
@@ -11,13 +11,11 @@ import {
     ExitToAppRounded as ExitIcon,
     DashboardRounded,
     SettingsRounded,
-    CalendarMonthRounded,
     LocationCityRounded,
     WarehouseRounded,
     LocalHotelRounded,
     PaidRounded,
-    PeopleRounded
-    PaidRounded,
+    PeopleRounded,
     HelpRounded,
     MenuBookRounded
 } from '@mui/icons-material';
@@ -97,9 +95,6 @@ export default function Aside() {
                         <DashboardRounded/>
                     </ListItemButton>
                 </Tooltip>
-                <ListItemButton disabled>
-                    <CalendarMonthRounded/>
-                </ListItemButton>
                 <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
                     <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
                         <LocationCityRounded/>
@@ -160,9 +155,8 @@ export default function Aside() {
                         <PeopleRounded/>
                     </ListItemButton>
                     </Tooltip>
-                    </Tooltip>
                     <Tooltip title="Installation Manual" TransitionComponent={Zoom} placement="right" arrow>
-                        <Link to={InstallationManual} target = "_blank">
+                        <Link to={InstallationManual} target="_blank">
                             <ListItemButton>
                                 <MenuBookRounded/>
                             </ListItemButton>
