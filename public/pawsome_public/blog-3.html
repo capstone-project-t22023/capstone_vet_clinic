@@ -35,6 +35,13 @@
                   <li class="dropdown">
                      <a href="#"><span>PET ARTICLES</span> <i class="bi bi-chevron-down"></i></a>
                      <ul>
+                        <li class="dropdown">
+                           <a href="#"><span>Pet Forms</span><i class="bi bi-chevron-right"></i></a>
+                           <ul>
+                              <li><a href="https://forms.gle/QAn3qKECoKKWUHD68">New Client Form</a></li>
+                              <li><a href="https://forms.gle/W6rFrG1ouqS7kPMJA">Foster Drop-OFF Form</a></li>
+                           </ul>
+                        </li>
                         <li><a href="puppyandkittencheck.html">Puppy &amp; Kitten Check</a></li>
                         <li><a href="poisonguide.html">Poison Guide</a></li>
                         <li><a href="groomingservices.html">Grooming Services</a></li>
