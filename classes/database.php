@@ -1256,7 +1256,6 @@ class Database
             SET
             firstname = ?,
             lastname = ?,
-            password = ?,
             address = ?,
             state = ?,
             email = ?,
@@ -1280,10 +1279,9 @@ class Database
             WHERE id = ?'
         ); 
         $sql->bind_param(
-            'ssssssiisi', 
+            'sssssiisi', 
             $record['firstname'],
             $record['lastname'],
-            $record['password'],
             $record['address'],
             $record['state'],
             $record['email'],
@@ -1319,7 +1317,6 @@ class Database
             SET
             firstname = ?,
             lastname = ?,
-            password = ?,
             address = ?,
             state = ?,
             email = ?,
@@ -1343,10 +1340,9 @@ class Database
             WHERE id = ?'
         ); 
         $sql->bind_param(
-            'ssssssiisi', 
+            'sssssiisi', 
             $record['firstname'],
             $record['lastname'],
-            $record['password'],
             $record['address'],
             $record['state'],
             $record['email'],
@@ -1382,7 +1378,6 @@ class Database
             SET
             firstname = ?,
             lastname = ?,
-            password = ?,
             address = ?,
             state = ?,
             email = ?,
@@ -1406,10 +1401,9 @@ class Database
             WHERE id = ?'
         ); 
         $sql->bind_param(
-            'ssssssiisi', 
+            'sssssiisi', 
             $record['firstname'],
             $record['lastname'],
-            $record['password'],
             $record['address'],
             $record['state'],
             $record['email'],

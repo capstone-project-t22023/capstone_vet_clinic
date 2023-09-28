@@ -156,7 +156,6 @@ request_body:
         "role":"doctor",
         "firstname":"Josh",
         "lastname":"Mcguire",
-        "password":"Sneeringbovril_2023",
         "address":"33 Arthur Street",
         "state":"NSW",
         "email":"sneeringbovril@pawsome.com.au",
