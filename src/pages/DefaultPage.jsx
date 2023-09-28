@@ -1,8 +1,12 @@
-import React from 'react'
-import {Typography} from '@mui/material';
+import React, { useEffect } from 'react';
 
-export default function DefaultPage() {
-  return (
-  <Typography component="h1" variant="h3">404 Not found. Oops, this is not a valid page.</Typography>
-  )
+export default function StaticLanding() {
+
+    useEffect(() => {
+        window.location.replace("http://localhost:3000/public/404/Patch/index.html");
+    }, []);
+    return (
+        <div></div>
+    )
+
 }
