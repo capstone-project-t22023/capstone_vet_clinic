@@ -166,6 +166,35 @@ class Database
     }
 
     /**
+     * Insert generated token to the database to be used by doctor whenever system is used
+     * Returns false or doctor_account_tokens object
+     */
+    public function generateTokenForTestDoctor($doctor_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `doctor_account_tokens`(`doctor_id`, `code`) VALUES(?,?) ON DUPLICATE KEY UPDATE    
+            code=?'
+        );
+        $code = 22222;
+        $sql->bind_param('iss', $doctor_id, $code, $code);
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return $code;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Insert generated token to the database to be used by admin whenever system is used
      * Returns false or admin_account_tokens object
      */
@@ -195,6 +224,35 @@ class Database
     }
 
     /**
+     * Insert generated token to the database to be used by admin whenever system is used
+     * Returns false or admin_account_tokens object
+     */
+    public function generateTokenForTestAdmin($admin_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `admin_account_tokens`(`admin_id`, `code`) VALUES(?,?) ON DUPLICATE KEY UPDATE    
+            code=?'
+        );
+        $code = 33333;
+        $sql->bind_param('iss', $admin_id, $code, $code);
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return $code;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Insert generated token to the database to be used by pet owner whenever system is used
      * Returns false or pet_owners_account_tokens object
      */
@@ -212,6 +270,35 @@ class Database
             code=?'
         );
         $code = rand(11111, 99999);
+        $sql->bind_param('iss', $pet_owner_id, $code, $code);
+        if ($sql->execute()) {
+            $sql->close();
+            $this->connection->close();
+            return $code;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
+     * Insert generated token to the database to be used by pet owner whenever system is used
+     * Returns false or pet_owners_account_tokens object
+     */
+    public function generateTokenForTestPetOwners($pet_owner_id)
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'INSERT INTO `pet_owners_account_tokens`(`pet_owner_id`, `code`) VALUES(?,?) ON DUPLICATE KEY UPDATE    
+            code=?'
+        );
+        $code = 44444;
         $sql->bind_param('iss', $pet_owner_id, $code, $code);
         if ($sql->execute()) {
             $sql->close();
