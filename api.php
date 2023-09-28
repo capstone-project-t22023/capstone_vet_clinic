@@ -180,12 +180,22 @@ if ($action === 'register_doctor') {
 
         if ($doctor_id = $database->addDoctor($doctor)) {
             $doctor['id'] = $doctor_id;
-            if ($code = $database->generateTokenForDoctor($doctor_id)) {
-                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-                $payload = ['user' => $doctor];
-                $jwt = generate_jwt_token($headers, $payload);
-                return_json(['register_user' => $jwt]);
+            if ( $_POST['username'] === "test_Doctor2023"){
+                if ($code = $database->generateTokenForTestDoctor($doctor_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $doctor];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                }
+            } else {
+               if ($code = $database->generateTokenForDoctor($doctor_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $doctor];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                } 
             }
+            
         }
     } else {
         return_json(['register_user' => false]);
@@ -282,12 +292,23 @@ elseif ($action === 'register_admin') {
     if($check){
         if ($admin_id = $database->addAdmin($admin)) {
             $admin['id'] = $admin_id;
-            if ($code = $database->generateTokenForAdmin($admin_id)) {
-                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-                $payload = ['user' => $admin];
-                $jwt = generate_jwt_token($headers, $payload);
-                return_json(['register_user' => $jwt]);
+
+            if ($_POST['username'] === "test_Admin2023"){
+                if ($code = $database->generateTokenForTestAdmin($admin_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $admin];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                }
+            } else {
+                if ($code = $database->generateTokenForAdmin($admin_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $admin];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                }
             }
+            
         }
     } else {
         return_json(['register_user' => false]);
@@ -366,6 +387,7 @@ elseif ($action === 'register_pet_owner') {
         return_json(['register_user' =>  "Error: Postcode must be up to 4 numerical characters only."]);  
     }
 
+    
     $pet_owner = [
         'firstname' => $_POST['firstname'],
         'lastname' => $_POST['lastname'],
@@ -376,20 +398,30 @@ elseif ($action === 'register_pet_owner') {
         'email' => $_POST['email'],
         'phone' => $_POST['phone'],
         'postcode' => $_POST['postcode'],
-        'archived' => 1,
+        'archived' => 0,
         'created_date' => date('Y-m-d H:i:s'),
         'updated_date' => date('Y-m-d H:i:s'),
     ];
-    
+
     if($check){
         if ($pet_owner_id = $database->addPetOwner($pet_owner)) {
             $pet_owner['id'] = $pet_owner_id;
-            if ($code = $database->generateTokenForPetOwners($pet_owner_id)) {
-                $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-                $payload = ['user' => $pet_owner];
-                $jwt = generate_jwt_token($headers, $payload);
-                return_json(['register_user' => $jwt]);
+            if($_POST['username'] === "test_Owner2023"){
+                if ($code = $database->generateTokenForTestPetOwners($pet_owner_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $pet_owner];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                } 
+            } else {
+                if ($code = $database->generateTokenForPetOwners($pet_owner_id)) {
+                    $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+                    $payload = ['user' => $pet_owner];
+                    $jwt = generate_jwt_token($headers, $payload);
+                    return_json(['register_user' => $jwt]);
+                }  
             }
+            
         }
     } else {
         return_json(['register_user' => false]);

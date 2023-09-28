@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Navigate} from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
     IconButton,
     Stack,
@@ -15,11 +15,16 @@ import {
     LocationCityRounded,
     WarehouseRounded,
     LocalHotelRounded,
-    PaidRounded
+    PaidRounded,
+    HelpRounded,
+    MenuBookRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
 import ProgramContext from "../../contexts/ProgramContext";
+import InstallationManual from '../../media/Pawsome Vet Clinic Installation Manual.pdf';
+import UserManual from '../../media/Pawsome Vet Clinic User Manual.pdf';
+
 
 export default function Aside() {
     const [toLogout, setToLogout] = useState(false);
@@ -146,6 +151,13 @@ export default function Aside() {
                             <LocalHotelRounded/>
                         </ListItemButton>
                     </Tooltip> 
+                    <Tooltip title="Installation Manual" TransitionComponent={Zoom} placement="right" arrow>
+                        <Link to={InstallationManual} target = "_blank">
+                            <ListItemButton>
+                                <MenuBookRounded/>
+                            </ListItemButton> 
+                        </Link>
+                    </Tooltip> 
                 </>
                 : "" }
 
@@ -154,7 +166,15 @@ export default function Aside() {
                         <SettingsRounded/>
                     </ListItemButton>
                 </Tooltip>
+                <Tooltip title="User Manual" TransitionComponent={Zoom} placement="right" arrow>
+                    <Link to={UserManual} target = "_blank">
+                        <ListItemButton>
+                            <HelpRounded/>
+                        </ListItemButton> 
+                    </Link>
+                </Tooltip> 
             </Stack>
+            
             <Stack direction="column">
                 <Tooltip title="Logout & Exit" TransitionComponent={Zoom} placement="top">
                     <IconButton aria-label="logout" onClick={handleLogout}>
