@@ -60,19 +60,19 @@
                      if(tmp.role){
                            tmp.role = 'admin';
                      }
-                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                     document.getElementById("username").innerHTML = "<strong> Hi " + tmp.firstname + " " + tmp.lastname + "</strong>";
                   } else if (data[1].user) {
                      let tmp = data[1].user;
                      if(tmp.role){
                            tmp.role = 'doctor';
                      }
-                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                     document.getElementById("username").innerHTML = "<strong> Hi " + tmp.firstname + " " + tmp.lastname + "</strong>";
                   } else if (data[2].user) {
                      let tmp = data[2].user;
                      if(tmp.role){
                            tmp.role = 'pet_owner';
                      }
-                     document.getElementById("username").innerHTML = "Hi " + tmp.firstname + " " + tmp.lastname;
+                     document.getElementById("username").innerHTML = "<strong> Hi " + tmp.firstname + " " + tmp.lastname + "</strong>";
                   }
                })
                .catch(error => {
