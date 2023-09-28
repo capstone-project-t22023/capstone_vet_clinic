@@ -50,7 +50,7 @@ $req = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $req = explode('/', $req);
 
 $action = $req[3];
-$id = $req[4];
+$id = isset($req[4]) ? $req[4] : "";
 
 /**
  * fetch("http://localhost/capstone_vet_clinic/api.php/user", {
