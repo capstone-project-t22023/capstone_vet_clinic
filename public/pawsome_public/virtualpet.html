@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta content="width=device-width, initial-scale=1.0" name="viewport">
-      <title>PawsomeVet | Virtual Pet</title>
+      <title>Pawsome | About Us</title>
       <meta content="Modern pet veterinary clinic in Sydney" name="description">
       <meta content="pet clinic, pet, pet treatment" name="keywords">
       <!--FAVICON -->
@@ -49,7 +49,7 @@
                         <li><a href="symptomchecker.php">Symptom Checker</a></li>
                         <li><a href="virtualpet.html">Virtual Pet</a></li>
                         <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
-                     </ul>>
+                     </ul>
                   <li><a class="nav-link scrollto" href="index.html">F.A.Q.</a></li>
                   <li><a class="nav-link scrollto" href="index.html">TEAM</a></li>
                   <li><a class="nav-link scrollto" href="blog.html">BLOG</a></li>
@@ -75,83 +75,120 @@
             </div>
          </section>
          <!-- End Breadcrumbs -->
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center">Virtual Pet</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-center">
-                  <div class="card-body">
-                     <h2 class="card-title">Your Virtual Pet</h2>
-                     <img id="pet-image" src="dog.png" alt="Pet">
-                     <p>Hunger: <span id="hunger">50</span></p>
-                     <p>Training: <span id="training">50</span></p>
-                     <p>Energy: <span id="energy">50</span></p>
+   <!--The images of the cartoony dog have been downloaded from https://www.behance.net/gallery/139178131/Dogs-(Spine-Animation)-->
+   <section>
+      <div class="container mt-5">
+         <h1 class="text-center">Virtual Pet</h1>
+         <div class="row">
+             <div class="col-md-6">
+                 <div class="card text-center">
+                     <div class="card-body">
+                         <h2 class="card-title">Pawsome Pup</h2>
+                         <img id="dog-image" src="assets/img/virtualpet/dogstandby.gif" alt="Dog">
+                         <p>Hunger: <span id="hunger">50</span></p>
+                         <p>Training: <span id="training">50</span></p>
+                         <p>Energy: <span id="energy">50</span></p>
+                     </div>
                  </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="actions">
-                    <button class="btn btn-primary" onclick="feed()">Feed</button>
-                    <button class="btn btn-success" onclick="train()">Train</button>
-                    <button class="btn btn-info" onclick="walk()">Walk</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-      
-        let hunger = 50;
-        let training = 50;
-        let energy = 50;
-
-        function updateStats() {
-            document.getElementById("hunger").textContent = hunger;
-            document.getElementById("training").textContent = training;
-            document.getElementById("energy").textContent = energy;
-        }
-
-        function feed() {
-            if (hunger < 100) {
-                hunger += 10;
-                energy -= 5;
-                updateStats();
-            }
-        }
-
-        function train() {
-            if (training < 100) {
-                training += 10;
-                hunger -= 5;
-                energy -= 5;
-                updateStats();
-            }
-        }
-
-        function walk() {
-            if (energy > 0) {
-                energy -= 10;
-                training += 5;
-                hunger += 5;
-                updateStats();
-            }
-        }
-
-        // Update the pet's stats every few seconds (simulating time passing)
-        setInterval(() => {
-            if (hunger > 0) hunger--;
-            if (training > 0) training--;
-            if (energy < 100) energy++;
-            updateStats();
-        }, 3000); // Update every 3 seconds
-    </script>
-
-
-    <!-- Bootstrap JS and Popper.js CDN -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+             </div>
+             <div class="col-md-6">
+                 <div class="actions">
+                     <button class="btn btn-primary" onclick="stay()"><i class="bi bi-person"></i> Stay</button>
+                     <button class="btn btn-success" onclick="sniff()"><i class="bi bi-compass"></i> Sniff</button>
+                     <button class="btn btn-info" onclick="scratch()"><i class="bi bi-scissors"></i> Scratch</button>
+                     <button class="btn btn-warning" onclick="waggle()"><i class="bi bi-lightbulb"></i> Waggle</button>
+                     <button class="btn btn-secondary" onclick="sleep()"><i class="bi bi-moon"></i> Sleep</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ 
+     <script>
+         let hunger = 50;
+         let training = 50;
+         let energy = 50;
+         let petImage = document.getElementById("dog-image");
+ 
+         function updateStats() {
+             document.getElementById("hunger").textContent = hunger;
+             document.getElementById("training").textContent = training;
+             document.getElementById("energy").textContent = energy;
+         }
+ 
+         function stay() {
+             // Implement the "stay" functionality
+             // For example, it can increase happiness and reduce energy
+             if (energy >= 10) {
+                 energy -= 10;
+                 // Implement any other logic specific to the action
+                 // For example, update the pet image
+                 petImage.src = "assets/img/virtualpet/dogstandby.gif"; // Replace with your image file
+             }
+             updateStats();
+         }
+ 
+         function sniff() {
+             // Implement the "sniff" functionality
+             // For example, it can increase happiness and slightly reduce hunger
+             if (hunger > 0) {
+                 hunger -= 5;
+                 // Implement any other logic specific to the action
+                 // For example, update the pet image
+                 petImage.src = "assets/img/virtualpet/dogsniff.gif"; // Replace with your image file
+             }
+             updateStats();
+         }
+ 
+         function scratch() {
+             // Implement the "scratch" functionality
+             // For example, it can increase happiness and reduce energy
+             if (energy >= 15) {
+                 energy -= 15;
+                 // Implement any other logic specific to the action
+                 // For example, update the pet image
+                 petImage.src = "assets/img/virtualpet/dogscratch.gif"; // Replace with your image file
+             }
+             updateStats();
+         }
+ 
+         function waggle() {
+             // Implement the "waggle" functionality
+             // For example, it can increase happiness and slightly reduce hunger
+             if (hunger > 0) {
+                 hunger -= 5;
+                 // Implement any other logic specific to the action
+                 // For example, update the pet image
+                 petImage.src = "assets/img/virtualpet/dogtail.gif"; // Replace with your image file
+             }
+             updateStats();
+         }
+ 
+         function sleep() {
+             // Implement the "sleep" functionality
+             // For example, it can restore energy and slightly reduce hunger
+             if (hunger > 0) {
+                 hunger -= 5;
+                 energy = 100; // Fully restore energy
+                 // Implement any other logic specific to the action
+                 // For example, update the pet image
+                 petImage.src = "assets/img/virtualpet/dogsleep.gif"; // Replace with your image file
+             }
+             updateStats();
+         }
+ 
+         // Update the pet's stats every few seconds (simulating time passing)
+         setInterval(() => {
+             if (hunger > 0) hunger--;
+             if (training > 0) training--;
+             if (energy < 100) energy++;
+             updateStats();
+         }, 3000); // Update every 3 seconds
+     </script>
+ 
+     <!-- Bootstrap JS and Popper.js CDN -->
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </main>
 <!-- End #main -->
          <!--FOOTER -->
@@ -231,7 +268,6 @@
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
          <!-- MAIN JS FILE -->
          <script src="assets/js/main.js"></script>
-      </main>
    </body>
 </html>
 
