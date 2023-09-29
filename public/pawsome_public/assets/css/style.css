@@ -2017,20 +2017,28 @@ input[type=text]:invalid {
 .image {
   border-radius: 20px;
 }
+
+#myInput {
+  background-image: url("assets/img/poisonguide/noun-search-3642227.svg"); 
+  background-position: 10px 12px; 
+  background-repeat: no-repeat; 
+  width: 100%; 
+  font-size: 16px; 
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd; 
+  margin-bottom: 12px; 
+}
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
 }
 
-
-th {
-    background-color: #f2f2f2;
-    text-align: left;
-    padding: 10px;
-    border: 1px solid #ccc;
+th, td {
+  text-align: left;
+  padding: 8px;
 }
-
 
 tr:nth-child(even) {
     background-color: #f2f2f2;
@@ -2038,7 +2046,7 @@ tr:nth-child(even) {
 
 td {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #000b1e;
 }
 
 tr:hover {

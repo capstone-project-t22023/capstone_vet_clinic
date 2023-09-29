@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* ... Your CSS styles ... */
+</style>
+</head>
+<body>
+
+<h2>Popup Chat Window</h2>
+<p>Click on the button at the bottom of this page to open the chat form.</p>
+<p>Note that the button and the form are fixed - they will always be positioned at the bottom of the browser window.</p>
+
+<button class="open-button" onclick="openForm()">Chat</button>
+
+<div class="chat-popup" id="myForm">
+  <form class="form-container">
+    <h1>Chat</h1>
+
+    <div id="chat-messages"></div>
+
+    <label for="msg"><b>Message</b></label>
+    <textarea id="msgInput" placeholder="Type message.." name="msg" required></textarea>
+
+    <button type="button" class="btn" onclick="sendMessage()">Send</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+  loadChatMessages();
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+
+function loadChatMessages() {
+  // Use AJAX or fetch to load chat messages from the server (chat.php).
+  fetch("chat.php")
+    .then(response => response.json())
+    .then(data => {
+      const chatMessages = document.getElementById("chat-messages");
+      chatMessages.innerHTML = "";
+      data.forEach(message => {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = `${message.user}: ${message.message}`;
+        chatMessages.appendChild(messageDiv);
+      });
+    })
+    .catch(error => console.error("Error loading chat messages:", error));
+}
+
+function sendMessage() {
+  const msgInput = document.getElementById("msgInput");
+  const message = msgInput.value.trim();
+  if (message !== "") {
+    // Use AJAX or fetch to send the message to the server (chat.php).
+    fetch("chat.php", {
+      method: "POST",
+      body: new URLSearchParams({ msg: message }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          msgInput.value = "";
+          loadChatMessages();
+        } else {
+          console.error("Failed to send message.");
+        }
+      })
+      .catch(error => console.error("Error sending message:", error));
+  }
+}
+
+// Load chat messages when the page loads.
+window.addEventListener("load", loadChatMessages);
+</script>
+
+</body>
+</html>
