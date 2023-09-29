@@ -69,9 +69,9 @@
             <div class="container">
                <ol>
                   <li><a href="index.html">Home</a></li>
-                  <li>About Us</li>
+                  <li>Virtual Pet</li>
                </ol>
-               <h2>About Us</h2>
+               <h2>Virtual Pet</h2>
             </div>
          </section>
          <!-- End Breadcrumbs -->
@@ -81,13 +81,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card text-center">
-                    <div class="card-body">
-                        <h2 class="card-title">Your Virtual Dog</h2>
-                        <img id="dog-image" src="assets/img/virtualpet/doganimated.gif" alt="Dog animated">
-                        <p>Hunger: <span id="hunger">50</span></p>
-                        <p>Training: <span id="training">50</span></p>
-                        <p>Energy: <span id="energy">50</span></p>
-                    </div>
+                  <div class="card-body">
+                     <h2 class="card-title">Your Virtual Pet</h2>
+                     <img id="pet-image" src="dog.png" alt="Pet">
+                     <p>Hunger: <span id="hunger">50</span></p>
+                     <p>Training: <span id="training">50</span></p>
+                     <p>Energy: <span id="energy">50</span></p>
+                 </div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -101,6 +101,7 @@
     </div>
 
     <script>
+      
         let hunger = 50;
         let training = 50;
         let energy = 50;
@@ -145,6 +146,7 @@
             updateStats();
         }, 3000); // Update every 3 seconds
     </script>
+
 
     <!-- Bootstrap JS and Popper.js CDN -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
