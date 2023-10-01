@@ -168,7 +168,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
             )}
 
 
-            {user.role !== 'pet_owner' && // <Link to="/pet-records" state={{selectedPet: selectedPet}}>
+            {user.role === 'doctor' &&
                 <Stack direction="column" spacing={2}>
                     <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded/>}
                             onClick={() => setPetRecordsDialog(!petRecordsDialog)}>Add Pet Record</Button>
