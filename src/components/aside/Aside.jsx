@@ -11,7 +11,6 @@ import {
     ExitToAppRounded as ExitIcon,
     DashboardRounded,
     SettingsRounded,
-    LocationCityRounded,
     WarehouseRounded,
     LocalHotelRounded,
     PaidRounded,
@@ -27,8 +26,8 @@ import UserManual from '../../media/Pawsome Vet Clinic User Manual.pdf';
 
 
 export default function Aside() {
-    const [toLogout, setToLogout] = useState(false);
-    const {user, authenticated, setAuthenticated} = useContext(ProgramContext);
+    const [toLogout] = useState(false);
+    const {user, setAuthenticated} = useContext(ProgramContext);
 
     const location = useLocation();
     const isActive = (path) => {

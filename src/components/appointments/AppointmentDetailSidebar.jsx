@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useState,} from "react";
 import {Link} from "react-router-dom";
-import {Stack, Typography, Button, IconButton, Divider, Tooltip} from "@mui/material";
+import {Stack, Typography, Button, IconButton, Divider, Tooltip, Dialog, DialogContent} from "@mui/material";
 import {
     AttachMoneyRounded,
     AutoDeleteRounded,
-    FaceRounded, HistoryEduRounded,
+    FaceRounded, FitnessCenterRounded, HistoryEduRounded, LocalHospitalRounded,
     PaidRounded,
     PetsRounded,
-    Receipt,
-    VisibilityRounded
+    Receipt, RestaurantRounded, VaccinesRounded
 } from "@mui/icons-material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -17,6 +16,8 @@ import dayjs from "dayjs";
 import Status from "./Status";
 import Doctor from "./Doctor";
 import BookingType from "./BookingType";
+import ImmunizationForm from "../petRecords/ImmunizationForm";
+import SurgeryForm from "../petRecords/SurgeryForm";
 
 export default function AppointmentDetailSidebar({appointmentId}) {
     const {user} = useContext(programContext);
@@ -25,8 +26,7 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         updateSelectedPet,
         updateSelectedAppointment,
         updateAppointmentStatus,
-        appointmentList,
-        selectedPet
+        appointmentList
     } = useContext(PetsContext);
     const [appointment, setAppointment] = useState({});
 
@@ -54,6 +54,18 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         updateSelectedPet(appointment.pet_id);
         changeSidebarContent("pet");
     }
+
+
+    const [openImmunizationForm, setOpenImmunizationForm] = useState(false)
+    const [openSurgeryForm, setOpenSurgeryForm] = useState(false)
+    const [petRecordsDialog, setPetRecordsDialog] = useState(false)
+    const [selectedForm, setSelectedForm] = useState('')
+
+
+    const handleClose = () => {
+        console.log("close dialog")
+        setPetRecordsDialog(false);
+    };
 
     return (
         <Stack direction="column" p={6} spacing={5}>
@@ -107,7 +119,8 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                                             disabled="true">
                                     <AttachMoneyRounded/>
                                 </IconButton>
-                                <Typography fontSize="0.75rem" color="grey.400"><strong>Not Available</strong></Typography>
+                                <Typography fontSize="0.75rem" color="grey.400"><strong>Not
+                                    Available</strong></Typography>
                             </>
                         }
                     </Stack>
@@ -153,13 +166,53 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     </Stack>
                 </Stack>
             )}
-            <Stack direction="column" spacing={2}>
-                {user.role !== 'pet_owner' &&
-                    <Link to="/pet-records" state={{selectedPet: selectedPet}}>
-                        <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded />}>Update pet History</Button>
-                    </Link>
-                }
-            </Stack>
+
+
+            {user.role !== 'pet_owner' && // <Link to="/pet-records" state={{selectedPet: selectedPet}}>
+                <Stack direction="column" spacing={2}>
+                    <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded/>}
+                            onClick={() => setPetRecordsDialog(!petRecordsDialog)}>Add Pet Record</Button>
+                </Stack>
+            }
+
+
+            {petRecordsDialog &&
+                <Dialog open={petRecordsDialog} onClose={handleClose}>
+                    <Stack direction='row' spacing={3} sx={{p: 3}}>
+                        <Button onClick={() => setSelectedForm('rehab')} variant="contained" color="secondary"
+                                endIcon={<FitnessCenterRounded/>}>Rehab</Button>
+                        <Button onClick={() => setSelectedForm('diet')} variant="contained" color="success"
+                                endIcon={<RestaurantRounded/>}>Diet</Button>
+                        <Button onClick={() => setSelectedForm('surgery')} variant="contained" color="error"
+                                endIcon={<LocalHospitalRounded/>}>Surgery</Button>
+                        <Button onClick={() => setSelectedForm('immunization')} variant="contained" color="warning"
+                                endIcon={<VaccinesRounded/>}>Immunization</Button>
+                    </Stack>
+
+
+                    <DialogContent>
+                        {selectedForm === "immunization" &&
+                            <ImmunizationForm
+                                setOpenForm={setOpenImmunizationForm}
+                                openForm={openImmunizationForm}
+                                selectedAppointmentId={appointmentId}
+                                onClose={setPetRecordsDialog}
+                            />
+                        }
+                        {selectedForm === "surgery" &&
+                            <SurgeryForm
+                                setOpenForm={setOpenSurgeryForm}
+                                openForm={openSurgeryForm}
+                                selectedAppointmentId={appointmentId}
+                                onClose={setPetRecordsDialog}
+                            />
+                        }
+                    </DialogContent>
+                </Dialog>
+
+            }
+
+
         </Stack>
     )
 }

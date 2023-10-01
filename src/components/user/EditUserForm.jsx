@@ -186,7 +186,7 @@ function EditUserForm({ user, onUpdateUser, userRole= "" }) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary" disabled={isDirty ? false : true}>
+                    <Button type="submit" variant="contained" color="primary" disabled={!isDirty}>
                         {isDirty ? "Save Changes" : "Change values"}
                     </Button>
                 </Grid>

@@ -3,34 +3,34 @@ import {
     Avatar, Button, Box, Stack, Typography, IconButton, Tooltip, Dialog, Paper, Zoom
 } from "@mui/material";
 import AgeCalculator from './AgeCalculator';
-import {SettingsApplicationsRounded, DeleteForeverRounded, HistoryEduRounded} from '@mui/icons-material';
+import {
+    SettingsApplicationsRounded,
+    DeleteForeverRounded
+} from '@mui/icons-material';
 import BookingButton from "../booking/BookingButton";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
 
 import AddNewPetForm from "./AddNewPetForm";
 import LastHealthChecks from "../appointments/petProfile/LastHealthChecks";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import {Link, useLocation, useNavigate} from "react-router-dom";
 
-export default function PetProfile({onDelete}) {
+export default function PetProfile() {
     const [showDialog, setShowDialog] = useState(false);
     const [actionForm, setActionForm] = useState(null);
-    const {selectedOwner,selectedPet,handlerReloadPetList} = useContext(PetsContext);
+    const {selectedOwner, selectedPet, handlerReloadPetList} = useContext(PetsContext);
     const [activePet, setActivePet] = useState(selectedPet);
-    const {user} = useContext(ProgramContext);
 
     function getPetById(petId) {
         return selectedOwner.pets ? selectedOwner.pets.find(pet => pet.pet_id === petId) : null;
     }
 
-    useEffect (() => {
+    useEffect(() => {
         setActivePet(getPetById(selectedPet))
-        setAppointmentList(fetchAppointments('pet_id',selectedPet));
+        setAppointmentList(fetchAppointments('pet_id', selectedPet));
     }, [selectedPet])
 
     const handleBooking = (booking) => {
-      console.log("This is booking", booking)
+        console.log("This is booking", booking)
     }
 
     const avatarAnimalUnsplashUrl = (species) => {
@@ -71,13 +71,11 @@ export default function PetProfile({onDelete}) {
 
     const deletePet = (petId) => {
         const apiUrl = `http://localhost/capstone_vet_clinic/api.php/delete_pet/${petId}`;
-        console.log("apiUrl ",apiUrl)
+        console.log("apiUrl ", apiUrl)
 
         return fetch(apiUrl, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + localStorage.getItem('token'),
+            method: 'DELETE', headers: {
+                'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -100,8 +98,6 @@ export default function PetProfile({onDelete}) {
     }
 
 
-
-
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
     const [appointmentList, setAppointmentList] = useState([])
@@ -110,8 +106,7 @@ export default function PetProfile({onDelete}) {
         const url = `http://localhost/capstone_vet_clinic/api.php/search_booking?filter=${filterType}&filter_value=${filterValue}`;
 
         fetch(url, {
-            method: 'GET',
-            headers: {
+            method: 'GET', headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
@@ -125,8 +120,7 @@ export default function PetProfile({onDelete}) {
     };
 
 
-    return (activePet && (
-        <Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{p: 4}}>
+    return (activePet && (<Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{p: 4}}>
             <Stack direction="column" spacing={2} alignItems="center"
                    sx={{
                        ":hover button": {
@@ -177,35 +171,27 @@ export default function PetProfile({onDelete}) {
                     <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth={"lg"}>
                         <Paper sx={{p: 3, textAlign: "center"}}>
 
-                            {actionForm === "delete" ? (
-                                <Box>
-                                    <h4>{activePet.petname} - {activePet.breed}</h4>
-                                    <p>Are you sure you want to delete this pet?</p>
+                            {actionForm === "delete" ? (<Box>
+                                <h4>{activePet.petname} - {activePet.breed}</h4>
+                                <p>Are you sure you want to delete this pet?</p>
 
-                                    <Button variant="text" onClick={() => setShowDialog(false)}>
-                                        Cancel
-                                    </Button>
-                                    <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-                                        Delete
-                                    </Button>
-                                </Box>
-                            ) : (
-                                actionForm === "update" ? (
-                                    <Box>
-                                        <h4>{selectedOwner.firstname} {activePet.petname} - {activePet.breed}</h4>
-                                        <AddNewPetForm petToEdit={activePet} onUpdate={handleConfirmUpdate}
-                                                       onCancel={() => setShowDialog(false)}/>
-                                    </Box>
-                                ) : (
-                                    <Box>
-                                        <h4>Error - no action form has been selected</h4>
+                                <Button variant="text" onClick={() => setShowDialog(false)}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                                    Delete
+                                </Button>
+                            </Box>) : (actionForm === "update" ? (<Box>
+                                <h4>{selectedOwner.firstname} {activePet.petname} - {activePet.breed}</h4>
+                                <AddNewPetForm petToEdit={activePet} onUpdate={handleConfirmUpdate}
+                                               onCancel={() => setShowDialog(false)}/>
+                            </Box>) : (<Box>
+                                <h4>Error - no action form has been selected</h4>
 
-                                        <Button variant="text" onClick={() => setShowDialog(false)}>
-                                            Cancel
-                                        </Button>
-                                    </Box>
-                                )
-                            )}
+                                <Button variant="text" onClick={() => setShowDialog(false)}>
+                                    Cancel
+                                </Button>
+                            </Box>))}
 
                         </Paper>
                     </Dialog>
@@ -251,19 +237,12 @@ export default function PetProfile({onDelete}) {
             </Stack>
 
             <Stack direction="column" spacing={2}>
-            <LastHealthChecks appointmentList={appointmentList} count={3} filterMode='today' />
-            <LastHealthChecks appointmentList={appointmentList} count={3} itemsPerPage={3} filterMode='future' />
+                <LastHealthChecks appointmentList={appointmentList} count={3} filterMode='today'/>
+                <LastHealthChecks appointmentList={appointmentList} count={3} itemsPerPage={3} filterMode='future'/>
             </Stack>
-
             <Stack direction="column" spacing={2}>
-            <BookingButton booking={handleBooking}/>
-            {user.role !== 'pet_owner' &&
-                    <Link to="/pet-records" state={{selectedPet: selectedPet}}>
-                        <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded />}>Update pet History</Button>
-                    </Link>
-            }
+                <BookingButton booking={handleBooking}/>
             </Stack>
-
 
         </Stack>
 

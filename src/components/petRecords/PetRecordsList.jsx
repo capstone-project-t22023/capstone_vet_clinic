@@ -11,7 +11,7 @@ import {
     Typography,
     Stack,
     Box,
-    Tabs, Tab
+    Tabs, Tab,
 } from "@mui/material";
 import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
@@ -146,6 +146,7 @@ export default function PetRecordsList() {
     const handleChangeTabVertical = (event, newValue) => {
         setSelectedTabVertical(newValue);
     };
+
 
     return (
         <Stack direction="column" sx={{width: "100%"}}>
@@ -343,7 +344,6 @@ export default function PetRecordsList() {
                     <Loading open={loading}/>
                 )}
             </TabPanel>
-
 
         </Stack>
     )
