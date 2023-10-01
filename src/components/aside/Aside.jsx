@@ -17,7 +17,7 @@ import {
     PaidRounded,
     PeopleRounded,
     HelpRounded,
-    MenuBookRounded
+    MenuBookRounded, HistoryEduRounded
 } from '@mui/icons-material';
 import Logo from "../header/Logo";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -95,11 +95,7 @@ export default function Aside() {
                         <DashboardRounded/>
                     </ListItemButton>
                 </Tooltip>
-                <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
-                    <ListItemButton disabled={user.role === 'pet_owner'} selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
-                        <LocationCityRounded/>
-                    </ListItemButton>
-                </Tooltip>
+
 
                 {user.role === 'pet_owner' ?
                 <>
@@ -115,6 +111,11 @@ export default function Aside() {
 
                 {user.role === 'doctor' ?
                 <>
+                    <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
+                            <HistoryEduRounded/>
+                        </ListItemButton>
+                    </Tooltip>
                     <Tooltip title="Invoices" TransitionComponent={Zoom} placement="right" arrow>
                         <ListItemButton
                             selected={isActive('/view_invoices')}
@@ -127,6 +128,11 @@ export default function Aside() {
 
                 {user.role === 'admin' ?
                 <>
+                    <Tooltip title="Pet Records" TransitionComponent={Zoom} placement="right" arrow>
+                        <ListItemButton selected={isActive('/pet-records')} onClick={() => handleClick('/pet-records')}>
+                            <HistoryEduRounded/>
+                        </ListItemButton>
+                    </Tooltip>
                     <Tooltip title="Payments" TransitionComponent={Zoom} placement="right" arrow>
                         <ListItemButton
                             selected={isActive('/process_payments')}

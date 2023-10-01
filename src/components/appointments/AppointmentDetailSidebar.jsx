@@ -1,7 +1,15 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Stack, Typography, Button, IconButton, Divider, Tooltip} from "@mui/material";
-import {AutoDeleteRounded, FaceRounded, PaidRounded, PetsRounded} from "@mui/icons-material";
+import React, {useContext, useEffect, useState,} from "react";
 import {Link} from "react-router-dom";
+import {Stack, Typography, Button, IconButton, Divider, Tooltip} from "@mui/material";
+import {
+    AttachMoneyRounded,
+    AutoDeleteRounded,
+    FaceRounded, HistoryEduRounded,
+    PaidRounded,
+    PetsRounded,
+    Receipt,
+    VisibilityRounded
+} from "@mui/icons-material";
 import programContext from "../../contexts/ProgramContext";
 import {PetsContext} from "../../contexts/PetsProvider";
 import BookingButton from "../booking/BookingButton";
@@ -17,7 +25,8 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         updateSelectedPet,
         updateSelectedAppointment,
         updateAppointmentStatus,
-        appointmentList
+        appointmentList,
+        selectedPet
     } = useContext(PetsContext);
     const [appointment, setAppointment] = useState({});
 
@@ -41,8 +50,8 @@ export default function AppointmentDetailSidebar({appointmentId}) {
         //     need to do the SELECTED USER TAB , what to display
     }
     const handleOpenPet = () => {
-        updateSelectedPet(appointment.pet_id);
         updateSelectedAppointment("");
+        updateSelectedPet(appointment.pet_id);
         changeSidebarContent("pet");
     }
 
@@ -54,10 +63,11 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                         <Typography variant="h6">Appointment Details</Typography>
                     </Tooltip>
                     <Status appointment={appointment}/>
-                    { user.role !== "pet_owner" && appointment.booking_status === "FINISHED" && !appointment.invoice_id &&
-                            <Link to="/generate_invoice"  state= {{ appointment: {appointment} }}>
-                                <Button variant="contained" color="primary" size="small" startIcon={<PaidRounded/>}>Generate Invoice</Button>
-                            </Link>
+                    {user.role !== "pet_owner" && appointment.booking_status === "FINISHED" && !appointment.invoice_id &&
+                        <Link to="/generate_invoice" state={{appointment: {appointment}}}>
+                            <Button variant="contained" color="primary" size="small" startIcon={<PaidRounded/>}>Generate
+                                Invoice</Button>
+                        </Link>
                     }
                     <Divider/>
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -79,13 +89,54 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                     <BookingType type={appointment.booking_type}/>
                     <Doctor id={appointment.doctor_id}/>
                     <Divider/>
-                    <Typography><strong>Invoice ID:</strong> {appointment.invoice_id}</Typography>
-                    <Typography><strong>Receipt ID:</strong> {appointment.receipt_id}</Typography>
-                    {/*<Typography><strong>Updated Date:</strong> {appointment.updated_date}</Typography>*/}
+
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        {appointment.invoice_id !== null ?
+                            <>
+                                <Link to="/manage_invoice" state={{appointment: {appointment}}}>
+                                    <IconButton color="primary" onClick={handleOpenPet}>
+                                        <AttachMoneyRounded/>
+                                    </IconButton>
+                                </Link>
+                                <Typography fontSize="0.75rem"><strong>Price:</strong></Typography>
+                                <Typography>{appointment.invoice_amount}</Typography>
+                            </>
+                            :
+                            <>
+                                <IconButton color="primary" onClick={handleOpenPet}
+                                            disabled="true">
+                                    <AttachMoneyRounded/>
+                                </IconButton>
+                                <Typography fontSize="0.75rem" color="grey.400"><strong>Not Available</strong></Typography>
+                            </>
+                        }
+                    </Stack>
+
+
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        {appointment.invoice_id !== null && appointment.payment_status === "PAID" ?
+                            <>
+                                <Link to="/manage_invoice" state={{appointment: {appointment}}}>
+                                    <IconButton color="primary" onClick={handleOpenPet}>
+                                        <Receipt/>
+                                    </IconButton>
+                                </Link>
+                                <Typography fontSize="0.75rem"><strong>Get Receipt</strong></Typography>
+                            </>
+                            :
+                            <>
+                                <IconButton color="primary" onClick={handleOpenPet}
+                                            disabled="true">
+                                    <Receipt/>
+                                </IconButton>
+                                <Typography fontSize="0.75rem" color="grey.400"><strong>No Receipt</strong></Typography>
+                            </>
+                        }
+                    </Stack>
+
+
                     <Divider/>
-                    {/*<Typography><strong>Pet Owner ID:</strong> {appointment.pet_owner_id}</Typography>*/}
-                    {/*<Typography><strong>Username:</strong> {appointment.username}</Typography>*/}
-                    {/*<Typography><strong>Pet ID:</strong> {appointment.pet_id}</Typography>*/}
+
                     <Stack direction="row" spacing={1} alignItems="center">
                         <IconButton color="primary" disabled onClick={handleOpenOwner}>
                             <FaceRounded/>
@@ -103,11 +154,10 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                 </Stack>
             )}
             <Stack direction="column" spacing={2}>
-                {user.role !== "pet_owner" ?
-                    <>
-                        <Button disabled variant="outlined" color="error">Update Pet Records??</Button>
-                    </>
-                    : ""
+                {user.role !== 'pet_owner' &&
+                    <Link to="/pet-records" state={{selectedPet: selectedPet}}>
+                        <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded />}>Update pet History</Button>
+                    </Link>
                 }
             </Stack>
         </Stack>

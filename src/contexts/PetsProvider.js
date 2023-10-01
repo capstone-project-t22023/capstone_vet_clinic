@@ -78,7 +78,6 @@ export const PetsProvider = ({children}) => {
     const updateSelectedPet = (petId) => {
         // selectedPet === petId ? setSelectedPet({}) : setSelectedPet(petId);
         setSelectedPet(petId)
-        console.log("petId:",petId)
         if (selectedAppointment && selectedAppointment.pet_id !== petId) {
             setSelectedAppointment({});
         }

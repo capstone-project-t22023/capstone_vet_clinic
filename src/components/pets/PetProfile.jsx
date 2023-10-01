@@ -3,7 +3,7 @@ import {
     Avatar, Button, Box, Stack, Typography, IconButton, Tooltip, Dialog, Paper, Zoom
 } from "@mui/material";
 import AgeCalculator from './AgeCalculator';
-import { SettingsApplicationsRounded, DeleteForeverRounded } from '@mui/icons-material';
+import {SettingsApplicationsRounded, DeleteForeverRounded, HistoryEduRounded} from '@mui/icons-material';
 import BookingButton from "../booking/BookingButton";
 import {PetsContext} from "../../contexts/PetsProvider";
 import ProgramContext from "../../contexts/ProgramContext";
@@ -11,6 +11,7 @@ import ProgramContext from "../../contexts/ProgramContext";
 import AddNewPetForm from "./AddNewPetForm";
 import LastHealthChecks from "../appointments/petProfile/LastHealthChecks";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 export default function PetProfile({onDelete}) {
     const [showDialog, setShowDialog] = useState(false);
@@ -122,8 +123,6 @@ export default function PetProfile({onDelete}) {
                 console.error('Error:', error);
             });
     };
-
-
 
 
     return (activePet && (
@@ -252,18 +251,18 @@ export default function PetProfile({onDelete}) {
             </Stack>
 
             <Stack direction="column" spacing={2}>
-            <LastHealthChecks appointmentList={appointmentList} filterMode='today' />
-            <LastHealthChecks appointmentList={appointmentList} filterMode='future' />
+            <LastHealthChecks appointmentList={appointmentList} count={3} filterMode='today' />
+            <LastHealthChecks appointmentList={appointmentList} count={3} itemsPerPage={3} filterMode='future' />
             </Stack>
 
+            <Stack direction="column" spacing={2}>
             <BookingButton booking={handleBooking}/>
-
-            {user.role !== 'pet_owner' && (
-                <Stack direction='row' spacing={2}>
-                    <Button variant="outlined" disabled={true}>Write prescription</Button>
-                    <Button variant="outlined" disabled={true}>Update pet History</Button>
-                </Stack>
-            )}
+            {user.role !== 'pet_owner' &&
+                    <Link to="/pet-records" state={{selectedPet: selectedPet}}>
+                        <Button variant="outlined" color="primary" endIcon={<HistoryEduRounded />}>Update pet History</Button>
+                    </Link>
+            }
+            </Stack>
 
 
         </Stack>

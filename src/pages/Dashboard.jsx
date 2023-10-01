@@ -89,13 +89,14 @@ export default function Dashboard() {
                                         </Typography>
                                     </Stack>
 
-                                    <Paper sx={{borderRadius: 6}} elevation={0}>
-                                        <Appointments timeframe="today" count={10} itemsPerPage={5} doctor />
+                                    <Stack direction="row" spacing={2} flex={1}>
+                                    <Paper elevation={0} sx={{width:"100%", borderRadius: 6}}>
+                                        <Appointments timeframe="today" count={10} itemsPerPage={3} doctor />
                                     </Paper>
-                                    <Paper sx={{borderRadius: 6}} elevation={0}>
-                                        <Appointments timeframe="future" count={10} itemsPerPage={5} doctor />
+                                        <Paper elevation={0} sx={{width:"100%", borderRadius: 6}}>
+                                        <Appointments timeframe="future" count={10} itemsPerPage={3} doctor />
                                     </Paper>
-
+                                    </Stack>
 
                                     <Stack direction="row" spacing={2}>
                                         <Box flex={1}>

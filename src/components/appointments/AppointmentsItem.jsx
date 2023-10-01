@@ -76,7 +76,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
         <Tooltip title={`${appointment.booking_type} - ${appointment.booking_status} - ${appointment.petname}`}
                  placement="top">
             <Stack direction="row" spacing={0} flex={0} sx={SxUpcomingAppointment} onClick={() => onClick(!isSelected)}>
-                <Stack direction="column" flex={0} alignItems="center">
+                <Stack direction="column" flex={0} alignItems="center" sx={{minWidth: "6rem"}}>
                     <Typography component="span">{dayjs(appointment.booking_date).format('MMMM')}</Typography>
                     <Typography component="p">{dayjs(appointment.booking_date).format('D ddd')}</Typography>
                 </Stack>

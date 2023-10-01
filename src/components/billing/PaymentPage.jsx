@@ -28,8 +28,6 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        // borderBottom: "1px solid",
-        // borderColor:  theme.palette.primary[100],
     },
 }));
 

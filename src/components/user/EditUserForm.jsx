@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import programContext from "../../contexts/ProgramContext";
 
-function EditUserForm({user, onUpdateUser, userRole = ""}) {
+function EditUserForm({ user, onUpdateUser, userRole= "" }) {
     const [firstname, setFirstname] = useState(user.firstname);
     const [lastname, setLastname] = useState(user.lastname);
     const [address, setAddress] = useState(user.address);
@@ -50,9 +50,6 @@ function EditUserForm({user, onUpdateUser, userRole = ""}) {
 
 
         console.log(url, JSON.stringify(req_body));
-
-        // TODO : edit doesn't work, return ERRORs like "update_user: 'Error: Firstname must be up to 50 letters only.'"
-
 
         fetch(url, {
             method: 'POST',

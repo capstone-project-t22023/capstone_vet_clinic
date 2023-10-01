@@ -12,6 +12,8 @@ export default function UserCard({user}) {
       setOpenEdit(false)
     }
 
+    console.log(user)
+
     return (
         <>
             <Stack direction="column" spacing={1}>

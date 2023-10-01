@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper,
         Typography, IconButton } from '@mui/material';
 import {Link} from "react-router-dom";
 import {
@@ -14,6 +14,29 @@ import {
     Receipt,
     PointOfSale
 } from "@mui/icons-material";
+
+import {styled} from '@mui/material/styles';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({theme}) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.primary[50],
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const showIcon = (typeId) => {
     switch (typeId) {
@@ -47,29 +70,29 @@ export default function InvoiceTable(props) {
             <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="invoice table">
                     <TableHead>
-                    <TableRow>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Booking ID</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Booking Type</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Pet Name</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Pet Owner</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Payment Status</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Amount Due</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Invoice</Typography></TableCell>
-                        <TableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Receipt</Typography></TableCell>
-                    </TableRow>
+                    <StyledTableRow>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Booking ID</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Booking Type</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Pet Name</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Pet Owner</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Payment Status</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Amount Due</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Invoice</Typography></StyledTableCell>
+                        <StyledTableCell align="center"><Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}>Receipt</Typography></StyledTableCell>
+                    </StyledTableRow>
                     </TableHead>
                     <TableBody>
                     {billingItems.map((appointment) => (
-                        <TableRow
+                        <StyledTableRow
                         key={appointment.booking_id}
                         >
-                            <TableCell align="center">{appointment.booking_id}</TableCell>
-                            <TableCell align="center">{showIcon(appointment.booking_type_id)}{appointment.booking_type}</TableCell>
-                            <TableCell align="center">{appointment.petname}</TableCell>
-                            <TableCell align="center">{appointment.pet_owner}</TableCell>
-                            <TableCell align="center">{appointment.payment_status}</TableCell>
-                            <TableCell align="center">{appointment.invoice_amount}</TableCell>
-                            <TableCell align="center">
+                            <StyledTableCell align="center">{appointment.booking_id}</StyledTableCell>
+                            <StyledTableCell align="center">{showIcon(appointment.booking_type_id)}{appointment.booking_type}</StyledTableCell>
+                            <StyledTableCell align="center">{appointment.petname}</StyledTableCell>
+                            <StyledTableCell align="center">{appointment.pet_owner}</StyledTableCell>
+                            <StyledTableCell align="center">{appointment.payment_status}</StyledTableCell>
+                            <StyledTableCell align="center">{appointment.invoice_amount}</StyledTableCell>
+                            <StyledTableCell align="center">
                                 { appointment.invoice_id !== "NA" ?
                                     ( appointment.payment_status === "NOT PAID" ?
                                     <Link to="/manage_invoice"  state= {{ appointment: {appointment} }}>
@@ -103,8 +126,8 @@ export default function InvoiceTable(props) {
                                         </IconButton>   
                                     </Link>
                                 }
-                            </TableCell>
-                            <TableCell align="center">
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
                             { appointment.invoice_id !== "NA" ?
                                 <Link to="/view_receipt"  state= {{ appointment: {appointment} }}>
                                     <IconButton
@@ -116,8 +139,8 @@ export default function InvoiceTable(props) {
                                     </IconButton>   
                                 </Link> : ""
                             }
-                            </TableCell>
-                        </TableRow>
+                            </StyledTableCell>
+                        </StyledTableRow>
                     ))}
                     </TableBody>
                 </Table>
