@@ -179,9 +179,9 @@ export default function AppointmentDetailSidebar({appointmentId}) {
             {petRecordsDialog &&
                 <Dialog open={petRecordsDialog} onClose={handleClose}>
                     <Stack direction='row' spacing={3} sx={{p: 3}}>
-                        <Button onClick={() => setSelectedForm('rehab')} variant="contained" color="secondary"
+                        <Button disabled onClick={() => setSelectedForm('rehab')} variant="contained" color="secondary"
                                 endIcon={<FitnessCenterRounded/>}>Rehab</Button>
-                        <Button onClick={() => setSelectedForm('diet')} variant="contained" color="success"
+                        <Button disabled onClick={() => setSelectedForm('diet')} variant="contained" color="success"
                                 endIcon={<RestaurantRounded/>}>Diet</Button>
                         <Button onClick={() => setSelectedForm('surgery')} variant="contained" color="error"
                                 endIcon={<LocalHospitalRounded/>}>Surgery</Button>
