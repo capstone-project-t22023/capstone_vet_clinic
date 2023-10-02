@@ -3,8 +3,8 @@
    <head>
       <meta charset="utf-8">
       <meta content="width=device-width, initial-scale=1.0" name="viewport">
-      <title>Pawsome | About Us</title>
-      <meta content="Modern pet veterinary clinic in Sydney" name="description">
+      <title>PawsomeVet | Virtual Pet</title>
+      <meta content="Emergency Services" name="description">
       <meta content="pet clinic, pet, pet treatment" name="keywords">
       <!--FAVICON -->
       <link href="assets/img/Logo.jpg" rel="icon">
@@ -31,7 +31,7 @@
             <nav id="navbar" class="navbar">
                <ul>
                   <li><a class="nav-link scrollto" href="index.html">OUR SERVICES</a></li>
-                  <li><a class="nav-link scrollto active" href="aboutus.html">ABOUT US</a></li>
+                  <li><a class="nav-link scrollto" href="aboutus.html">ABOUT US</a></li>
                   <li class="dropdown">
                      <a href="#"><span>PET ARTICLES</span> <i class="bi bi-chevron-down"></i></a>
                      <ul>
@@ -46,7 +46,6 @@
                         <li><a href="poisonguide.html">Poison Guide</a></li>
                         <li><a href="groomingservices.html">Grooming Services</a></li>
                         <li><a href="fees.html">Fees &amp; Insurance</a></li>
-                        <li><a href="symptomchecker.php">Symptom Checker</a></li>
                         <li><a href="virtualpet.html">Virtual Pet</a></li>
                         <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                      </ul>
@@ -75,199 +74,192 @@
             </div>
          </section>
          <!-- End Breadcrumbs -->
-   <!--The images of the cartoony dog have been downloaded from https://www.behance.net/gallery/139178131/Dogs-(Spine-Animation)-->
-   <section>
-      <div class="container mt-5">
-         <h1 class="text-center">Virtual Pet</h1>
-         <div class="row">
-             <div class="col-md-6">
-                 <div class="card text-center">
-                     <div class="card-body">
-                         <h2 class="card-title">Pawsome Pup</h2>
-                         <img id="dog-image" src="assets/img/virtualpet/dogstandby.gif" alt="Dog">
-                         <p>Hunger: <span id="hunger">50</span></p>
-                         <p>Training: <span id="training">50</span></p>
-                         <p>Energy: <span id="energy">50</span></p>
-                     </div>
-                 </div>
-             </div>
-             <div class="col-md-6">
-                 <div class="actions">
-                     <button class="btn btn-primary" onclick="stay()"><i class="bi bi-person"></i> Stay</button>
-                     <button class="btn btn-success" onclick="sniff()"><i class="bi bi-compass"></i> Sniff</button>
-                     <button class="btn btn-info" onclick="scratch()"><i class="bi bi-scissors"></i> Scratch</button>
-                     <button class="btn btn-warning" onclick="waggle()"><i class="bi bi-lightbulb"></i> Waggle</button>
-                     <button class="btn btn-secondary" onclick="sleep()"><i class="bi bi-moon"></i> Sleep</button>
-                 </div>
-             </div>
-         </div>
-     </div>
- 
-     <script>
-         let hunger = 50;
-         let training = 50;
-         let energy = 50;
-         let petImage = document.getElementById("dog-image");
- 
-         function updateStats() {
-             document.getElementById("hunger").textContent = hunger;
-             document.getElementById("training").textContent = training;
-             document.getElementById("energy").textContent = energy;
-         }
- 
-         function stay() {
-             // Implement the "stay" functionality
-             // For example, it can increase happiness and reduce energy
-             if (energy >= 10) {
-                 energy -= 10;
-                 // Implement any other logic specific to the action
-                 // For example, update the pet image
-                 petImage.src = "assets/img/virtualpet/dogstandby.gif"; // Replace with your image file
-             }
-             updateStats();
-         }
- 
-         function sniff() {
-             // Implement the "sniff" functionality
-             // For example, it can increase happiness and slightly reduce hunger
-             if (hunger > 0) {
-                 hunger -= 5;
-                 // Implement any other logic specific to the action
-                 // For example, update the pet image
-                 petImage.src = "assets/img/virtualpet/dogsniff.gif"; // Replace with your image file
-             }
-             updateStats();
-         }
- 
-         function scratch() {
-             // Implement the "scratch" functionality
-             // For example, it can increase happiness and reduce energy
-             if (energy >= 15) {
-                 energy -= 15;
-                 // Implement any other logic specific to the action
-                 // For example, update the pet image
-                 petImage.src = "assets/img/virtualpet/dogscratch.gif"; // Replace with your image file
-             }
-             updateStats();
-         }
- 
-         function waggle() {
-             // Implement the "waggle" functionality
-             // For example, it can increase happiness and slightly reduce hunger
-             if (hunger > 0) {
-                 hunger -= 5;
-                 // Implement any other logic specific to the action
-                 // For example, update the pet image
-                 petImage.src = "assets/img/virtualpet/dogtail.gif"; // Replace with your image file
-             }
-             updateStats();
-         }
- 
-         function sleep() {
-             // Implement the "sleep" functionality
-             // For example, it can restore energy and slightly reduce hunger
-             if (hunger > 0) {
-                 hunger -= 5;
-                 energy = 100; // Fully restore energy
-                 // Implement any other logic specific to the action
-                 // For example, update the pet image
-                 petImage.src = "assets/img/virtualpet/dogsleep.gif"; // Replace with your image file
-             }
-             updateStats();
-         }
- 
-         // Update the pet's stats every few seconds (simulating time passing)
-         setInterval(() => {
-             if (hunger > 0) hunger--;
-             if (training > 0) training--;
-             if (energy < 100) energy++;
-             updateStats();
-         }, 3000); // Update every 3 seconds
-     </script>
- 
-     <!-- Bootstrap JS and Popper.js CDN -->
-     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</main>
-<!-- End #main -->
-         <!--FOOTER -->
-         <footer id="footer" class="footer">
-            <div class="footer-top">
-               <div class="container">
-                  <div class="row gy-4">
-                     <div class="col-lg-5 col-md-12 footer-info">
-                        <a href="index.html" class="logo d-flex align-items-center">
-                        <img src="assets/img/Logo.jpg" alt="">
-                        <span>PawsomeVet</span>
-                        </a>
-                        <br>
-                        <br>
-                        <p><b>Where all paws are treated<br>with care.</b></p>
-                        <br>
-                        <br>
-                        <br>            
-                        <div class="social-links mt-3">
-                           <a href="#" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+         <!--VIRTUAL PET SECTION-->
+         <section id="emergencyservices" class="emergencyservices">
+            <div class="container-fluid p-0 overflow-hidden" data-aos="fade-up">
+               <div class="row g-0">
+                  <div class="col-lg-6 order-lg-1 my-auto px-5 py-5" data-aos="fade-up">
+                     <div class="lc-block">
+                        <div class="rich">
+                            <h2 class="card-title">Your Virtual Dog</h2>
+                            <img id="dog-image" src="assets/img/virtualpet/dogstandby.gif" alt="Dog">
+                            <p>Hunger: <span id="hunger">50</span></p>
+                            <p>Training: <span id="training">50</span></p>
+                            <p>Energy: <span id="energy">50</span></p>
+                            <p>Happiness: <span id="happiness">50</span></p>
                         </div>
                      </div>
-                     <div class="col-lg-2 col-6 footer-links">
-                        <h4>Our Services</h4>
-                        <ul>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="generalcheckup.html"><b>General Check-Up</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="healthconcerns.html"><b>Health Concerns Consultations</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="dentistry.html"><b>Dentistry</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="surgery.html"><b>Surgery</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="emergencyservices.html"><b>Emergency Services</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="nutritionprograms.html"><b>Nutrition Programs</b></a></li>
-                        </ul>
+                  </div>
+                  <div class="col-lg-6 order-lg-1 my-auto px-5 py-5" data-aos="fade-up">
+                    <div class="lc-block">
+                       <div class="rich">
+                        <div class="actions">
+                            <button class="btn btn-primary" onclick="performAction('stay', 'Your dog stays contentedly.')"><i class="bi bi-person"></i> Stay</button>
+                            <button class="btn btn-success" onclick="performAction('sniff', 'Dogs have an incredibly keen sense of smell, which is estimated to be tens of thousands to even hundreds of thousands of times more sensitive than that of humans. They use their sense of smell as a primary way of gathering information about their environment, other animals, and even people. Dogs sniff as a way of gathering information, communicating, and navigating their world. It is a fundamental and vital part of their sensory experience, and it plays a significant role in their daily lives.')"><i class="bi bi-compass"></i> Sniff</button>
+                            <button class="btn btn-info" onclick="performAction('scratch', 'Dogs scratch themselves for various reasons, and it is a normal behavior for them. Scratching helps them address several needs and discomforts.While scratching is normal, excessive or persistent scratching can indicate an underlying problem that needs attention. If you notice your dog scratching excessively or if their skin appears irritated, red, or inflamed, it is essential to consult a veterinarian. The vet can diagnose the underlying cause and recommend appropriate treatment, which may include medications, changes in diet, or flea and tick prevention measures.')"><i class="bi bi-scissors"></i> Scratch</button>
+                            <button class="btn btn-warning" onclick="performAction('waggle', 'Dogs wag their tails as a form of communication, and the way they wag their tails can convey different emotions and messages. It is important for dog owners and individuals interacting with dogs to pay attention to the overall body language and context when interpreting a tail wagging. While a wagging tail can be a sign of happiness and friendliness, it is not the only factor to consider. The rest of the body language, including posture, ear position, facial expressions, and vocalizations, provides important clues about their emotional state and intentions.')"><i class="bi bi-lightbulb"></i> Waggle</button>
+                            <button class="btn btn-secondary" onclick="performAction('sleep', 'Dogs, like all animals, sleep as a fundamental physiological need. Sleep is crucial for their overall health and well-being, just as it is for humans. The amount of sleep a dog needs can vary depending on factors like age, activity level, and breed. Puppies and young dogs tend to sleep more than adult dogs, and large breeds often require more sleep than smaller ones. On average, adult dogs may sleep anywhere from 12 to 16 hours a day, while puppies and seniors may sleep even more. It is essential for dog owners to provide a comfortable and safe sleeping environment for their pets and ensure they have access to a regular sleep schedule. Additionally, if  sleep patterns change significantly or if they exhibit signs of sleep disturbances, it is a good idea to consult with a veterinarian to rule out any underlying health issues.')"><i class="bi bi-moon"></i> Sleep</button>
+                        </div>
+                        <!-- Container for trivia -->
+                        <div class="trivia-container mt-3">
+                            <h3>Trivia</h3>
+                            <p id="trivia"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                       </div>
+                    </div>
+            <script>
+                let hunger = 50;
+                let training = 50;
+                let energy = 50;
+                let happiness = 50;
+                let petImage = document.getElementById("dog-image");
+                let triviaContainer = document.getElementById("trivia");
+        
+                function updateStats() {
+                    document.getElementById("hunger").textContent = hunger;
+                    document.getElementById("training").textContent = training;
+                    document.getElementById("energy").textContent = energy;
+                    document.getElementById("happiness").textContent = happiness;
+                }
+        
+                function performAction(action, trivia) {
+                    switch (action) {
+                        case 'stay':
+                            energy -= 10;
+                            happiness += 10;
+                            petImage.src = "assets/img/virtualpet/dogstandby.gif";
+                            break;
+                        case 'sniff':
+                            hunger -= 5;
+                            happiness += 15;
+                            petImage.src = "assets/img/virtualpet/dogsniff.gif";
+                            break;
+                        case 'scratch':
+                            energy -= 15;
+                            happiness += 10;
+                            petImage.src = "assets/img/virtualpet/dogscratch.gif";
+                            break;
+                        case 'waggle':
+                            hunger -= 5;
+                            happiness += 20;
+                            petImage.src = "assets/img/virtualpet/dogtail.gif";
+                            break;
+                        case 'sleep':
+                            hunger -= 5;
+                            energy = 100;
+                            happiness += 30;
+                            petImage.src = "assets/img/virtualpet/dogsleep.gif";
+                            break;
+                        default:
+                            break;
+                    }
+                    // Implement random events
+                    if (Math.random() < 0.2) {
+                        // Simulate a random event, e.g., finding a treat
+                        trivia += " (Found a treat!)";
+                        happiness += 10;
+                    }
+                    // Update trivia container with the provided trivia
+                    triviaContainer.textContent = trivia;
+                    // Cap happiness to 100
+                    happiness = Math.min(100, happiness);
+                    updateStats();
+                }
+        
+                // Update the pet's stats every few seconds (simulating time passing)
+                setInterval(() => {
+                    if (hunger > 0) hunger--;
+                    if (training > 0) training--;
+                    if (energy < 100) energy++;
+                    if (happiness > 0) happiness--;
+                    updateStats();
+                }, 3000); // Update every 3 seconds
+            </script>
+        
+            <!-- Bootstrap JS and Popper.js CDN -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+         </section>
+      </main>
+      <!-- End #main -->
+      <!--FOOTER -->
+      <footer id="footer" class="footer">
+         <div class="footer-top">
+            <div class="container">
+               <div class="row gy-4">
+                  <div class="col-lg-5 col-md-12 footer-info">
+                     <a href="index.html" class="logo d-flex align-items-center">
+                     <img src="assets/img/Logo.jpg" alt="">
+                     <span>PawsomeVet</span>
+                     </a>
+                     <br>
+                     <br>
+                     <p><b>Where all paws are treated<br>with care.</b></p>
+                     <br>
+                     <br>
+                     <br>            
+                     <div class="social-links mt-3">
+                        <a href="#" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="#" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
                      </div>
-                     <div class="col-lg-2 col-6 footer-links">
-                        <h4>Pet Info</h4>
-                        <ul>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="symptomchecker.php"><b> Symptom Checker</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="virtualpet.html"><b>Virtual Pet</b></a></li>
-                           <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
-                        </ul>
-                     </div>
-                     <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-                        <h4>Contact Us</h4>
-                        <p>
-                           1 New Street <br>
-                           Sydney 2000 NSW <br>
-                           Australia <br><br>
-                           <strong>Phone:</strong>+ (02) 9519 4111 / +(02)95194112<br>
-                           <strong>Email:</strong><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a>
-                        </p>
-                     </div>
+                  </div>
+                  <div class="col-lg-2 col-6 footer-links">
+                     <h4>Our Services</h4>
+                     <ul>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="generalcheckup.html"><b>General Check-Up</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="healthconcerns.html"><b>Health Concerns Consultations</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="dentistry.html"><b>Dentistry</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="surgery.html"><b>Surgery</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="emergencyservices.html"><b>Emergency Services</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i> <a href="nutritionprograms.html"><b>Nutrition Programs</b></a></li>
+                     </ul>
+                  </div>
+                  <div class="col-lg-2 col-6 footer-links">
+                     <h4>Pet Info</h4>
+                     <ul>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
+                        <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
+                        <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
+                     </ul>
+                  </div>
+                  <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                     <h4>Contact Us</h4>
+                     <p>
+                        1 New Street <br>
+                        Sydney 2000 NSW <br>
+                        Australia <br><br>
+                        <strong>Phone:</strong>+ (02) 9519 4111 / +(02)95194112<br>
+                        <strong>Email:</strong><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a>
+                     </p>
                   </div>
                </div>
             </div>
-            <div class="container">
-               <div class="copyright">
-                  &copy; Copyright 2023 <strong><span>PawsomeVet</span></strong>. <a href="privacypolicy.html">Privacy Policy</a>| <a href="termsandconditions.html">Terms & Conditions</a>
-               </div>
+         </div>
+         <div class="container">
+            <div class="copyright">
+               &copy; Copyright 2023 <strong><span>PawsomeVet</span></strong>. <a href="privacypolicy.html">Privacy Policy</a>| <a href="termsandconditions.html">Terms & Conditions</a>
             </div>
-         </footer>
-         <!-- End Footer -->
-         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="fa-solid fa-arrow-up fa-beat fa-2xl" style="color: #ffffff;"></i></a>
-         <!-- VENDOR JS FILES-->
-         <script src="assets/vendors/aos/aos.js"></script>
-         <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
-         <script src="assets/vendors/fontawesome-free-6.4.2-web/js/fontawesome.min.js"></script>
-         <script src="assets/vendors/glightbox/js/glightbox.min.js"></script>
-         <script src="assets/vendors/swiper/swiper-bundle.min.js"></script>
-         <script src="assets/vendors/php-email-form/validate.js"></script>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-         <!-- MAIN JS FILE -->
-         <script src="assets/js/main.js"></script>
+         </div>
+      </footer>
+      <!-- End Footer -->
+      <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="fa-solid fa-arrow-up fa-beat fa-2xl" style="color: #ffffff;"></i></a>
+      <!-- VENDOR JS FILES-->
+      <script src="assets/vendors/aos/aos.js"></script>
+      <script src="assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="assets/vendors/fontawesome-free-6.4.2-web/js/fontawesome.min.js"></script>
+      <script src="assets/vendors/glightbox/js/glightbox.min.js"></script>
+      <script src="assets/vendors/swiper/swiper-bundle.min.js"></script>
+      <script src="assets/vendors/php-email-form/validate.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <!-- MAIN JS FILE -->
+      <script src="assets/js/main.js"></script>
    </body>
 </html>
-

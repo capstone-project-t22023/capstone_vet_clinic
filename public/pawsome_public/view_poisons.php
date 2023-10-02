@@ -65,7 +65,6 @@ $result = $stmt->get_result();
                         <li><a href="poisonguide.html">Poison Guide</a></li>
                         <li><a href="groomingservices.html">Grooming Services</a></li>
                         <li><a href="fees.html">Fees &amp; Insurance</a></li>
-                        <li><a href="symptomchecker.php">Symptom Checker</a></li>
                         <li><a href="virtualpet.html">Virtual Pet</a></li>
                         <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                      </ul>
@@ -164,8 +163,7 @@ $result = $stmt->get_result();
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="symptomchecker.php"><b> Symptom Checker</b></a></li>
+                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="virtualpet.html"><b>Virtual Pet</b></a></li>
                            <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                         </ul>
