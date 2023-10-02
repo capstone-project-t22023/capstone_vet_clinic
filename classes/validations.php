@@ -51,7 +51,7 @@ function validateDate($input){
 }
 
 function validatePassword($input){
-    if(preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/', $input)){
+    if(preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,20}$/', $input)){
         return true;
     } else {
         return false;
