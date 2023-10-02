@@ -123,8 +123,8 @@ $result = $stmt->get_result();
             </section>
 </body>
          <!-- End #main -->
-         <!--FOOTER -->
-         <footer id="footer" class="footer">
+        <!--FOOTER -->
+        <footer id="footer" class="footer">
             <div class="footer-top">
                <div class="container">
                   <div class="row gy-4">
@@ -163,18 +163,17 @@ $result = $stmt->get_result();
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="puppyandkittencheck.html"><b>Puppy &amp; Kitten Check</b></a></li>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="poisonguide.html"><b>Poison Guide</b></a></li>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="groomingservices.html"><b>Grooming Services</b></a></li>
-                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>>
+                           <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="fees.html"><b>Fees &amp; Insurance</b></a></li>
                            <li><i class="fa-solid fa-paw fa-bounce fa-xl" style="color: #9e4554;"></i><a href="virtualpet.html"><b>Virtual Pet</b></a></li>
                            <li><a href="vetchatbot.html"><img src="assets/img/vetchatbotlogo.png" alt="Vet Chatbot Logo Image"></a></li>
                         </ul>
                      </div>
                      <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-                     <h4>Contact Us</h4>
-                     <p><a href="https://maps.app.goo.gl/KcTqw4rbcvFrpX6o7" target="_blank" rel="noopener noreferrer">
-                        10 Barrack Street<br>
-                        Sydney 2000 NSW <br>
-                        Australia <br></a><br>
-                           <strong>Phone:</strong>+ (02) 9519 4111 / +(02)95194112<br>
+                        <h4>Contact Us</h4>
+                        <p><a href="https://maps.app.goo.gl/KcTqw4rbcvFrpX6o7" target="_blank" rel="noopener noreferrer">
+                           10 Barrack Street<br>
+                           Sydney 2000 NSW <br>
+                           Australia <br></a><br>
                            <strong>Email:</strong><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a>
                         </p>
                      </div>
