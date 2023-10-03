@@ -2098,133 +2098,6 @@ tr:hover {
 #dog-image {
   border-radius: 10px;
 }
-/*--------------------------------------------------------------
-#LIVE CHATBOX
---------------------------------------------------------------*/
-form {
-  position:relative;
-  padding: 15px 25px;
-  display:flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-form label {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-input {
-  font-family: "Lato";
-}
-
-a {
-  color: #0000ff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: none;
-}
-.wrapper,
-#loginform {
-  position: relative;
-  padding-bottom: 25px;
-  background: #dbdada;
-  width: 100%;
-  border-radius: 10px;
-}
-
-#loginform {
-  text-align: center;
-}
-
-#loginform p {
-  padding: 15px 25px;
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-#chatbox {
-  text-align: left;
-  margin: 0 auto;
-  margin-bottom: 25px;
-  padding: 10px;
-  background: #f6f3f3;
-  height: 300px;
-  width: 90%;
-  overflow: auto;
-  border-radius: 10px;
-  justify-content: center;
-}
-
-#usermsg {
-  flex: 1;
-  border-radius: 4px;
-}
-
-#name {
-  border-radius: 4px;
-  padding: 2px 8px;
-}
-
-#submitmsg,
-#enter{
-  background: #3dc5ba;
-  color: white;
-  padding: 4px 10px;
-  font-weight: bold;
-  border-radius: 4px;
-}
-
-.error {
-  color: #70e6d6;
-}
-
-#menu {
-  padding: 15px 25px;
-  display: flex;
-}
-
-#menu p.welcome {
-  flex: 1;
-}
-
-a#exit {
-  color: white;
-  background: #984684;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.msgln {
-  margin: 0 0 5px 0;
-}
-
-.msgln span.left-info {
-  color: rgb(235, 131, 221);
-}
-
-.msgln span.chat-time {
-  color: #666;
-  font-size: 60%;
-  vertical-align: super;
-}
-
-.msgln b.user-name, .msgln b.user-name-left {
-  font-weight: bold;
-  background: #48565c;
-  color: white;
-  padding: 2px 4px;
-  font-size: 90%;
-  border-radius: 4px;
-  margin: 0 5px 0 0;
-}
-
-.msgln b.user-name-left {
-  background: rgb(235, 131, 221);
-}
 
 /*--------------------------------------------------------------
 # FOOTER
@@ -2292,7 +2165,7 @@ a#exit {
 }
 
 .footer .footer-top .social-links a:hover {
-  color: #012970;
+  color: #ab4959;
 }
 
 .footer .footer-top h4 {
