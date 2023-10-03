@@ -93,8 +93,6 @@ $result = $stmt->get_result();
             </div>
          </section>
          <!-- End Breadcrumbs -->
-        <h1>Pet Poison Guide - <?php echo $animal_type; ?></h1>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a poison...">
         <section>
         <div class="table-responsive-lg">
             <table class="table">
