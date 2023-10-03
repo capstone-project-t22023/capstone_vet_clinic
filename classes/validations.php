@@ -26,7 +26,7 @@ function validateDecimal($input){
 }
 
 function validateAlpha($input){
-    if(preg_match('/^[A-Za-z ]+$/', $input)){
+    if(preg_match('/^[A-Za-z- ]+$/', $input)){
         return true;
     } else {
         return false;
@@ -41,12 +41,24 @@ function validateAlphaNumeric($input){
     }
 }
 
-function validateDate($input){
-    list($day, $month, $year) = explode('-', $input);
-    if(checkdate($month, $day, $year)){
+function validateAddress($input){
+    if(preg_match('/^[A-Za-z0-9-.,# ]+$/', $input)){
         return true;
     } else {
         return false;
+    }
+}
+
+function validateDate($input){
+    if($input){
+        list($day, $month, $year) = explode('-', $input);
+        if(checkdate($month, $day, $year)){
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
     }
 }
 
@@ -67,7 +79,7 @@ function validateUsername($input){
 }
 
 function validateEmail($input){
-    if(preg_match('/^\\S+@\\S+\\.\\S+$/', $input)){
+    if(preg_match('/[a-z0-9._`{|}~-]+(?:\.[a-z0-9._`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/', $input)){
         return true;
     } else {
         return false;

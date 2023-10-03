@@ -352,7 +352,7 @@ elseif ($action === 'register_pet_owner') {
         return_json(['register_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
     }
 
-    if(validateAlphaNumeric($_POST['address'])
+    if(validateAddress($_POST['address'])
         && validateLength($_POST['address'], 100)){
         $check = true;
     } else {
@@ -887,7 +887,7 @@ elseif ($action === 'add_user') {
             return_json(['add_user' =>  "Error: Password must be at least 8 letters, at least one number, one uppercase, one lowercase, and one special character only."]);  
         }
 
-        if(validateAlphaNumeric($_POST['address'])
+        if(validateAddress($_POST['address'])
             && validateLength($_POST['address'], 100)){
             $check = true;
         } else {
@@ -990,7 +990,7 @@ elseif ($action === 'update_user') {
             return_json(['update_user' =>  "Error: Username must be up to 20 characters only."]);  
         }
 
-        if(validateAlphaNumeric($_POST['address'])
+        if(validateAddress($_POST['address'])
             && validateLength($_POST['address'], 100)){
             $check = true;
         } else {
@@ -1221,7 +1221,7 @@ elseif ($action === 'add_pet') {
         && validateNumeric($_POST['insurance_membership'])){
             $check = true;
         } else {
-            return_json(['add_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+            return_json(['add_pet' =>  "Error: Insurance Membership Number must be up to 10 numeric characters only."]);
         }
 
         if(validateDate($_POST['insurance_expiry'])){
@@ -1251,7 +1251,7 @@ elseif ($action === 'add_pet') {
                 'comments' => $_POST['comments'],
                 'username' => $req_username
             ];
-            
+
             if ($pet_id = $pet_database->addPet($pet)) {
                 return_json(['add_pet' => $pet_id]);
             } else {
