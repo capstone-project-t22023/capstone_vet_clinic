@@ -73,7 +73,7 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
     useEffect(() => {
         const sortedMerged = Object.values(appointmentList).sort((b, a) =>
-            timeframe === 'historic' || timeframe === 'all' ? a.booking_date.localeCompare(b.booking_date) : b.booking_date.localeCompare(a.booking_date)
+            timeframe === 'historic' || timeframe === 'all' ? a.booking_date.localeCompare(b.booking_date) : a.booking_date.localeCompare(a.booking_date)
         );
         setMergedAppointments(sortedMerged);
     }, [appointmentList]);
@@ -83,11 +83,11 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
         if (timeframeMode === 'historic') {
-            return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
+            return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
         } else if (timeframeMode === 'today') {
             return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
         } else if (timeframeMode === 'future') {
-            return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
+            return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
         }
         return true;
     });

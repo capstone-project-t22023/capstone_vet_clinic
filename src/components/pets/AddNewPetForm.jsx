@@ -1,10 +1,10 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import dayjs from "dayjs";
 import {
     Box,
     Button,
     TextField,
-    Stack,
+    Stack, DialogTitle, InputLabel, Select, MenuItem, FormControl,
 } from "@mui/material";
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
@@ -33,20 +33,72 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
     const validateField = (name, value) => {
         let error = '';
 
-        if (name === 'insurance_membership' || name === 'microchip_no') {
-            if (value.length > 10) {
-                error = 'Max 10 characters allowed';
+        if (name === 'petname') {
+            if (value.trim() === '') {
+                error = 'Pet name is required.';
+            }
+            // Add more specific validations for petname if needed
+        }
+
+        if (name === 'birthdate') {
+            if (value.trim() === '') {
+                error = 'Birthdate is required.';
+            } else {
+                // You can add more complex date validations here if needed
             }
         }
 
-        // Add more specific validations for other fields here
-        // Example: if (name === 'weight' && !Number(value)) error = 'Invalid weight';
+        if (name === 'species') {
+            if (value === '') {
+                error = 'Species is required.';
+            }
+        }
+
+        if (name === 'breed') {
+            if (value.trim() === '') {
+                error = 'Breed is required.';
+            } else if (value.length < 1 || value.length > 50) {
+                error = 'Breed must be between 1 and 50 characters.';
+            }
+        }
+
+        if (name === 'weight') {
+            if (value.trim() === '') {
+                error = true;
+            }
+            else if (isNaN(value) || parseFloat(value) <= 0) {
+                error = 'Weight must be a positive number.';
+            }
+        }
+
+        if (name === 'sex') {
+            if (value === '') {
+                error = 'Sex is required.';
+            }
+        }
+
+        if (name === 'microchip_no') {
+            if (value.trim() === '') {
+                error = true;
+            }
+            else if (value.length > 10) {
+                error = 'Max 10 numbers allowed.';
+            }
+        }
+
+        if (name === 'insurance_membership') {
+            if (value.trim() === '') {
+                error = 'Insurance membership is required.';
+            } else if (!(value.length >= 10 && value.length <= 15)) {
+                error = 'Between 10 - 15 characters allowed.';
+            }
+        }
+
 
         return error;
     };
 
     const handleChange = (event) => {
-        console.log("Event:", event)
         const {name, value} = event.target;
         const error = validateField(name, value);
 
@@ -79,55 +131,45 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
             setErrors(newErrors);
         } else {
             setErrors({});
-            onAddPet(formData);
+               onAddPet(formData);
             setOriginalData(formData);
             setFormData(initialFormData);
         }
     };
 
+
     const isFieldChanged = (field) => formData[field] !== originalData[field];
 
     return (
-        <Box p={3}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DialogTitle>Add a new pet</DialogTitle>
             <form onSubmit={handleSubmit}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Stack direction="column" spacing={2}>
+                <Stack direction="column" spacing={2}>
+                    <Stack direction="row" spacing={2}>
                         <TextField
                             label="Pet Name"
                             name="petname"
                             value={formData.petname}
                             onChange={handleChange}
                             fullWidth
-                            required
+                            // required
                             error={Boolean(errors.petname)}
-                            helperText={errors.petname}
-                        />
-                        <TextField
-                            label="Species"
-                            name="species"
-                            value={formData.species}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                            error={Boolean(errors.species)}
-                            helperText={errors.species}
-                        />
-                        <TextField
-                            label="Breed"
-                            name="breed"
-                            value={formData.breed}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                            error={Boolean(errors.breed)}
-                            helperText={errors.breed}
                         />
                         <DatePicker
                             label="Birthdate"
                             name="birthdate"
                             openTo="year"
-                            // defaultValue={dayjs()}
-                            required
+                            disableFuture
+                            onError={(newError) => Boolean(errors.birthdate)}
+                            slotProps={{
+                                textField: {
+                                    // helperText: errors.birthdate,
+                                    variant: 'outlined', // For example, change the variant to 'outlined'
+                                    fullWidth: true, // Make the text field full width
+                                    error: Boolean(errors.birthdate)
+                                },
+                            }}
+                            fullWidth
                             // value={formData.birthdate}
                             onChange={(newValue) => {
                                 handleChange({
@@ -138,53 +180,82 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                                 });
                             }}
                             error={Boolean(errors.birthdate)}
-                            helperText={errors.birthdate}
-                            disableFuture
-                            slotProps={{
-                                textField: {
-                                    // helperText: 'MM/DD/YYYY',
-                                },
-                            }}
+
                         />
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
+                        <FormControl component="form" variant='outlined' fullWidth
+                                     error={Boolean(errors.species)}>
+                            <InputLabel htmlFor="label-species">Species</InputLabel>
+                            <Select
+                                name="species"
+                                labelId="label-species"
+                                value={formData.species}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="Dog">Dog</MenuItem>
+                                <MenuItem value="Cat">Cat</MenuItem>
+                                <MenuItem value="Giraffe">Giraffe</MenuItem>
+                                <MenuItem value="Racoon">Racoon</MenuItem>
+                                <MenuItem value="Snake">Snake</MenuItem>
+                                <MenuItem value="Other">Other</MenuItem>
+                            </Select>
+
+                        </FormControl>
+
+                        <TextField
+                            label="Breed"
+                            name="breed"
+                            value={formData.breed}
+                            onChange={handleChange}
+                            fullWidth
+                            // required
+                            error={Boolean(errors.breed)}
+                        />
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
                         <TextField
                             label="Weight"
                             name="weight"
                             value={formData.weight}
-                            onChange={(event) => {
-                                const newValue = parseFloat(event.target.value); // Convert input value to a number
-                                handleChange({
-                                    target: {
-                                        name: 'weight',
-                                        value: isNaN(newValue) ? '' : newValue, // Update with a number or an empty string
-                                    },
-                                });
-                            }}
+                            onChange={handleChange}
                             fullWidth
-                            required
                             error={Boolean(errors.weight)}
                             helperText={errors.weight}
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
 
+                        <FormControl component="form" variant='outlined' fullWidth
+                                     error={Boolean(errors.sex)}>
+                            <InputLabel htmlFor="label-sex">Sex</InputLabel>
+                            <Select
+                                name="sex"
+                                labelId="label-sex"
+                                value={formData.sex}
+                                onChange={handleChange}
+                                error={Boolean(errors.sex)}
+                            >
+                                <MenuItem value="Male">Male</MenuItem>
+                                <MenuItem value="Female">Female</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
                         <TextField
-                            label="Sex"
-                            name="sex"
-                            value={formData.sex}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                            error={Boolean(errors.sex)}
-                            helperText={errors.sex}
-                        />
-                        <TextField
-                            label="Microchip Number"
+                            label="Insurance Membership"
                             name="microchip_no"
                             value={formData.microchip_no}
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             onChange={handleChange}
                             fullWidth
-                            required
                             error={Boolean(errors.microchip_no)}
                             helperText={errors.microchip_no}
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
                         <TextField
                             label="Insurance Membership"
@@ -192,15 +263,16 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             value={formData.insurance_membership}
                             onChange={handleChange}
                             fullWidth
-                            required
                             error={Boolean(errors.insurance_membership)}
                             helperText={errors.insurance_membership}
                         />
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
                         <DatePicker
                             label="Insurance Expiry"
                             name="insurance_expiry"
                             // defaultValue={dayjs()}
-                            required
+                            // required
                             // value={formData.insurance_expiry}
                             onChange={(newValue) => {
                                 handleChange({
@@ -214,29 +286,33 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             helperText={errors.insurance_expiry}
                             slotProps={{
                                 textField: {
-                                    // helperText: 'MM/DD/YYYY',
+                                    // Add any props you want to customize the text field here
+                                    variant: 'outlined', // For example, change the variant to 'outlined'
+                                    fullWidth: true, // Make the text field full width
                                 },
                             }}
                         />
-                        <TextField
-                            label="Comments"
-                            name="comments"
-                            value={formData.comments}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                            error={Boolean(errors.comments)}
-                            helperText={errors.comments}
-                        />
-                        <Button variant="text" color="primary">
+                        {/*<TextField*/}
+                        {/*    label="Comments"*/}
+                        {/*    name="comments"*/}
+                        {/*    value={formData.comments}*/}
+                        {/*    onChange={handleChange}*/}
+                        {/*    fullWidth*/}
+                        {/*    required*/}
+                        {/*    error={Boolean(errors.comments)}*/}
+                        {/*/>*/}
+                    </Stack>
+                    <Stack direction="row" spacing={2} flex={1} justifyContent="center">
+                        <Button variant="outlined" color="primary">
                             Cancel
                         </Button>
                         <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
                             Add Pet
                         </Button>
                     </Stack>
-                </LocalizationProvider>
+                </Stack>
             </form>
-        </Box>
-    );
+        </LocalizationProvider>
+    )
+        ;
 };

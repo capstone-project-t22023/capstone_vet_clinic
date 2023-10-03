@@ -25,8 +25,6 @@ export default function BookingOptions(props) {
     const [takenSlots, setTakenSlots] = useState([]);
     const [bookingTypes, setBookingTypes] = useState([]);
 
-    console.log(selectedBooking)
-
     //mount data
     useEffect(() => {
         let tempSelectedBookingDate = new Date();
@@ -151,10 +149,11 @@ export default function BookingOptions(props) {
             });
     }, []);
 
-
     const changeDateHandler = (newDate) => {
-        setDate(dayjs(newDate))
-        selectedBooking.booking_date === dayjs(newDate).format('YYYY-MM-DD') ? setSelectedSlots(selectedBooking.booking_time) : setSelectedSlots([]);
+        setDate(dayjs(newDate));
+        if (selectedBooking && selectedBooking.booking_date) {
+            selectedBooking.booking_date === dayjs(newDate).format('YYYY-MM-DD') ? setSelectedSlots(selectedBooking.booking_time) : setSelectedSlots([])
+        };
         fetch(`http://localhost/capstone_vet_clinic/api.php/get_taken_slots_by_date?selected_date=${dayjs(newDate).format('DD-MM-YYYY')}`, {
             method: 'GET',
             headers: {

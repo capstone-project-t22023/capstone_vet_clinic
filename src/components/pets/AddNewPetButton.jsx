@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Button, Tooltip, Dialog, IconButton, Zoom, Typography} from "@mui/material";
+import {Button, Tooltip, Dialog, IconButton, Zoom, Typography, DialogContent} from "@mui/material";
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
 import {PetsContext} from "../../contexts/PetsProvider";
@@ -73,11 +73,9 @@ export default function AddNewPetButton() {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
             >
-                <Typography component="h3" variant="h5">
-                    Add a new pet to this
-                </Typography>
-                <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet}/>
-                <Button onClick={() => updatePetList(true)}>Update Data List</Button>
+                <DialogContent>
+                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet}/>
+                </DialogContent>
             </Dialog>
         </>
     )
