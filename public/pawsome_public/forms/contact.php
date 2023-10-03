@@ -1,7 +1,7 @@
 <?php
     use PHPMailer\PHPMailer\PHPMailer;
 
-  $receiving_email_address = 'k220251@student.kent.edu.au';
+  $receiving_email_address = 'pawsomevetc@gmail.com';
 
 
     if (isset($_POST['name']) && isset($_POST['email'])) {
@@ -18,7 +18,7 @@
 
         //SMTP Settings
         $mail->isSMTP();
-        $mail->Host = "smtp.gmail.com";
+        $mail->Host = "smtp.freesmtpservers.com";
         $mail->SMTPAuth = true;
         $mail->Username = "pawsome331@gmail.com";
         $mail->Password = 'datevwmewbezddox';
