@@ -487,6 +487,22 @@ CREATE TABLE `pawsome`.`subscribers` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `poisons` (
+  `id` int(11) NOT NULL,
+  `animal_type` enum('Dog','Cat','Rabbit') NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `symptoms` text DEFAULT NULL,
+  `urgency_level` enum('High','Moderate','Low') NOT NULL
+);
+
+ALTER TABLE `poisons`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `poisons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
 /** 
 DATA SET UP
 */

@@ -13,9 +13,12 @@ import ProgramContext from "../../contexts/ProgramContext";
 
 import AddNewPetForm from "./AddNewPetForm";
 import LastHealthChecks from "../appointments/petProfile/LastHealthChecks";
+import PetProfileForm from "./PetProfileForm";
 
 export default function PetProfile() {
+    const {user} = useContext(ProgramContext);
     const [showDialog, setShowDialog] = useState(false);
+    const [refreshPet, setRefreshPet] = useState(false);
     const [actionForm, setActionForm] = useState(null);
     const {selectedOwner, selectedPet, handlerReloadPetList} = useContext(PetsContext);
     const [activePet, setActivePet] = useState(selectedPet);
@@ -28,6 +31,11 @@ export default function PetProfile() {
         setActivePet(getPetById(selectedPet))
         setAppointmentList(fetchAppointments('pet_id', selectedPet));
     }, [selectedPet])
+
+    useEffect(() => {
+        handlerReloadPetList(true);
+        setRefreshPet(false);
+    }, [refreshPet])
 
     const handleBooking = (booking) => {
         console.log("This is booking", booking)
@@ -54,11 +62,7 @@ export default function PetProfile() {
         setActionForm('update');
         setShowDialog(true);
     }
-    const handleConfirmUpdate = (pet) => {
-        console.log("This pet has to be updated - do action here", pet);
-        setShowDialog(false);
-        handlerReloadPetList(true);
-    };
+    
     const handleDeletePet = () => {
         setActionForm('delete');
         setShowDialog(true);
@@ -74,8 +78,10 @@ export default function PetProfile() {
         console.log("apiUrl ", apiUrl)
 
         return fetch(apiUrl, {
-            method: 'DELETE', headers: {
-                'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('token'),
+            method: 'DELETE', 
+            headers: {
+                'Content-Type': 'application/json', 
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -85,7 +91,7 @@ export default function PetProfile() {
                 return response.json();
             })
             .then((data) => {
-                if (data.delete_pet === true) {
+                if (data.delete_pet) {
                     return true; // Pet was successfully deleted
                 } else {
                     throw new Error('Failed to delete pet');
@@ -96,7 +102,6 @@ export default function PetProfile() {
                 return false; // Pet deletion failed
             });
     }
-
 
     // APPOINTMENTS LIST
     const [loading, setLoading] = useState(true);
@@ -118,7 +123,6 @@ export default function PetProfile() {
                 console.error('Error:', error);
             });
     };
-
 
     return (activePet && (<Stack direction="column" alignItems="center" flex={1} spacing={6} sx={{p: 4}}>
             <Stack direction="column" spacing={2} alignItems="center"
@@ -162,14 +166,14 @@ export default function PetProfile() {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete forever" placement="left" TransitionComponent={Zoom} arrow>
-                            <IconButton color="error" onClick={handleDeletePet}>
+                            <IconButton color="error" onClick={handleDeletePet} disabled={user.role === 'doctor'}>
                                 <DeleteForeverRounded fontSize="medium"/>
                             </IconButton>
                         </Tooltip>
                     </Stack>
 
                     <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth={"lg"}>
-                        <Paper sx={{p: 3, textAlign: "center"}}>
+                        <Paper>
 
                             {actionForm === "delete" ? (<Box>
                                 <h4>{activePet.petname} - {activePet.breed}</h4>
@@ -181,11 +185,13 @@ export default function PetProfile() {
                                 <Button variant="contained" color="error" onClick={handleConfirmDelete}>
                                     Delete
                                 </Button>
-                            </Box>) : (actionForm === "update" ? (<Box>
-                                <h4>{selectedOwner.firstname} {activePet.petname} - {activePet.breed}</h4>
-                                <AddNewPetForm petToEdit={activePet} onUpdate={handleConfirmUpdate}
-                                               onCancel={() => setShowDialog(false)}/>
-                            </Box>) : (<Box>
+                            </Box>) : 
+                            (actionForm === "update" ? (<>
+                                <h4>{selectedOwner.firstname}'s {activePet.petname} - {activePet.breed}</h4>
+                                <PetProfileForm defaultValues={activePet} ownerId={selectedOwner.pet_owner_id}
+                                               mode={"edit"} setShowDialog={setShowDialog} showDialog={showDialog}/>
+                            </>) : 
+                            (<Box>
                                 <h4>Error - no action form has been selected</h4>
 
                                 <Button variant="text" onClick={() => setShowDialog(false)}>

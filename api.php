@@ -1322,30 +1322,38 @@ elseif ($action === 'update_pet') {
             return_json(['update_pet' =>  "Error: Sex must only consist of letters."]);
         }
 
-        if(validateLength($_POST['microchip_no'], 15)
-        && validateNumeric($_POST['microchip_no'])){
-            $check = true;
-        } else {
-            return_json(['update_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
+        if($_POST['microchip_no']){
+            if(validateLength($_POST['microchip_no'], 15)
+            && validateNumeric($_POST['microchip_no'])){
+                $check = true;
+            } else {
+                return_json(['update_pet' =>  "Error: Microchip Number must be up to 15 numeric characters only."]);
+            }
         }
 
-        if(validateLength($_POST['insurance_membership'], 10)
-        && validateNumeric($_POST['insurance_membership'])){
-            $check = true;
-        } else {
-            return_json(['update_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+        if($_POST['insurance_membership']){
+            if(validateLength($_POST['insurance_membership'], 10)
+            && validateNumeric($_POST['insurance_membership'])){
+                $check = true;
+            } else {
+                return_json(['update_pet' =>  "Error: Insurance Membership Number must be up to 15 numeric characters only."]);
+            }
         }
 
+        if($_POST['insurance_expiry']){
         if(validateDate($_POST['insurance_expiry'])){
             $check = true;
         } else {
             return_json(['update_pet' =>  "Error: Insurance Expiration Date must be a valid date with format DD-MM-YYYY."]);
         }
+        }
 
-        if(validateLength($_POST['comments'], 1000)){
-            $check = true;
-        } else {
-            return_json(['update_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
+        if($_POST['comments']){
+            if(validateLength($_POST['comments'], 1000)){
+                $check = true;
+            } else {
+                return_json(['update_pet' =>  "Error: Comments are allowed until 1000 characters only."]);
+            }
         }
 
         $pet = [

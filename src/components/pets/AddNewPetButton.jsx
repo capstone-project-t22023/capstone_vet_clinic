@@ -3,6 +3,7 @@ import {Button, Tooltip, Dialog, IconButton, Zoom, Typography, DialogContent} fr
 import {AddRounded} from "@mui/icons-material";
 import AddNewPetForm from "./AddNewPetForm";
 import {PetsContext} from "../../contexts/PetsProvider";
+import PetProfileForm from "./PetProfileForm";
 
 export default function AddNewPetButton() {
     const [showDialog, setShowDialog] = useState(false);
@@ -74,7 +75,7 @@ export default function AddNewPetButton() {
                 onClose={() => setShowDialog(false)}
             >
                 <DialogContent>
-                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet} onCancel={() => setShowDialog(false)}/>
+                    <PetProfileForm ownerId={selectedOwner.pet_owner_id} setShowDialog={setShowDialog} showDialog={showDialog} onCancel={() => setShowDialog(false)}/>
                 </DialogContent>
             </Dialog>
         </>

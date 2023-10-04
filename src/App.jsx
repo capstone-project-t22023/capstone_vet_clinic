@@ -196,21 +196,38 @@ function App() {
                                     </Protected>
                                 }
                                 />
+                                <Route path="/user-management" element={
+                                    <Protected isLoggedIn={authenticated}>
+                                        <UserManagement />
+                                    </Protected>
+                                }
+                                />
                                 </> :
-                                <Route path="/lodging" element={
+                                <Route path="/" element={
                                     <DefaultPage />
                                 }
                                 />
                                 }
 
-                                <Route path="/generate_invoice" element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <PetsProvider>
-                                            <GenerateInvoice />
-                                        </PetsProvider>
-                                    </Protected>
+                                { user.role === "doctor" ?
+                                <>
+                                    <Route path="/generate_invoice" element={
+                                        <Protected isLoggedIn={authenticated}>
+                                            <PetsProvider>
+                                                <GenerateInvoice />
+                                            </PetsProvider>
+                                        </Protected>
+                                    }
+                                    />
+                                </>
+                                :
+                                <Route path="/" element={
+                                    <DefaultPage />
                                 }
                                 />
+                                }
+
+                                
 
                                 <Route path="/view_invoices" element={
                                     <Protected isLoggedIn={authenticated}>
@@ -244,12 +261,7 @@ function App() {
                                 }
                                 />
 
-                                <Route path="/user-management" element={
-                                    <Protected isLoggedIn={authenticated}>
-                                        <UserManagement />
-                                    </Protected>
-                                }
-                                />
+                                
 
                                 <Route path="/logout" element={<Logout/>}/>
                                 <Route path="/login" element={<Login/>}/>

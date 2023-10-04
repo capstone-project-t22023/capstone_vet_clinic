@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import dayjs from "dayjs";
 import {
     Box,
@@ -10,7 +10,7 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 
 
-export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUpdate, onCancel}) {
+export default function AddNewPetForm({petToEdit, ownerId, onAddPet, onUpdate, onCancel, mode}) {
 
     const initialFormData = {
         pet_owner_id: ownerId,
@@ -30,18 +30,24 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
     const [originalData, setOriginalData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
 
+    useEffect(() => {
+        if(mode !== "add"){
+            setFormData(petToEdit);
+        }
+    }, [petToEdit, mode]);
+
     const validateField = (name, value) => {
         let error = '';
 
         if (name === 'petname') {
-            if (value.trim() === '') {
+            if (!value) {
                 error = 'Pet name is required.';
             }
             // Add more specific validations for petname if needed
         }
 
         if (name === 'birthdate') {
-            if (value.trim() === '') {
+            if (!value) {
                 error = 'Birthdate is required.';
             } else {
                 // You can add more complex date validations here if needed
@@ -49,13 +55,13 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
 
         if (name === 'species') {
-            if (value === '') {
+            if (!value) {
                 error = 'Species is required.';
             }
         }
 
         if (name === 'breed') {
-            if (value.trim() === '') {
+            if (!value) {
                 error = 'Breed is required.';
             } else if (value.length < 1 || value.length > 50) {
                 error = 'Breed must be between 1 and 50 characters.';
@@ -63,7 +69,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
 
         if (name === 'weight') {
-            if (value.trim() === '') {
+            if (!value) {
                 error = true;
             }
             else if (isNaN(value) || parseFloat(value) <= 0) {
@@ -72,16 +78,13 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
 
         if (name === 'sex') {
-            if (value === '') {
+            if (!value) {
                 error = 'Sex is required.';
             }
         }
 
         if (name === 'microchip_no') {
-            if (value.trim() === '') {
-                error = true;
-            }
-            else if (value.includes('+')) {
+            if (value.includes('+')) {
                 error = 'Only numbers allowed.';
             }
             else if (value.length > 10) {
@@ -93,9 +96,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
 
         if (name === 'insurance_membership') {
-            if (value.trim() === '') {
-                error = true;
-            } else if (!(value.length >= 1 && value.length <= 10)) {
+            if (!(value.length >= 1 && value.length <= 10)) {
                 error = '1 - 10 characters allowed.';
             }
             else if (value.includes('+')) {
@@ -114,11 +115,6 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
-        }));
-
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [name]: error,
         }));
     };
 
@@ -140,7 +136,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
             setErrors(newErrors);
         } else {
             setErrors({});
-               onAddPet(formData);
+            onAddPet(formData);
             setOriginalData(formData);
             setFormData(initialFormData);
         }
@@ -148,10 +144,10 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
 
 
     const isFieldChanged = (field) => formData[field] !== originalData[field];
-
+console.log("formdata", formData)
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DialogTitle>Add a new pet</DialogTitle>
+            <DialogTitle>{mode === "edit" ? "Update pet": "Add a new pet"}</DialogTitle>
             <Box component="form" noValidate sx={{mt: 1}} onSubmit={handleSubmit}>
 
             {/*<form onSubmit={handleSubmit}>*/}
@@ -181,7 +177,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                                 },
                             }}
                             fullWidth
-                            // value={formData.birthdate}
+                            value={dayjs(formData.birthdate)}
                             onChange={(newValue) => {
                                 handleChange({
                                     target: {
@@ -206,7 +202,10 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             >
                                 <MenuItem value="Dog">Dog</MenuItem>
                                 <MenuItem value="Cat">Cat</MenuItem>
+                                <MenuItem value="Guinea Pig">Guinea Pig</MenuItem>
                                 <MenuItem value="Giraffe">Giraffe</MenuItem>
+                                <MenuItem value="Hamster">Hamster</MenuItem>
+                                <MenuItem value="Rabbit">Rabbit</MenuItem>
                                 <MenuItem value="Racoon">Racoon</MenuItem>
                                 <MenuItem value="Snake">Snake</MenuItem>
                                 <MenuItem value="Other">Other</MenuItem>
@@ -262,7 +261,6 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             fullWidth
                             error={Boolean(errors.microchip_no)}
                             helperText={errors.microchip_no}
-                            type="number"
                             InputProps={{ inputProps: { min: 0 } }}
                         />
                         <TextField
@@ -271,7 +269,6 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             value={formData.insurance_membership}
                             onChange={handleChange}
                             fullWidth
-                            type="number"
                             InputProps={{ inputProps: { min: 0 } }}
                             error={Boolean(errors.insurance_membership)}
                             helperText={errors.insurance_membership}
@@ -283,7 +280,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             name="insurance_expiry"
                             // defaultValue={dayjs()}
                             // required
-                            // value={formData.insurance_expiry}
+                            value={formData.insurance_expiry ? dayjs(formData.insurance_expiry) : null}
                             onChange={(newValue) => {
                                 handleChange({
                                     target: {
@@ -316,9 +313,15 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         <Button variant="outlined" color="primary" onClick={onCancel}>
                             Cancel
                         </Button>
-                        <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
-                            Add Pet
-                        </Button>
+                        { mode === "edit" ?
+                            <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
+                                Update Pet
+                            </Button>
+                        :
+                            <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
+                                Add Pet
+                            </Button>
+                        }
                     </Stack>
                 </Stack>
             {/*</form>*/}

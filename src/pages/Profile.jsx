@@ -36,7 +36,7 @@ export default function Home() {
                     <Container>
 
                         <Typography component="h1" variant="h4" sx={{fontWeight: 600}}>
-                            Welcome Back Admin - {user.firstname}!
+                            Welcome Back - {user.firstname}!
                         </Typography>
 
 
