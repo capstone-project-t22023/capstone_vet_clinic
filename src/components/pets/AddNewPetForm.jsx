@@ -4,7 +4,7 @@ import {
     Box,
     Button,
     TextField,
-    Stack, DialogTitle, InputLabel, Select, MenuItem, FormControl,
+    Stack, DialogTitle, InputLabel, Select, MenuItem, FormControl, InputAdornment,
 } from "@mui/material";
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
@@ -84,6 +84,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
             else if (value.length > 10) {
                 error = 'Max 10 numbers allowed.';
             }
+            else if (value < 0) {
+                error = `Can't be negative`;
+            }
         }
 
         if (name === 'insurance_membership') {
@@ -137,6 +140,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
     };
 
+    const handleCancel = () => {
+        onCancel(true)
+    }
 
     const isFieldChanged = (field) => formData[field] !== originalData[field];
 
@@ -222,10 +228,10 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             fullWidth
                             error={Boolean(errors.weight)}
                             helperText={errors.weight}
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                             }}
+
                         />
 
                         <FormControl component="form" variant='outlined' fullWidth
@@ -245,7 +251,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                     </Stack>
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            label="Insurance Membership"
+                            label="Microchip Number"
                             name="microchip_no"
                             value={formData.microchip_no}
                             onChange={handleChange}
@@ -253,6 +259,8 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             error={Boolean(errors.microchip_no)}
                             helperText={errors.microchip_no}
                             type="number"
+                            min={0}
+                            InputProps={{ inputProps: { min: 0 } }}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -303,7 +311,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         {/*/>*/}
                     </Stack>
                     <Stack direction="row" spacing={2} flex={1} justifyContent="center">
-                        <Button variant="outlined" color="primary">
+                        <Button variant="outlined" color="primary" onClick={handleCancel}>
                             Cancel
                         </Button>
                         <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>

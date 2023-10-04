@@ -74,7 +74,7 @@ export default function AddNewPetButton() {
                 onClose={() => setOpenModal(false)}
             >
                 <DialogContent>
-                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet}/>
+                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet} onCancel={() => setOpenModal(false)}/>
                 </DialogContent>
             </Dialog>
         </>
