@@ -14,12 +14,15 @@ export default function LastHealthChecks({filterMode = 'all', count = -1, itemsP
     const filteredAppointments = appointmentList ? appointmentList.filter(appointment => {
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
-        if (filterMode === 'historic') {
-            return dayjs(appointmentDate).format('DD-MM-YYYY') < dayjs(currentDate).format('DD-MM-YYYY');
-        } else if (filterMode === 'today') {
-            return dayjs(appointmentDate).format('DD-MM-YYYY') === dayjs(currentDate).format('DD-MM-YYYY');
+    // console.log(currentDate)
+    // console.log(appointmentDate)
+    console.log(appointmentDate === currentDate)
+        if (filterMode === 'today') {
+            return dayjs(appointmentDate).isSame(dayjs(currentDate), 'day');
+        } else if (filterMode === 'historic') {
+            return dayjs(appointmentDate).isBefore(dayjs(currentDate), 'day');
         } else if (filterMode === 'future') {
-            return dayjs(appointmentDate).format('DD-MM-YYYY') > dayjs(currentDate).format('DD-MM-YYYY');
+            return dayjs(appointmentDate).isAfter(dayjs(currentDate), 'day');
         }
         return true;
     }) : [];
