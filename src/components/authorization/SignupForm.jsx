@@ -250,7 +250,7 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             errorPresent = true;
-        } else if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,20}$/.test(password)) {
+        } else if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-#?!@$ %^&*_]).{8,20}$/.test(password)) {
             setErrorPassword(true);
             setErrorAlert(true);
             setErrorPasswordMessage("Password should be more than 8 characters with at least one small lowercase, one uppercase, one number, and one of the special characters (#?!@$ %^&*-).");
@@ -262,6 +262,11 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorPassword2Message("Please confirm password");
             errorPresent = true;
+        } else if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-#?!@$ %^&*_]).{8,20}$/.test(password2)) {
+            setErrorPassword2(true);
+            setErrorAlert(true);
+            setErrorPassword2Message("Password should be more than 8 characters with at least one small lowercase, one uppercase, one number, and one of the special characters (#?!@$ %^&*-).");
+            errorPresent = true;
         } else if (password !== password2){
             setErrorPassword(true);
             setErrorPassword2(true);
@@ -269,7 +274,7 @@ export default function SignupForm() {
             setErrorPasswordMessage("Password doesn't match");
             setErrorPassword2Message("Password doesn't match");
             errorPresent = true;
-        }
+        } 
         
         if (!username) {
             setErrorUsername(true);
@@ -548,7 +553,7 @@ export default function SignupForm() {
                     <TextField
                         id="password"
                         label="Password"
-                        helperText={errorPassword ? errorPassword2Message : ""}
+                        helperText={errorPassword ? errorPasswordMessage : ""}
                         onChange={handleChange}
                         // variant="standard"
                         type={showPassword ? 'text' : 'password'}

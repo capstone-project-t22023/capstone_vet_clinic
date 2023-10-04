@@ -51,9 +51,10 @@ function App() {
     const helmetContext = {};
     const [user, setUser] = useState({});
     const [authenticated, setAuthenticated] = useState(false);
+    const [updated, setUpdated] = useState(false);
 
     useEffect(() => {
-        if(localStorage.getItem('token')){
+        if(localStorage.getItem('token') || updated ){
             Promise.all([
                 fetch("http://localhost/capstone_vet_clinic/api.php/get_admin", {
                     headers: {
@@ -107,7 +108,8 @@ function App() {
                     console.error(error);
                 });
         }
-    }, []);
+        setUpdated(false);
+    }, [updated]);
 
     return (
         <div className="App">
@@ -115,7 +117,8 @@ function App() {
                 <ProgramContext.Provider
                     value={{
                         user, setUser,
-                        authenticated, setAuthenticated
+                        authenticated, setAuthenticated,
+                        updated, setUpdated
                     }}>
                     <ThemeProvider theme={theme}>
                         <CssBaseline/>

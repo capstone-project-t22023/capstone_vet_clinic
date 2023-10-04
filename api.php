@@ -1522,13 +1522,12 @@ elseif ($action === 'add_booking') {
         ];
 
         $taken_slots = $booking_database->getTakenSlotsByDate($new_slots['booking_date']);
+        $disallowed = array();
 
         if($taken_slots){
             $allowed_slot = array_values(array_diff($new_slots['booking_time'], $taken_slots['booking_time']));
             $decision = 'no';
-            $disallowed = array_values($allowed_slot);
-        } else {
-            $disallowed = array();
+            $disallowed = array_values(array_intersect($new_slots['booking_time'], $taken_slots['booking_time']));
         }
 
         if(count($disallowed) === 0){

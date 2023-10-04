@@ -17,7 +17,7 @@ function EditUserForm({ user, onUpdateUser, userRole= "" }) {
     const [errors, setErrors] = useState({});
     const [success, setSuccess] = useState(false)
 
-    const {user: loggedUser} = useContext(programContext)
+    const {user: loggedUser, setUpdated} = useContext(programContext)
 
     useEffect(() => {
         // Check if any field value has changed
@@ -79,6 +79,7 @@ function EditUserForm({ user, onUpdateUser, userRole= "" }) {
                 console.log(data)
                 if (data.update_user) {
                     setSuccess(true);
+                    setUpdated(true);
                 }
 
             })
