@@ -88,9 +88,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
 
         if (name === 'insurance_membership') {
             if (value.trim() === '') {
-                error = 'Insurance membership is required.';
-            } else if (!(value.length >= 10 && value.length <= 15)) {
-                error = 'Between 10 - 15 characters allowed.';
+                error = true;
+            } else if (!(value.length >= 1 && value.length <= 10)) {
+                error = '1 - 10 characters allowed.';
             }
         }
 
