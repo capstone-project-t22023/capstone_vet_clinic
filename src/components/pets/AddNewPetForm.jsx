@@ -81,16 +81,16 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
             if (value.trim() === '') {
                 error = true;
             }
-            else if (value.length > 10) {
-                error = 'Max 10 numbers allowed.';
+            else if (value.length !== 15) {
+                error = '15 numbers allowed.';
             }
         }
 
         if (name === 'insurance_membership') {
             if (value.trim() === '') {
                 error = true;
-            } else if (!(value.length >= 1 && value.length <= 10)) {
-                error = '1 - 10 characters allowed.';
+            } else if (value.length !== 10) {
+                error = '10 numbers allowed.';
             }
         }
 
@@ -245,7 +245,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                     </Stack>
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            label="Insurance Membership"
+                            label="Microchip Number"
                             name="microchip_no"
                             value={formData.microchip_no}
                             onChange={handleChange}
@@ -303,7 +303,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         {/*/>*/}
                     </Stack>
                     <Stack direction="row" spacing={2} flex={1} justifyContent="center">
-                        <Button variant="outlined" color="primary">
+                        <Button variant="outlined" color="primary" onClick={onCancel}>
                             Cancel
                         </Button>
                         <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
