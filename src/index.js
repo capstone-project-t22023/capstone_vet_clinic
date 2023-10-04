@@ -15,6 +15,17 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
  * Entry point to the web application
  * 
  */
+
+//expire user information after some time
+const cleanSession = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  localStorage.removeItem('authenticated');
+  window.location.replace("http://localhost:3000/pawsome_public/index.html");
+}
+
+//window.setTimeout(cleanSession, 1000*30);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

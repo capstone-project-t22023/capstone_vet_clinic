@@ -889,6 +889,58 @@ class Database
     }
 
     /**
+     * Retrieves all records of users
+     */
+    public function getAllUsers()
+    {
+        $this->connection = new mysqli(
+            $this->server,
+            $this->db_uname,
+            $this->db_pwd,
+            $this->db_name
+        );
+        $this->connection->set_charset('utf8');
+        $sql = $this->connection->prepare(
+            'WITH
+            all_users AS 
+            (
+                SELECT `doctors`.*, "doctor" role FROM `pawsome`.`doctors`
+                UNION
+                SELECT `admins`.*, "admin" role FROM `pawsome`.`admins`
+                UNION 
+                SELECT `pet_owners`.*, "pet_owner" role FROM `pawsome`.`pet_owners`
+            )
+            SELECT 
+            `id`,
+            `firstname`,
+            `lastname`,
+            `username`,
+            `address`,
+            `state`,
+            `email`,
+            `phone`,
+            `postcode`,
+            `role`
+            FROM all_users 
+            WHERE archived = 0'
+        );
+        $sql->execute();
+        $result = $sql->get_result();
+        if ($result->num_rows > 0) {
+            $users = array();
+            while($row=$result->fetch_assoc()){
+                array_push($users, $row);
+            }
+            $sql->close();
+            $this->connection->close();
+            return $users;
+        }
+        $sql->close();
+        $this->connection->close();
+        return false;
+    }
+
+    /**
      * Insert data into the doctors table by admin
      */
     public function addDoctorByAdmin($record)

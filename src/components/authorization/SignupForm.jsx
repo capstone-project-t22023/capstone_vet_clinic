@@ -160,7 +160,7 @@ export default function SignupForm() {
 
     function handleSignup(event){
         event.preventDefault();
-        let record = {};
+        let record = null;
         let errorPresent = false;
 
         if (selectedPrivilege === 'doctor'){

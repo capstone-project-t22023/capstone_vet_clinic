@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {Container, Divider, Stack} from '@mui/material';
 import LoginForm from '../components/authorization/LoginForm'
 import {Helmet} from 'react-helmet-async';
 import Footer from "../components/Footer";
+import ProgramContext from '../contexts/ProgramContext';
+
 
 export default function Login() {
+    const {user} = useContext(ProgramContext);
+
+    useEffect(() => {
+        if(user.username){
+            window.location.replace("http://localhost:3000");
+        }
+    },[user]);
+
+    console.log("user", user);
 
     return (
         <div>

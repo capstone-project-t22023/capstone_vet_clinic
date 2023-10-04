@@ -17,6 +17,7 @@ import SignupForm from "../authorization/SignupForm";
 import ProgramContext from "../../contexts/ProgramContext";
 import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+import NewUserForm from './NewUserForm';
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -47,16 +48,12 @@ const columns = [
     {id: 'firstname', label: 'First Name', minWidth: 100},
     {id: 'lastname', label: 'Last Name', minWidth: 100},
     {id: 'username', label: 'User Name', minWidth: 100},
-    // { id: 'password', label: 'Password', minWidth: 100 },
     {id: 'address', label: 'Address', minWidth: 100},
     {id: 'state', label: 'State', minWidth: 100},
     {id: 'email', label: 'Email', minWidth: 100},
     {id: 'phone', label: 'Phone', minWidth: 100},
     {id: 'postcode', label: 'PostCode', minWidth: 100},
-    // { id: 'archived', label: 'Archived', minWidth: 100 },
-    // { id: 'created_date', label: 'Created', minWidth: 100 },
     {id: 'updated_date', label: 'Updated', minWidth: 100},
-    // { id: 'updated_by', label: 'Updated By', minWidth: 100 },
 ];
 
 function ListLevel(props) {
@@ -104,6 +101,7 @@ export default function UsersTable(props) {
     const [alertUpdate, setAlertUpdate] = useState(false);
     const [alertAdd, setAlertAdd] = useState(false);
     const [mode, setMode] = useState("edit");
+    const [refreshList, setRefreshList] = useState(false);
 
 
     const [usersList, setUsersList] = useState([])
@@ -155,9 +153,10 @@ export default function UsersTable(props) {
     }
 
     useEffect(() => {
-        props.setRefreshList(false);
+        console.log("REFRESHHH")
         fetchUsers(props.usersListType);
-    }, [props.refreshList])
+        setRefreshList(false);
+    }, [refreshList])
 
 
     const handleChangePage = (event, newPage) => {
@@ -229,8 +228,8 @@ export default function UsersTable(props) {
 
     const handleCancel = () => {
         setDefaultValues({})
-        setOpenAddForm(false)
-        setOpenEditForm(false)
+        setOpenAddForm(false);
+        setOpenEditForm(false);
     }
 
     const handleUpdatedUser = (data) => {
@@ -298,7 +297,7 @@ export default function UsersTable(props) {
                         </IconButton>
                     }
                 >
-                    Item has has been added successfully!
+                    User has has been added successfully!
                 </Alert>
                 : ""}
             <Paper sx={{width: '100%', overflow: 'hidden'}}>
@@ -386,17 +385,6 @@ export default function UsersTable(props) {
                 />
 
                 {openEditForm ?
-                    // <UserForm
-                    //     defaultValues={defaultValues}
-                    //     setOpenForm={setOpenEditForm}
-                    //     openForm={openEditForm}
-                    //     catName={props.catName}
-                    //     catId={props.catId}
-                    //     setRefreshList={props.setRefreshList}
-                    //     mode={mode}
-                    //     setAlertUpdate={setAlertUpdate}
-                    // />
-
                     <Dialog open={openEditForm} onClose={handleCancel}>
                         <Box sx={{p: 2}}>
                             <EditUserForm user={defaultValues} onUpdateUser={handleUpdatedUser} userRole={props.usersListType === 0 ? "doctor" : props.usersListType === 1 ? "pet_owner" : "" }/>
@@ -408,8 +396,7 @@ export default function UsersTable(props) {
                 {openAddForm ?
                     <Dialog open={openAddForm} onClose={handleCancel}>
                         <Box sx={{p: 2}}>
-                            {/*<EditUserForm user={defaultValues} />*/}
-                            <SignupForm/>
+                            <NewUserForm setRefreshList={setRefreshList} setOpenAddForm={setOpenAddForm} setAlertAdd={setAlertAdd}/>
                         </Box>
                     </Dialog> : ""}
             </Paper>

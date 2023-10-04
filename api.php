@@ -666,6 +666,21 @@ elseif ($action === 'get_pet_owner') {
 } 
 
 /**
+ * API endpoint when getting all users that are active
+ */ 
+elseif ($action === 'get_all_users') {
+    if ($valid_jwt_token) {
+        if ($users = $database->getAllUsers()) {
+            return_json(['users' => $users]);
+        }  else {
+            return_json(['users' => false]); 
+        }
+    } else {
+        return_json(['ERROR:' => "UNAUTHORIZED"]); 
+    }
+} 
+
+/**
  * API endpoint when getting all doctors that are active
  */ 
 elseif ($action === 'get_all_doctors') {
@@ -858,7 +873,7 @@ elseif ($action === 'add_user') {
         $rest_json = file_get_contents('php://input');
         $_POST = json_decode($rest_json, true);
         $check = false;
-
+        
         if(validateLength($_POST['firstname'], 50)
             && validateAlpha($_POST['firstname'])){
             $check = true;
@@ -923,7 +938,7 @@ elseif ($action === 'add_user') {
         }
         
         $user = [
-            'role' => $_POST['role'],
+            'role' => $_POST['privilege'],
             'firstname' => $_POST['firstname'],
             'lastname' => $_POST['lastname'],
             'username' => $_POST['username'],
@@ -933,22 +948,23 @@ elseif ($action === 'add_user') {
             'email' => $_POST['email'],
             'phone' => $_POST['phone'],
             'postcode' => $_POST['postcode'],
-            'created_by' => $_POST['created_by']
+            'created_by' => $req_username
         ];
-
-        if($_POST['role'] === 'pet_owner'){
+        
+        
+        if($_POST['privilege'] === 'pet_owner'){
             if ($user_id = $database->addPetOwnerByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {
                 return_json(['add_user' => false]);
             }
-        } elseif ($_POST['role'] === 'doctor'){
+        } elseif ($_POST['privilege'] === 'doctor'){
             if ($user_id = $database->addDoctorByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {
                 return_json(['add_user' => false]);
             }
-        } elseif ($_POST['role'] === 'admin'){
+        } elseif ($_POST['privilege'] === 'admin'){
             if ($user_id = $database->addAdminByAdmin($user)) {
                 return_json(['add_user' => $user_id]);
             } else {

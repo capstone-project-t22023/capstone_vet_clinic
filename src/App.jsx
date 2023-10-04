@@ -246,9 +246,7 @@ function App() {
 
                                 <Route path="/user-management" element={
                                     <Protected isLoggedIn={authenticated}>
-                                        <UserManagement>
-                                            <Lodging />
-                                        </UserManagement>
+                                        <UserManagement />
                                     </Protected>
                                 }
                                 />
