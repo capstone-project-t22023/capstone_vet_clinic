@@ -78,7 +78,7 @@ export default function AppointmentsItem({appointment, onClick, isSelected}) {
             <Stack direction="row" spacing={0} flex={0} sx={SxUpcomingAppointment} onClick={() => onClick(!isSelected)}>
                 <Stack direction="column" flex={0} alignItems="center" sx={{minWidth: "6rem"}}>
                     <Typography component="span">{dayjs(appointment.booking_date).format('MMMM')}</Typography>
-                    <Typography component="p">{dayjs(appointment.booking_date).format('D ddd')}</Typography>
+                    <Typography component="p" sx={{whiteSpace: "nowrap"}}>{dayjs(appointment.booking_date).format('D ddd')}</Typography>
                 </Stack>
                 <Divider orientation="vertical" flexItem/>
                 <Stack direction="column" flex={1} alignItems="flex-start">

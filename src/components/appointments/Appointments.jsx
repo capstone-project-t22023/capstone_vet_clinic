@@ -114,8 +114,8 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
 
     return (
-        <Stack direction="column" flex={1}
-               sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2, width: "100%", height: "100%"}}>
+        <Stack direction="column" flex={1} spacing={2}
+               sx={{border: "1px solid", borderColor: "primary.50", borderRadius: 6, px: 2, py: 2, width: "100%"}}>
 
             <Stack direction="row" justifyContent="space-between" width="100%" alignItems="baseline" sx={{mb: 2}}>
                 <Typography fontWeight="bold">
