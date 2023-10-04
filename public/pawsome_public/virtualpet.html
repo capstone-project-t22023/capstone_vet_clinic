@@ -75,18 +75,12 @@
          </section>
          <!-- End Breadcrumbs -->
          <!--VIRTUAL PET SECTION-->
-         <section id="emergencyservices" class="emergencyservices">
             <div class="container-fluid p-0 overflow-hidden" data-aos="fade-up">
                <div class="row g-0">
                   <div class="col-lg-6 order-lg-1 my-auto px-5 py-5" data-aos="fade-up">
                      <div class="lc-block">
                         <div class="rich">
-                            <h2 class="card-title">Your Virtual Dog</h2>
                             <img id="dog-image" src="assets/img/virtualpet/dogstandby.gif" alt="Dog">
-                            <p>Hunger: <span id="hunger">50</span></p>
-                            <p>Training: <span id="training">50</span></p>
-                            <p>Energy: <span id="energy">50</span></p>
-                            <p>Happiness: <span id="happiness">50</span></p>
                         </div>
                      </div>
                   </div>
@@ -94,15 +88,15 @@
                     <div class="lc-block">
                        <div class="rich">
                         <div class="actions">
-                            <button class="btn btn-primary" onclick="performAction('stay', 'Your dog stays contentedly.')"><i class="bi bi-person"></i> Stay</button>
-                            <button class="btn btn-success" onclick="performAction('sniff', 'Dogs have an incredibly keen sense of smell, which is estimated to be tens of thousands to even hundreds of thousands of times more sensitive than that of humans. They use their sense of smell as a primary way of gathering information about their environment, other animals, and even people. Dogs sniff as a way of gathering information, communicating, and navigating their world. It is a fundamental and vital part of their sensory experience, and it plays a significant role in their daily lives.')"><i class="bi bi-compass"></i> Sniff</button>
-                            <button class="btn btn-info" onclick="performAction('scratch', 'Dogs scratch themselves for various reasons, and it is a normal behavior for them. Scratching helps them address several needs and discomforts.While scratching is normal, excessive or persistent scratching can indicate an underlying problem that needs attention. If you notice your dog scratching excessively or if their skin appears irritated, red, or inflamed, it is essential to consult a veterinarian. The vet can diagnose the underlying cause and recommend appropriate treatment, which may include medications, changes in diet, or flea and tick prevention measures.')"><i class="bi bi-scissors"></i> Scratch</button>
-                            <button class="btn btn-warning" onclick="performAction('waggle', 'Dogs wag their tails as a form of communication, and the way they wag their tails can convey different emotions and messages. It is important for dog owners and individuals interacting with dogs to pay attention to the overall body language and context when interpreting a tail wagging. While a wagging tail can be a sign of happiness and friendliness, it is not the only factor to consider. The rest of the body language, including posture, ear position, facial expressions, and vocalizations, provides important clues about their emotional state and intentions.')"><i class="bi bi-lightbulb"></i> Waggle</button>
-                            <button class="btn btn-secondary" onclick="performAction('sleep', 'Dogs, like all animals, sleep as a fundamental physiological need. Sleep is crucial for their overall health and well-being, just as it is for humans. The amount of sleep a dog needs can vary depending on factors like age, activity level, and breed. Puppies and young dogs tend to sleep more than adult dogs, and large breeds often require more sleep than smaller ones. On average, adult dogs may sleep anywhere from 12 to 16 hours a day, while puppies and seniors may sleep even more. It is essential for dog owners to provide a comfortable and safe sleeping environment for their pets and ensure they have access to a regular sleep schedule. Additionally, if  sleep patterns change significantly or if they exhibit signs of sleep disturbances, it is a good idea to consult with a veterinarian to rule out any underlying health issues.')"><i class="bi bi-moon"></i> Sleep</button>
+                            <button class="btn btn-primary" onclick="performAction('stay', 'Your dog stays contentedly.')">Stay</button>
+                            <button class="btn btn-success" onclick="performAction('sniff', 'Dogs have an incredibly keen sense of smell, which is estimated to be tens of thousands to even hundreds of thousands of times more sensitive than that of humans. They use their sense of smell as a primary way of gathering information about their environment, other animals, and even people. Dogs sniff as a way of gathering information, communicating, and navigating their world. It is a fundamental and vital part of their sensory experience, and it plays a significant role in their daily lives.')">Sniff</button>
+                            <button class="btn btn-info" onclick="performAction('scratch', 'Dogs scratch themselves for various reasons, and it is a normal behavior for them. Scratching helps them address several needs and discomforts.While scratching is normal, excessive or persistent scratching can indicate an underlying problem that needs attention. If you notice your dog scratching excessively or if their skin appears irritated, red, or inflamed, it is essential to consult a veterinarian. The vet can diagnose the underlying cause and recommend appropriate treatment, which may include medications, changes in diet, or flea and tick prevention measures.')">Scratch</button>
+                            <button class="btn btn-warning" onclick="performAction('waggle', 'Dogs wag their tails as a form of communication, and the way they wag their tails can convey different emotions and messages. It is important for dog owners and individuals interacting with dogs to pay attention to the overall body language and context when interpreting a tail wagging. While a wagging tail can be a sign of happiness and friendliness, it is not the only factor to consider. The rest of the body language, including posture, ear position, facial expressions, and vocalizations, provides important clues about their emotional state and intentions.')">Waggle</button>
+                            <button class="btn btn-secondary" onclick="performAction('sleep', 'Dogs, like all animals, sleep as a fundamental physiological need. Sleep is crucial for their overall health and well-being, just as it is for humans. The amount of sleep a dog needs can vary depending on factors like age, activity level, and breed. Puppies and young dogs tend to sleep more than adult dogs, and large breeds often require more sleep than smaller ones. On average, adult dogs may sleep anywhere from 12 to 16 hours a day, while puppies and seniors may sleep even more. It is essential for dog owners to provide a comfortable and safe sleeping environment for their pets and ensure they have access to a regular sleep schedule. Additionally, if  sleep patterns change significantly or if they exhibit signs of sleep disturbances, it is a good idea to consult with a veterinarian to rule out any underlying health issues.')">Sleep</button>
                         </div>
                         <!-- Container for trivia -->
                         <div class="trivia-container mt-3">
-                            <h3>Trivia</h3>
+                            <h3>Did you know that...</h3>
                             <p id="trivia"></p>
                         </div>
                     </div>
@@ -111,46 +105,25 @@
                        </div>
                     </div>
             <script>
-                let hunger = 50;
-                let training = 50;
-                let energy = 50;
-                let happiness = 50;
                 let petImage = document.getElementById("dog-image");
                 let triviaContainer = document.getElementById("trivia");
         
-                function updateStats() {
-                    document.getElementById("hunger").textContent = hunger;
-                    document.getElementById("training").textContent = training;
-                    document.getElementById("energy").textContent = energy;
-                    document.getElementById("happiness").textContent = happiness;
-                }
         
                 function performAction(action, trivia) {
                     switch (action) {
                         case 'stay':
-                            energy -= 10;
-                            happiness += 10;
                             petImage.src = "assets/img/virtualpet/dogstandby.gif";
                             break;
                         case 'sniff':
-                            hunger -= 5;
-                            happiness += 15;
                             petImage.src = "assets/img/virtualpet/dogsniff.gif";
                             break;
                         case 'scratch':
-                            energy -= 15;
-                            happiness += 10;
                             petImage.src = "assets/img/virtualpet/dogscratch.gif";
                             break;
                         case 'waggle':
-                            hunger -= 5;
-                            happiness += 20;
                             petImage.src = "assets/img/virtualpet/dogtail.gif";
                             break;
                         case 'sleep':
-                            hunger -= 5;
-                            energy = 100;
-                            happiness += 30;
                             petImage.src = "assets/img/virtualpet/dogsleep.gif";
                             break;
                         default:
@@ -164,9 +137,6 @@
                     }
                     // Update trivia container with the provided trivia
                     triviaContainer.textContent = trivia;
-                    // Cap happiness to 100
-                    happiness = Math.min(100, happiness);
-                    updateStats();
                 }
         
                 // Update the pet's stats every few seconds (simulating time passing)
@@ -183,7 +153,6 @@
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-         </section>
       </main>
       <!-- End #main -->
         <!--FOOTER -->
@@ -261,6 +230,5 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <!-- MAIN JS FILE -->
       <script src="assets/js/main.js"></script>
-   </main>
 </body>
 </html>
