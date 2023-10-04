@@ -14,9 +14,6 @@ export default function LastHealthChecks({filterMode = 'all', count = -1, itemsP
     const filteredAppointments = appointmentList ? appointmentList.filter(appointment => {
         const currentDate = new Date();
         const appointmentDate = new Date(appointment.booking_date);
-    // console.log(currentDate)
-    // console.log(appointmentDate)
-    console.log(appointmentDate === currentDate)
         if (filterMode === 'today') {
             return dayjs(appointmentDate).isSame(dayjs(currentDate), 'day');
         } else if (filterMode === 'historic') {

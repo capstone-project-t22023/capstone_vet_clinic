@@ -11,7 +11,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
 
 
     // APPOINTMENTS LIST
-    const [loading, setLoading] = useState(true);
     const {
         selectedOwner,
         selectedAppointment,
@@ -43,7 +42,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
             .then(data => {
                 setAppointmentList(data.bookings);
                 if (selectedAppointment) {
-                    console.log("Selected appointment",typeof selectedAppointment)
                     updateSelectedAppointment(data.bookings.find(x => x.id = selectedAppointment.booking_id));
                 }
 
@@ -63,7 +61,6 @@ export default function Appointments({timeframe = 'all', count = -1, itemsPerPag
         }
         handlerRefreshAppointments(false);
     }, [selectedOwner, refreshAppointments]);
-    // }, [ refreshAppointments]);
 
     // TODO sanity the doctor appointments and all doctor appointments only if doctor = true
 
