@@ -1,42 +1,45 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+    use PHPMailer\PHPMailer\PHPMailer;
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'k220251@student.kent.edu.au';
+  $receiving_email_address = 'pawsomevetc@gmail.com';
 
-  if( file_exists($php_email_form = '../assets/vendors/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+    if (isset($_POST['name']) && isset($_POST['email'])) {
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $subject = $_POST['subject'];
+        $message = $_POST['message'];
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+        require_once "PHPMailer/PHPMailer.php";
+        require_once "PHPMailer/SMTP.php";
+        require_once "PHPMailer/Exception.php";
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
-  $contact->honeypot = $_POST['first_name'];
+        $mail = new PHPMailer();
 
-  echo $contact->send();
+        //SMTP Settings
+        $mail->isSMTP();
+        $mail->Host = "smtp.freesmtpservers.com";
+        $mail->SMTPAuth = true;
+        $mail->Username = "pawsome331@gmail.com";
+        $mail->Password = 'datevwmewbezddox';
+        $mail->Port = 465; //587
+        $mail->SMTPSecure = "ssl"; //tls
+
+        //Email Settings
+        $mail->isHTML(true);
+        $mail->setFrom($email, $name);
+        $mail->addAddress($receiving_email_address);
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+
+        if ($mail->send()) {
+            $status = "success";
+            $response = "Email is sent!";
+        } else {
+            $status = "failed";
+            $response = "Something is wrong: <br><br>" . $mail->ErrorInfo;
+        }
+		echo $response;
+        //exit(json_encode(array("status" => $status, "response" => $response)));
+    }
 ?>

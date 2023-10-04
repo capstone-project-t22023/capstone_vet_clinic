@@ -250,7 +250,12 @@ export default function SignupForm() {
             setErrorAlert(true);
             setErrorPasswordMessage("Password is required");
             errorPresent = true;
-        } 
+        } else if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,20}$/.test(password)) {
+            setErrorPassword(true);
+            setErrorAlert(true);
+            setErrorPasswordMessage("Password should be more than 8 characters with at least one small lowercase, one uppercase, one number, and one of the special characters (#?!@$ %^&*-).");
+            errorPresent = true;
+        }
         
         if (!password2) {
             setErrorPassword2(true);
