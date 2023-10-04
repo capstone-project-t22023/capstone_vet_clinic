@@ -137,12 +137,12 @@ $result = $stmt->get_result();
                         <br>
                         <br>
                         <br>            
-                        <div class="social-links mt-3">
-                           <a href="#" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                           <a href="#" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
-                        </div>
+                     <div class="social-links mt-3">
+                        <a href="https://twitter.com/MalgoMika87" class="twitter"><i class="fa-brands fa-square-twitter fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100001882155591" class="facebook"><i class="fa-brands fa-square-facebook fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="https://www.instagram.com/malgorzata_mikart/" class="instagram"><i class="fa-brands fa-square-instagram fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                        <a href="https://www.linkedin.com/in/malgorzatamika/" class="linkedin"><i class="fa-brands fa-linkedin fa-bounce fa-xl" style="color: #7d005c;"></i></a>
+                     </div>
                      </div>
                      <div class="col-lg-2 col-6 footer-links">
                         <h4>Our Services</h4>
@@ -172,6 +172,7 @@ $result = $stmt->get_result();
                            10 Barrack Street<br>
                            Sydney 2000 NSW <br>
                            Australia <br></a><br>
+                           <strong>Phone:</strong><a href="tel:0295194111">+(02)95194111</a><br><a href="tel:0295194112">+(02)95194112</a>
                            <strong>Email:</strong><a href="mailto:info@pawsomevet.com.au">info@pawsomevet.com.au</a><br><a href="mailto:inquiry@pawsomevet.com.au">inquiry@pawsomevet.com.au</a>
                         </p>
                      </div>
