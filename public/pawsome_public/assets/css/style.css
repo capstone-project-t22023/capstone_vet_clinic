@@ -1303,44 +1303,6 @@ input[type=text]:invalid {
 .blog-author {
   background-color: #fff; 
 }
-
-.comments {
-  position:relative;
-  width: 66%;
-  display:flex;
-  flex-direction: column;
-  margin-left: 20px;
-  box-shadow: 10px;
-}
-
-#comment{
-  position:relative;
-  width: 66%;
-  padding: 13px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 10px;
-}
-#addComments {
-  position:relative;
-  width: 66%;
-  padding: 13px;
-  margin: 5px;
-  border-radius: 5px;
-  border: none;
-  background-color:  rgb(164, 79, 109);
-  color:#fff;
-  box-shadow: 10px;
-}
-#allComments {
-  position:relative;
-  width: 66%;
-  margin:5px;
-  padding: 7px;
-  background-color: #fff;
-  color:#000;   
-}
-
 .wrapper > button {
   margin-right: 5px;
   background-color: lightseagreen;
@@ -2053,7 +2015,6 @@ input[type=text]:invalid {
 }
 
 #myInput {
-  background-image: url("assets/img/poisonguide/noun-search-3642227.svg"); 
   background-position: 10px 12px; 
   background-repeat: no-repeat; 
   width: 100%; 
