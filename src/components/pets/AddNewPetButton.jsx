@@ -5,7 +5,7 @@ import AddNewPetForm from "./AddNewPetForm";
 import {PetsContext} from "../../contexts/PetsProvider";
 
 export default function AddNewPetButton() {
-    const [openModal, setOpenModal] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
     const {selectedOwner, updatePetList, handlerReloadPetList} = useContext(PetsContext);
 
     const addNewPet = (petInfo) => {
@@ -43,15 +43,15 @@ export default function AddNewPetButton() {
 
     const handleAddPet = (pet) => {
         console.log("add this pet", pet);
-        setOpenModal(false);
         addNewPet(pet);
+        setShowDialog(false);
     };
 
 
     return (
         <>
             <Tooltip title="New Pet" TransitionComponent={Zoom} placement="top">
-                <IconButton onClick={() => setOpenModal(true)}
+                <IconButton onClick={() => setShowDialog(true)}
                             sx={{
                                 flexShrink: 0,
                                 width: 40,
@@ -70,11 +70,11 @@ export default function AddNewPetButton() {
                 </IconButton>
             </Tooltip>
             <Dialog
-                open={openModal}
-                onClose={() => setOpenModal(false)}
+                open={showDialog}
+                onClose={() => setShowDialog(false)}
             >
                 <DialogContent>
-                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet} onCancel={() => setOpenModal(false)}/>
+                    <AddNewPetForm ownerId={selectedOwner.pet_owner_id} onAddPet={handleAddPet} onCancel={() => setShowDialog(false)}/>
                 </DialogContent>
             </Dialog>
         </>

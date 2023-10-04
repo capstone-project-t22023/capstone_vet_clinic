@@ -104,13 +104,20 @@ export const PetsProvider = ({children}) => {
                         setSelectedOwner(userPets); // Set userIsPetOwner based on whether user is a pet owner
                         setPetList(userPets.pets);
                     } else if (user.role === 'doctor' || user.role === 'admin') {
-                        setPetList(data.pets)
+                        if(selectedOwner.pet_owner_id){
+                            const userPets = data.pets.find(u => u.pet_owner_id === selectedOwner.pet_owner_id);
+                            setSelectedOwner(userPets); 
+                            setPetList(data.pets);
+                        } else {
+                            setPetList(data.pets);
+                        }
                     }
                 }
             })
             .catch(error => {
                 console.error(error);
             });
+            
         setReloadPetList(false);
     }, [user, reloadPetList]);
 

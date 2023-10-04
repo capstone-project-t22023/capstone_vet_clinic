@@ -140,9 +140,6 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
         }
     };
 
-    const handleCancel = () => {
-        onCancel(true)
-    }
 
     const isFieldChanged = (field) => formData[field] !== originalData[field];
 
@@ -231,7 +228,6 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                             }}
-
                         />
 
                         <FormControl component="form" variant='outlined' fullWidth
@@ -311,7 +307,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         {/*/>*/}
                     </Stack>
                     <Stack direction="row" spacing={2} flex={1} justifyContent="center">
-                        <Button variant="outlined" color="primary" onClick={handleCancel}>
+                        <Button variant="outlined" color="primary" onClick={onCancel}>
                             Cancel
                         </Button>
                         <Button type="submit" variant="contained" color="primary" disabled={!isFieldChanged('petname')}>
