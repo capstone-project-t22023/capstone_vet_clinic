@@ -81,6 +81,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
             if (value.trim() === '') {
                 error = true;
             }
+            else if (value.includes('+')) {
+                error = 'Only numbers allowed.';
+            }
             else if (value.length > 10) {
                 error = 'Max 10 numbers allowed.';
             }
@@ -94,6 +97,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                 error = true;
             } else if (!(value.length >= 1 && value.length <= 10)) {
                 error = '1 - 10 characters allowed.';
+            }
+            else if (value.includes('+')) {
+                error = 'Only numbers allowed.';
             }
         }
 
@@ -255,11 +261,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             error={Boolean(errors.microchip_no)}
                             helperText={errors.microchip_no}
                             type="number"
-                            min={0}
                             InputProps={{ inputProps: { min: 0 } }}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
                         />
                         <TextField
                             label="Insurance Membership"
@@ -267,6 +269,8 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             value={formData.insurance_membership}
                             onChange={handleChange}
                             fullWidth
+                            type="number"
+                            InputProps={{ inputProps: { min: 0 } }}
                             error={Boolean(errors.insurance_membership)}
                             helperText={errors.insurance_membership}
                         />
