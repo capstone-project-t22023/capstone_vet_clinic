@@ -16,14 +16,14 @@
 
         $mail = new PHPMailer();
 
-        //SMTP Settings
-        $mail->isSMTP();
-        $mail->Host = "smtp.freesmtpservers.com";
-        $mail->SMTPAuth = true;
-        $mail->Username = "pawsome331@gmail.com";
-        $mail->Password = 'datevwmewbezddox';
-        $mail->Port = 465; //587
-        $mail->SMTPSecure = "ssl"; //tls
+          //SMTP Settings
+    $mail->isSMTP();
+    $mail->Host = "smtp.gmail.com";
+    $mail->SMTPAuth = true;
+    $mail->Username = "pawsome331@gmail.com";
+    $mail->Password = 'oytd azua qgnc xplz';
+    $mail->Port = 465; //587
+    $mail->SMTPSecure = "ssl"; //tls
 
         //Email Settings
         $mail->isHTML(true);

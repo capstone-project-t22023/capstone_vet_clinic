@@ -94,16 +94,14 @@ $result = $stmt->get_result();
          </section>
          <!-- End Breadcrumbs -->
         <section>
-        <div class="table-responsive-lg">
-            <table class="table">
-             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Symptoms<th>
-                    <th>Urgency Level</th>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+            <table id="myTable">
+               <tr class="header">
+                    <th style="width:40%;">Name</th>
+                    <th style="width:40%;">Description</th>
+                    <th style="width:40%;">Symptoms<th>
+                    <th style="width:40%;">Urgency Level</th>
                 </tr>
-            </thead>
             <tbody>
                 <?php
                 while ($row = $result->fetch_assoc()) {
@@ -117,7 +115,29 @@ $result = $stmt->get_result();
                 ?>
             </tbody>
         </table>
-    </div>
+        <script>
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
             </section>
 </body>
          <!-- End #main -->
