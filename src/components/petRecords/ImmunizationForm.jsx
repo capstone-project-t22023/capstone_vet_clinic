@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
 import {
-    Alert,
+    Alert, Box,
     Button,
-    DialogTitle,
+    DialogTitle, FormControl, InputLabel,
     MenuItem,
     Select,
-    Slide,
     Stack,
     TextField
 } from "@mui/material";
@@ -33,7 +32,7 @@ export default function ImmunizationForm(props) {
         pet_id: selectedPet,
         doctor_id: user.id,
         booking_id: props.selectedAppointmentId,
-        vaccine_date: dayjs(new Date()).format("DD-MM-YYYY"),
+        vaccine_date: dayjs(new Date()),
         vaccine: '',
         comments: ''
 
@@ -70,20 +69,12 @@ export default function ImmunizationForm(props) {
         });
     };
 
-    const handleVaccine = (event) => {
-        setFormData({
-            ...formData,
-            vaccine: event.target.value, // Use "vaccine" as the key
-        });
-    };
-
     const handleDateChange = (date) => {
         setFormData({
             ...formData,
-            vaccine_date: dayjs(date).format("DD-MM-YYYY"),
+            vaccine_date: dayjs(date),
         });
     };
-
 
 
     const handleSubmit = (e) => {
@@ -92,14 +83,24 @@ export default function ImmunizationForm(props) {
         if (Object.keys(validationErrors).length === 0) {
             // Form is valid, handle form submission here
 
-            console.log(JSON.stringify(formData))
+            const reqBody = {
+                pet_id: formData.pet_id,
+                doctor_id: formData.doctor_id,
+                booking_id: formData.booking_id,
+                vaccine_date: dayjs(formData.vaccine_date).format("DD-MM-YYYY"),
+                vaccine: formData.vaccine,
+                comments: formData.comments
+            }
+
+            console.log(JSON.stringify(reqBody))
+
             const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(reqBody),
             };
 
             fetch('http://localhost/capstone_vet_clinic/api.php/add_immun_record', requestOptions)
@@ -109,14 +110,14 @@ export default function ImmunizationForm(props) {
                         console.log('Record added successfully');
                         // Optionally, you can reset the form here
                     } else {
-                        console.error('Failed to add record',data);
+                        console.error('Failed to add record', data);
                     }
                 })
                 .catch((error) => {
                     console.error('Error adding record:', error);
                 });
 
-        handleCloseForm();
+            handleCloseForm();
 
         } else {
             // Form is invalid, set errors
@@ -145,7 +146,8 @@ export default function ImmunizationForm(props) {
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DialogTitle>{"Add Immunization Record"}</DialogTitle>
-            <form onSubmit={handleSubmit}>
+            <Box component="form" id="immunizForm" noValidate sx={{mt: 1}} onSubmit={handleSubmit}>
+                {/*<form onSubmit={handleSubmit}>*/}
                 <Stack spacing={2}>
                     <DatePicker
                         id="vaccine_date"
@@ -163,19 +165,23 @@ export default function ImmunizationForm(props) {
                     />
                     {errors.vaccine_date && <Alert severity="error">{errors.vaccine_date}</Alert>}
 
-                    <Select
-                        id="vaccine"
-                        label="Vaccine"
-                        value={formData.vaccine}
-                        onChange={handleVaccine}
-                    >
-                        <MenuItem value="">Select a vaccine</MenuItem>
-                        {vaccineOptions.map((option, index) => (
-                            <MenuItem key={index} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <FormControl variant='outlined' fullWidth
+                                 error={Boolean(errors.vaccine)}>
+                        <InputLabel label="label-vaccine">Vaccine</InputLabel>
+                        <Select
+                            name="vaccine"
+                            labelId="label-vaccine"
+                            value={formData.vaccine}
+                            onChange={handleChange}
+                            error={Boolean(errors.vaccine)}
+                        >
+                            {vaccineOptions.map((option, index) => (
+                                <MenuItem key={index} value={option}>
+                                    {option}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     {errors.vaccine && <Alert severity="error">{errors.vaccine}</Alert>}
 
                     <TextField
@@ -189,9 +195,10 @@ export default function ImmunizationForm(props) {
                     />
                     {errors.comments && <Alert severity="error">{errors.comments}</Alert>}
 
-                <Button type="submit">Submit</Button>
+                    <Button type="submit">Submit</Button>
                 </Stack>
-            </form>
+                {/*</form>*/}
+            </Box>
         </LocalizationProvider>
 
     )

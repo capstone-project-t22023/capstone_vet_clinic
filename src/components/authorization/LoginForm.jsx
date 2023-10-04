@@ -1,6 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Button, InputAdornment, TextField, IconButton, Box, Avatar, Typography, Checkbox, Grid, FormControlLabel} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {
+    Button,
+    InputAdornment,
+    TextField,
+    IconButton,
+    Box,
+    Typography,
+    Stack
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {Link, Navigate} from "react-router-dom";
@@ -47,11 +54,11 @@ export default function LoginForm() {
 
     function handleShowPassword() {
         setShowPassword(!showPassword);
-    };
+    }
 
     function handleMouseDownPassword(event) {
         event.preventDefault();
-    };
+    }
 
     function handleChange(event) {
         setErrorUsername(false);
@@ -135,7 +142,7 @@ export default function LoginForm() {
                     console.error(error);
                 });
         }
-    };
+    }
 
     function handleLoginDoctor(event) {
         event.preventDefault();
@@ -345,18 +352,11 @@ export default function LoginForm() {
                         <Button type="submit" onClick={handleLoginPetOwner} fullWidth variant="contained">as Customer</Button>
                     </Box>
 
-                    <Grid container>
-                        <Grid item xs>
-                            <Link variant="body2">
-                                //Forgot password?
+                    <Stack direction="row" justifyContent="start">
+                            <Link to="/signup">
+                                <Button variant="text">Don't have an account? Sign Up Here</Button>
                             </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link to="/signup" variant="body2">
-                                "Don't have an account? Sign Up"
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    </Stack>
                 </Box>
             </Box>
         }

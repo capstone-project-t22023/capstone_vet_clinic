@@ -201,7 +201,7 @@ export default function PetRecordsList() {
                                             <TableBody>
                                                 {record.rehab_records.map((rehabRecord, idx) => (
                                                     <StyledTableRow key={idx}>
-                                                        <StyledTableCell>{rehabRecord.treatment_date}</StyledTableCell>
+                                                        <StyledTableCell>{dayjs(rehabRecord.treatment_date).format("DD MMM YYYY")}</StyledTableCell>
                                                         <StyledTableCell>{rehabRecord.attended}</StyledTableCell>
                                                         <StyledTableCell>{rehabRecord.comments}</StyledTableCell>
                                                     </StyledTableRow>
@@ -298,11 +298,11 @@ export default function PetRecordsList() {
                             <TableBody>
                                 {petSurgeryList.map((record, index) => (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell>{record.surgery_date}</StyledTableCell>
+                                        <StyledTableCell>{dayjs(record.surgery_date).format("DD MMM YYYY")}</StyledTableCell>
                                         <StyledTableCell>{record.surgery}</StyledTableCell>
                                         <StyledTableCell>{record.veterinarian}</StyledTableCell>
                                         <StyledTableCell>{record.comments || 'N/A'}</StyledTableCell>
-                                        <StyledTableCell>{record.discharge_date}</StyledTableCell>
+                                        <StyledTableCell>{dayjs(record.discharge_date).format("DD MMM YYYY")}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
                             </TableBody>

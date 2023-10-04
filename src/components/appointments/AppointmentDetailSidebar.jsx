@@ -63,7 +63,6 @@ export default function AppointmentDetailSidebar({appointmentId}) {
 
 
     const handleClose = () => {
-        console.log("close dialog")
         setPetRecordsDialog(false);
     };
 
@@ -115,9 +114,8 @@ export default function AppointmentDetailSidebar({appointmentId}) {
                             </>
                             :
                             <>
-                                <IconButton color="primary" onClick={handleOpenPet}
-                                            disabled="true">
-                                    <AttachMoneyRounded/>
+                                <IconButton disabled>
+                                    <AttachMoneyRounded />
                                 </IconButton>
                                 <Typography fontSize="0.75rem" color="grey.400"><strong>Not
                                     Available</strong></Typography>

@@ -152,7 +152,9 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DialogTitle>Add a new pet</DialogTitle>
-            <form onSubmit={handleSubmit}>
+            <Box component="form" noValidate sx={{mt: 1}} onSubmit={handleSubmit}>
+
+            {/*<form onSubmit={handleSubmit}>*/}
                 <Stack direction="column" spacing={2}>
                     <Stack direction="row" spacing={2}>
                         <TextField
@@ -193,7 +195,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         />
                     </Stack>
                     <Stack direction="row" spacing={2}>
-                        <FormControl component="form" variant='outlined' fullWidth
+                        <FormControl variant='outlined' fullWidth
                                      error={Boolean(errors.species)}>
                             <InputLabel htmlFor="label-species">Species</InputLabel>
                             <Select
@@ -236,7 +238,7 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                             }}
                         />
 
-                        <FormControl component="form" variant='outlined' fullWidth
+                        <FormControl variant='outlined' fullWidth
                                      error={Boolean(errors.sex)}>
                             <InputLabel htmlFor="label-sex">Sex</InputLabel>
                             <Select
@@ -319,7 +321,8 @@ export default function AddNewPetForm({petToEdit = null, ownerId, onAddPet, onUp
                         </Button>
                     </Stack>
                 </Stack>
-            </form>
+            {/*</form>*/}
+            </Box>
         </LocalizationProvider>
     )
         ;

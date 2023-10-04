@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Alert, Button, DialogTitle, Slide, Stack, TextField} from "@mui/material";
+import {Alert, Button, DialogTitle, Stack, TextField} from "@mui/material";
 import dayjs from "dayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -24,11 +24,9 @@ export default function SurgeryForm(props) {
         doctor_id: user.id,
         booking_id: props.selectedAppointmentId,
         surgery: '',
-        surgery_date: dayjs(new Date()).format("DD-MM-YYYY"),
-        discharge_date: dayjs(new Date()).format("DD-MM-YYYY"),
+        surgery_date: dayjs(new Date()),
+        discharge_date: dayjs(new Date()),
         comments: ''
-
-
     });
 
     const [errors, setErrors] = useState({});
@@ -45,13 +43,13 @@ export default function SurgeryForm(props) {
     const handleDateChange = (date) => {
         setFormData({
             ...formData,
-            surgery_date: dayjs(date).format("DD-MM-YYYY"),
+            surgery_date: dayjs(date),
         });
     };
     const handleDischargeDateChange = (date) => {
         setFormData({
             ...formData,
-            discharge_date: dayjs(date).format("DD-MM-YYYY"),
+            discharge_date: dayjs(date),
         });
     };
 
@@ -62,14 +60,24 @@ export default function SurgeryForm(props) {
         if (Object.keys(validationErrors).length === 0) {
             // Form is valid, handle form submission here
 
-            console.log(JSON.stringify(formData))
+            const reqBody={
+                pet_id: formData.pet_id,
+                doctor_id: formData.doctor_id,
+                booking_id: formData.booking_id,
+                surgery: formData.surgery,
+                surgery_date: dayjs(formData.surgery_date).format("DD-MM-YYYY"),
+                discharge_date: dayjs(formData.discharge_date).format("DD-MM-YYYY"),
+                comments: formData.comments
+            }
+
+            console.log(JSON.stringify(reqBody))
             const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(reqBody),
             };
 
             fetch('http://localhost/capstone_vet_clinic/api.php/add_surgery', requestOptions)
@@ -101,7 +109,7 @@ export default function SurgeryForm(props) {
             errors.surgery_date = 'Vaccine Date is required';
         }
         if (!data.surgery) {
-            errors.surgery = 'Surgery Name is required';
+            errors.surgery = 'Surgery is required';
         }
         if (!data.discharge_date) {
             errors.discharge_date = 'Discharge Date is required';
@@ -127,6 +135,7 @@ export default function SurgeryForm(props) {
                         variant="outlined"
                         onChange={handleChange}
                         value={formData.surgery}
+                        error={errors.surgery}
                     />
                     {errors.surgery && <Alert severity="error">{errors.surgery}</Alert>}
                     <DatePicker
@@ -137,6 +146,7 @@ export default function SurgeryForm(props) {
                         onChange={(date) => handleDateChange(date)}
                         slotProps={{
                             textField: {
+                                error: errors.surgery_date,
                                 // helperText: 'MM/DD/YYYY',
                             },
                         }}
@@ -150,6 +160,7 @@ export default function SurgeryForm(props) {
                         onChange={(date) => handleDischargeDateChange(date)}
                         slotProps={{
                             textField: {
+                                error: errors.discharge_date,
                                 // helperText: 'MM/DD/YYYY',
                             },
                         }}
@@ -164,6 +175,7 @@ export default function SurgeryForm(props) {
                         maxRows={4}
                         onChange={handleChange}
                         value={formData.comments}
+                        error={errors.comments}
                     />
                     {errors.comments && <Alert severity="error">{errors.comments}</Alert>}
 
